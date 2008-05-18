@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="modification.xsl" type="text/xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+================================================================================
+
+	Modification files can be used to modify files so that they do what
+	your package needs them to do to work properly.
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<!-- This information needs to be the same as that in the package-info.xml. -->
+	<id>Niko:SMFProject</id>
+	<version>0.1 Alpha</version>
+
+	<!-- Board directory -->
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
+			<add><![CDATA[
+		'issues' => array('IssueList.php', 'IssueList'),
+		'issue' => array('IssueList.php', 'IssueViewIssue'),
+		'project' => array('Project.php', 'ProjectView'),
+		'projects' => array('Project.php', 'ProjectList'),
+		'report' => array('IssueReport.php', 'IssueReport'),
+		'report2' => array('IssueReport.php', 'IssueReport2'),]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[	elseif (empty($_REQUEST['action']))]]></search>
+			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
+	{
+		require_once($sourcedir . '/Project.php');
+		return 'ProjectView';
+	}
+	elseif (empty($_REQUEST['action']) && isset($_REQUEST['issue']))
+	{
+		require_once($sourcedir . '/IssueList.php');
+		return 'IssueViewIssue';
+	}]]></add>
+		</operation>
+	</file>
+
+	<!-- Source files -->
+	<file name="$sourcedir/Admin.php">
+		<operation>
+			<search position="after"><![CDATA[		'layout' => array(
+			'title' => $txt['layout_controls'],]]></search>
+			<add><![CDATA[		'project' => array(
+			'title' => $txt['project_tools'],
+			'permission' => array('project_admin'),
+			'areas' => array(
+				'manageprojects' => array(
+					'label' => $txt['manage_projects'],
+					'file' => 'ManageProjects.php',
+					'function' => 'ManageProjects',
+					'permission' => array('project_admin'),
+					'subsections' => array(
+						'main' => array($txt['list_projects']),
+						'category' => array($txt['categories']),
+					),
+				),
+			),
+		),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManagePermissions.php">
+		<operation>
+			<search position="before"><![CDATA[	$permissionList = array(
+		'membergroup' => array(]]></search>
+
+			<add><![CDATA[			'project' => array(
+				'project_access' => false,
+				'project_admin' => false,
+				'issue_view' => true,
+				'issue_update' => true,
+				'issue_assign' => false,
+				'issue_assign_to' => false,
+			),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageSettings.php">
+		<operation>
+			<search position="after"><![CDATA[
+		// pm = post moderation.]]></search>
+			<add><![CDATA[		// pj = project tools
+		'pj' => array(
+			'settings' => array(
+				'projectEnabled' => 1,
+			),
+		),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="before"><![CDATA[	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);]]></search>
+			<add><![CDATA[	$context['allow_project'] = !empty($modSettings['projectEnabled']) && allowedTo('project_access');]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[			'search' => array(]]></search>
+			<add><![CDATA[			'projects' => array(
+				'title' => $txt['projects'],
+				'href' => $scripturl . '?action=projects',
+				'show' => $context['allow_project'],
+				'sub_buttons' => array(),
+			),]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[	if (isset($context['menu_buttons'][$context['current_action']]))
+		$current_action = $context['current_action'];]]></search>
+			<add><![CDATA[	elseif (in_array($context['current_action'], array('project', 'issues', 'report', 'report2')) || isset($_REQUEST['project']))
+		$current_action = 'projects';]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Db-mysql.php">
+		<operation>
+			<search position="after"><![CDATA[
+	if (!isset($matches[2]))]]></search>
+			<add><![CDATA[
+	if ($matches[1] === 'query_see_project')
+		return $user_info['query_see_project'];
+	elseif ($matches[1] === 'query_see_version')
+		return $user_info['query_see_version'];
+	elseif ($matches[1] === 'query_see_issue')
+		return $user_info['query_see_issue'];
+]]></add>
+		</operation>
+	</file>
+
+	<!-- Languages -->
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[// SMF Project tools
+$txt['project_tools'] = 'Project Tools';
+$txt['issue_tracker'] = 'Issue Tracker';
+$txt['issues'] = 'Issues';
+
+$txt['permissiongroup_project'] = 'Project Tools';
+$txt['permissionname_issue_access'] = 'View Issue Tracker';
+$txt['permissionname_issue_report'] = 'Report issues';
+$txt['permissionname_issue_view'] = 'View issues';
+$txt['permissionname_issue_view_any'] = 'Any issue';
+$txt['permissionname_issue_view_own'] = 'Own issue';
+$txt['permissionname_project_admin'] = 'Administrate Project Tools';
+
+$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
+$txt['cannot_issue_report'] = 'You don\'t have permission to report issues on our Issue Tracker';
+
+// SMF Project tools admin
+$txt['manage_projects'] = 'Projects';
+$txt['list_projects'] = 'Project List';
+$txt['versions'] = 'Versions';
+$txt['categories'] = 'Categories';
+
+// Core Features
+$txt['core_settings_item_pj'] = 'Project Tools';
+$txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
+
+// Common texts
+$txt['project'] = 'Project';
+$txt['projects'] = 'Projects';]]></add>
+		</operation>
+	</file>
+
+</modification>

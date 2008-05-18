@@ -1,0 +1,69 @@
+Changes go downward, months go upward.  Please scroll to the bottom for a legend.
+Changelog started April 6, 2007.
+
+SMF Project Tools 0.1                                                          ?
+================================================================================
+April 2008
+--------------------------------------------------------------------------------
+ ! Updated to SMF 2.0 Beta 4
+
+October 2007
+--------------------------------------------------------------------------------
+ ! Store all data on non SMF -tables
+ + updateIssue
+ ! Correct redirect after reporting issue
+ ! Many fixes to updateIssue
+ ! Fixes to view issue
+ * Issue view page (IssueList.template.php)
+ ! Fixed WYSIWYG (IssueList.template.php)
+ ! Project and Issue works again without action (install.xml)
+ + Basic timeline logging
+ ! Fixed permission not being set on install
+ ! Fixed database error for non admin users
+ + Show list of categories on Project manager
+ + Ability to create and update categories is back
+ ! Can select category for issue without error
+
+September 2007
+--------------------------------------------------------------------------------
+ ! Many many bugs (created & fixed)
+ + Projects now have board assigned to them
+ + Merged Version management to Project List
+ + Select "trackers" per project
+ + Project list
+ ! Load project with board
+
+July 2007
+--------------------------------------------------------------------------------
+ ! Fixes on install
+ + Subs-Issue.php with Issue Tracker functions
+
+June 2007
+--------------------------------------------------------------------------------
+ ! Missing validations on some fields
+ + Ability to delete projects
+ + Ability to edit projects
+ + Basic version listing on admin
+
+May 2007
+--------------------------------------------------------------------------------
+ ! Name changed to SMF Project Tools
+ ! loadMemberGroups returns now array
+ + Function for displayig form
+ * Missing globals on config-tempalte
+ ! Bug fixes here and there
+
+April 2007
+--------------------------------------------------------------------------------
+ ! Many fixes
+ + Issues view
+ + Product select
+ + Product -> Project
+
+Legend:
+--------------------------------------------------------------------------------
+ ! Minor change or bugfix. (don't bother to log typos except between releases.)
+ * Change like above, but affects templates.
+ & Change that affects a language file. (make two if it affects templates too.)
+ + Feature addition or improvement.
+ - Feature or option removal.

@@ -1,0 +1,142 @@
+/* ************************************* */
+/* styles from Project.template          */
+/* ************************************* */
+.projectlistframe
+{
+	margin-top: 0.4em;
+}
+.projectlistframe h3
+{
+	margin: 0;
+}
+table.projectsframe
+{
+	width: 100%;
+}
+table.projectsframe td.icon
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 6%;
+}
+table.projectsframe td.info
+{
+	width: 60%;
+	padding: 0;
+}
+table.projectsframe td.info h4
+{
+	padding: 0.4em 0.4em 0 0.4em;
+	margin: 0;
+}
+table.projectsframe td.info p
+{
+	padding: 0 0.4em 0.5em 0.4em;
+	margin: 0;
+}
+table.projectsframe td.stats
+{
+	width: 8%;
+	vertical-align: middle;
+	text-align: center;
+}
+table.projectsframe td.lastissue
+{
+	width: 20%;
+}
+
+/* ************************************* */
+/* styles from IssueView.template        */
+/* ************************************* */
+.issueinfoframe
+{
+	margin-top: 0.4em;
+}
+.issueinfoframe h3
+{
+	margin: 0;
+}
+
+#issueinfo h3.catbg3
+{
+	font-weight: normal;
+	padding: 0.4em;
+}
+#issueinfo h3.catbg3 img
+{
+	vertical-align: middle;
+}
+#issueinfo h3.catbg3 span
+{
+	padding-left: 2%;
+}
+
+#issueinfo table
+{
+	width: 100%;
+}
+
+#issueinfo .dark
+{
+	color: grey;
+}
+
+.infotable
+{
+	width: 33%;
+}
+.infotable div
+{
+	height: 20px;
+	border-bottom: 1px solid black;
+}
+.infotable div.last
+{
+	border-bottom: 0;
+}
+
+/* ************************************* */
+/* styles from IssueReport.template      */
+/* ************************************* */
+#reportissue
+{
+}
+#reportform
+{
+}
+#reportform dl
+{
+	padding: 5px;
+	margin: 0;
+}
+#reportform dt, #reportform dd
+{
+	margin: 0;
+	padding: 3px 0px;
+}
+#reportform dt
+{
+	float: left;
+	width: 15%;
+	font-weight: bold;
+	text-align: right;
+}
+#reportform dd
+{
+	margin-left: 16%;
+}
+#reportform dd.full
+{
+	margin-left: 0;
+	width: 100%;
+}
+#reportform dd.clear
+{
+	float: none;
+	clear: both;
+}
+
+.center
+{
+	text-align: center;
+}

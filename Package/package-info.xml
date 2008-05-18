@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="package-info.xsl" type="text/xsl"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+================================================================================
+
+	This script can be used to make your package do many different things.
+	The following documentation should be available on the format of this
+	file and the things you can do with it:
+		http://mods.simplemachines.org/docs/package-info.php
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>Niko:SMFProject</id>
+	<name>SMF Project Tools</name>
+	<version>0.1 Alpha</version>
+	<type>modification</type>
+
+	<install for="2.0 Beta 4">
+		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
+		<database>installDatabase.php</database>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
+		<require-file name="Sources/Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+
+		<!-- These files goest to Theme directory -->
+		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
+		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+
+		<!-- CSS -->
+		<require-file name="Themes/default/css/project.css" destination="$themedir/css" />
+
+		<!-- Images -->
+		<require-file name="Themes/default/images/bug.png" destination="$imagesdir" />
+		<require-file name="Themes/default/images/feature.png" destination="$imagesdir" />
+
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Issue.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+
+		<modification format="xml" type="file">install.xml</modification>
+	</install>
+
+	<uninstall for="2.0 Beta 4">
+		<!-- Remove code modifications -->
+		<modification format="xml" type="file" reverse="true">install.xml</modification>
+
+		<!-- Remove these files from Sources -->
+		<remove-file name="$sourcedir/IssueList.php" />
+		<remove-file name="$sourcedir/IssueReport.php" />
+		<remove-file name="$sourcedir/ManageProjects.php" />
+		<remove-file name="$sourcedir/Project.php" />
+		<remove-file name="$sourcedir/Subs-Issue.php" />
+		<remove-file name="$sourcedir/Subs-Project.php" />
+
+		<!-- Templates -->
+		<remove-file name="$themedir/IssueList.template.php" />
+		<remove-file name="$themedir/IssueReport.template.php" />
+		<remove-file name="$themedir/ManageProjects.template.php" />
+		<remove-file name="$themedir/Project.template.php" />
+
+		<!-- Images -->
+		<remove-file name="$imagesdir/bug.png" />
+		<remove-file name="$imagesdir/feature.png" />
+
+		<!-- Languages -->
+		<remove-file name="$languagedir/Issue.english.php" />
+		<remove-file name="$languagedir/Project.english.php" />
+		<remove-file name="$languagedir/ProjectAdmin.english.php" />
+	</uninstall>
+
+</package-info>
