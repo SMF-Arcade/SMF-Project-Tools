@@ -20,9 +20,34 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-function loadIssueTracker()
+function loadIssueTypes()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+
+	$context['project_tools']['issue_types'] = array(
+		'bug' => array(
+			'id' => 'bug',
+			'name' => $txt['project_bug'],
+			'plural' => $txt['project_bugs'],
+			'help' => $txt['project_bug_help'],
+			'image' => 'bug.png',
+		),
+		'feature' => array(
+			'id' => 'feature',
+			'name' => $txt['project_feature'],
+			'plural' => $txt['project_features'],
+			'help' => $txt['project_feature_help'],
+			'image' => 'feature.png',
+		),
+	);
+
+	// Make list of columns that need to be selected
+	$context['type_columns'] = array();
+	foreach ($context['project_tools']['issue_types'] as $id => $info)
+	{
+		$context['type_columns'][] = "open_$id";
+		$context['type_columns'][] = "closed_$id";
+	}
 
 	// Status, types, priorities
 	$context['issue']['status'] = array(
@@ -56,24 +81,6 @@ function loadIssueTracker()
 		1 => 'issue_priority_low',
 		'issue_priority_normal',
 		'issue_priority_high'
-	);
-
-	// Load issue if needed
-	if (!empty($_REQUEST['issue']))
-	{
-		if (!loadIssue((int) $_REQUEST['issue']))
-			fatal_lang_error('issue_not_found');
-
-		$_REQUEST['project'] = $context['current_issue']['project']['id'];
-	}
-
-	// Load Project if needed
-	if (!empty($_REQUEST['project']) && !loadProject((int) $_REQUEST['project'], true, 'issues'))
-		fatal_lang_error('project_not_found');
-
-	$context['linktree'][] = array(
-		'name' => $txt['linktree_issues'],
-		'url' => $scripturl . '?action=issues;project=' . $context['project']['id']
 	);
 }
 
@@ -132,7 +139,7 @@ function loadIssue($id_issue)
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
-		'link' => $scripturl . '?action=issue;issue=' . $row['id_issue'],
+		'link' => $scripturl . '?issue=' . $row['id_issue'],
 		'category' => $row['category_name'],
 		'id_category' => $row['id_category'],
 		'version' => array(
@@ -152,7 +159,7 @@ function loadIssue($id_issue)
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
 		'project' => array(
 			'id' => $row['id_project'],
-			'link' => $scripturl . '?action=issues;sa=project;p=' . $row['id_project'],
+			'link' => $scripturl . '?project=' . $row['id_project'] . ';sa=issues',
 			'name' => $row['project_name']
 		),
 		'body' => parse_bbc($row['body']),

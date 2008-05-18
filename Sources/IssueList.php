@@ -24,17 +24,13 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	View and List issues
+	Issue List / Search
 
 */
 
 function IssueList()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
-
-	require_once($sourcedir . '/Subs-Project.php');
-
-	loadProjectTools('issue');
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
@@ -86,7 +82,7 @@ function IssueList()
 	list ($issueCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex('?action=issues;project=' . $context['project']['id'], $_REQUEST['start'], $issueCount, $issuesPerPage);
+	$context['page_index'] = constructPageIndex('?project=' . $context['project']['id'] . ';sa=issues', $_REQUEST['start'], $issueCount, $issuesPerPage);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -118,10 +114,10 @@ function IssueList()
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?action=issues;project=' . $row['id_project'] . ';category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
-			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?action=issues;project=' . $row['id_project'] . ';version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
+			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
 			'type' => $row['issue_type'],
-			'link' => $scripturl . '?action=issue;issue=' . $row['id_issue'],
+			'link' => $scripturl . '?issue=' . $row['id_issue'],
 			'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
 			'created' => timeformat($row['created']),
 			'status' => &$context['issue']['status'][$row['status']]['text'],
@@ -135,90 +131,6 @@ function IssueList()
 	//$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
 
 	loadTemplate('IssueList');
-}
-
-function IssueViewIssue()
-{
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
-	global $comment_req;
-
-	require_once($sourcedir . '/Subs-Project.php');
-	loadProjectTools('issue');
-
-	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
-
-	$issue = $context['current_issue']['id'];
-
-	// Permission stolen from display.php ;)
-	$common_permissions = array(
-		'can_approve' => 'approve_posts',
-		'can_ban' => 'manage_bans',
-		'can_sticky' => 'make_sticky',
-		'can_merge' => 'merge_any',
-		'can_split' => 'split_any',
-		'can_mark_notify' => 'mark_any_notify',
-		'can_send_pm' => 'pm_send',
-		'can_report_moderator' => 'report_any',
-		'can_moderate_forum' => 'moderate_forum',
-		'can_issue_warning' => 'issue_warning',
-	);
-	foreach ($common_permissions as $contextual => $perm)
-		$context[$contextual] = allowedTo($perm);
-
-	$start = $_REQUEST['start'];
-	$limit = $modSettings['defaultMaxMessages'];
-
-	$type = $context['current_issue']['is_my'] ? 'own' : 'any';
-
-	if (allowedTo('issue_update_' . $type))
-	{
-		require_once($sourcedir . '/Subs-Members.php');
-
-		$context['can_update'] = true;
-
-		/*if (allowedTo('issue_assign'))
-		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = array();
-
-			$groups = groupsAllowedTo('issue_assign_to');
-
-			$request = $smcFunc['db_query']('', "
-				SELECT mem.id_member, mem.member_name, mem.real_name
-				FROM {$db_prefix}members AS mem
-				WHERE (id_group IN ('" . implode(', ', $groups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $groups['allowed']) . ")
-					AND NOT (id_group IN ('" . implode(', ', $groups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $groups['denied']) . ")", __FILE__, __LINE__);
-
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$context['assign_members'][] = array($row['id_member'], $row['member_name'], $row['real_name']);
-			$smcFunc['db_free_result']($request);
-		}*/
-	}
-
-	// Template
-	$context['sub_template'] = 'issue_view';
-	//$context['page_title'] = sprintf($txt['issue_tracker_view_issue'], $context['current_issue']['id'], $context['current_issue']['name']);
-
-	loadTemplate('IssueList');
-}
-
-
-function IssueDelete()
-{
-	global $context;
-
-	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
-
-	checkSession('get');
-
-	isAllowedTo('issue_delete');
-
-	deleteIssue($context['current_issue']['id']);
-
-	redirectexit('action=issues;project=' . $_REQUEST['project']);
-
 }
 
 ?>

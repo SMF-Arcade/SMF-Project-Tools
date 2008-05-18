@@ -9,7 +9,7 @@ function template_issue_list()
 		'post_issue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
-			'url' => $scripturl . '?action=report;project=' . $context['project']['id'],
+			'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=reportIssue',
 			'lang' => true
 		),
 	);
@@ -47,7 +47,7 @@ function template_issue_list()
 		{
 			echo '
 				<tr class="windowbg">
-					<td style="text-align: center"><a href="', $scripturl, '?action=issues;project=', $context['project']['id'], ';type=', $issue['type'], '"><img src="', $settings['images_url'], '/', $issue['type'], '.png" alt=""/></a></td>
+					<td style="text-align: center"><a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '"><img src="', $settings['images_url'], '/', $issue['type'], '.png" alt=""/></a></td>
 					<td class="windowbg2"><a href="', $issue['link'], '">', $issue['name'], '</a></td>
 					<td>', $issue['status'], '</td>
 					<td class="windowbg2">', $issue['reporter'], '</td>

@@ -35,13 +35,9 @@ if (!defined('SMF'))
 
 */
 
-function IssueReport()
+function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir;
-
-	require_once($sourcedir . '/Subs-Project.php');
-
-	loadProjectTools('issue');
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
@@ -84,7 +80,7 @@ function IssueReport()
 	create_control_richedit($editorOptions);
 
 	$context['post_box_name'] = 'details';
-	$context['destination'] = 'report2';
+	$context['destination'] = 'issueReport2';
 
 	$context['show_version'] = !empty($context['project']['versions']);
 	$context['show_category'] = !empty($context['project']['category']);
@@ -94,20 +90,16 @@ function IssueReport()
 	// Template
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_report_issue'],
-		'url' => $scripturl . '?action=report;project=' . $context['project']['id']
+		'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=reportIssue'
 	);
 
 	loadTemplate('IssueReport');
 	$context['sub_template'] = 'report_issue';
 }
 
-function IssueReport2()
+function ReportIssue2()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir;
-
-	require_once($sourcedir . '/Subs-Project.php');
-
-	loadProjectTools('issue');
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
@@ -205,173 +197,6 @@ function IssueReport2()
 	createIssue($issueOptions, $posterOptions);
 
 	redirectexit('project=' . $context['project']['id']);
-}
-
-function IssueReport_old()
-{
-	global $txt, $scripturl, $topic, $db_prefix, $modSettings, $board;
-	global $user_info, $sc, $board_info, $context, $settings;
-	global $sourcedir, $options, $smcFunc, $language;
-
-	// Preview/Post
-	if (isset($_REQUEST['message']) || !empty($context['post_error']))
-	{
-		// Validate inputs.
-		if (empty($context['post_error']))
-		{
-			// Version
-			if (!empty($_POST['version']))
-			{
-				if (!in_array($_POST['version'], $context['project']['parents']))
-					$context['post_error']['invalid_version'] = true;
-			}
-
-			// Type
-			if (!isset($_POST['type']) || !isset($context['project_tools']['issue_types'][$_POST['type']]))
-				$context['post_error']['invalid_type'] = true;
-
-			// Category
-			if (!empty($_POST['category']) && !isset($context['project']['category'][$_POST['category']]))
-				$context['post_error']['invalid_category'] = true;
-			elseif (empty($_POST['category']))
-				$_POST['category'] = 0;
-		}
-
-
-		$context['version'] = !empty($_POST['version']) ? $_POST['version'] : 0;
-		$context['category'] = !empty($_POST['category']) ? $_POST['category'] : 0;
-		$context['type'] = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
-
-		$context['use_smileys'] = !isset($_REQUEST['ns']);
-		$context['icon'] = isset($_REQUEST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_REQUEST['icon']) : 'xx';
-
-		$context['destination'] = 'report2;sesc=' . $sc;
-		$context['submit_label'] = $txt['report_issue'];
-
-		checkSubmitOnce('free');
-	}
-	// New issue
-	else
-	{
-		// Start with default values
-		$context['version'] = 0;
-		$context['category'] = 0;
-		$context['type'] = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
-
-		$context['use_smileys'] = true;
-		$context['destination'] = 'report2';
-
-		$context['submit_label'] = $txt['report_issue'];
-
-		$form_subject = isset($_GET['subject']) ? $_GET['subject'] : '';
-		$form_message = '';
-	}
-
-	$context['previewing'] = isset($_REQUEST['preview']);
-
-	if ($context['previewing'])
-		$context['page_title'] = $txt['preview_report_issue'];
-	else
-		$context['page_title'] = $txt['report_issue'];
-
-	if (empty($topic))
-		$context['linktree'][] = array(
-			'name' => '<i>' . $txt['report_issue'] . '</i>'
-		);
-
-	$context['subject'] = addcslashes($form_subject, '"');
-	$context['message'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_message);
-
-	checkSubmitOnce('register');
-
-	// Finally load template and show the form
-	loadTemplate('IssueReport');
-	$context['sub_template'] = 'report_issue';
-}
-
-function IssueReport2_old()
-{
-	global $board, $topic, $txt, $db_prefix, $modSettings, $sourcedir, $context;
-	global $user_info, $board_info, $options, $smcFunc;
-
-
-	// Version
-	if (!empty($_POST['version']))
-	{
-		if (!in_array($_POST['version'], $context['project']['parents']))
-			$post_errors[] = 'invalid_version';
-	}
-
-	// Type
-	if (!isset($_POST['type']) || !isset($context['project_tools']['issue_types'][$_POST['type']]))
-		$post_errors[] = 'invalid_type';
-
-	// Category
-	if (!empty($_POST['category']) && !isset($context['project']['category'][$_POST['category']]))
-		$post_errors[] = 'invalid_category';
-	elseif (empty($_POST['category']))
-		$_POST['category'] = 0;
-
-	// Errors?
-	if (!empty($post_errors))
-	{
-		loadLanguage('Errors');
-		$_REQUEST['preview'] = true;
-
-		$context['post_error'] = array('messages' => array());
-		foreach ($post_errors as $post_error)
-		{
-			$context['post_error'][$post_error] = true;
-			if ($post_error == 'long_message')
-				$txt['error_' . $post_error] = sprintf($txt['error_' . $post_error], $modSettings['max_messageLength']);
-
-			$context['post_error']['messages'][] = $txt['error_' . $post_error];
-		}
-
-		return IssueReport();
-	}
-
-	$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
-	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
-	$_POST['email'] = htmlspecialchars($_POST['email']);
-
-	if ($smfFunc['strlen']($_POST['subject']) > 100)
-		$_POST['subject'] = $smfFunc['db_escape_string']($smfFunc['substr']($smfFunc['db_unescape_string']($_POST['subject']), 0, 100));
-
-	$posterOptions = array(
-		'id' => $user_info['id'],
-		'name' => $_POST['guestname'],
-		'email' => $_POST['email'],
-	);
-	$issueOptions = array(
-		'project' => $context['project']['id'],
-		'subject' => $_POST['subject'],
-		'version' => $_POST['version'],
-		'type' => $_POST['type'],
-		'status' => 1,
-		'priority' => 2,
-		'category' => $_POST['category'],
-		'version' => $_POST['version'],
-		'assignee' => 0,
-		'body' => $_POST['message'],
-		'created' => time(),
-		'updated' => time(),
-	);
-
-	// New Issue
-	if (true)
-	{
-		createIssue($issueOptions, $posterOptions);
-
-		if (isset($topicOptions['id']))
-			$topic = $topicOptions['id'];
-	}
-	// Edit Old Issue
-	elseif (true)
-	{
-	}
-
-	redirectexit('action=project;project=' . $context['project']['id']);
 }
 
 ?>

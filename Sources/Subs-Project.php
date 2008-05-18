@@ -34,101 +34,54 @@ function loadProjectTools($mode = '', $force = false)
 	if (!empty($project_version) && !$force)
 		return;
 
-	if (empty($project_version))
-	{
-		// Which version this is?
-		$project_version = '0.1 Alpha';
+	require_once($sourcedir . '/Subs-Issue.php');
 
-		// Can see project?
-		if ($user_info['is_guest'])
-			$see_project = 'FIND_IN_SET(-1, p.member_groups)';
+	// Which version this is?
+	$project_version = '0.1 Alpha';
 
-		// Administrators can see all projects.
-		elseif ($user_info['is_admin'])
-			$see_project = '1 = 1';
-		// Registered user.... just the groups in $user_info['groups'].
-		else
-			$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
+	// Can see project?
+	if ($user_info['is_guest'])
+		$see_project = 'FIND_IN_SET(-1, p.member_groups)';
 
-		// Can see version?
-		if ($user_info['is_guest'])
-			$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
-		// Administrators can see all versions.
-		elseif ($user_info['is_admin'])
-			$see_version = '1 = 1';
-		// Registered user.... just the groups in $user_info['groups'].
-		else
-			$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
+	// Administrators can see all projects.
+	elseif ($user_info['is_admin'])
+		$see_project = '1 = 1';
+	// Registered user.... just the groups in $user_info['groups'].
+	else
+		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 
-		$user_info['query_see_project'] = $see_project;
-		$user_info['query_see_version'] = $see_version;
+	// Can see version?
+	if ($user_info['is_guest'])
+		$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
+	// Administrators can see all versions.
+	elseif ($user_info['is_admin'])
+		$see_version = '1 = 1';
+	// Registered user.... just the groups in $user_info['groups'].
+	else
+		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
 
-		// Show everything?
-		if (allowedTo('issue_view_any'))
-			$user_info['query_see_issue'] = "($see_project AND $see_version)";
-		// Show only own?
-		elseif (allowedTo('issue_view_own'))
-			$user_info['query_see_issue'] = "($see_project AND $see_version AND i.reporter = $user_info[id])";
-		// if not then we can't show anything
-		else
-			$user_info['query_see_issue'] = "(0 = 1)";
+	$user_info['query_see_project'] = $see_project;
+	$user_info['query_see_version'] = $see_version;
 
-		$context['project_tools'] = array();
+	// Show everything?
+	if (allowedTo('issue_view_any'))
+		$user_info['query_see_issue'] = "($see_project AND $see_version)";
+	// Show only own?
+	elseif (allowedTo('issue_view_own'))
+		$user_info['query_see_issue'] = "($see_project AND $see_version AND i.reporter = $user_info[id])";
+	// if not then we can't show anything
+	else
+		$user_info['query_see_issue'] = "(0 = 1)";
 
-		loadLanguage('Project');
-		loadLanguage('Issue');
-		loadIssueTypes();
-	}
+	$context['project_tools'] = array();
+	$context['issue_tracker'] = array();
 
-	if ($mode == 'project')
-	{
-		loadTemplate('Project', 'project');
-	}
-	elseif ($mode == 'issue' && !isset($context['issue_tracker']))
-	{
-		require_once($sourcedir . '/Subs-Issue.php');
-
-		$context['issue_tracker'] = array();
-
-		loadTemplate('Project', array('forum', 'project'));
-		loadIssueTracker();
-	}
-	elseif ($mode == 'admin')
-	{
-	}
+	loadLanguage('Project+Issue');
+	loadIssueTypes();
+	loadTemplate('Project', array('forum', 'project'));
 }
 
-function loadIssueTypes()
-{
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
-
-	$context['project_tools']['issue_types'] = array(
-		'bug' => array(
-			'id' => 'bug',
-			'name' => $txt['project_bug'],
-			'plural' => $txt['project_bugs'],
-			'help' => $txt['project_bug_help'],
-			'image' => 'bug.png',
-		),
-		'feature' => array(
-			'id' => 'feature',
-			'name' => $txt['project_feature'],
-			'plural' => $txt['project_features'],
-			'help' => $txt['project_feature_help'],
-			'image' => 'feature.png',
-		),
-	);
-
-	// Make list of columns that need to be selected
-	$context['type_columns'] = array();
-	foreach ($context['project_tools']['issue_types'] as $id => $info)
-	{
-		$context['type_columns'][] = "open_$id";
-		$context['type_columns'][] = "closed_$id";
-	}
-}
-
-function loadProject($id_project, $detailed = true, $project_page = false)
+function loadProject($id_project, $detailed = true)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
 
@@ -153,9 +106,6 @@ function loadProject($id_project, $detailed = true, $project_page = false)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	if ($detailed !== 'return')
-		$project = &$context['project'];
-
 	$project = array(
 		'id' => $row['id_project'],
 		'link' => $scripturl . '?project=' . $row['id_project'],
@@ -170,41 +120,8 @@ function loadProject($id_project, $detailed = true, $project_page = false)
 		'trackers' => explode(',', $row['trackers']),
 	);
 
-	if (!empty($project_page))
-	{
-		$context['linktree'][] = array(
-			'name' => $txt['projects'],
-			'url' => $scripturl . '?action=projects'
-		);
-		$context['linktree'][] = array(
-			'name' => $row['name'],
-			'url' => $scripturl . '?project=' . $row['id_project']
-		);
-
-		$context['project_tabs'] = array(
-			'title' => $row['name'],
-			'text' => parse_bbc($row['description']),
-			'tabs' => array(
-				array(
-					'href' => $scripturl . '?project=' . $row['id_project'],
-					'title' => $txt['project'],
-					'is_selected' => in_array($project_page, array('project')) || $project_page === true,
-				),
-				array(
-					'href' => $scripturl . '?action=issues;project=' . $row['id_project'],
-					'title' => $txt['issues'],
-					'is_selected' => in_array($project_page, array('report', 'issue', 'issues')),
-				)
-			),
-		);
-
-		$context['template_layers'][] = 'project';
-	}
-
-	if ($detailed === 'return')
-		return $context['project'];
 	if (!$detailed)
-		return true;
+		return $project;
 
 	foreach ($project['trackers'] as $key)
 	{
@@ -213,11 +130,11 @@ function loadProject($id_project, $detailed = true, $project_page = false)
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?action=issues;project='. $project['id'] . ';type=' . $key
+			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key
 		);
 	}
 
-	// Load versions
+	// Load Versions
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			id_version, id_parent, version_name, release_date, status, ' .  implode(', ', $context['type_columns']) . '
@@ -240,7 +157,7 @@ function loadProject($id_project, $detailed = true, $project_page = false)
 				'open' => $row['open_' . $key],
 				'closed' => $row['closed_' . $key],
 				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => $scripturl . '?action=issues;project='. $project['id'] . ';version=' . $row['id_version'] . ';type=' . $key
+				'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;version=' . $row['id_version'] . ';type=' . $key
 			);
 		}
 
@@ -285,7 +202,7 @@ function loadProject($id_project, $detailed = true, $project_page = false)
 		);
 	$smcFunc['db_free_result']($request);
 
-	return true;
+	return $project;
 }
 
 function projectAllowed($permission)

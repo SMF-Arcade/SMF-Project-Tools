@@ -1,41 +1,12 @@
 <?php
 // Version: 0.1 Alpha; IssueReport
 
-function template_issue_type()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings, $sc;
-
-	echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>
-	<div style="text-align: center;">
-		<div class="tborder" style="text-align: left; width: 80%; margin: 0 auto">
-			<table class="bordercolor" border="0" cellpadding="4" cellspacing="0" width="100%">
-				<tr class="catbg"><td colspan="2">', $txt['report_issue'], '</td></tr>';
-
-	foreach ($context['project_tools']['issue_types'] as $id => $type)
-		echo '
-				<tr class="windowbg2">
-					<td width="18">
-						<img src="', $settings['images_url'], '/', $id, '.png" />
-					</td>
-					<td>
-						<a href="', $scripturl, '?action=report;project=', $context['project']['id'], ';type=', $id, '"><b>', $txt[$type['text']], '</b></a><br />
-						<span class="smalltext">', $txt[$type['help']], '</span><br /><br />
-					</td>
-				</tr>';
-
-	echo '
-			</table>
-		</div>
-	</div>';
-}
-
 function template_report_issue()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<form action="', $scripturl, '?action=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
 			<div class="windowbg">
@@ -123,40 +94,6 @@ function template_report_issue()
 			</div>
 		</div>
 
-		<input type="hidden" name="project" value="', $context['project']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-	</form>';
-}
-
-function template_report_issue_old()
-{
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	// Submit buttons
-	echo '
-					<tr>
-						<td align="center" colspan="2">
-							<input type="submit" name="post" value="', $context['submit_label'], '" tabindex="', $context['tabindex']++, '" />
-							<input type="submit" name="preview" value="', $txt['preview'], '" tabindex="', $context['tabindex']++, '" />';
-
-	// Spell check button if the option is enabled.
-	if ($context['show_spellchecking'])
-		echo '
-							<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $context['post_box_name'], '.spellCheckStart();" />';
-
-	echo '
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2"></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-
-		<input type="hidden" name="type" value="', $context['type'], '" />
 		<input type="hidden" name="project" value="', $context['project']['id'], '" />
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />

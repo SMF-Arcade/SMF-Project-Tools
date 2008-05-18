@@ -1,6 +1,11 @@
 <?php
 // Version: 0.1 Alpha; Project
 
+// Linktree
+$txt['linktree_projects'] = 'Projects';
+$txt['linktree_issues'] = 'Issues';
+$txt['linktree_report_issue'] = 'Report Issue';
+
 // General
 $txt['issue_type'] = 'Type';
 $txt['project_bug'] = 'Bug';
@@ -9,6 +14,19 @@ $txt['project_bug_help'] = 'Bugs should be reported here';
 $txt['project_feature'] = 'Feature';
 $txt['project_features'] = 'Features';
 $txt['project_feature_help'] = 'If you wan\'t to have some feature that isn\'t currently included, you may request it here';
+
+$txt['issue'] = 'Issue';
+$txt['issue_guest'] = 'Guest';
+$txt['issue_report'] = 'Report Issue';
+$txt['issue_title'] = 'Title';
+$txt['issue_updated'] = 'Updated';
+$txt['issue_created'] = 'Created';
+$txt['issue_version'] = 'Version';
+$txt['issue_version_fixed'] = 'Fixed in';
+$txt['issue_reported_by'] = 'Reported by';
+$txt['issue_assigned_to'] = 'Assigned to';
+$txt['issue_none'] = '(none)';
+$txt['issue_category'] = 'Category';
 
 // Tabs
 $txt['issues'] = 'Issues';

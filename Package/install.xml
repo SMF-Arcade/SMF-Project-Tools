@@ -25,12 +25,7 @@
 		<operation>
 			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
 			<add><![CDATA[
-		'issues' => array('IssueList.php', 'IssueList'),
-		'issue' => array('IssueList.php', 'IssueViewIssue'),
-		'project' => array('Project.php', 'ProjectView'),
-		'projects' => array('Project.php', 'ProjectList'),
-		'report' => array('IssueReport.php', 'IssueReport'),
-		'report2' => array('IssueReport.php', 'IssueReport2'),]]></add>
+		'projects' => array('Project.php', 'ProjectList'),]]></add>
 		</operation>
 
 		<operation>
@@ -38,7 +33,7 @@
 			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
 	{
 		require_once($sourcedir . '/Project.php');
-		return 'ProjectView';
+		return 'Projects';
 	}
 	elseif (empty($_REQUEST['action']) && isset($_REQUEST['issue']))
 	{

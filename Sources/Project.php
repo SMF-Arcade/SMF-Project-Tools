@@ -27,12 +27,99 @@ if (!defined('SMF'))
 	!!!
 */
 
-function ProjectList()
+function Projects()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
 
 	require_once($sourcedir . '/Subs-Project.php');
 	loadProjectTools('project');
+
+	$subActions = array(
+		// Project
+		'list' => array('Project.php', 'ProjectList'),
+		'viewProject' => array('Project.php', 'ProjectView'),
+		// Issues
+		'issues' => array('IssueList.php', 'IssueList'),
+		'viewIssue' => array('IsseView.php', 'IssueView'),
+		// Report Issue
+		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
+		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
+	);
+
+	// Load Issue if needed
+	if (!empty($_REQUEST['issue']))
+	{
+		if (!loadIssue((int) $_REQUEST['issue']))
+			fatal_lang_error('issue_not_found');
+
+		$_REQUEST['project'] = $context['current_issue']['project']['id'];
+
+		if (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'viewIssue';
+	}
+
+	// Load Project if needed
+	if (!empty($_REQUEST['project']))
+	{
+		if (!($context['project'] = loadProject((int) $_REQUEST['project'], true)))
+			fatal_lang_error('project_not_found');
+
+		if (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'viewProject';
+	}
+
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
+
+	// Check permission if needed
+	if (isset($subActions[$_REQUEST['sa']][2]))
+		isAllowedTo($subActions[$_REQUEST['sa']][2]);
+
+	// Template if Project selected
+	if (isset($context['project']))
+	{
+		$context['project_tabs'] = array(
+			'title' => $row['name'],
+			'text' => parse_bbc($context['project']['description']),
+			'tabs' => array(
+				array(
+					'href' => $scripturl . '?project=' . $context['project']['id'],
+					'title' => $txt['project'],
+					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')) || $project_page === true,
+				),
+				'issues' => array(
+					'href' => $scripturl . '?project=' . $context['project']['id'] . ';sa=issues',
+					'title' => $txt['issues'],
+					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2')),
+				)
+			),
+		);
+
+		// Linktree
+		$context['linktree'][] = array(
+			'name' => $txt['linktree_projects'],
+			'url' => $scripturl . '?action=projects'
+		);
+		$context['linktree'][] = array(
+			'name' => $row['name'],
+			'url' => $scripturl . '?project=' . $row['id_project']
+		);
+
+		if ($context['project_tabs']['tabs']['issues']['is_selected'])
+			$context['linktree'][] = array(
+				'name' => $txt['linktree_issues'],
+				'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=issues',
+			);
+
+		$context['template_layers'][] = 'project';
+	}
+
+	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
+	$subActions[$_REQUEST['sa']][1]();
+}
+
+function ProjectList()
+{
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_project, p.name, p.description, p.trackers, ' . implode(', p.', $context['type_columns']) . '
@@ -62,7 +149,7 @@ function ProjectList()
 				'open' => $row['open_' . $key],
 				'closed' => $row['closed_' . $key],
 				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => $scripturl . '?action=issues;project='. $row['id_project'] . ';type=' . $key
+				'link' => $scripturl . '?project='. $row['id_project'] . ';sa=issues;type=' . $key
 			);
 		}
 	}
@@ -82,10 +169,7 @@ function ProjectView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
 
-	require_once($sourcedir . '/Subs-Project.php');
-	loadProjectTools('project');
-
-	if (!empty($_REQUEST['project']) && !loadProject((int) $_REQUEST['project'], true, 'project'))
+	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
 
 	$context['project']['long_description'] = parse_bbc($context['project']['long_description']);

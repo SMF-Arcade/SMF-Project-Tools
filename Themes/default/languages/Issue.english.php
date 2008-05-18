@@ -1,25 +1,7 @@
 <?php
 // Version: 0.1 Alpha; Issue
 
-// Linktree
-$txt['linktree_issues'] = 'Issues';
-$txt['linktree_report_issue'] = 'Report Issue';
-
-// General
-$txt['issue'] = 'Issue';
-$txt['issue_guest'] = 'Guest';
-$txt['issue_report'] = 'Report Issue';
-$txt['issue_title'] = 'Title';
-$txt['issue_updated'] = 'Updated';
-$txt['issue_created'] = 'Created';
-$txt['issue_version'] = 'Version';
-$txt['issue_version_fixed'] = 'Fixed in';
-$txt['issue_reported_by'] = 'Reported by';
-$txt['issue_assigned_to'] = 'Assigned to';
-$txt['issue_none'] = '(none)';
-$txt['issue_category'] = 'Category';
-
-// Issue list
+// Issue List
 $txt['new_issue'] = 'Report Issue';
 $txt['issue_list'] = 'Issue List';
 $txt['issue_no_issues'] = 'No issues, isn\'t it great?';
