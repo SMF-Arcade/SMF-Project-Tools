@@ -30,15 +30,10 @@
 
 		<operation>
 			<search position="after"><![CDATA[	elseif (empty($_REQUEST['action']))]]></search>
-			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
+			<add><![CDATA[	elseif (empty($_REQUEST['action']) && (isset($_REQUEST['project']) || isset($_REQUEST['issue'])))
 	{
 		require_once($sourcedir . '/Project.php');
 		return 'Projects';
-	}
-	elseif (empty($_REQUEST['action']) && isset($_REQUEST['issue']))
-	{
-		require_once($sourcedir . '/IssueList.php');
-		return 'IssueViewIssue';
 	}]]></add>
 		</operation>
 	</file>

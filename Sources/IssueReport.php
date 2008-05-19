@@ -80,7 +80,7 @@ function ReportIssue()
 	create_control_richedit($editorOptions);
 
 	$context['post_box_name'] = 'details';
-	$context['destination'] = 'issueReport2';
+	$context['destination'] = 'reportIssue2';
 
 	$context['show_version'] = !empty($context['project']['versions']);
 	$context['show_category'] = !empty($context['project']['category']);

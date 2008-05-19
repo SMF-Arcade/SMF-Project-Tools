@@ -156,7 +156,7 @@ function ProjectList()
 	$smcFunc['db_free_result']($request);
 
 	// Template
-	$context['linktree'][] = array(
+	$context['linktrgee'][] = array(
 		'name' => $txt['projects'],
 		'url' => $scripturl . '?action=projects'
 	);
