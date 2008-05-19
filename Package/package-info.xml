@@ -28,6 +28,7 @@
 
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
@@ -61,6 +62,7 @@
 
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueList.php" />
+		<remove-file name="$sourcedir/IssueView.php" />
 		<remove-file name="$sourcedir/IssueReport.php" />
 		<remove-file name="$sourcedir/ManageProjects.php" />
 		<remove-file name="$sourcedir/Project.php" />

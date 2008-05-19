@@ -85,12 +85,10 @@ function loadProject($id_project, $detailed = true)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
 
-	$columns = implode(', p.', $context['type_columns']);
-
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
-			p.' . $columns . '
+			p.' . implode(', p.', $context['type_columns']) . '
 		FROM {db_prefix}projects AS p
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}

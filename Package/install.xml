@@ -25,7 +25,7 @@
 		<operation>
 			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
 			<add><![CDATA[
-		'projects' => array('Project.php', 'ProjectList'),]]></add>
+		'projects' => array('Project.php', 'Projects'),]]></add>
 		</operation>
 
 		<operation>
