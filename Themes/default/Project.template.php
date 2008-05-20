@@ -134,8 +134,13 @@ function template_project()
 	if (!empty($context['recent_issues']))
 	{
 		echo '
-		<h3 class="catbg headerpadding">', $txt['project'], '</h3>
-		<table cellspacing="1" class="bordercolor issuetable">';
+		<table cellspacing="1" class="bordercolor issuetable">
+			<tr>
+				<th class="catbg3 headerpadding"></th>
+				<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+				<th class="catbg3 headerpadding"></th>
+				<th class="catbg3 headerpadding"></th>
+			</tr>';
 
 		foreach ($context['recent_issues'] as $issue)
 		{
