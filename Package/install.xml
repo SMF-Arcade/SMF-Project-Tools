@@ -107,12 +107,12 @@
 			),]]></add>
 		</operation>
 
-		<!--<operation>
+		<operation>
 			<search position="before"><![CDATA[	if (isset($context['menu_buttons'][$context['current_action']]))
 		$current_action = $context['current_action'];]]></search>
-			<add><![CDATA[	elseif (in_array($context['current_action'], array('project', 'issues', 'report', 'report2')) || isset($_REQUEST['project']))
+			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
 		$current_action = 'projects';]]></add>
-		</operation>-->
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Subs-Db-mysql.php">
