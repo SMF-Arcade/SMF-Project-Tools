@@ -1,11 +1,13 @@
 /* ************************************* */
 /* styles from Project.template          */
 /* ************************************* */
+
+/* Project list */
 .projectlistframe
 {
 	margin-top: 0.4em;
 }
-.projectlistframe h3
+.projectlistframe h3, .projectframe h3
 {
 	margin: 0;
 }
@@ -43,6 +45,32 @@ table.projectsframe td.stats
 table.projectsframe td.lastissue
 {
 	width: 20%;
+}
+
+/* Frame for Project info page*/
+.projectframe
+{
+	margin-top: 2em;
+	clear: both;
+}
+.projectframe_section
+{
+	clear: both;
+}
+.projectframe_section p.section
+{
+	display: block;
+	margin: 0;
+	width: 3%;
+	text-align: center;
+	float: left;
+	padding: 0.5em 0 0 0;
+}
+.projectframe_section div.sectionbody
+{
+	margin-left: 3%;
+	padding: 0.3em;
+	border-left: solid #a0a0a0 1px;
 }
 
 /* ************************************* */

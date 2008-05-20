@@ -114,52 +114,50 @@ function template_project()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div style="text-align: center"><div style="width: 50%; margin: auto; text-align: left">
-		<table class="bordercolor" border="0" cellpadding="4" cellspacing="1" width="100%">
-			<tr class="windowbg2">
-				<td>
-					<div>', $context['project']['long_description'], '</div>';
-
-	// Downloads
-	echo '
-					<h2>Download</h2>';
-
-	// Issue trackers
-	echo '
-					<h2>Issue Trackers</h2>
-					<div style="padding-left: 5px">';
+	<div class="projectframe tborder">
+		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
+		<div class="projectframe_section">
+			<div class="windowbg">
+				<p class="section"></p>
+				<div class="sectionbody">
+					', $context['project']['long_description'], '
+				</div>
+			</div>
+		</div>
+		<div class="projectframe_section">
+			<div class="windowbg">
+				<h4 class="headerpadding titlebg">Issue Trackers</h4>
+				<p class="section"></p>
+				<div class="sectionbody">';
 
 	foreach ($context['project']['issues'] as $type)
 		echo '
-						<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
-						<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
+					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
+					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
+
 
 	echo '
-					</div>';
+				</div>
+			</div>
+		</div>
+		<div class="projectframe_section">
+			<div class="windowbg">
+				<h4 class="headerpadding titlebg">', $txt['project_timeline'], '</h4>
+				<p class="section"></p>
+				<div class="sectionbody">';
 
-	// Timeline
-	if (!empty($context['events']))
+
+	foreach ($context['events'] as $event)
 	{
 		echo '
-					<h2>', $txt['project_timeline'], '</h3>
-					<div style="padding-left: 5px">';
-
-		foreach ($context['events'] as $event)
-		{
-			echo '
-						<div>', $event['time'], ' - ', $event['link'], '<br /><span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span></div>';
-		}
-
-		echo '
-					</div>';
+					<div>', $event['time'], ' - ', $event['link'], '<br /><span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span></div>';
 	}
 
 	echo '
-				</td>
-			</tr>
-		</table>
-	</div></div>
-	<br style="clear: both" />';
+				</div>
+			</div>
+		</div>';
+
 }
 
 function template_project_below()
