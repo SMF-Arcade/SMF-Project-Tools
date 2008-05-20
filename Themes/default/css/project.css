@@ -92,6 +92,45 @@ table.projectsframe td.lastissue
 }
 
 /* ************************************* */
+/* styles from IssueList.template        */
+/* ************************************* */
+
+/* Issue list */
+.issuelistframe
+{
+	margin-top: 0.4em;
+}
+.issuelistframe h3
+{
+	margin: 0;
+}
+table.issuetable
+{
+	width: 100%;
+}
+table.issuetable td.icon
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 6%;
+}
+table.issuetable td.info
+{
+	width: 60%;
+	padding: 0;
+}
+table.issuetable td.info h4
+{
+	padding: 0.4em 0.4em 0 0.4em;
+	margin: 0;
+}
+table.issuetable td.info p
+{
+	padding: 0 0.4em 0.5em 0.4em;
+	margin: 0;
+}
+
+/* ************************************* */
 /* styles from IssueView.template        */
 /* ************************************* */
 .issueinfoframe

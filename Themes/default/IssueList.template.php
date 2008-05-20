@@ -30,7 +30,7 @@ function template_issue_list()
 		<div class="tborder">
 			<table class="bordercolor" border="0" cellpadding="4" cellspacing="1" width="100%">';
 
-	if (count($context['issues']) > 0)
+	if (!empty($context['issues']))
 	{
 		echo '
 				<tr>
@@ -47,7 +47,7 @@ function template_issue_list()
 		{
 			echo '
 				<tr class="windowbg">
-					<td style="text-align: center"><a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '"><img src="', $settings['images_url'], '/', $issue['type'], '.png" alt=""/></a></td>
+					<td style="text-align: center"><a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '"><img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" /></a></td>
 					<td class="windowbg2"><a href="', $issue['link'], '">', $issue['name'], '</a></td>
 					<td>', $issue['status'], '</td>
 					<td class="windowbg2">', $issue['reporter'], '</td>

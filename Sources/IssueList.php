@@ -127,6 +127,7 @@ function IssueList()
 			'priority' => $row['priority']
 		);
 	}
+	$smcFunc['db_free_result']($request);
 
 	// Template
 	$context['sub_template'] = 'issue_list';

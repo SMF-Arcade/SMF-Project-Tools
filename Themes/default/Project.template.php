@@ -16,7 +16,6 @@ function template_project_list()
 
 		foreach ($context['projects'] as $i => $project)
 		{
-
 			echo '
 			<tr>
 				<td class="windowbg icon">
@@ -46,10 +45,12 @@ function template_project_list()
 		</table>';
 	}
 	else
+	{
 		echo '
 				<tr>
 					<td class="catbg3"><b>', $txt['no_projects'], '</b></td>
 				</tr>';
+	}
 
 	echo '
 	</div>';
@@ -123,8 +124,55 @@ function template_project()
 				</p>
 			</div>
 		</div>
-	</div><br />
+	</div><br />';
 
+	// List of latest updated issues
+
+	echo '
+	<div class="issuelistframe tborder">';
+
+	if (!empty($context['recent_issues']))
+	{
+		echo '
+		<h3 class="catbg headerpadding">', $txt['project'], '</h3>
+		<table cellspacing="1" class="bordercolor issuetable">';
+
+		foreach ($context['recent_issues'] as $issue)
+		{
+			echo '
+			<tr>
+				<td class="windowbg icon">
+					<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+						<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+					</a>
+				</td>
+				<td class="windowbg2 info">
+					<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
+				</td>
+				<td class="windowbg stats smalltext">
+				</td>
+				<td class="windowbg lastissue">
+				</td>
+			</tr>';
+		}
+
+		echo '
+		</table>';
+	}
+	else
+	{
+		echo '
+				<tr>
+					<td class="catbg3"><b>', $txt['no_projects'], '</b></td>
+				</tr>';
+	}
+
+	echo '
+	</div>';
+
+
+	// Statistics etc
+	echo '
 	<div class="projectframe tborder">
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
@@ -147,7 +195,6 @@ function template_project()
 				<h4 class="headerpadding titlebg">', $txt['project_timeline'], '</h4>
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">';
-
 
 	foreach ($context['events'] as $event)
 	{
