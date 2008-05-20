@@ -205,11 +205,14 @@ function loadProject($id_project, $detailed = true)
 
 function projectAllowed($permission)
 {
-	global $context;
+	global $context, $project;
 
 	if ($project === null)
 	{
+		fatal_error('projectAllowed(): Project not loaded');
 	}
+
+	return allowedTo($permission);
 }
 
 function createProject($projectOptions)

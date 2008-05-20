@@ -66,6 +66,8 @@ function IssueList()
 
 	$issuesPerPage = 25;
 
+	$context['show_checkboxes'] = projectAllowed('');
+
 	// How many issues?
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)

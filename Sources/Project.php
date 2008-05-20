@@ -29,7 +29,9 @@ if (!defined('SMF'))
 
 function Projects()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
+
+	$project = 0;
 
 	require_once($sourcedir . '/Subs-Project.php');
 	loadProjectTools('project');
@@ -64,30 +66,35 @@ function Projects()
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'], true)))
 			fatal_lang_error('project_not_found');
 
+		$project = $context['project']['id'];
+
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewProject';
 	}
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
+	if ($_REQUEST['sa'] == 'list' && !empty($project))
+		$_REQUEST['sa'] = 'viewProject';
+
 	// Check permission if needed
 	if (isset($subActions[$_REQUEST['sa']][2]))
 		isAllowedTo($subActions[$_REQUEST['sa']][2]);
 
 	// Template if Project selected
-	if (isset($context['project']))
+	if (!empty($project))
 	{
 		$context['project_tabs'] = array(
-			'title' => $row['name'],
+			'title' => $context['project']['name'],
 			'text' => parse_bbc($context['project']['description']),
 			'tabs' => array(
 				array(
-					'href' => $scripturl . '?project=' . $context['project']['id'],
+					'href' => $scripturl . '?project=' . $project,
 					'title' => $txt['project'],
 					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')) || $project_page === true,
 				),
 				'issues' => array(
-					'href' => $scripturl . '?project=' . $context['project']['id'] . ';sa=issues',
+					'href' => $scripturl . '?project=' . $project . ';sa=issues',
 					'title' => $txt['issues'],
 					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2')),
 				)
@@ -101,13 +108,13 @@ function Projects()
 		);
 		$context['linktree'][] = array(
 			'name' => $row['name'],
-			'url' => $scripturl . '?project=' . $row['id_project']
+			'url' => $scripturl . '?project=' . $project
 		);
 
 		if ($context['project_tabs']['tabs']['issues']['is_selected'])
 			$context['linktree'][] = array(
 				'name' => $txt['linktree_issues'],
-				'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=issues',
+				'url' => $scripturl . '?project=' . $project . ';sa=issues',
 			);
 
 		$context['template_layers'][] = 'project';
