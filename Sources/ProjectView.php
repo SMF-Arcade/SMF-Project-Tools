@@ -45,18 +45,18 @@ function ProjectView()
 			IFNULL(cat.category_name, {string:empty}) AS category_name,
 			IFNULL(ver.version_name, {string:empty}) AS version_name, i.created, i.updated
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
 			AND i.id_project = {int:project}
 		ORDER BY i.updated DESC
-		LIMIT {int:start},' . $issuesPerPage,
+		LIMIT {int:start}, {int:number_recent}',
 		array(
 			'project' => $context['project']['id'],
 			'empty' => '',
-			'start' => $_REQUEST['start']
+			'start' => 0,
+			'number_recent' => 15,
 		)
 	);
 
