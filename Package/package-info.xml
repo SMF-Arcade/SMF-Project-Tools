@@ -32,6 +32,8 @@
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 
@@ -66,6 +68,8 @@
 		<remove-file name="$sourcedir/IssueReport.php" />
 		<remove-file name="$sourcedir/ManageProjects.php" />
 		<remove-file name="$sourcedir/Project.php" />
+		<remove-file name="$sourcedir/ProjectList.php" />
+		<remove-file name="$sourcedir/ProjectView.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />
 		<remove-file name="$sourcedir/Subs-Project.php" />
 

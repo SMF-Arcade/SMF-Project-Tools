@@ -27,60 +27,6 @@ if (!defined('SMF'))
 	!!!
 */
 
-function loadProjectTools($mode = '', $force = false)
-{
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project_version;
-
-	if (!empty($project_version) && !$force)
-		return;
-
-	require_once($sourcedir . '/Subs-Issue.php');
-
-	// Which version this is?
-	$project_version = '0.1 Alpha';
-
-	// Can see project?
-	if ($user_info['is_guest'])
-		$see_project = 'FIND_IN_SET(-1, p.member_groups)';
-
-	// Administrators can see all projects.
-	elseif ($user_info['is_admin'])
-		$see_project = '1 = 1';
-	// Registered user.... just the groups in $user_info['groups'].
-	else
-		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
-
-	// Can see version?
-	if ($user_info['is_guest'])
-		$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
-	// Administrators can see all versions.
-	elseif ($user_info['is_admin'])
-		$see_version = '1 = 1';
-	// Registered user.... just the groups in $user_info['groups'].
-	else
-		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
-
-	$user_info['query_see_project'] = $see_project;
-	$user_info['query_see_version'] = $see_version;
-
-	// Show everything?
-	if (allowedTo('issue_view_any'))
-		$user_info['query_see_issue'] = "($see_project AND $see_version)";
-	// Show only own?
-	elseif (allowedTo('issue_view_own'))
-		$user_info['query_see_issue'] = "($see_project AND $see_version AND i.reporter = $user_info[id])";
-	// if not then we can't show anything
-	else
-		$user_info['query_see_issue'] = "(0 = 1)";
-
-	$context['project_tools'] = array();
-	$context['issue_tracker'] = array();
-
-	loadLanguage('Project+Issue');
-	loadIssueTypes();
-	loadTemplate('Project', array('forum', 'project'));
-}
-
 function loadProject($id_project, $detailed = true)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
@@ -431,15 +377,15 @@ function updateCategory($id_category, $categoryOptions)
 
 	if (!empty($categoryOptions))
 		$request = $smcFunc['db_query']('', '
-		UPDATE {db_prefix}issue_category
-		SET
-			' . implode(',
-			', $categoryUpdates) . '
-		WHERE id_category = {int:category}',
-		array_merge($categoryOptions, array(
-			'category' => $id_category,
-		))
-	);
+			UPDATE {db_prefix}issue_category
+			SET
+				' . implode(',
+				', $categoryUpdates) . '
+			WHERE id_category = {int:category}',
+			array_merge($categoryOptions, array(
+				'category' => $id_category,
+			))
+		);
 
 	return true;
 }

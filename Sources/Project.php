@@ -38,8 +38,8 @@ function Projects()
 
 	$subActions = array(
 		// Project
-		'list' => array('Project.php', 'ProjectList'),
-		'viewProject' => array('Project.php', 'ProjectView'),
+		'list' => array('ProjectList.php', 'ProjectList'),
+		'viewProject' => array('ProjectView.php', 'ProjectView'),
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList'),
 		'viewIssue' => array('IsseView.php', 'IssueView'),
@@ -124,103 +124,58 @@ function Projects()
 	$subActions[$_REQUEST['sa']][1]();
 }
 
-function ProjectList()
+function loadProjectTools()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project_version;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT p.id_project, p.name, p.description, p.trackers, ' . implode(', p.', $context['type_columns']) . '
-		FROM {db_prefix}projects AS p
-		WHERE {query_see_project}',
-		array(
-		)
-	);
+	if (!empty($project_version))
+		return;
 
-	$context['projects'] = array();
+	require_once($sourcedir . '/Subs-Issue.php');
 
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['projects'][$row['id_project']] = array(
-			'id' => $row['id_project'],
-			'link' => $scripturl . '?project=' . $row['id_project'],
-			'name' => $row['name'],
-			'description' => $row['description'],
-			'trackers' =>  explode(',', $row['trackers']),
-			'issues' => array()
-		);
+	// Which version this is?
+	$project_version = '0.1 Alpha';
 
-		foreach ($context['projects'][$row['id_project']]['trackers'] as $key)
-		{
-			$context['projects'][$row['id_project']]['issues'][$key] = array(
-				'info' => &$context['project_tools']['issue_types'][$key],
-				'open' => $row['open_' . $key],
-				'closed' => $row['closed_' . $key],
-				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => $scripturl . '?project='. $row['id_project'] . ';sa=issues;type=' . $key
-			);
-		}
-	}
-	$smcFunc['db_free_result']($request);
+	// Can see project?
+	if ($user_info['is_guest'])
+		$see_project = 'FIND_IN_SET(-1, p.member_groups)';
 
-	// Template
-	$context['linktrgee'][] = array(
-		'name' => $txt['projects'],
-		'url' => $scripturl . '?action=projects'
-	);
+	// Administrators can see all projects.
+	elseif ($user_info['is_admin'])
+		$see_project = '1 = 1';
+	// Registered user.... just the groups in $user_info['groups'].
+	else
+		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 
-	$context['sub_template'] = 'project_list';
-	$context['page_title'] = $txt['project_list_title'];
-}
+	// Can see version?
+	if ($user_info['is_guest'])
+		$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
+	// Administrators can see all versions.
+	elseif ($user_info['is_admin'])
+		$see_version = '1 = 1';
+	// Registered user.... just the groups in $user_info['groups'].
+	else
+		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
 
-function ProjectView()
-{
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
+	$user_info['query_see_project'] = $see_project;
+	$user_info['query_see_version'] = $see_version;
 
-	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
+	// Show everything?
+	if (allowedTo('issue_view_any'))
+		$user_info['query_see_issue'] = "($see_project AND $see_version)";
+	// Show only own?
+	elseif (allowedTo('issue_view_own'))
+		$user_info['query_see_issue'] = "($see_project AND $see_version AND i.reporter = $user_info[id])";
+	// if not then we can't show anything
+	else
+		$user_info['query_see_issue'] = "(0 = 1)";
 
-	$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
+	$context['project_tools'] = array();
+	$context['issue_tracker'] = array();
 
-	// Load timeline
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
-			tl.event, tl.event_data, tl.event_time, tl.id_version,
-			mem.id_member, IFNULL(mem.real_name, {string:empty}) AS user,
-			ver.member_groups
-		FROM {db_prefix}project_timeline AS tl
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
-			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = tl.id_version)
-		WHERE tl.id_project = {int:project}
-			AND {query_see_issue}
-		ORDER BY tl.event_time DESC
-		LIMIT 25',
-		array(
-			'project' => $project,
-			'empty' => ''
-		)
-	);
-
-	$context['events'] = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$data = unserialize($row['event_data']);
-
-		$context['events'][] = array(
-			'event' => $row['event'],
-			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
-			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
-			'time' => timeformat($row['event_time']),
-			'data' => $data,
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	// Template
-	$context['sub_template'] = 'project';
-	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
+	loadLanguage('Project+Issue');
+	loadIssueTypes();
+	loadTemplate('Project', array('forum', 'project'));
 }
 
 ?>

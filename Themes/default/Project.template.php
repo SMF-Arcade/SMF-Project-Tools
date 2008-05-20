@@ -117,14 +117,15 @@ function template_project()
 	<div class="projectframe tborder">
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
-			<div class="windowbg">
-				<h4 class="headerpadding titlebg">', $txt['project_info'], '</h4>
-				<p class="section"></p>
-				<div class="windowbg2 sectionbody middletext">
+			<div class="windowbg2 middletext">
 					', $context['project']['long_description'], '
 				</div>
 			</div>
 		</div>
+	</div><br />
+
+	<div class="projectframe tborder">
+		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">Issue Trackers</h4>
@@ -135,7 +136,6 @@ function template_project()
 		echo '
 					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
 					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
-
 
 	echo '
 				</div>
