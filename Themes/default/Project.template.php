@@ -120,7 +120,7 @@ function template_project()
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">', $txt['project_info'], '</h4>
 				<p class="section"></p>
-				<div class="sectionbody">
+				<div class="windowbg2 sectionbody middletext">
 					', $context['project']['long_description'], '
 				</div>
 			</div>
@@ -129,7 +129,7 @@ function template_project()
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">Issue Trackers</h4>
 				<p class="section"></p>
-				<div class="sectionbody">';
+				<div class="windowbg2 sectionbody middletext">';
 
 	foreach ($context['project']['issues'] as $type)
 		echo '
@@ -145,7 +145,7 @@ function template_project()
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">', $txt['project_timeline'], '</h4>
 				<p class="section"></p>
-				<div class="sectionbody">';
+				<div class="windowbg2 sectionbody middletext">';
 
 
 	foreach ($context['events'] as $event)
@@ -157,7 +157,8 @@ function template_project()
 	echo '
 				</div>
 			</div>
-		</div>';
+		</div>
+	</div>';
 
 }
 
