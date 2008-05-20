@@ -66,6 +66,13 @@ table.projectsframe td.lastissue
 	float: left;
 	padding: 0.5em 0 0 0;
 }
+.projectframe_section p.section_full
+{
+	display: block;
+	margin: 0;
+	padding: 0.3em;
+	width: 100%;
+}
 .projectframe_section div.sectionbody
 {
 	margin-left: 3%;

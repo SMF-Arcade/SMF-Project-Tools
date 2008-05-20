@@ -41,7 +41,7 @@ function Projects()
 		'viewProject' => array('ProjectView.php', 'ProjectView'),
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList'),
-		'viewIssue' => array('IsseView.php', 'IssueView'),
+		'viewIssue' => array('IssueView.php', 'IssueView'),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
