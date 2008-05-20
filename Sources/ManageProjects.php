@@ -320,7 +320,7 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'newversion')
 	{
-		if (!empty($_REQUEST['project']) && !loadProject($_REQUEST['project']))
+		if (!empty($_REQUEST['project']) && !$context['project'] = loadProject($_REQUEST['project'], false))
 			fatal_lang_error('issue_project_not_found');
 
 		$curVersion = array(
@@ -356,7 +356,7 @@ function EditVersion()
 
 		$row = $smcFunc['db_fetch_assoc']($request);
 
-		if (!loadProject($row['id_project']))
+		if (!$context['project'] = loadProject($row['id_project'], false))
 			fatal_lang_error('issue_project_not_found');
 
 		$curVersion = array(

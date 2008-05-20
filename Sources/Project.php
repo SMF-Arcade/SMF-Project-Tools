@@ -175,6 +175,11 @@ function loadProjectTools($mode = '')
 		else
 			$user_info['query_see_issue'] = "(0 = 1)";
 	}
+	elseif ($mode == 'admin')
+	{
+		$user_info['query_see_project'] = '1 = 1';
+		$user_info['query_see_version'] = '1 = 1';
+	}
 
 	loadLanguage('Project+Issue');
 	loadIssueTypes();
