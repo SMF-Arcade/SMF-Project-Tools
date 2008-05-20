@@ -117,7 +117,7 @@ function ProjectView()
 	$smcFunc['db_free_result']($request);
 
 	// Template
-	$context['sub_template'] = 'project';
+	$context['sub_template'] = 'project_view';
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
 }
 
