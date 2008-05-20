@@ -80,6 +80,17 @@ table.projectsframe td.lastissue
 	border-left: solid #a0a0a0 1px;
 }
 
+/* Progress bar */
+.progressbar
+{
+	width: 100%;
+}
+.progressbar div.done
+{
+	height: 1em;
+	background: url("../images/bar.gif") repeat;
+}
+
 /* ************************************* */
 /* styles from IssueView.template        */
 /* ************************************* */
