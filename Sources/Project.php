@@ -116,7 +116,8 @@ function Projects()
 				'url' => $scripturl . '?project=' . $project . ';sa=issues',
 			);
 
-		$context['template_layers'][] = 'project';
+		$context['template_layers'][] = 'project_view';
+		loadTemplate('ProjectView');
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);

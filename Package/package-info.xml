@@ -42,6 +42,7 @@
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 
 		<!-- CSS -->
 		<require-file name="Themes/default/css/project.css" destination="$themedir/css" />
@@ -78,6 +79,7 @@
 		<remove-file name="$themedir/IssueReport.template.php" />
 		<remove-file name="$themedir/ManageProjects.template.php" />
 		<remove-file name="$themedir/Project.template.php" />
+		<remove-file name="$themedir/ProjectView.template.php" />
 
 		<!-- Images -->
 		<remove-file name="$imagesdir/bug.png" />
