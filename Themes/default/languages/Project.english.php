@@ -48,12 +48,16 @@ $txt['version_stable_rec'] = 'Stable (Recommended)';
 $txt['version_obsolute'] = 'Obsolute';
 
 // Project page
-$txt['project_title'] = 'Projects - %s';
+$txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Project Statistics';
 $txt['project_open_closed'] = '%1$d open - %2$d closed';
 $txt['project_timeline'] = 'Project Timeline';
 $txt['evt_new_issue'] = 'Issue created by %s';
+
+// Title
+$txt['project_list_title'] = $context['forum_name'] . ' - Projects';
+$txt['project_title'] = 'Projects - %s';
 
 // Errors
 $txt['project_not_found'] = 'Project not found';

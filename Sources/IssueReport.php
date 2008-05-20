@@ -37,7 +37,7 @@ if (!defined('SMF'))
 
 function ReportIssue()
 {
-	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir;
+	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
@@ -90,7 +90,7 @@ function ReportIssue()
 	// Template
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_report_issue'],
-		'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=reportIssue'
+		'url' => $scripturl . '?project=' . $project . ';sa=reportIssue'
 	);
 
 	loadTemplate('IssueReport');
@@ -99,22 +99,17 @@ function ReportIssue()
 
 function ReportIssue2()
 {
-	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir;
+	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
 
-	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_REQUEST['details_mode']) && isset($_REQUEST['details']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 
 		$_REQUEST['details'] = html_to_bbc($_REQUEST['details']);
-
-		// We need to unhtml it now as it gets done shortly.
 		$_REQUEST['details'] = un_htmlspecialchars($_REQUEST['details']);
-
-		// We need this for everything else.
 		$_POST['details'] = $_REQUEST['details'];
 	}
 
@@ -181,7 +176,7 @@ function ReportIssue2()
 		'email' => $_POST['email'],
 	);
 	$issueOptions = array(
-		'project' => $context['project']['id'],
+		'project' => $project,
 		'subject' => $_POST['title'],
 		'type' => $_POST['type'],
 		'status' => 1,
@@ -196,7 +191,7 @@ function ReportIssue2()
 
 	createIssue($issueOptions, $posterOptions);
 
-	redirectexit('project=' . $context['project']['id']);
+	redirectexit('project=' . $project);
 }
 
 ?>

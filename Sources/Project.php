@@ -169,12 +169,12 @@ function ProjectList()
 	);
 
 	$context['sub_template'] = 'project_list';
-	$context['page_title'] = $txt['projects'];
+	$context['page_title'] = $txt['project_list_title'];
 }
 
 function ProjectView()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
@@ -197,7 +197,7 @@ function ProjectView()
 		ORDER BY tl.event_time DESC
 		LIMIT 25',
 		array(
-			'project' => $context['project']['id'],
+			'project' => $project,
 			'empty' => ''
 		)
 	);

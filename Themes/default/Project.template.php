@@ -118,6 +118,7 @@ function template_project()
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
 			<div class="windowbg">
+				<h4 class="headerpadding titlebg">', $txt['project_info'], '</h4>
 				<p class="section"></p>
 				<div class="sectionbody">
 					', $context['project']['long_description'], '
