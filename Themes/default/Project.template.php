@@ -153,6 +153,7 @@ function template_project()
 				</td>
 				<td class="windowbg2 info">
 					<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
+					<p class="smalltext">', $issue['reporter_link'], '</p>
 				</td>
 				<td class="windowbg stats smalltext">
 				</td>
