@@ -107,7 +107,7 @@ function Projects()
 			'url' => $scripturl . '?action=projects'
 		);
 		$context['linktree'][] = array(
-			'name' => $row['name'],
+			'name' => $context['project']['name'],
 			'url' => $scripturl . '?project=' . $project
 		);
 
