@@ -224,7 +224,7 @@ function EditProject()
 	}
 	$smcFunc['db_free_result']($request);
 
-	require_once($sourcedir . '/Subs-Members.php');
+	require_once($sourcedir . '/Subs-Editor.php');
 
 	// Developer suggester
 	$suggestOptions = array(
@@ -325,8 +325,6 @@ function EditProject2()
 	}
 	elseif (isset($_POST['delete']))
 	{
-		require_once($sourcedir . '/Subs-Boards.php');
-
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}projects
 			WHERE id_project = {int:project}
