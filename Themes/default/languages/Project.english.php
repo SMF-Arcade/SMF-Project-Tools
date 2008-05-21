@@ -33,7 +33,7 @@ $txt['issues'] = 'Issues';
 $txt['downloads'] = 'Downloads';
 $txt['roadmap'] = 'Roadmap';
 
-// Project list
+// Project List
 $txt['project_description'] = 'Description';
 $txt['select_project'] = 'Select Project';
 $txt['total_issues'] = 'Total Issues';
@@ -48,6 +48,7 @@ $txt['version_stable_rec'] = 'Stable (Recommended)';
 $txt['version_obsolute'] = 'Obsolute';
 
 // Project page
+$txt['recent_updated_issues'] = 'Recently updated issues';
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Project Statistics';

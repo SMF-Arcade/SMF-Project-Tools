@@ -74,17 +74,18 @@ function template_project_view()
 	// List of latest updated issues
 
 	echo '
-	<div class="issuelistframe tborder">';
+	<div class="issuelistframe tborder">
+		<h3 class="catbg headerpadding">', $txt['recent_updated_issues'], '</h3>';
 
 	if (!empty($context['recent_issues']))
 	{
 		echo '
 		<table cellspacing="1" class="bordercolor issuetable">
 			<tr>
-				<th class="catbg3 headerpadding"></th>
-				<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-				<th class="catbg3 headerpadding"></th>
-				<th class="catbg3 headerpadding"></th>
+				<th class="titlebg headerpadding"></th>
+				<th class="titlebg headerpadding">', $txt['issue_title'], '</th>
+				<th class="titlebg headerpadding"></th>
+				<th class="titlebg headerpadding"></th>
 			</tr>';
 
 		foreach ($context['recent_issues'] as $issue)
