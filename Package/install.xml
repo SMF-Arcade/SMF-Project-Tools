@@ -54,7 +54,7 @@
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'main' => array($txt['list_projects']),
-						'category' => array($txt['categories']),
+						'newproject' => array($txt['new_project']),
 					),
 				),
 			),
@@ -64,17 +64,16 @@
 
 	<file name="$sourcedir/ManagePermissions.php">
 		<operation>
-			<search position="before"><![CDATA[	$permissionList = array(
-		'membergroup' => array(]]></search>
+			<search position="before"><![CDATA[			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),]]></search>
 
-			<add><![CDATA[			'project' => array(
-				'project_access' => false,
-				'project_admin' => false,
-				'issue_view' => true,
-				'issue_update' => true,
-				'issue_assign' => false,
-				'issue_assign_to' => false,
-			),]]></add>
+			<add><![CDATA[
+			'project_access' => array(false, 'project', 'project'),
+			'project_admin' => array(false, 'project', 'administrate'),
+
+			'issue_view' => array(false, 'project', 'project'),
+			'issue_update' => array(false, 'project', 'project_developer'),
+			'issue_assign' => array(false, 'project', 'project_developer'),
+			'issue_assign_to' => array(false, 'project', 'project_developer'),]]></add>
 		</operation>
 	</file>
 

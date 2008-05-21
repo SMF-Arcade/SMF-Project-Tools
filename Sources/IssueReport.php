@@ -42,6 +42,8 @@ function ReportIssue()
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
 
+	projectIsAllowedTo('');
+
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $type)

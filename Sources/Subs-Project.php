@@ -149,7 +149,19 @@ function loadProject($id_project, $detailed = true)
 	return $project;
 }
 
-function projectAllowed($permission)
+function projectAllowedTo($permission)
+{
+	global $context, $project;
+
+	if ($project === null)
+	{
+		fatal_error('projectAllowed(): Project not loaded');
+	}
+
+	return allowedTo($permission);
+}
+
+function projectIsAllowedTo($permission)
 {
 	global $context, $project;
 

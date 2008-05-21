@@ -52,6 +52,7 @@ function ManageProjects()
 		'newcategory' => array('EditCategory'),
 		'category' => array('EditCategory'),
 		'category2' => array('EditCategory2'),
+		// Permissions
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
