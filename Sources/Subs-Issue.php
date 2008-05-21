@@ -79,8 +79,6 @@ function loadIssueTypes()
 
 	$context['closed_status'] = array(5, 6);
 
-
-
 	$context['issue']['priority'] = array(
 		1 => 'issue_priority_low',
 		'issue_priority_normal',

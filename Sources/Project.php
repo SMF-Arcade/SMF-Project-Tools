@@ -90,7 +90,7 @@ function Projects()
 				array(
 					'href' => $scripturl . '?project=' . $project,
 					'title' => $txt['project'],
-					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')) || $project_page === true,
+					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
 				),
 				'issues' => array(
 					'href' => $scripturl . '?project=' . $project . ';sa=issues',

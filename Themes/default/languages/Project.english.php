@@ -1,6 +1,8 @@
 <?php
 // Version: 0.1 Alpha; Project
 
+global $context;
+
 // Linktree
 $txt['linktree_projects'] = 'Projects';
 $txt['linktree_issues'] = 'Issues';

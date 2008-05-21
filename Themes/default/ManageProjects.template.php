@@ -201,7 +201,7 @@ function template_edit_project()
 
 	foreach ($context['project_tools']['issue_types'] as $key => $type)
 		echo '
-				<label for="tracker_', $key, '"><input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /><span>', $txt[$type['text']], '</span></label><br />';
+				<label for="tracker_', $key, '"><input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /><span>', $type['name'], '</span></label><br />';
 
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'trackers[]\');" /><br />
