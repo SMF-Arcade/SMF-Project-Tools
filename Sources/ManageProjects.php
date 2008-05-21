@@ -310,8 +310,8 @@ function EditProject2()
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',
 				array(
-					'id_project',
-					'id_member'
+					'id_project' => 'int',
+					'id_member' => 'int',
 				),
 				$rows,
 				array('id_project', 'id_member')

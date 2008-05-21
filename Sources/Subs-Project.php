@@ -69,8 +69,8 @@ function loadProject($id_project, $detailed = true)
 	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}project_developer AS dev
-		WHERE id_project = {int:project}
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
+		WHERE id_project = {int:project}
 		ORDER BY id_parent',
 		array(
 			'project' => $id_project,
