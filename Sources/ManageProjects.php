@@ -344,7 +344,7 @@ function EditProject2()
 		);
 
 		$smcFunc['db_query']('', '
-			DELETE FROM {$db_prefix}issues
+			DELETE FROM {db_prefix}issues
 			WHERE id_project = {int:project}',
 			array(
 				'project' => $_POST['project']
