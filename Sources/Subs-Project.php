@@ -70,8 +70,7 @@ function loadProject($id_project, $detailed = true)
 		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}project_developer AS dev
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
-		WHERE id_project = {int:project}
-		ORDER BY id_parent',
+		WHERE id_project = {int:project}',
 		array(
 			'project' => $id_project,
 		)
