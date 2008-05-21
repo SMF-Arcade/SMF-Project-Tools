@@ -53,6 +53,7 @@ function ManageProjects()
 		'category' => array('EditCategory'),
 		'category2' => array('EditCategory2'),
 		// Permissions
+		'permissions' => array('EditPermissions'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
@@ -151,7 +152,7 @@ function EditProject()
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
 
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
-	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProject($_REQUEST['project'], 'return'))
+	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProject($_REQUEST['project']))
 		$_REQUEST['sa'] = 'newproject';
 
 	if ($_REQUEST['sa'] == 'newproject')
@@ -167,12 +168,13 @@ function EditProject()
 			'description' => '',
 			'long_description' => '',
 			'trackers' => array_keys($context['project_tools']['issue_types']),
+			'developers' => array(),
 		);
 	}
 	else
 	{
 		$curProject = array(
-			'member_groups' => explode(',', $project['member_groups'])
+			'member_groups' => explode(',', $project['member_groups']),
 		);
 
 		$context['project'] = array(
@@ -181,6 +183,7 @@ function EditProject()
 			'description' => htmlspecialchars($project['description']),
 			'long_description' => htmlspecialchars($project['long_description']),
 			'trackers' => array_keys($project['issues']),
+			'developers' => $project['developers'],
 		);
 	}
 
@@ -206,6 +209,7 @@ function EditProject()
 		FROM {db_prefix}membergroups
 		WHERE id_group > 3 OR id_group = 2
 		ORDER BY min_posts, id_group != 2, group_name');
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($_REQUEST['sa'] == 'newproject' && $row['min_posts'] == -1)
@@ -219,6 +223,18 @@ function EditProject()
 		);
 	}
 	$smcFunc['db_free_result']($request);
+
+	require_once($sourcedir . '/Subs-Members.php');
+
+	// Developer suggester
+	$suggestOptions = array(
+		'id' => 'developer',
+		'search_type' => 'member',
+		'width' => '130px',
+		'value' => '',
+		'button' => $txt['developer_add'],
+	);
+	create_control_autosuggest($suggestOptions);
 
 	if (!isset($_REQUEST['delete']))
 	{
@@ -270,9 +286,37 @@ function EditProject2()
 			fatal_lang_error('no_issue_types');
 
 		if (isset($_POST['add']))
-			createProject($projectOptions);
+			$_POST['project'] = createProject($projectOptions);
 		else
 			updateProject($_POST['project'], $projectOptions);
+
+		$developers = array();
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_developer
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $_POST['project'],
+			)
+		);
+
+		$rows = array();
+
+		if (!empty($_POST['developer']))
+		{
+			foreach ($_POST['developer'] as $id_member)
+				$rows[] = array($_POST['project'], $id_member);
+
+			$smcFunc['db_insert']('insert',
+				'{db_prefix}project_developer',
+				array(
+					'id_project',
+					'id_member'
+				),
+				$rows,
+				array('id_project', 'id_member')
+			);
+		}
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))
 	{

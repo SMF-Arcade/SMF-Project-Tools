@@ -170,6 +170,30 @@ function template_edit_project()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
+				<b>', $txt['project_developers'], ':</b><br />
+			</td>
+			<td valign="top" align="left">
+				', template_control_autosuggest('developer'), '';
+
+	foreach ($context['project']['developers'] as $member)
+		echo '
+				<div id="suggest_template_developer_', $member['id'], '">
+					<input type="hidden" name="developer[]" value="', $member['id'], '" />
+					<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="developer_link_to_', $member['id'], '" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">', $member['name'], '</a>
+					<input type="image" name="delete_developer" value="', $member['id'], '" onclick="return suggestHandledeveloper.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" />', '
+				</div>';
+
+		echo '
+				<div id="suggest_template_developer" style="visibility: hidden; display: none;">
+					<input type="hidden" name="developer[]" value="{MEMBER_ID}" />
+					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
+					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
+				</div>
+				<br />
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
 				<b>', $txt['project_trackers'], ':</b><br />
 				<span class="smalltext">', $txt['project_trackers_desc'], '</span><br />
 			</td>

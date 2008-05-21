@@ -62,7 +62,29 @@ function loadProject($id_project, $detailed = true)
 		'category' => array(),
 		'issues' => array(),
 		'trackers' => explode(',', $row['trackers']),
+		'developers' => array(),
 	);
+
+	// Developers
+	$request = $smcFunc['db_query']('', '
+		SELECT mem.id_member, mem.real_name
+		FROM {db_prefix}project_developer AS dev
+		WHERE id_project = {int:project}
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
+		ORDER BY id_parent',
+		array(
+			'project' => $id_project,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$project['developers'][] = array(
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+		);
+	}
+	$smcFunc['db_free_result']($request);
 
 	if (!$detailed)
 		return $project;

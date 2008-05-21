@@ -41,66 +41,6 @@ $permissions = array(
 );
 
 $tables = array(
-	// Categories/modules table
-	'issue_category' => array(
-		'name' => 'issue_category',
-		'columns' => array(
-			array(
-				'name' => 'id_category',
-				'type' => 'int',
-				'null' => false,
-				'auto' => true,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_project',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'category_name',
-				'type' => 'varchar',
-				'size' => 30,
-				'null' => false,
-			),
-			array(
-				'name' => 'open_bug',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'closed_bug',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'open_feature',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'closed_feature',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-		),
-		'indexes' => array(
-			array(
-				'type' => 'primary',
-				'columns' => array('id_category')
-			),
-			array(
-				'name' => 'id_project',
-				'type' => 'index',
-				'columns' => array('id_project')
-			),
-		)
-	),
 	// Projects
 	'projects' => array(
 		'name' => 'projects',
@@ -172,31 +112,12 @@ $tables = array(
 			),
 		)
 	),
-	// Project Timeline
-	'project_timeline' => array(
-		'name' => 'project_timeline',
+	// Developers
+	'project_developer' => array(
+		'name' => 'project_developer',
 		'columns' => array(
 			array(
-				'name' => 'id_event',
-				'type' => 'int',
-				'null' => false,
-				'auto' => true,
-				'unsigned' => true,
-			),
-			array(
 				'name' => 'id_project',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_issue',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_version',
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
@@ -207,35 +128,18 @@ $tables = array(
 				'null' => false,
 				'unsigned' => true,
 			),
-			array(
-				'name' => 'event',
-				'type' => 'varchar',
-				'size' => 15,
-				'null' => false,
-			),
-			array(
-				'name' => 'event_time',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'event_data',
-				'type' => 'text',
-				'null' => false
-			),
 		),
 		'indexes' => array(
 			array(
 				'type' => 'primary',
-				'columns' => array('id_event')
+				'columns' => array('id_member', 'id_project')
 			),
 			array(
 				'name' => 'id_project',
 				'type' => 'index',
 				'columns' => array('id_project')
 			),
-		),
+		)
 	),
 	// Versions
 	'project_versions' => array(
@@ -323,6 +227,66 @@ $tables = array(
 				'name' => 'member_groups',
 				'type' => 'index',
 				'columns' => array('member_groups')
+			),
+		)
+	),
+	// Categories/modules table
+	'issue_category' => array(
+		'name' => 'issue_category',
+		'columns' => array(
+			array(
+				'name' => 'id_category',
+				'type' => 'int',
+				'null' => false,
+				'auto' => true,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'category_name',
+				'type' => 'varchar',
+				'size' => 30,
+				'null' => false,
+			),
+			array(
+				'name' => 'open_bug',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'closed_bug',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'open_feature',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'closed_feature',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_category')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
 			),
 		)
 	),
@@ -415,17 +379,76 @@ $tables = array(
 			)
 		)
 	),
+	// Project Timeline
+	'project_timeline' => array(
+		'name' => 'project_timeline',
+		'columns' => array(
+			array(
+				'name' => 'id_event',
+				'type' => 'int',
+				'null' => false,
+				'auto' => true,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_version',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'event',
+				'type' => 'varchar',
+				'size' => 15,
+				'null' => false,
+			),
+			array(
+				'name' => 'event_time',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'event_data',
+				'type' => 'text',
+				'null' => false
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_event')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+		),
+	),
 	/*
 	// Tags
 	'issue_tags' => array(
 		'name' => 'issue_tags',
 		'columns' => array(
-				array(
-				'name' => 'id_tag',
-				'type' => 'int',
-				'null' => false,
-				'auot' => true,
-			),
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
@@ -441,7 +464,7 @@ $tables = array(
 		'indexes' => array(
 			array(
 				'type' => 'primary',
-				'columns' => array('id_tag', 'id_issue')
+				'columns' => array('id_issue', 'tag')
 			),
 		)
 	),*/
