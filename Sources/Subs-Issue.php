@@ -55,27 +55,31 @@ function loadIssueTypes()
 			'text' => $txt['issue_new'],
 			'type' => 'open',
 		),
-		array(
+		2 => array(
 			'text' => $txt['issue_feedback'],
 			'type' => 'open',
 		),
-		array(
+		3 => array(
 			'text' => $txt['issue_confirmed'],
 			'type' => 'open',
 		),
-		array(
+		4 => array(
 			'text' => $txt['issue_assigned'],
 			'type' => 'open',
 		),
-		array(
+		5 => array(
 			'text' => $txt['issue_resolved'],
 			'type' => 'closed',
 		),
-		array(
+		6 => array(
 			'text' => $txt['issue_closed'],
 			'type' => 'closed',
 		),
 	);
+
+	$context['closed_status'] = array(5, 6);
+
+
 
 	$context['issue']['priority'] = array(
 		1 => 'issue_priority_low',

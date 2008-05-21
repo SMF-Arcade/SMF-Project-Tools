@@ -36,48 +36,20 @@ function ProjectView()
 
 	$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
-	// Load Recently updated issues
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
-			i.id_category, i.id_reporter, i.id_version,
-			IFNULL(mr.real_name, {string:empty}) AS reporter,
-			IFNULL(cat.category_name, {string:empty}) AS category_name,
-			IFNULL(ver.version_name, {string:empty}) AS version_name, i.created, i.updated
-		FROM {db_prefix}issues AS i
-			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-		WHERE {query_see_issue}
-			AND i.id_project = {int:project}
-		ORDER BY i.updated DESC
-		LIMIT {int:start}, {int:number_recent}',
-		array(
-			'project' => $project,
-			'empty' => '',
-			'start' => 0,
-			'number_recent' => 5,
-		)
+	$issues_num = 5;
+
+	$issue_list = array(
+		'recent_issues' => array(
+			'order' => 'i.updated DESC',
+			'where' => '1 = 1',
+			'show' => true,
+		),
+		'my_reports' => array(
+			'order' => 'i.updated DESC',
+			'where' => 'i.id_reporter = {int:member}',
+			'show' => projectAllowedTo('issue_report'),
+		),
 	);
-
-	$context['recent_issues'] = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['recent_issues'][] = array(
-			'id' => $row['id_issue'],
-			'name' => $row['subject'],
-			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
-			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
-			'type' => $row['issue_type'],
-			'link' => $scripturl . '?issue=' . $row['id_issue'],
-			'updated' => timeformat($row['updated']),
-			'status' => &$context['issue']['status'][$row['status']]['text'],
-			'reporter_link' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
-			'priority' => $row['priority']
-		);
-	}
-	$smcFunc['db_free_result']($request);
 
 	// Load timeline
 	$request = $smcFunc['db_query']('', '
@@ -119,6 +91,57 @@ function ProjectView()
 	// Template
 	$context['sub_template'] = 'project_view';
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
+}
+
+function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
+{
+	global $project, $user_info, $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
+			i.id_category, i.id_reporter, i.id_version,
+			IFNULL(mr.real_name, {string:empty}) AS reporter,
+			IFNULL(cat.category_name, {string:empty}) AS category_name,
+			IFNULL(ver.version_name, {string:empty}) AS version_name, i.created, i.updated
+		FROM {db_prefix}issues AS i
+			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
+			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
+		WHERE {query_see_issue}
+			AND ('. $where . ')
+			AND i.id_project = {int:project}
+		ORDER BY ' . $order . '
+		LIMIT {int:start}, {int:num_issues}',
+		array(
+			'project' => $project,
+			'empty' => '',
+			'start' => 0,
+			'num_issues' => $num_issues,
+			'member' => $user_info['id']
+		)
+	);
+
+	$return = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$return[] = array(
+			'id' => $row['id_issue'],
+			'name' => $row['subject'],
+			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
+			'type' => $row['issue_type'],
+			'link' => $scripturl . '?issue=' . $row['id_issue'],
+			'updated' => timeformat($row['updated']),
+			'status' => &$context['issue']['status'][$row['status']]['text'],
+			'reporter_link' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			'priority' => $row['priority']
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $return;
 }
 
 ?>

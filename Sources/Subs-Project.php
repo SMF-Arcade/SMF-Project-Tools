@@ -63,6 +63,7 @@ function loadProject($id_project, $detailed = true)
 		'issues' => array(),
 		'trackers' => explode(',', $row['trackers']),
 		'developers' => array(),
+		'is_developer' => false,
 	);
 
 	// Developers
@@ -82,6 +83,9 @@ function loadProject($id_project, $detailed = true)
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
 		);
+
+		if ($user_info['id'] == $row['id_member'])
+			$project['is_developer'] = true;
 	}
 	$smcFunc['db_free_result']($request);
 
