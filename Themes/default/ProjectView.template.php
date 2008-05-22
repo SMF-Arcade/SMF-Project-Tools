@@ -106,12 +106,15 @@ function template_project_view()
 						</a>
 					</td>
 					<td class="windowbg2 info">
-						<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
-						<p class="smalltext">', $issue['reporter_link'], '</p>
+						<h4>', $issue['link'], '</h4>
+						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
-					<td class="windowbg stats smalltext">
+					<td class="windowbg stats smalltext center">
+						', $issue['status']['text'], '<br />
 					</td>
-					<td class="windowbg lastissue">
+					<td class="windowbg lastissue smalltext">
+						', $issue['updater']['link'], '<br />
+						', $issue['updated'], '
 					</td>
 				</tr>';
 			}

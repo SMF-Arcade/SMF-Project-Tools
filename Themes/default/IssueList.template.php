@@ -27,8 +27,8 @@ function template_issue_list()
 			echo '
 					<th class="catbg3 headerpadding"></th>
 					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_status'], ' / ', $txt['issue_updated'], '</th>
-					<th class="catbg3 headerpadding"></th>';
+					<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
+					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
 					<th class="windowbg2" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
@@ -53,9 +53,10 @@ function template_issue_list()
 					</td>
 					<td class="windowbg stats smalltext center">
 						', $issue['status']['text'], '<br />
-						', $issue['updated'], '
 					</td>
-					<td class="windowbg lastissue">
+					<td class="windowbg lastissue smalltext">
+						', $issue['updater']['link'], '<br />
+						', $issue['updated'], '
 					</td>
 				</tr>';
 		}

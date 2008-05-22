@@ -89,6 +89,7 @@ function ProjectView()
 
 	$nowtime = forum_time();
 	$now = @getdate($nowtime);
+	$clockFromat = strpos($user_info['time_format'], '%I') === false ? '%H:%M' : '%I:%M %p';
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
@@ -105,9 +106,9 @@ function ProjectView()
 			);
 
 			if ($date['yday'] == $now['yday'] && $date['year'] == $now['year'])
-				$context['events'][$index]['date'] = $txt['today'];
+				$context['events'][$index]['date'] = $txt['project_today'];
 			elseif (($date['yday'] == $now['yday'] - 1 && $date['year'] == $now['year']) || ($now['yday'] == 0 && $date['year'] == $now['year'] - 1) && $date['mon'] == 12 && $date['mday'] == 31)
-				$context['events'][$index]['date'] = $txt['yesterday'];
+				$context['events'][$index]['date'] = $txt['project_yesterday'];
 			else
 				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
 		}
@@ -116,7 +117,7 @@ function ProjectView()
 			'event' => $row['event'],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
 			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
-			'time' => timeformat($row['event_time']),
+			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'data' => $data,
 		);
 	}
@@ -133,13 +134,16 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
-			i.id_category, i.id_reporter, i.id_version,
-			IFNULL(mr.real_name, {string:empty}) AS reporter,
-			IFNULL(cat.category_name, {string:empty}) AS category_name,
-			IFNULL(ver.version_name, {string:empty}) AS version_name, i.created, i.updated
+			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
+			i.status, i.created, i.updated,
+			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
+			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
+			i.id_version,, IFNULL(ver.version_name, {string:empty}) AS version_name,
+			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 		FROM {db_prefix}issues AS i
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}members AS mu ON (mr.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
@@ -163,13 +167,32 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 		$return[] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
-			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $project . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
+			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>',
+			'href' => $scripturl . '?issue=' . $row['id_issue'],
+			'category' => array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name'],
+				'link' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+			),
+			'version' => array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
+			),
 			'type' => $row['issue_type'],
-			'link' => $scripturl . '?issue=' . $row['id_issue'],
 			'updated' => timeformat($row['updated']),
-			'status' => &$context['issue']['status'][$row['status']]['text'],
-			'reporter_link' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			'created' => timeformat($row['created']),
+			'status' => &$context['issue']['status'][$row['status']],
+			'reporter' => array(
+				'id' => $row['id_reporter'],
+				'name' => empty($row['reporter']) ? $txt['issue_guest'] : $row['reporter'],
+				'link' => empty($row['reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			),
+			'updater' => array(
+				'id' => $row['id_updater'],
+				'name' => empty($row['updater']) ? $txt['issue_guest'] : $row['updater'],
+				'link' => empty($row['updater']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_updater'] . '">' . $row['updater'] . '</a>',
+			),
 			'priority' => $row['priority']
 		);
 	}

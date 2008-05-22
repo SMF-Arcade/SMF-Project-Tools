@@ -88,14 +88,16 @@ function IssueList()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority, i.status,
-			i.id_category, i.id_reporter, i.id_version,
-			IFNULL(mr.real_name, {string:empty}) AS reporter,
-			IFNULL(cat.category_name, {string:empty}) AS category_name,
-			IFNULL(ver.version_name, {string:empty}) AS version_name, i.created, i.updated
+			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
+			i.status, i.created, i.updated,
+			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
+			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
+			i.id_version,, IFNULL(ver.version_name, {string:empty}) AS version_name,
+			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}members AS mu ON (mr.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
@@ -134,8 +136,13 @@ function IssueList()
 			'status' => &$context['issue']['status'][$row['status']],
 			'reporter' => array(
 				'id' => $row['id_reporter'],
-				'name' => empty($row['id_reporter']) ? $txt['issue_guest'] : $row['reporter'],
-				'link' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+				'name' => empty($row['reporter']) ? $txt['issue_guest'] : $row['reporter'],
+				'link' => empty($row['reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			),
+			'updater' => array(
+				'id' => $row['id_updater'],
+				'name' => empty($row['updater']) ? $txt['issue_guest'] : $row['updater'],
+				'link' => empty($row['updater']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_updater'] . '">' . $row['updater'] . '</a>',
 			),
 			'priority' => $row['priority']
 		);

@@ -31,6 +31,11 @@ $txt['issue_assigned_to'] = 'Assigned to';
 $txt['issue_none'] = '(none)';
 $txt['issue_category'] = 'Category';
 
+$txt['issue_last_update'] = 'Last Update';
+
+$txt['project_today'] = 'Today';
+$txt['project_yesterday'] = 'Yesterday';
+
 // Tabs
 $txt['issues'] = 'Issues';
 $txt['roadmap'] = 'Roadmap';
