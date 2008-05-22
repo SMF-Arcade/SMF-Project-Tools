@@ -67,6 +67,17 @@ function loadProject($id_project, $detailed = true)
 
 	$trackers = explode(',', $row['trackers']);
 
+	foreach ($trackers as $key)
+	{
+		$project['trackers'][$key] = array(
+			'info' => &$context['project_tools']['issue_types'][$key],
+			'open' => $row['open_' . $key],
+			'closed' => $row['closed_' . $key],
+			'total' => $row['open_' . $key] + $row['closed_' . $key],
+			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key,
+		);
+	}
+
 	// Developers
 	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.real_name
@@ -92,21 +103,6 @@ function loadProject($id_project, $detailed = true)
 
 	if (!$detailed)
 		return $project;
-
-	foreach ($trackers as $key)
-	{
-		$project['trackers'][$key] = array(
-			'info' => &$context['project_tools']['issue_types'][$key],
-			'open' => $row['open_' . $key],
-			'closed' => $row['closed_' . $key],
-			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key,
-		);
-	}
-
-	print_r($row);
-
-	unset($row);
 
 	// Load Versions
 	$request = $smcFunc['db_query']('', '

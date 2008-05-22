@@ -133,10 +133,10 @@ function template_project_view()
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">';
 
-	foreach ($context['project']['issues'] as $type)
+	foreach ($context['project']['trackers'] as $type)
 		echo '
 					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
-					<div class=""></div>
+					<div class="progressbar"><div class="done" style="width: ', round($type['closed'] / $type['total'], 2), '%"></div></div>
 					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
 
 	echo '
@@ -160,10 +160,6 @@ function template_project_view()
 			</div>
 		</div>
 	</div>';
-
-
-	// DEBUG
-	print_r($context['project']);
 }
 
 function template_project_view_below()
