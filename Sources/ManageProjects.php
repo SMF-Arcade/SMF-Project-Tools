@@ -374,7 +374,7 @@ function EditVersion()
 		$context['version'] = array(
 			'is_new' => true,
 			'id' => 0,
-			'project' => $context['project']['id_project'],
+			'project' => $context['project']['id'],
 			'name' => '',
 			'description' => '',
 			'parent' => !empty($_REQUEST['parent']) && isset($context['project']['versions'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
@@ -455,6 +455,7 @@ function EditVersion()
 	}
 	$smcFunc['db_free_result']($request);
 
+	// Template
 	$context['sub_template'] = 'edit_version';
 }
 

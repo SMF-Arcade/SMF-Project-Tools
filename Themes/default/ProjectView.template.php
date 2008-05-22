@@ -139,11 +139,13 @@ function template_project_view()
 					<tr>
 						<td width="10%">
 							<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
-							<span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span>
 						</td>
 						<td>
 							<div class="progressbar"><div class="done" style="width: ', round($type['closed'] / $type['total'], 2), '%"></div></div>
 						</td>
+					</tr>
+					<tr>
+						<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
 					</tr>';
 
 	echo '

@@ -64,7 +64,7 @@ function IssueView()
 	$context['sub_template'] = 'issue_view';
 	//$context['page_title'] = sprintf($txt['issue_tracker_view_issue'], $context['current_issue']['id'], $context['current_issue']['name']);
 
-	loadTemplate('IssueList');
+	loadTemplate('IssueView');
 }
 
 function IssueDelete()

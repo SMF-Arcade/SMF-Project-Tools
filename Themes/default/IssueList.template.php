@@ -15,72 +15,57 @@ function template_issue_list()
 	);
 
 	echo '
-		<table border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tr>
-				<td class="middletext" style="padding-bottom: 4px;" valign="bottom">', $txt['pages'], ': ', $context['page_index'], '&nbsp;&nbsp;<a href="#issue_bottom"><b>', $txt['go_down'], '</b></a></td>
-				<td style="padding-right: 1ex;" align="right">
-					<table cellpadding="0" cellspacing="0">
-						<tr>
-							<td>', template_button_strip($buttons, 'bottom'), '</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-		<div class="tborder">
-			<table class="bordercolor" border="0" cellpadding="4" cellspacing="1" width="100%">';
+		<div class="modbuttons clearfix margintop">
+			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'bottom'), '
+		</div>
+		<div class="issuelistframe tborder columnmargin">
+			<table cellspacing="1" class="bordercolor issuetable">
+				<tr>';
+
+		if (!empty($context['issues']))
+			echo '
+					<th class="catbg3 headerpadding"></th>
+					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+					<th class="catbg3 headerpadding"></th>
+					<th class="catbg3 headerpadding"></th>';
+		else
+			echo '
+					<th class="windowbg2" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+
+		echo '
+				</tr>';
 
 	if (!empty($context['issues']))
 	{
-		echo '
-				<tr>
-					<td class="catbg3" width="16"></td>
-					<td class="catbg3">', $txt['issue_title'], '</td>
-					<td class="catbg3">', $txt['issue_status'], '</td>
-					<td class="catbg3">', $txt['issue_reported_by'], '</td>
-					<td class="catbg3"></td>
-					<td class="catbg3">', $txt['issue_category'], '</td>
-					<td class="catbg3">', $txt['issue_assigned_to'], '</td>
-				</tr>';
-
-		foreach ($context['issues'] as $i => $issue)
+		foreach ($issueList['issues'] as $issue)
 		{
 			echo '
-				<tr class="windowbg">
-					<td style="text-align: center"><a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '"><img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" /></a></td>
-					<td class="windowbg2"><a href="', $issue['link'], '">', $issue['name'], '</a></td>
-					<td>', $issue['status'], '</td>
-					<td class="windowbg2">', $issue['reporter'], '</td>
-					<td>', $issue['created'], '<br />', $issue['updated'], '</td>
-					<td>-----</td>
-					<td>-----</td>
+				<tr>
+					<td class="windowbg icon">
+						<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+						</a>
+					</td>
+					<td class="windowbg2 info">
+						<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
+						<p class="smalltext">', $issue['reporter_link'], '</p>
+					</td>
+					<td class="windowbg stats smalltext">
+					</td>
+					<td class="windowbg lastissue">
+					</td>
 				</tr>';
 		}
-
-	}
-	else
-	{
-		echo '
-				<tr>
-					<td class="catbg3"><b>', $txt['issue_no_issues'], '</b></td>
-				</tr>';
 	}
 
 	echo '
 			</table>
 		</div>
-		<table border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tr>
-				<td class="middletext">', $txt['pages'], ': ', $context['page_index'], '&nbsp;&nbsp;<a href="#issue_top"><b>', $txt['go_up'], '</b></a></td>
-				<td style="padding-right: 1ex;" align="right">
-					<table cellpadding="0" cellspacing="0">
-						<tr>
-							<td>', template_button_strip($buttons, 'top'), '</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>';
+		<div class="modbuttons clearfix margintop">
+			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'bottom'), '
+		</div>';
 }
 
 function template_issue_view()
