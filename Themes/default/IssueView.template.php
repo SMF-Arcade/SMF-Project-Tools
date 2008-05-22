@@ -9,13 +9,15 @@ function template_issue_view()
 	{
 		echo '
 		<script language="JavaScript" type="text/javascript">
+			function startEdit(this)
+			{
+				$j("#issueinfo td.infocolumn.canedit div.edit").show();
+				$j("#issueinfo td.infocolumn.canedit div.display").hide();
+			}
+
 			$j(document).bind("ready", function()
 			{
-				$j("#issueinfo td.infocolumn").bind("dblclick", function ()
-				{
-					$j(this).children("div.edit").show();
-					$j(this).children("div.display").hide();
-				});
+				$j("#issueinfo td.infocolumn").bind("dblclick", startEdit($j(this)));
 			});
 		</script>';
 	}
@@ -28,8 +30,10 @@ function template_issue_view()
 	echo '
 	<div id="issueinfo" class="tborder">
 		<h3 class="catbg3">
-			<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
-			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+			<div class="floatleft">
+				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
+				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+			</div>
 			<div class="floatright">
 				', $txt['project'], ': ', $context['current_issue']['project']['link'], '
 			</div>
@@ -38,7 +42,7 @@ function template_issue_view()
 	echo '
 		<table cellspacing="1" class="bordercolor issueinfoframe">
 			<tr class="windowbg smalltext">
-				<td class="infocolumn">
+				<td class="infocolumn canedit">
 					<div class="display">
 						<span class="dark">', $txt['issue_category'], '</span>
 						<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
