@@ -161,8 +161,9 @@ function loadIssue($id_issue)
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
 		'project' => array(
 			'id' => $row['id_project'],
-			'link' => $scripturl . '?project=' . $row['id_project'] . ';sa=issues',
-			'name' => $row['project_name']
+			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['project_name'] . '</a>',
+			'href' => $scripturl . '?project=' . $row['id_project'],
+			'name' => $row['project_name'],
 		),
 		'body' => parse_bbc($row['body']),
 	);

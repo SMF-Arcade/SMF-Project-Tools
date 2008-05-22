@@ -32,6 +32,9 @@ function template_issue_view()
 		<h3 class="catbg3">
 			<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+			<div class="floatright">
+				', $txt['project'], ': ', $issue['project']['link'], '
+			</div>
 		</h3>';
 
 	echo '
