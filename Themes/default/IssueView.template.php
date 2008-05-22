@@ -11,7 +11,7 @@ function template_issue_view()
 		<script language="JavaScript" type="text/javascript">
 			$j(document).bind("ready", function()
 			{
-				$j("#infotable td.infocolumn").bind("mouseenter", function ()
+				$j("#issueinfo td.infocolumn").bind("mouseenter", function ()
 				{
 					$j(this).children("div.options").fadeIn(500);
 				}).bind("mouseleave", function ()
@@ -34,26 +34,9 @@ function template_issue_view()
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>';
 
-
-	/*
-							<div class="windowbg2 itrow">
-
-							</div>
-							<div class="windowbg itrow">
-
-							</div>
-							<div class="windowbg2 itrow">
-
-							</div>
-							<div class="windowbg last itrow">
-
-							</div>
-							<div style="clear: both"></div>
-						</div>';*/
-
 	echo '
 		<table cellspacing="1" class="bordercolor issueinfoframe">
-			<tr class="windowbg">
+			<tr class="windowbg smalltext">
 				<td class="infocolumn">
 					<div class="display floatleft">
 						<span class="dark">', $txt['issue_category'], '</span>
@@ -82,7 +65,7 @@ function template_issue_view()
 					</div>
 				</td>
 			</tr>
-			<tr class="windowbg2">
+			<tr class="windowbg2 smalltext">
 				<td class="infocolumn">
 					<div class="display floatleft">
 						<span class="dark">', $txt['issue_status'], '</span>
@@ -111,7 +94,7 @@ function template_issue_view()
 					</div>
 				</td>
 			</tr>
-			<tr>
+			<tr class="windowbg smalltext">
 				<td class="infocolumn">
 					<div class="display floatleft">
 						<span class="dark">', $txt['issue_assigned_to'], '</span>
@@ -123,7 +106,6 @@ function template_issue_view()
 				</td>
 			</tr>
 		</table>
-
 	</div>
 
 		<div class="bordercolor">

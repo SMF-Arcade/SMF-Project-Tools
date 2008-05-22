@@ -176,10 +176,17 @@ table.issuetable td.info p
 {
 	width: 100%;
 }
-
+#issueinfo td
+{
+	vertical-align: middle;
+}
 #issueinfo .dark
 {
 	color: grey;
+}
+#issueinfo div.options
+{
+	display: none;
 }
 
 .infotable
@@ -194,16 +201,6 @@ table.issuetable td.info p
 .infotable div.last
 {
 	border-bottom: 0;
-}
-
-#infotable div.options
-{
-	display: none;
-}
-
-.itrow
-{
-	clear: both;
 }
 
 /* ************************************* */
