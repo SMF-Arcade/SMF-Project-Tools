@@ -60,13 +60,14 @@ $txt['reported_by_me'] = 'Reported by Me';
 
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
-
 $txt['project_statistics'] = 'Statistics';
 $txt['project_open_issues'] = 'Open Issues';
 $txt['project_closed_issues'] = 'Closed Issues';
-
 $txt['project_timeline'] = 'Timeline';
-$txt['evt_new_issue'] = 'Issue created by %s';
+$txt['evt_new_issue'] = 'Issue reported by %s';
+
+// View Issue
+$txt['issue_edit'] = 'Edit';
 
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';

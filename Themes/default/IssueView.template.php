@@ -23,7 +23,7 @@ function template_issue_view()
 	}
 
 	$delete_button = create_button('delete.gif', 'issue_delete', 'issue_delete');
-	$modify_button = create_button('modify.gif', 'edit', 'edit');
+	$modify_button = create_button('modify.gif', 'issue_edit', 'issue_edit');
 
 	$reporter = &$context['current_issue']['reporter'];
 
