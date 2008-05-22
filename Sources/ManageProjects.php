@@ -364,22 +364,8 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'newversion')
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
-				p.' . implode(', p.', $context['type_columns']) . '
-			FROM {db_prefix}projects AS p
-			WHERE {query_see_project}
-				AND p.id_project = {int:project}
-			LIMIT 1',
-			array(
-				'project' => (int) $_REQUEST['project'],
-			)
-		);
-
-		if (!($context['project'] = $smcFunc['db_fetch_assoc']($request)))
+		if (!$context['project'] = loadProject((int) $_REQUEST['project'], true))
 			fatal_lang_error('project_not_found');
-		$smcFunc['db_free_result']($request);
 
 		$curVersion = array(
 			'member_groups' => array(-1, 0),
@@ -413,23 +399,10 @@ function EditVersion()
 			fatal_lang_error('version_not_found');
 
 		$row = $smcFunc['db_fetch_assoc']($request);
-
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
-				p.' . implode(', p.', $context['type_columns']) . '
-			FROM {db_prefix}projects AS p
-			WHERE {query_see_project}
-				AND p.id_project = {int:project}
-			LIMIT 1',
-			array(
-				'project' => $row['id_project'],
-			)
-		);
-
-		if (!($context['project'] = $smcFunc['db_fetch_assoc']($request)))
-			fatal_lang_error('project_not_found');
 		$smcFunc['db_free_result']($request);
+
+		if (!$context['project'] = loadProject((int) $_REQUEST['project'], true))
+			fatal_lang_error('project_not_found');
 
 		$curVersion = array(
 			'member_groups' => explode(',', $row['member_groups']),
