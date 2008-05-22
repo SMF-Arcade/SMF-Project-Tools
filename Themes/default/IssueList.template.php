@@ -51,8 +51,9 @@ function template_issue_list()
 						<h4>', $issue['link'], '</h4>
 						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
-					<td class="windowbg stats smalltext">
-						', $issue['status']['text'], '
+					<td class="windowbg stats smalltext center">
+						', $issue['status']['text'], '<br />
+						', $issue['updated'], '
 					</td>
 					<td class="windowbg lastissue">
 					</td>
