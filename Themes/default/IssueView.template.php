@@ -9,7 +9,7 @@ function template_issue_view()
 	{
 		echo '
 		<script language="JavaScript" type="text/javascript">
-			function startEdit(this)
+			function startEdit(param)
 			{
 				$j("#issueinfo td.infocolumn.canedit div.edit").show();
 				$j("#issueinfo td.infocolumn.canedit div.display").hide();
