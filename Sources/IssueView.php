@@ -32,14 +32,14 @@ function IssueView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
+	$context['show_update'] = false;
+
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_my_issue'] ? 'own' : 'any';
 
 	if (projectAllowedTo('issue_update_' . $type))
 	{
-		require_once($sourcedir . '/Subs-Members.php');
-
-		$context['can_update'] = true;
+		$context['show_update'] = true;
 
 		if (allowedTo('issue_assign'))
 		{

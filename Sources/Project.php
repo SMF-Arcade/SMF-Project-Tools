@@ -176,11 +176,11 @@ function loadProjectTools($mode = '')
 		else
 			$user_info['query_see_issue'] = "(0 = 1)";
 
-		if (empty($context['jquery_loaded']))
-			$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/jquery.js"></script>';
-
-		$context['jquery_loaded'] = true;
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			var $j = jQuery.noConflict();
+		// ]]></script>';
 	}
 	elseif ($mode == 'admin')
 	{
