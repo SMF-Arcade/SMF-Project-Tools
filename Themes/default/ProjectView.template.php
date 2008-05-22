@@ -81,7 +81,7 @@ function template_project_view()
 			<table cellspacing="1" class="bordercolor issuetable">
 				<tr>';
 
-		if (!empty($context['recent_issues']))
+		if (!empty($issueList['issues']))
 			echo '
 					<th class="catbg3 headerpadding"></th>
 					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
@@ -136,7 +136,7 @@ function template_project_view()
 	foreach ($context['project']['issues'] as $type)
 		echo '
 					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
-					<div c
+					<div class=""></div>
 					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
 
 	echo '
@@ -161,6 +161,9 @@ function template_project_view()
 		</div>
 	</div>';
 
+
+	// DEBUG
+	print_r($context['project']);
 }
 
 function template_project_view_below()
