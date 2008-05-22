@@ -48,7 +48,6 @@ function template_issue_view()
 						</div>
 						<div class="floatright">
 							<a href="#">', $modify_button, '</a>
-							<a class="cancel" href="#">x</a>
 						</div>
 					</div>
 				</td>
@@ -62,7 +61,6 @@ function template_issue_view()
 						</div>
 						<div class="floatright">
 							<a href="#">', $modify_button, '</a>
-							<a class="cancel" href="#">x</a>
 						</div>
 					</div>
 				</td>
@@ -76,7 +74,6 @@ function template_issue_view()
 						</div>
 						<div class="floatright">
 							<a href="#">', $modify_button, '</a>
-							<a class="cancel" href="#">x</a>
 						</div>
 					</div>
 				</td>
