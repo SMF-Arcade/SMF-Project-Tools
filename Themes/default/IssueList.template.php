@@ -27,7 +27,7 @@ function template_issue_list()
 			echo '
 					<th class="catbg3 headerpadding"></th>
 					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-					<th class="catbg3 headerpadding"></th>
+					<th class="catbg3 headerpadding">', $txt['issue_status'], ' / ', $txt['issue_updated'], '</th>
 					<th class="catbg3 headerpadding"></th>';
 		else
 			echo '
