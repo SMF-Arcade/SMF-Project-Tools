@@ -48,11 +48,7 @@ function template_issue_view()
 						<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 				<td class="infocolumn">
@@ -61,11 +57,7 @@ function template_issue_view()
 						<span class="value">', $context['current_issue']['type']['name'], '</span>
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 				<td class="infocolumn">
@@ -74,11 +66,7 @@ function template_issue_view()
 						', $txt[$context['current_issue']['priority']], '
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 			</tr>
@@ -89,11 +77,7 @@ function template_issue_view()
 						', $context['current_issue']['status']['text'], '
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 				<td class="infocolumn">
@@ -102,11 +86,7 @@ function template_issue_view()
 						', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 				<td class="infocolumn">
@@ -115,11 +95,7 @@ function template_issue_view()
 						', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
 				</td>
 			</tr>
@@ -130,12 +106,13 @@ function template_issue_view()
 						', !empty($context['current_issue']['assignee']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 					</div>
 					<div class="edit">
-						<div class="floatleft">
-						</div>
-						<div class="floatright">
-							<a href="#">', $modify_button, '</a>
-						</div>
+
 					</div>
+				</td>
+			</tr>
+			<tr class="catbg" style="display: none">
+				<td class="right" colspan="3" width="100%">
+					<input type="submit" />
 				</td>
 			</tr>
 		</table>
