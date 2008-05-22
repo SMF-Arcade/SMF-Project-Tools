@@ -333,6 +333,11 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'id_updater',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'id_version',
 				'type' => 'int',
 				'null' => false,

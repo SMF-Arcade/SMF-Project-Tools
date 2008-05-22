@@ -230,12 +230,12 @@ function createIssue($issueOptions, &$posterOptions)
 	$issueOptions['no_log'] = true;
 
 	if (!empty($issueOptions))
-		updateIssue($id_issue, $issueOptions);
+		updateIssue($id_issue, $issueOptions, $posterOptions);
 
 	return $id_issue;
 }
 
-function updateIssue($id_issue, $issueOptions)
+function updateIssue($id_issue, $issueOptions, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
 
@@ -306,6 +306,8 @@ function updateIssue($id_issue, $issueOptions)
 	{
 		$issueUpdates[] = 'updated = {int:time}';
 		$issueOptions['time'] = time();
+		$issueUpdates[] = 'id_updater = {int:updater}';
+		$issueOptions['updater'] = $posterOptions['id'];
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}issues
@@ -378,7 +380,6 @@ function updateIssue($id_issue, $issueOptions)
 					'category' => $issueOptions['category']
 				)
 			);
-
 	}
 
 	$projectUpdates = array();
