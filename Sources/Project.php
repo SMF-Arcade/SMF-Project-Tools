@@ -126,7 +126,7 @@ function Projects()
 
 function loadProjectTools($mode = '')
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project_version;
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
 
 	if (!empty($project_version))
 		return;
