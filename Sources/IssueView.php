@@ -33,31 +33,19 @@ function IssueView()
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_my'] ? 'own' : 'any';
+	$type = $context['current_issue']['is_my_issue'] ? 'own' : 'any';
 
-	if (allowedTo('issue_update_' . $type))
+	if (projectAllowedTo('issue_update_' . $type))
 	{
 		require_once($sourcedir . '/Subs-Members.php');
 
 		$context['can_update'] = true;
 
-		/*if (allowedTo('issue_assign'))
+		if (allowedTo('issue_assign'))
 		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = array();
-
-			$groups = groupsAllowedTo('issue_assign_to');
-
-			$request = $smcFunc['db_query']('', "
-				SELECT mem.id_member, mem.member_name, mem.real_name
-				FROM {$db_prefix}members AS mem
-				WHERE (id_group IN ('" . implode(', ', $groups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $groups['allowed']) . ")
-					AND NOT (id_group IN ('" . implode(', ', $groups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $groups['denied']) . ")", __FILE__, __LINE__);
-
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$context['assign_members'][] = array($row['id_member'], $row['member_name'], $row['real_name']);
-			$smcFunc['db_free_result']($request);
-		}*/
+			$context['show_assign'] = true;
+			$context['assign_members'] = &$context['project']['developers'];
+		}
 	}
 
 	// Template

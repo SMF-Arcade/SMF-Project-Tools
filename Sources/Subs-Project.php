@@ -180,9 +180,11 @@ function projectAllowedTo($permission)
 	global $context, $project;
 
 	if ($project === null)
-	{
 		fatal_error('projectAllowed(): Project not loaded');
-	}
+
+	// Developers can do anything
+	if ($context['project']['is_developer'])
+		return true;
 
 	return allowedTo($permission);
 }
@@ -427,4 +429,5 @@ function updateCategory($id_category, $categoryOptions)
 
 	return true;
 }
+
 ?>

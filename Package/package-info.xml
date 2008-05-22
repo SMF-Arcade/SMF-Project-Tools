@@ -48,6 +48,9 @@
 		<!-- CSS -->
 		<require-file name="Themes/default/css/project.css" destination="$themedir/css" />
 
+		<!-- Scripts -->
+		<require-file name="Themes/default/scripts/jquery.js" destination="$themedir/scripts" />
+
 		<!-- Images -->
 		<require-file name="Themes/default/images/bug.png" destination="$imagesdir" />
 		<require-file name="Themes/default/images/feature.png" destination="$imagesdir" />
@@ -82,6 +85,12 @@
 		<remove-file name="$themedir/ManageProjects.template.php" />
 		<remove-file name="$themedir/Project.template.php" />
 		<remove-file name="$themedir/ProjectView.template.php" />
+
+		<!-- CSS -->
+		<remove-file name="$themedir/css/project.css" />
+
+		<!-- Scripts -->
+		<remove-file name="$themedir/scripts/jquery.js" />
 
 		<!-- Images -->
 		<remove-file name="$imagesdir/bug.png" />

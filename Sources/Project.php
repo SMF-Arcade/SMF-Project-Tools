@@ -175,6 +175,12 @@ function loadProjectTools($mode = '')
 		// if not then we can't show anything
 		else
 			$user_info['query_see_issue'] = "(0 = 1)";
+
+		if (empty($context['jquery_loaded']))
+			$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/jquery.js"></script>';
+
+		$context['jquery_loaded'] = true;
 	}
 	elseif ($mode == 'admin')
 	{

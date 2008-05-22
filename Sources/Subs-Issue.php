@@ -153,7 +153,7 @@ function loadIssue($id_issue)
 			'name' => $row['vnamefix'],
 		),
 		'reporter' => &$memberContext[$row['id_reporter']],
-		'is_my_issue' => !$user_info['guest'] && $row['id_reporter'] == $user_info['id'],
+		'is_my_issue' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
 		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
 		'status' => $context['issue']['status'][$row['status']],
 		'priority' => $context['issue']['priority'][$row['priority']],
