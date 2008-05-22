@@ -83,13 +83,13 @@ function template_project_view()
 
 		if (!empty($context['recent_issues']))
 			echo '
-					<th class="titlebg headerpadding"></th>
-					<th class="titlebg headerpadding">', $txt['issue_title'], '</th>
-					<th class="titlebg headerpadding"></th>
-					<th class="titlebg headerpadding"></th>';
+					<th class="catbg3 headerpadding"></th>
+					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+					<th class="catbg3 headerpadding"></th>
+					<th class="catbg3 headerpadding"></th>';
 		else
 			echo '
-					<th class="titlebg" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+					<th class="catbg3" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
 
 		echo '
 				</tr>';
