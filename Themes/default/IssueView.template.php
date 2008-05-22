@@ -11,13 +11,18 @@ function template_issue_view()
 		<script language="JavaScript" type="text/javascript">
 			$j(document).bind("ready", function()
 			{
-				$j("#issueinfo td.infocolumn").bind("mouseenter", function ()
+				$j("#issueinfo td.infocolumn").bind("dblclick", function ()
 				{
-					$j(this).children("div.options").fadeIn(500);
-				}).bind("mouseleave", function ()
-				{
-					$j(this).children("div.options").fadeOut(500);
+					$j(this).children("div.edit").show();
+					$j(this).children("div.display").hide();
 				});
+
+				$j(this).children("#issueinfo td.infocolumn div.edit cancel").bind("onclick", function()
+				{
+					$j(this).parents("#issueinfo td.infocolumn").children("div.edit").hide();
+					$j(this).parents("#issueinfo td.infocolumn").children("div.display").show();
+				});
+
 			});
 		</script>';
 	}
@@ -41,70 +46,101 @@ function template_issue_view()
 		<table cellspacing="1" class="bordercolor issueinfoframe">
 			<tr class="windowbg smalltext">
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_category'], '</span>
 						<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+							<a class="cancel" href="#">x</a>
+						</div>
 					</div>
 				</td>
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_type'], '</span>
 						<span class="value">', $context['current_issue']['type']['name'], '</span>
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+							<a class="cancel" href="#">x</a>
+						</div>
 					</div>
 				</td>
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_priority'], '</span>
 						', $txt[$context['current_issue']['priority']], '
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+							<a class="cancel" href="#">x</a>
+						</div>
 					</div>
 				</td>
 			</tr>
 			<tr class="windowbg2 smalltext">
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_status'], '</span>
 						', $context['current_issue']['status']['text'], '
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+						</div>
 					</div>
 				</td>
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_version'], '</span>
 						', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+						</div>
 					</div>
 				</td>
 				<td class="infocolumn">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_version_fixed'], '</span>
 						', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+						</div>
 					</div>
 				</td>
 			</tr>
 			<tr class="windowbg smalltext">
 				<td class="infocolumn" colspan="3" width="100%">
-					<div class="display floatleft">
+					<div class="display">
 						<span class="dark">', $txt['issue_assigned_to'], '</span>
 						', !empty($context['current_issue']['assignee']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 					</div>
-					<div class="options floatright">
-						<a href="#">', $modify_button, '</a>
+					<div class="edit">
+						<div class="floatleft">
+						</div>
+						<div class="floatright">
+							<a href="#">', $modify_button, '</a>
+						</div>
 					</div>
 				</td>
 			</tr>
