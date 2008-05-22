@@ -95,7 +95,7 @@ function template_issue_view()
 				</td>
 			</tr>
 			<tr class="windowbg smalltext">
-				<td class="infocolumn">
+				<td class="infocolumn" colspan="3" width="100%">
 					<div class="display floatleft">
 						<span class="dark">', $txt['issue_assigned_to'], '</span>
 						', !empty($context['current_issue']['assignee']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
