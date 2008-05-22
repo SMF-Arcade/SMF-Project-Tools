@@ -201,6 +201,11 @@ table.issuetable td.info p
 	display: none;
 }
 
+.itrow
+{
+	clear: both;
+}
+
 /* ************************************* */
 /* styles from IssueReport.template      */
 /* ************************************* */
