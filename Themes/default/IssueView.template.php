@@ -17,7 +17,7 @@ function template_issue_view()
 
 			$j(document).bind("ready", function()
 			{
-				$j("#issueinfo td.infocolumn").bind("dblclick", startEdit($j(this)));
+				$j("#issueinfo td.infocolumn").bind("dblclick", startEdit(this));
 			});
 		</script>';
 	}
