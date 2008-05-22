@@ -47,6 +47,22 @@ table.projectsframe td.lastissue
 	width: 20%;
 }
 
+/* ************************************* */
+/* styles from ProjectView.template      */
+/* ************************************* */
+
+.issuecolumn
+{
+	float: left;
+	width: 50%;
+}
+
+.columnmargin
+{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
 /* Frame for Project info page*/
 .projectframe
 {

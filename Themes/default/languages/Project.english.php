@@ -50,7 +50,9 @@ $txt['version_stable_rec'] = 'Stable (Recommended)';
 $txt['version_obsolute'] = 'Obsolute';
 
 // Project page
-$txt['recent_updated_issues'] = 'Recently updated issues';
+$txt['recent_issues'] = 'Recently Updated';
+$txt['reported_by_me'] = 'Reported by Me';
+
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Project Statistics';

@@ -81,7 +81,6 @@ function template_issue_list()
 				</td>
 			</tr>
 		</table>';
-
 }
 
 function template_issue_view()

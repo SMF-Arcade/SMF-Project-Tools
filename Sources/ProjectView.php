@@ -40,16 +40,29 @@ function ProjectView()
 
 	$issue_list = array(
 		'recent_issues' => array(
+			'title' => 'recent_issues',
 			'order' => 'i.updated DESC',
 			'where' => '1 = 1',
 			'show' => true,
 		),
 		'my_reports' => array(
+			'title' => 'reported_by_me',
 			'order' => 'i.updated DESC',
 			'where' => 'i.id_reporter = {int:member}',
 			'show' => projectAllowedTo('issue_report'),
 		),
 	);
+
+	$context['issue_list'] = array();
+
+	foreach ($issue_list as $issuel)
+	{
+		if ($issuel['show'])
+			$context['issue_list'][] = array(
+				'title' => $txt[$issuel['title']],
+				'issues' => getIssueList($issues_num, $issuel['order'], $issuel['where']),
+			);
+	}
 
 	// Load timeline
 	$request = $smcFunc['db_query']('', '

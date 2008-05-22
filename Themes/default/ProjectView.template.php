@@ -72,56 +72,53 @@ function template_project_view()
 	</div><br />';
 
 	// List of latest updated issues
-
-	echo '
-	<div class="issuelistframe tborder">
-		<h3 class="catbg headerpadding">', $txt['recent_updated_issues'], '</h3>';
-
-	if (!empty($context['recent_issues']))
+	foreach ($context['issue_list'] as $issueList)
 	{
 		echo '
-		<table cellspacing="1" class="bordercolor issuetable">
-			<tr>
-				<th class="titlebg headerpadding"></th>
-				<th class="titlebg headerpadding">', $txt['issue_title'], '</th>
-				<th class="titlebg headerpadding"></th>
-				<th class="titlebg headerpadding"></th>
-			</tr>';
+	<div class="issuecolumn">
+		<div class="issuelistframe tborder columnmargin">
+			<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
+			<table cellspacing="1" class="bordercolor issuetable">
+				<tr>';
+
+		if (!empty($context['recent_issues']))
+			echo '
+					<th class="titlebg headerpadding"></th>
+					<th class="titlebg headerpadding">', $txt['issue_title'], '</th>
+					<th class="titlebg headerpadding"></th>
+					<th class="titlebg headerpadding"></th>';
+		else
+			echo '
+					<th class="titlebg" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+
+		echo '
+				</tr>';
 
 		foreach ($context['recent_issues'] as $issue)
 		{
 			echo '
-			<tr>
-				<td class="windowbg icon">
-					<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
-						<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
-					</a>
-				</td>
-				<td class="windowbg2 info">
-					<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
-					<p class="smalltext">', $issue['reporter_link'], '</p>
-				</td>
-				<td class="windowbg stats smalltext">
-				</td>
-				<td class="windowbg lastissue">
-				</td>
-			</tr>';
+				<tr>
+					<td class="windowbg icon">
+						<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+						</a>
+					</td>
+					<td class="windowbg2 info">
+						<h4><a href="', $issue['link'], '">', $issue['name'], '</a></h4>
+						<p class="smalltext">', $issue['reporter_link'], '</p>
+					</td>
+					<td class="windowbg stats smalltext">
+					</td>
+					<td class="windowbg lastissue">
+					</td>
+				</tr>';
 		}
 
 		echo '
-		</table>';
-	}
-	else
-	{
-		echo '
-				<tr>
-					<td class="catbg3"><b>', $txt['no_projects'], '</b></td>
-				</tr>';
-	}
-
-	echo '
+			</table>
+		</div>
 	</div>';
-
+	}
 
 	// Statistics etc
 	echo '
