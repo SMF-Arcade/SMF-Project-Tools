@@ -116,14 +116,27 @@ function IssueList()
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'category' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
-			'version' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : '',
+			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>',
+			'href' => $scripturl . '?issue=' . $row['id_issue'],
+			'category' => array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name'],
+				'link' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+			),
+			'version' => array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
+			),
 			'type' => $row['issue_type'],
-			'link' => $scripturl . '?issue=' . $row['id_issue'],
-			'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
+			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
-			'status' => &$context['issue']['status'][$row['status']]['text'],
-			'reporter' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			'status' => &$context['issue']['status'][$row['status']],
+			'reporter' => array(
+				'id' => $row['id_reporter'],
+				'name' => empty($row['id_reporter']) ? $txt['issue_guest'] : $row['reporter'],
+				'link' => empty($row['id_reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			),
 			'priority' => $row['priority']
 		);
 	}
