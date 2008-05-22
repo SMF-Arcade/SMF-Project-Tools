@@ -143,8 +143,8 @@ function ReportIssue2()
 
 	$context['possible_types'] = array();
 
-	foreach ($context['project']['trackers'] as $type)
-		$context['possible_types'][$type] = &$context['project_tools']['issue_types'][$type];
+	foreach ($context['project']['trackers'] as $id => $type)
+		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
 
 	if (empty($_POST['type']) || !isset($context['possible_types'][$_POST['type']]))
 		$post_errors[] = 'no_issue_type';
@@ -164,7 +164,7 @@ function ReportIssue2()
 			$context['post_error']['messages'][] = $txt['error_' . $post_error];
 		}
 
-		return IssueReport();
+		return ReportIssue();
 	}
 
 	$_POST['title'] = strtr($smcFunc['htmlspecialchars']($_POST['title']), array("\r" => '', "\n" => '', "\t" => ''));
