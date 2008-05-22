@@ -46,10 +46,10 @@ function ReportIssue()
 
 	$context['possible_types'] = array();
 
-	foreach ($context['project']['trackers'] as $type)
+	foreach ($context['project']['trackers'] as $id => $type)
 	{
-		$context['possible_types'][$type] = &$context['project_tools']['issue_types'][$type];
-		$context['possible_types'][$type]['selected'] = isset($_REQUEST['type']) && $_REQUEST['type'] == $type;
+		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$id]['selected'] = isset($_REQUEST['type']) && $_REQUEST['type'] == $id;
 	}
 
 	$context['issue'] = array(
@@ -89,14 +89,16 @@ function ReportIssue()
 
 	checkSubmitOnce('register');
 
-	// Template
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_report_issue'],
 		'url' => $scripturl . '?project=' . $project . ';sa=reportIssue'
 	);
 
+	// Template
 	loadTemplate('IssueReport');
+
 	$context['sub_template'] = 'report_issue';
+	$context['page_title'] = sprintf($txt['project_report_issue'], $context['project']['name']);
 }
 
 function ReportIssue2()

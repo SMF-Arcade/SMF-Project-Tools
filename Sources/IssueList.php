@@ -144,7 +144,7 @@ function IssueList()
 
 	// Template
 	$context['sub_template'] = 'issue_list';
-	//$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
+	$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
 
 	loadTemplate('IssueList');
 }

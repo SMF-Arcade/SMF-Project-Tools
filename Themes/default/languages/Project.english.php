@@ -65,6 +65,9 @@ $txt['evt_new_issue'] = 'Issue created by %s';
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';
 $txt['project_title'] = 'Projects - %s';
+$txt['project_title_issues'] = '%s - Issues';
+$txt['project_view_issue'] = '%s - Issue #%d: %s';
+$txt['project_report_issue'] = '%s - Report Issue';
 
 // Errors
 $txt['project_not_found'] = 'Project not found';

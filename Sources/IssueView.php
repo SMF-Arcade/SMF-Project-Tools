@@ -62,7 +62,7 @@ function IssueView()
 
 	// Template
 	$context['sub_template'] = 'issue_view';
-	//$context['page_title'] = sprintf($txt['issue_tracker_view_issue'], $context['current_issue']['id'], $context['current_issue']['name']);
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 
 	loadTemplate('IssueView');
 }
