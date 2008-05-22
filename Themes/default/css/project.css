@@ -180,6 +180,10 @@ table.issuetable td.info p
 {
 	vertical-align: middle;
 }
+#issueinfo td.infocolumn
+{
+	width: 33%;
+}
 #issueinfo .dark
 {
 	color: grey;
