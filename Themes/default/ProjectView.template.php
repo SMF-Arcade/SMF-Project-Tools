@@ -94,7 +94,7 @@ function template_project_view()
 		echo '
 				</tr>';
 
-		foreach ($context['recent_issues'] as $issue)
+		foreach ($issueList['issues'] as $issue)
 		{
 			echo '
 				<tr>
