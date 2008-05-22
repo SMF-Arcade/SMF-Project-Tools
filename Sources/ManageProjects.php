@@ -182,7 +182,7 @@ function EditProject()
 			'name' => htmlspecialchars($project['name']),
 			'description' => htmlspecialchars($project['description']),
 			'long_description' => htmlspecialchars($project['long_description']),
-			'trackers' => array_keys($project['issues']),
+			'trackers' => array_keys($project['trackers']),
 			'developers' => $project['developers'],
 		);
 	}
@@ -364,8 +364,22 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'newversion')
 	{
-		if (!empty($_REQUEST['project']) && !$context['project'] = loadProject($_REQUEST['project'], false))
-			fatal_lang_error('issue_project_not_found');
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
+				p.' . implode(', p.', $context['type_columns']) . '
+			FROM {db_prefix}projects AS p
+			WHERE {query_see_project}
+				AND p.id_project = {int:project}
+			LIMIT 1',
+			array(
+				'project' => (int) $_REQUEST['project'],
+			)
+		);
+
+		if (!($context['project'] = $smcFunc['db_fetch_assoc']($request)))
+			fatal_lang_error('project_not_found');
+		$smcFunc['db_free_result']($request);
 
 		$curVersion = array(
 			'member_groups' => array(-1, 0),
@@ -374,7 +388,7 @@ function EditVersion()
 		$context['version'] = array(
 			'is_new' => true,
 			'id' => 0,
-			'project' => $context['project']['id'],
+			'project' => $context['project']['id_project'],
 			'name' => '',
 			'description' => '',
 			'parent' => !empty($_REQUEST['parent']) && isset($context['project']['versions'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
@@ -400,8 +414,22 @@ function EditVersion()
 
 		$row = $smcFunc['db_fetch_assoc']($request);
 
-		if (!$context['project'] = loadProject($row['id_project'], false))
-			fatal_lang_error('issue_project_not_found');
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
+				p.' . implode(', p.', $context['type_columns']) . '
+			FROM {db_prefix}projects AS p
+			WHERE {query_see_project}
+				AND p.id_project = {int:project}
+			LIMIT 1',
+			array(
+				'project' => $row['id_project'],
+			)
+		);
+
+		if (!($context['project'] = $smcFunc['db_fetch_assoc']($request)))
+			fatal_lang_error('project_not_found');
+		$smcFunc['db_free_result']($request);
 
 		$curVersion = array(
 			'member_groups' => explode(',', $row['member_groups']),

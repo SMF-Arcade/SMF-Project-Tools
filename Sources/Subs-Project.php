@@ -60,11 +60,12 @@ function loadProject($id_project, $detailed = true)
 		'versions' => array(),
 		'parents' => array(),
 		'category' => array(),
-		'issues' => array(),
-		'trackers' => explode(',', $row['trackers']),
+		'trackers' => array(),
 		'developers' => array(),
 		'is_developer' => false,
 	);
+
+	$trackers = explode(',', $row['trackers']);
 
 	// Developers
 	$request = $smcFunc['db_query']('', '
@@ -92,16 +93,20 @@ function loadProject($id_project, $detailed = true)
 	if (!$detailed)
 		return $project;
 
-	foreach ($project['trackers'] as $key)
+	foreach ($trackers as $key)
 	{
-		$project['issues'][$key] = array(
+		$project['trackers'][$key] = array(
 			'info' => &$context['project_tools']['issue_types'][$key],
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key
+			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key,
 		);
 	}
+
+	print_r($row);
+
+	unset($row);
 
 	// Load Versions
 	$request = $smcFunc['db_query']('', '
@@ -119,7 +124,7 @@ function loadProject($id_project, $detailed = true)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$issues = array();
-		foreach ($project['trackers'] as $key)
+		foreach ($trackers as $key)
 		{
 			$issues[$key] = array(
 				'info' => &$context['project_tools']['issue_types'][$key],
