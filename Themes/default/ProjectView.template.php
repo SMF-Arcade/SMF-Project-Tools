@@ -159,9 +159,13 @@ function template_project_view()
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">';
 
-	foreach ($context['events'] as $event)
+	foreach ($context['events'] as $date)
 	{
 		echo '
+				<div class="windowbg"><h5>', $date['date'], '</h5></div>';
+
+		foreach ($date['events'] as $event)
+			echo '
 					<div>', $event['time'], ' - ', $event['link'], '<br /><span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span></div>';
 	}
 

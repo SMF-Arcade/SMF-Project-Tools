@@ -87,11 +87,32 @@ function ProjectView()
 
 	$context['events'] = array();
 
+	$nowtime = forum_time();
+	$now = @getdate($nowtime);
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$data = unserialize($row['event_data']);
 
-		$context['events'][] = array(
+		$index = date('Ymd', forum_time(true, $row['event_time']));
+		$date = @getdate(forum_time(true, $row['event_time']));
+
+		if (!isset($context['events'][$index]))
+		{
+			$context['events'][$index] = array(
+				'date' => '',
+				'events' => array(),
+			);
+
+			if ($date['yday'] == $now['yday'] && $date['year'] == $now['year'])
+				$context['events'][$index]['date'] = $txt['today'];
+			elseif (($date['yday'] == $now['yday'] - 1 && $date['year'] == $now['year']) || ($now['yday'] == 0 && $date['year'] == $now['year'] - 1) && $date['mon'] == 12 && $date['mday'] == 31)
+				$context['events'][$index]['date'] = $txt['yesterday'];
+			else
+				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
+		}
+
+		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
 			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
