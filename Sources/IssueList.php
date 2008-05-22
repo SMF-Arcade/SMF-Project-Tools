@@ -92,7 +92,7 @@ function IssueList()
 			i.status, i.created, i.updated,
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
-			i.id_version,, IFNULL(ver.version_name, {string:empty}) AS version_name,
+			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
