@@ -114,7 +114,7 @@ table.projectsframe td.lastissue
 /* Issue list */
 .issuelistframe
 {
-	margin-top: 0.4em;
+	margin-top: 0;
 }
 .issuelistframe h3
 {
