@@ -32,7 +32,6 @@ $txt['issue_category'] = 'Category';
 
 // Tabs
 $txt['issues'] = 'Issues';
-$txt['downloads'] = 'Downloads';
 $txt['roadmap'] = 'Roadmap';
 
 // Project List
@@ -55,8 +54,11 @@ $txt['reported_by_me'] = 'Reported by Me';
 
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
+
 $txt['project_statistics'] = 'Statistics';
-$txt['project_open_closed'] = '%1$d open - %2$d closed';
+$txt['project_open_issues'] = 'Open Issues';
+$txt['project_closed_issues'] = 'Closed Issues';
+
 $txt['project_timeline'] = 'Timeline';
 $txt['evt_new_issue'] = 'Issue created by %s';
 

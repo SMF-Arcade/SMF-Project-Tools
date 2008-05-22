@@ -131,15 +131,23 @@ function template_project_view()
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">', $txt['project_statistics'], '</h4>
 				<p class="section"></p>
-				<div class="windowbg2 sectionbody middletext">';
+				<div class="windowbg2 sectionbody middletext">
+					<table width="100%">';
 
 	foreach ($context['project']['trackers'] as $type)
 		echo '
-					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
-					<div class="progressbar"><div class="done" style="width: ', round($type['closed'] / $type['total'], 2), '%"></div></div>
-					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
+					<tr>
+						<td width="10%">
+							<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
+							<span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span>
+						</td>
+						<td>
+							<div class="progressbar"><div class="done" style="width: ', round($type['closed'] / $type['total'], 2), '%"></div></div>
+						</td>
+					</tr>';
 
 	echo '
+					</table>
 				</div>
 			</div>
 		</div>
