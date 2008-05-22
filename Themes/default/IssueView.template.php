@@ -16,13 +16,6 @@ function template_issue_view()
 					$j(this).children("div.edit").show();
 					$j(this).children("div.display").hide();
 				});
-
-				$j(this).children("#issueinfo td.infocolumn div.edit cancel").bind("onclick", function()
-				{
-					$j(this).parents("#issueinfo td.infocolumn").children("div.edit").hide();
-					$j(this).parents("#issueinfo td.infocolumn").children("div.display").show();
-				});
-
 			});
 		</script>';
 	}

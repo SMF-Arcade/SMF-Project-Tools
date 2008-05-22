@@ -188,12 +188,12 @@ table.issuetable td.info p
 {
 	color: grey;
 }
-#issueinfo div.display, #issueinfo div.options
+#issueinfo div.display, #issueinfo div.edit
 {
 	height: 25px;
 	vertical-align: middle;
 }
-#issueinfo div.options
+#issueinfo div.edit
 {
 	display: none;
 }
