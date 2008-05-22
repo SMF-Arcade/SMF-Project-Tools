@@ -108,7 +108,7 @@ function ProjectView()
 
 function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 {
-	global $project, $user_info, $smcFunc;
+	global $project, $user_info, $smcFunc, $scripturl;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT

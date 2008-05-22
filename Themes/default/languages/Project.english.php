@@ -55,9 +55,9 @@ $txt['reported_by_me'] = 'Reported by Me';
 
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
-$txt['project_statistics'] = 'Project Statistics';
+$txt['project_statistics'] = 'Statistics';
 $txt['project_open_closed'] = '%1$d open - %2$d closed';
-$txt['project_timeline'] = 'Project Timeline';
+$txt['project_timeline'] = 'Timeline';
 $txt['evt_new_issue'] = 'Issue created by %s';
 
 // Title

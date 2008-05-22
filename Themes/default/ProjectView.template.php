@@ -94,9 +94,11 @@ function template_project_view()
 		echo '
 				</tr>';
 
-		foreach ($issueList['issues'] as $issue)
+		if (!empty($issueList['issues']))
 		{
-			echo '
+			foreach ($issueList['issues'] as $issue)
+			{
+				echo '
 				<tr>
 					<td class="windowbg icon">
 						<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
@@ -112,6 +114,7 @@ function template_project_view()
 					<td class="windowbg lastissue">
 					</td>
 				</tr>';
+			}
 		}
 
 		echo '
@@ -126,13 +129,14 @@ function template_project_view()
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
 			<div class="windowbg">
-				<h4 class="headerpadding titlebg">Issue Trackers</h4>
+				<h4 class="headerpadding titlebg">', $txt['project_statistics'], '</h4>
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">';
 
 	foreach ($context['project']['issues'] as $type)
 		echo '
 					<h3><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></h3>
+					<div c
 					<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span> <span>', $type['total'], '</span></div>';
 
 	echo '
