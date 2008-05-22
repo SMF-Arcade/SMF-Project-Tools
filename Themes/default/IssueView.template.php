@@ -11,7 +11,7 @@ function template_issue_view()
 		<script language="JavaScript" type="text/javascript">
 			$j(document).bind("ready", function()
 			{
-				$j("#infotable div").bind("mouseenter", function ()
+				$j("#infotable div.itrow").bind("mouseenter", function ()
 				{
 					$j(this).children("div.options").fadeIn(500);
 				}).bind("mouseleave", function ()
@@ -115,6 +115,7 @@ function template_issue_view()
 									<a href="#">', $modify_button, '</a>
 								</div>
 							</div>
+							<div style="clear: both"></div>
 						</div>';
 
 	echo '
