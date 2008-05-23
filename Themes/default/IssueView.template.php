@@ -28,7 +28,7 @@ function template_issue_view()
 	echo '
 	<div id="issueinfo" class="tborder">
 		<h3 class="catbg3">
-			<div class="floatleft">
+			<div class="floatleft" style="width: 50%">
 				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
 				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 			</div>
@@ -122,6 +122,7 @@ function template_issue_view()
 		</table>
 	</div>
 
+	<div class="tborder">
 		<div class="bordercolor">
 			<div class="clearfix topborder windowbg largepadding">
 				<div class="floatleft poster">
@@ -133,18 +134,7 @@ function template_issue_view()
 						<h5>', $context['current_issue']['name'], '</h5>
 						<div class="smalltext">&#171; <strong>', $txt['reported_on'], ':</strong> ', $context['current_issue']['created'], ' &#187;</div>
 					</div>
-					<div class="post">';
-
-
-	// Info table
-	echo '
-						<div id="infotable" class="floatright infotable tborder">
-							<div  itrow">
-
-							</div>
-	';
-
-	echo '
+					<div class="post">
 						', $context['current_issue']['body'], '
 					</div>
 				</div>
