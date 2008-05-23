@@ -11,14 +11,12 @@ function template_issue_view()
 		<script language="JavaScript" type="text/javascript">
 			function startEdit(param)
 			{
+				$j("#issueupdate").show();
+				$j("#issueoptions").hide();
+
 				$j("#issueinfo td.infocolumn.canedit div.edit").show();
 				$j("#issueinfo td.infocolumn.canedit div.display").hide();
 			}
-
-			$j(document).bind("ready", function()
-			{
-				$j("#issueinfo td.infocolumn").bind("dblclick", startEdit);
-			});
 		</script>';
 	}
 
@@ -111,9 +109,14 @@ function template_issue_view()
 					</div>
 				</td>
 			</tr>
-			<tr class="catbg" style="display: none">
-				<td class="right" colspan="3" width="100%">
+			<tr id="issueupdate" class="catbg" style="display: none">
+				<td align="right" colspan="3" width="100%">
 					<input type="submit" />
+				</td>
+			</tr>
+			<tr id="issueoptions" class="catbg">
+				<td align="right" colspan="3" width="100%">
+					<a href="#" onclick="startEdit(); return false;">', $txt['issue_edit'], '</a>
 				</td>
 			</tr>
 		</table>

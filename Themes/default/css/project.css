@@ -149,10 +149,6 @@ table.issuetable td.info p
 /* ************************************* */
 /* styles from IssueView.template        */
 /* ************************************* */
-.issueinfoframe
-{
-	margin-top: 0.4em;
-}
 .issueinfoframe h3
 {
 	margin: 0;
