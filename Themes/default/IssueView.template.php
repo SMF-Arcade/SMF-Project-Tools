@@ -99,13 +99,29 @@ function template_issue_view()
 					</td>
 				</tr>
 				<tr class="windowbg smalltext">
-					<td class="infocolumn" colspan="3" width="100%">
+					<td class="infocolumn', $context['can_assign'] ? ' canedit' : '', '" colspan="3" width="100%">
 						<div class="display">
 							<span class="dark">', $txt['issue_assigned_to'], '</span>
 							', !empty($context['current_issue']['assignee']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
-						</div>
+						</div>';
+
+	if ($context['can_assign'])
+	{
+		echo '
 						<div class="edit">
-						</div>
+							<select name="assign">';
+
+		foreach ($context['assign_members'] as $mem)
+		{
+			echo '
+								<option value="', $mem['id'], '">', $mem['name'], '</option>';
+		}
+
+		echo '
+							</select>
+						</div>';
+	}
+	echo '
 					</td>
 				</tr>
 				<tr id="issueupdate" class="catbg" style="display: none">

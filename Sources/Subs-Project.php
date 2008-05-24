@@ -156,6 +156,7 @@ function loadProject($id_project, $detailed = true)
 	}
 	$smcFunc['db_free_result']($request);
 
+	// Category
 	$request = $smcFunc['db_query']('', '
 		SELECT id_category, category_name
 		FROM {db_prefix}issue_category AS cat

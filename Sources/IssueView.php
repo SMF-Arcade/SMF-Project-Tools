@@ -34,21 +34,22 @@ function IssueView()
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
-		
-	$context['show_update'] = false;
 
 	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_my_issue'] ? 'own' : 'any';
+	$type = $context['current_issue']['is_my'] ? 'own' : 'any';
 
+	$context['show_update'] = false;
+	$context['can_assign'] = false;
+	
 	if (projectAllowedTo('issue_update_' . $type))
 	{
-		$context['show_update'] = true;
-
-		if (allowedTo('issue_assign'))
+		if (projectAllowedTo('issue_assign'))
 		{
-			$context['show_assign'] = true;
+			$context['can_assign'] = true;
 			$context['assign_members'] = &$context['project']['developers'];
 		}
+
+		$context['show_update'] = true;
 	}
 
 	// Template
