@@ -36,11 +36,11 @@ function IssueView()
 		fatal_lang_error('issue_not_found');
 
 	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_my'] ? 'own' : 'any';
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
 	$context['can_assign'] = false;
-	
+
 	if (projectAllowedTo('issue_update_' . $type))
 	{
 		if (projectAllowedTo('issue_assign'))
@@ -61,13 +61,25 @@ function IssueView()
 
 function IssueUpdate()
 {
-	global $context;
+	global $context, $user_info;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
 
 	checkSession();
 
+	$posterOptions = array(
+		'id' => $user_info['id']
+	);
+
+	if (projectAllowedTo('issue_update_' . $type))
+	{
+
+	}
+
 	print_r($_POST);
+	die();
+
+	redirectexit('issue=' . $_REQUEST['issue']);
 }
 ?>

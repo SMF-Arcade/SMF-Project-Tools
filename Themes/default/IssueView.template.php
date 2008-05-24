@@ -28,7 +28,7 @@ function template_issue_view()
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=updateIssue" method="post">
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		
+
 		<div id="issueinfo" class="tborder">
 			<h3 class="catbg3">
 				<div class="floatleft" style="width: 50%">
@@ -111,12 +111,13 @@ function template_issue_view()
 	{
 		echo '
 						<div class="edit">
-							<select name="assign">';
+							<select name="assign">
+								<option></option>';
 
 		foreach ($context['assign_members'] as $mem)
 		{
 			echo '
-								<option value="', $mem['id'], '">', $mem['name'], '</option>';
+								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
 		}
 
 		echo '

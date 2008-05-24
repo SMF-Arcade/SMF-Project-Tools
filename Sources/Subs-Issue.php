@@ -142,8 +142,16 @@ function loadIssue($id_issue)
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
 		'link' => $scripturl . '?issue=' . $row['id_issue'],
-		'category' => $row['category_name'],
-		'id_category' => $row['id_category'],
+		'project' => array(
+			'id' => $row['id_project'],
+			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['project_name'] . '</a>',
+			'href' => $scripturl . '?project=' . $row['id_project'],
+			'name' => $row['project_name'],
+		),
+		'category' => array(
+			'id' => $row['id_category'],
+			'name' => $row['category_name'],
+		),
 		'version' => array(
 			'id' => $row['id_version'],
 			'name' => $row['version_name'],
@@ -153,18 +161,16 @@ function loadIssue($id_issue)
 			'name' => $row['vnamefix'],
 		),
 		'reporter' => &$memberContext[$row['id_reporter']],
-		'is_my_issue' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
+		'assignee' => array(
+			'id' => $row['id_assigned'],
+		),
+		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
 		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
 		'status' => $context['issue']['status'][$row['status']],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
-		'project' => array(
-			'id' => $row['id_project'],
-			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['project_name'] . '</a>',
-			'href' => $scripturl . '?project=' . $row['id_project'],
-			'name' => $row['project_name'],
-		),
+
 		'body' => parse_bbc($row['body']),
 	);
 
