@@ -32,6 +32,9 @@ function IssueView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found');
+		
 	$context['show_update'] = false;
 
 	$issue = $context['current_issue']['id'];
