@@ -104,7 +104,7 @@ function template_issue_view()
 					<td class="infocolumn', $context['can_assign'] ? ' canedit' : '', '" colspan="3" width="100%">
 						<div class="display">
 							<span class="dark">', $txt['issue_assigned_to'], '</span>
-							', !empty($context['current_issue']['assignee']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
+							', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 						</div>';
 
 	if ($context['can_assign'])

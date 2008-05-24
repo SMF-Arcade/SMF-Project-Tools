@@ -66,19 +66,32 @@ function IssueUpdate()
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
 
+	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+
 	checkSession();
 
 	$posterOptions = array(
 		'id' => $user_info['id']
 	);
 
+	$issueOptions = array();
+
 	if (projectAllowedTo('issue_update_' . $type))
 	{
+		if (projectAllowedTo('issue_assign') && isset($_POST['assign']))
+		{
+			if ((int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
+				$issueOptions['assignee'] = (int) $_POST['assign'];
 
+		}
 	}
 
-	print_r($_POST);
+	// DEBUG
+	print_r(array($_POST, $issueOptions));
 	die();
+
+	updateIssue($issue, $issueOptions, $posterOptions);
 
 	redirectexit('issue=' . $_REQUEST['issue']);
 }

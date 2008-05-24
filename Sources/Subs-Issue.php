@@ -93,7 +93,8 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_reporter, i.id_assigned, i.body,
+			i.id_reporter, i.body,
+			i.id_assigned, ma.real_name AS a_real_name,
 			p.id_project, p.name AS project_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
@@ -163,6 +164,8 @@ function loadIssue($id_issue)
 		'reporter' => &$memberContext[$row['id_reporter']],
 		'assignee' => array(
 			'id' => $row['id_assigned'],
+			'name' => '',
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_assigned'] . '">' . $row['a_real_name'] . '</a>',
 		),
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
 		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
@@ -170,7 +173,6 @@ function loadIssue($id_issue)
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
-
 		'body' => parse_bbc($row['body']),
 	);
 
@@ -275,7 +277,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		$issueUpdates[] = 'status = {int:status}';
 
 	if (!empty($issueOptions['assignee']))
-		$issueUpdates[] = 'id_assignee = {int:assignee}';
+		$issueUpdates[] = 'id_assigned = {int:assignee}';
 
 	if (!empty($issueOptions['priority']))
 		$issueUpdates[] = 'priority = {int:priority}';
