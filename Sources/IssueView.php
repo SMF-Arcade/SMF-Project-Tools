@@ -55,19 +55,15 @@ function IssueView()
 	loadTemplate('IssueView');
 }
 
-function IssueDelete()
+function IssueUpdate()
 {
 	global $context;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
 
-	checkSession('get');
+	checkSession();
 
-	isAllowedTo('issue_delete');
-
-	deleteIssue($context['current_issue']['id']);
-
-	redirectexit('project=' . $_REQUEST['project']. ';sa=issues');
+	print_r($_POST);
 }
 ?>

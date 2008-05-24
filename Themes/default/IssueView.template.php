@@ -26,7 +26,7 @@ function template_issue_view()
 	$reporter = &$context['current_issue']['reporter'];
 
 	echo '
-	<form action="', $scripturl, '?project=" method="post">
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=updateIssue" method="post">
 		<div id="issueinfo" class="tborder">
 			<h3 class="catbg3">
 				<div class="floatleft" style="width: 50%">
@@ -46,7 +46,12 @@ function template_issue_view()
 							<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
 						</div>
 						<div class="edit">
+							<span class="dark">', $txt['issue_category'], '</span>
+							<span class="value">
+								<select>
 
+								</select>
+							</span>
 						</div>
 					</td>
 					<td class="infocolumn">
@@ -64,7 +69,6 @@ function template_issue_view()
 							', $txt[$context['current_issue']['priority']], '
 						</div>
 						<div class="edit">
-
 						</div>
 					</td>
 				</tr>
@@ -75,7 +79,6 @@ function template_issue_view()
 							', $context['current_issue']['status']['text'], '
 						</div>
 						<div class="edit">
-
 						</div>
 					</td>
 					<td class="infocolumn">
@@ -84,7 +87,6 @@ function template_issue_view()
 							', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
 						</div>
 						<div class="edit">
-
 						</div>
 					</td>
 					<td class="infocolumn">
@@ -93,7 +95,6 @@ function template_issue_view()
 							', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
 						</div>
 						<div class="edit">
-
 						</div>
 					</td>
 				</tr>
@@ -133,6 +134,7 @@ function template_issue_view()
 						<h5>', $context['current_issue']['name'], '</h5>
 						<div class="smalltext">&#171; <strong>', $txt['reported_on'], ':</strong> ', $context['current_issue']['created'], ' &#187;</div>
 					</div>
+					<hr width="100%" size="1" class="hrcolor" />
 					<div class="post">
 						', $context['current_issue']['body'], '
 					</div>

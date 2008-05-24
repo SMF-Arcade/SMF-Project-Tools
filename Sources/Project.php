@@ -42,6 +42,7 @@ function Projects()
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList'),
 		'viewIssue' => array('IssueView.php', 'IssueView'),
+		'updateIssue' => array('IssueView.php', 'IssueUpdate'),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
