@@ -252,7 +252,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 			id_project, subject, id_version, status, id_category,
 			priority, issue_type, id_assigned, id_version_fixed
 		FROM {db_prefix}issues
-		WHERE i.id_issue = {int:issue}',
+		WHERE id_issue = {int:issue}',
 		array(
 			'issue' => $id_issue
 		)
