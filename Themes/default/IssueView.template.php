@@ -99,8 +99,7 @@ function template_issue_view()
 						<div class="edit">
 							<span class="dark">', $txt['issue_status'], '</span>
 							<span class="value">
-								<select name="status">
-									<option></option>';
+								<select name="status">';
 
 
 		foreach ($context['issue']['status'] as $status)
