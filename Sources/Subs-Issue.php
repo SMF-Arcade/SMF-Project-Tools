@@ -460,7 +460,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 	$projectUpdates = array();
 
-	if (!empty($issueOptions['type']) && $issueOptions['type'] != $row['issue_type'])
+	if (!empty($issueOptions['type']) && ($issueOptions['type'] != $row['issue_type'] || $oldStatus != $newStatus))
 	{
 		if (!empty($oldStatus))
 			$projectUpdates[] = "{$oldStatus}_$row[issue_type] = {$oldStatus}_$row[issue_type] - 1";
