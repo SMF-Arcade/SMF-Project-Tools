@@ -185,7 +185,7 @@ function projectIsAllowedTo($permission)
 		fatal_error('projectAllowed(): Project not loaded');
 	}
 
-	return allowedTo($permission);
+	return isAllowedTo($permission);
 }
 
 function createProject($projectOptions)

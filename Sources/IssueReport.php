@@ -42,7 +42,7 @@ function ReportIssue()
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
 
-	projectIsAllowedTo('');
+	projectIsAllowedTo('issue_report');
 
 	$context['possible_types'] = array();
 

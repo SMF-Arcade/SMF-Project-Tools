@@ -501,6 +501,16 @@ function EditVersion2()
 		else
 			updateVersion($_POST['version'], $versionOptions);
 	}
+	elseif (isset($_POST['delete']))
+	{
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_versions
+			WHERE id_version = {int:version}',
+			array(
+				'version' => $_POST['version']
+			)
+		);
+	}
 
 	redirectexit('action=admin;area=manageprojects');
 }

@@ -53,6 +53,12 @@ function IssueView()
 		$context['set_target'] = projectAllowedTo('issue_set_taget');
 		$context['change_status'] = projectAllowedTo('issue_change_status');
 
+		$context['possible_types'] = array();
+
+		foreach ($context['project']['trackers'] as $id => $type)
+			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
+
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
@@ -129,6 +135,14 @@ function IssueUpdate()
 			if (isset($context['issue']['status'][(int) $_POST['status']]))
 				$issueOptions['status'] = (int) $_POST['status'];
 		}
+
+		$context['possible_types'] = array();
+
+		foreach ($context['project']['trackers'] as $id => $type)
+			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+
+		if (isset($context['possible_types'][$_POST['type']]))
+			$issueOptions['type'] = $_POST['type'];
 	}
 
 	// DEBUG

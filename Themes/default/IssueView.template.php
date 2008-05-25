@@ -72,10 +72,27 @@ function template_issue_view()
 						<div class="display">
 							<span class="dark">', $txt['issue_type'], '</span>
 							<span class="value">', $context['current_issue']['type']['name'], '</span>
-						</div>
-						<div class="edit">
+						</div>';
 
-						</div>
+	if ($context['can_edit'])
+	{
+		echo '
+						<div class="edit">
+							<span class="dark">', $txt['issue_type'], '</span>
+							<span class="value">
+								<select name="type">';
+
+		foreach ($context['possible_types'] as $id => $type)
+			echo '
+									<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
+
+		echo '
+								</select>
+							</span>
+						</div>';
+	}
+
+	echo '
 					</td>
 					<td class="infocolumn">
 						<div class="display">
@@ -103,10 +120,9 @@ function template_issue_view()
 
 
 		foreach ($context['issue']['status'] as $status)
-		{
+
 			echo '
 									<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
-		}
 
 		echo '
 								</select>
