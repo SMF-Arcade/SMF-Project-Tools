@@ -87,7 +87,7 @@ function template_issue_view()
 					</td>
 				</tr>
 				<tr class="windowbg2 smalltext">
-					<td class="infocolumn', !empty($context['change_status']) ? ' canedit' : '', '">
+					<td class="issue_',  $context['current_issue']['name'], ' infocolumn', !empty($context['change_status']) ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_status'], '</span>
 							', $context['current_issue']['status']['text'], '
