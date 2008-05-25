@@ -88,10 +88,10 @@ function IssueUpdate()
 	}
 
 	// DEBUG
-	print_r(array($_POST, $issueOptions));
-	die();
+	//print_r(array($_POST, $issueOptions));
+	//die();
 
-	updateIssue($issue, $issueOptions, $posterOptions);
+	$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 
 	redirectexit('issue=' . $_REQUEST['issue']);
 }

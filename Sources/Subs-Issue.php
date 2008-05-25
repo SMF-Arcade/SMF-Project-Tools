@@ -208,12 +208,6 @@ function createIssue($issueOptions, &$posterOptions)
 
 	$id_issue = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
 
-	$event_data = array(
-		'subject' => $issueOptions['subject']
-	);
-
-	$event_data = serialize($event_data);
-
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',
 		array(
@@ -230,7 +224,9 @@ function createIssue($issueOptions, &$posterOptions)
 			$posterOptions['id'],
 			'new_issue',
 			$issueOptions['created'],
-			$event_data
+			serialize(array(
+				'subject' => $issueOptions['subject']
+			)),
 		),
 		array()
 	);
@@ -252,8 +248,10 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
 
 	$request = $smcFunc['db_query']('', '
-		SELECT i.id_project, i.id_issue, i.id_project, i.id_version, i.status, i.id_category, i.issue_type, i.id_assigned
-		FROM {db_prefix}issues AS i
+		SELECT
+			id_project, subject, id_version, status, id_category,
+			priority, issue_type, id_assigned, id_version_fixed
+		FROM {db_prefix}issues
 		WHERE i.id_issue = {int:issue}',
 		array(
 			'issue' => $id_issue
@@ -265,34 +263,91 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	$issueUpdates = array();
+	$issueUpdates = array(
+		'subject' => isset($issueOptions['subject']) ? $issueOptions['subject'] : $row['subject'],
+		'changes' => array(),
+	);
 
-	if (!empty($issueOptions['subject']))
+	if (!empty($issueOptions['subject']) && $issueOptions['subject'] != $row['subject'])
+	{
 		$issueUpdates[] = 'subject = {string:subject}';
 
+		$event_data['changes'][] = array(
+			'rename', $row['subject'], $issueOptions['subject']
+		);
+	}
+
 	if (!empty($issueOptions['body']))
+	{
 		$issueUpdates[] = 'body = {string:body}';
 
-	if (!empty($issueOptions['status']))
+		$event_data['changes'][] = array(
+			'details_edit'
+		);
+	}
+
+	if (!empty($issueOptions['status']) && $issueOptions['status'] != $row['status'])
+	{
 		$issueUpdates[] = 'status = {int:status}';
 
-	if (!empty($issueOptions['assignee']))
+		$event_data['changes'][] = array(
+			'status', $row['status'], $issueOptions['status'],
+		);
+	}
+
+	if (!empty($issueOptions['assignee']) && $issueOptions['assignee'] != $row['id_assigned'])
+	{
 		$issueUpdates[] = 'id_assigned = {int:assignee}';
 
-	if (!empty($issueOptions['priority']))
+		$event_data['changes'][] = array(
+			'assign', $row['id_assigned'], $issueOptions['assignee'],
+		);
+	}
+
+	if (!empty($issueOptions['priority']) && $issueOptions['priority'] != $row['priority'])
+	{
 		$issueUpdates[] = 'priority = {int:priority}';
 
-	if (!empty($issueOptions['version']))
+		$event_data['changes'][] = array(
+			'priority', $row['priority'], $issueOptions['priority'],
+		);
+	}
+
+	if (!empty($issueOptions['version']) && $issueOptions['version'] != $row['id_version'])
+	{
 		$issueUpdates[] = 'id_version = {int:version}';
 
-	if (!empty($issueOptions['category']))
+		$event_data['changes'][] = array(
+			'version', $row['id_version'], $issueOptions['version'],
+		);
+	}
+
+	if (!empty($issueOptions['version_fixed']) && $issueOptions['version_fixed'] != $row['id_version_fixed'])
+	{
+		$issueUpdates[] = 'id_version = {int:version}';
+
+		$event_data['changes'][] = array(
+			'target_version', $row['id_version_fixed'], $issueOptions['version_fixed'],
+		);
+	}
+
+	if (!empty($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
+	{
 		$issueUpdates[] = 'id_category = {int:category}';
 
-	if (!empty($issueOptions['project']))
-		$issueUpdates[] = 'id_project = {int:project}';
+		$event_data['changes'][] = array(
+			'category', $row['id_category'], $issueOptions['category'],
+		);
+	}
 
-	if (!empty($issueOptions['type']))
+	if (!empty($issueOptions['type']) && $issueOptions['type'] != $row['issue_type'])
+	{
 		$issueUpdates[] = 'issue_type = {string:type}';
+
+		$event_data['changes'][] = array(
+			'type', $row['issue_type'], $issueOptions['type'],
+		);
+	}
 
 	if (!empty($row['status']))
 		$oldStatus = $context['issue']['status'][$row['status']]['type'];
@@ -304,31 +359,28 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	else
 		$newStatus = $oldStatus;
 
-	if (empty($newStatus))
-		fatal_error('status must exists');
-
 	if (!isset($issueOptions['type']))
 		$issueOptions['type'] = $row['issue_type'];
 
 	// Update database
 	if (!empty($issueUpdates))
-	{
-		$issueUpdates[] = 'updated = {int:time}';
-		$issueOptions['time'] = time();
-		$issueUpdates[] = 'id_updater = {int:updater}';
-		$issueOptions['updater'] = $posterOptions['id'];
+		return true;
 
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}issues
-			SET
-				' . implode(',
-				', $issueUpdates) . '
-			WHERE id_issue = {int:issue}',
-			array_merge($issueOptions ,array(
-				'issue' => $id_issue,
-			))
-		);
-	}
+	$issueUpdates[] = 'updated = {int:time}';
+	$issueOptions['time'] = time();
+	$issueUpdates[] = 'id_updater = {int:updater}';
+	$issueOptions['updater'] = $posterOptions['id'];
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET
+			' . implode(',
+			', $issueUpdates) . '
+		WHERE id_issue = {int:issue}',
+		array_merge($issueOptions ,array(
+			'issue' => $id_issue,
+		))
+	);
 
 	// Update issue count
 	if (isset($issueOptions['version']) || $newStatus != $oldStatus)
@@ -415,6 +467,32 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 				'project' => $issueOptions['project'],
 			)
 		);
+
+	if (!isset($issueOptions['no_log']) && !empty($event_data))
+	{
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_timeline',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'event' => 'string',
+				'event_time' => 'int',
+				'event_data' => 'string',
+			),
+			array(
+				$row['id_project'],
+				$id_issue,
+				$posterOptions['id'],
+				'update_issue',
+				$issueOptions['time'],
+				serialize($event_data)
+			),
+			array()
+		);
+
+		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+	}
 
 	return true;
 }
