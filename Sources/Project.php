@@ -189,7 +189,7 @@ function loadProjectTools($mode = '')
 		$user_info['query_see_version'] = '1 = 1';
 	}
 
-	loadLanguage('Project+Issue');
+	loadLanguage($mode != 'admin' ? 'Project' : 'Project+ProjectAdmin');
 	loadIssueTypes();
 	loadTemplate('Project', array('forum', 'project'));
 }

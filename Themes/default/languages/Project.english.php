@@ -8,7 +8,7 @@ $txt['linktree_projects'] = 'Projects';
 $txt['linktree_issues'] = 'Issues';
 $txt['linktree_report_issue'] = 'Report Issue';
 
-// General
+// Types
 $txt['issue_type'] = 'Type';
 $txt['project_bug'] = 'Bug';
 $txt['project_bugs'] = 'Bugs';
@@ -17,6 +17,31 @@ $txt['project_feature'] = 'Feature';
 $txt['project_features'] = 'Features';
 $txt['project_feature_help'] = 'If you wan\'t to have some feature that isn\'t currently included, you may request it here';
 
+// Priority
+$txt['issue_priority'] = 'Priority';
+$txt['issue_priority_low'] = 'Low';
+$txt['issue_priority_normal'] = 'Normal';
+$txt['issue_priority_high'] = 'High';
+
+// Statuses
+$txt['issue_status'] = 'Status';
+$txt['issue_new'] = 'New';
+$txt['issue_feedback'] = 'Feedback';
+$txt['issue_confirmed'] = 'Confirmed';
+$txt['issue_assigned'] = 'Assigned';
+$txt['issue_resolved'] = 'Resolved';
+$txt['issue_closed'] = 'Closed';
+
+// Version statuses
+$txt['version_future'] = 'Future';
+$txt['version_alpha'] = 'In Development (Alpha)';
+$txt['version_beta'] = 'Beta';
+$txt['version_rc'] = 'RC';
+$txt['version_stable'] = 'Stable';
+$txt['version_stable_rec'] = 'Stable (Recommended)';
+$txt['version_obsolute'] = 'Obsolute';
+
+// General
 $txt['issue'] = 'Issue';
 $txt['issue_guest'] = 'Guest';
 $txt['issue_report'] = 'Report Issue';
@@ -30,44 +55,48 @@ $txt['issue_reported_by'] = 'Reported by';
 $txt['issue_assigned_to'] = 'Assigned to';
 $txt['issue_none'] = '(none)';
 $txt['issue_category'] = 'Category';
-
 $txt['issue_last_update'] = 'Last Update';
-
-$txt['project_today'] = 'Today';
-$txt['project_yesterday'] = 'Yesterday';
-
-// Tabs
-$txt['issues'] = 'Issues';
-$txt['roadmap'] = 'Roadmap';
 
 // Project List
 $txt['project_description'] = 'Description';
 $txt['select_project'] = 'Select Project';
 $txt['total_issues'] = 'Total Issues';
 
-// Version status
-$txt['version_future'] = 'Future';
-$txt['version_alpha'] = 'In Development (Alpha)';
-$txt['version_beta'] = 'Beta';
-$txt['version_rc'] = 'RC';
-$txt['version_stable'] = 'Stable';
-$txt['version_stable_rec'] = 'Stable (Recommended)';
-$txt['version_obsolute'] = 'Obsolute';
+// Project Page Tabs
+$txt['issues'] = 'Issues';
+$txt['roadmap'] = 'Roadmap';
 
-// Project page
+// Project Page - Issue lists
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
 
+// Project Info
 $txt['project_info'] = 'Information';
 $txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Statistics';
 $txt['project_open_issues'] = 'Open Issues';
 $txt['project_closed_issues'] = 'Closed Issues';
+
+// Timeline
 $txt['project_timeline'] = 'Timeline';
+$txt['project_today'] = 'Today';
+$txt['project_yesterday'] = 'Yesterday';
 $txt['evt_new_issue'] = 'Issue reported by %s';
+$txt['evt_update_issue'] = 'Issue updated by %s';
+
+// Issue List
+$txt['new_issue'] = 'Report Issue';
+$txt['issue_list'] = 'Issue List';
+$txt['issue_no_issues'] = 'No issues, isn\'t it great?';
+
+// Report issue
+$txt['report_issue'] = 'Report Issue';
+$txt['preview_report_issue'] = 'Preview issue';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';
+$txt['reported_on'] = 'Reported on';
+$txt['issue_delete'] = 'Delete Issue';
 
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';
@@ -78,11 +107,16 @@ $txt['project_report_issue'] = '%s - Report Issue';
 
 // Errors
 $txt['project_not_found'] = 'Project not found';
-$txt['project_is_missing'] = 'Required field %s is empty';
-$txt['project_too_long'] = '%s is too long';
-$txt['project_fix_errors'] = 'Please fix following errors';
-$txt['project_invalid'] = '%s has invalid value';
 $txt['version_not_found'] = 'Version not found';
+$txt['issue_not_found'] = 'Issue not found';
+
+$txt['project_fix_errors'] = 'Please fix following errors';
+$txt['project_is_missing'] = 'Required field %s is empty';
+$txt['project_invalid'] = '%s has invalid value';
+$txt['project_too_long'] = '%s is too long';
+$txt['error_invalid_type'] = 'You didn\'t select type for issue';
+$txt['error_invalid_version'] = 'Version selected doesn\'t exist';
+
 $txt['no_projects'] = 'There are no projects!';
 $txt['no_versions'] = 'There are no versions!';
 $txt['no_category'] = 'There are no categories!';

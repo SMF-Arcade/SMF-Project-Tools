@@ -263,10 +263,12 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	$issueUpdates = array(
+	$event_data = array(
 		'subject' => isset($issueOptions['subject']) ? $issueOptions['subject'] : $row['subject'],
 		'changes' => array(),
 	);
+
+	$issueUpdates = array();
 
 	if (!empty($issueOptions['subject']) && $issueOptions['subject'] != $row['subject'])
 	{
@@ -362,8 +364,8 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	if (!isset($issueOptions['type']))
 		$issueOptions['type'] = $row['issue_type'];
 
-	// Update database
-	if (!empty($issueUpdates))
+	// Updates needed?
+	if (empty($issueUpdates))
 		return true;
 
 	$issueUpdates[] = 'updated = {int:time}';

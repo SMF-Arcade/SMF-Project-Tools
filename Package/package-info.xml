@@ -56,7 +56,6 @@
 		<require-file name="Themes/default/images/feature.png" destination="$imagesdir" />
 
 		<!-- Langauges -->
-		<require-file name="Themes/default/languages/Issue.english.php" destination="$languagedir" />
 		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
 		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
 
@@ -97,7 +96,6 @@
 		<remove-file name="$imagesdir/feature.png" />
 
 		<!-- Languages -->
-		<remove-file name="$languagedir/Issue.english.php" />
 		<remove-file name="$languagedir/Project.english.php" />
 		<remove-file name="$languagedir/ProjectAdmin.english.php" />
 	</uninstall>
