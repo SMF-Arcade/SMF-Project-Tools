@@ -59,7 +59,7 @@ function template_issue_view()
 
 		foreach ($context['project']['category'] as $c)
 			echo '
-									<option value="', $c['id'], '" ', $context['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+									<option value="', $c['id'], '" ', $$context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '
 								</select>
 							</span>

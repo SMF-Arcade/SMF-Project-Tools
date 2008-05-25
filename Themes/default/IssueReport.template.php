@@ -60,11 +60,11 @@ function template_report_issue()
 					<dt>', $txt['issue_category'], ':</dt>
 					<dd>
 						<select name="category">
-							<option value=""></option>';
+							<option></option>';
 
 		foreach ($context['project']['category'] as $c)
 			echo '
-							<option value="', $c['id'], '" ', $context['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+							<option value="', $c['id'], '" ', $context['issue']['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '
 						</select>
 					</dd>';
