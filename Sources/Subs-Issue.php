@@ -397,67 +397,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		))
 	);
 
-	// Update issue count
-	if (isset($issueOptions['version']) || $newStatus != $oldStatus)
-	{
-		if (!isset($issueOptions['version']))
-			$issueOptions['version'] =  $row['id_version'];
-
-		$colname = $oldStatus . '_' . $row['issue_type'];
-
-		if (!empty($row['id_version']))
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}project_versions
-				SET ' . $colname . ' = ' . $colname . '- 1
-				WHERE id_version = {int:version}',
-				array(
-					'version' => $row['id_version']
-				)
-			);
-
-		$colname = $newStatus . '_' . $issueOptions['type'];
-
-		if (!empty($issueOptions['version']))
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}project_versions
-				SET ' . $colname . ' = ' . $colname . ' + 1
-				WHERE id_version = {int:version}',
-				array(
-					'version' => $issueOptions['version']
-				)
-			);
-	}
-
-	if (isset($issueOptions['category']) || $newStatus != $oldStatus)
-	{
-		if (!isset($issueOptions['category']))
-			$issueOptions['category'] = $row['id_category'];
-
-		$colname = $oldStatus . '_' . $row['issue_type'];
-
-		if (!empty($row['id_category']))
-			$smcFunc['db_query']('', '
-				UPDATE {$db_prefix}issue_category
-				SET ' . $colname . ' = ' . $colname . ' - 1
-				WHERE id_category = {int:category}',
-				array(
-					'category' => $row['id_category']
-				)
-			);
-
-		$colname = $newStatus . '_' . $issueOptions['type'];
-
-		if (!empty($issueOptions['category']))
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}issue_category
-				SET ' . $colname . ' = ' . $colname . ' + 1
-				WHERE id_category = {int:category}',
-				array(
-					'category' => $issueOptions['category']
-				)
-			);
-	}
-
 	$projectUpdates = array();
 
 	if (!empty($issueOptions['type']) && ($issueOptions['type'] != $row['issue_type'] || $oldStatus != $newStatus))

@@ -192,26 +192,6 @@ $tables = array(
 				'size' => 255,
 				'null' => false,
 			),
-			array(
-				'name' => 'open_bug',
-				'type' => 'int',
-				'null' => false,
-			),
-			array(
-				'name' => 'closed_bug',
-				'type' => 'int',
-				'null' => false,
-			),
-			array(
-				'name' => 'open_feature',
-				'type' => 'int',
-				'null' => false,
-			),
-			array(
-				'name' => 'closed_feature',
-				'type' => 'int',
-				'null' => false,
-			),
 		),
 		'indexes' => array(
 			array(
@@ -252,30 +232,6 @@ $tables = array(
 				'type' => 'varchar',
 				'size' => 30,
 				'null' => false,
-			),
-			array(
-				'name' => 'open_bug',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'closed_bug',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'open_feature',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'closed_feature',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
 			),
 		),
 		'indexes' => array(

@@ -107,7 +107,7 @@ function loadProject($id_project, $detailed = true)
 	// Load Versions
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_version, id_parent, version_name, release_date, status, ' .  implode(', ', $context['type_columns']) . '
+			id_version, id_parent, version_name, release_date, status
 		FROM {db_prefix}project_versions AS ver
 		WHERE id_project = {int:project}
 			AND {query_see_version}
@@ -119,24 +119,11 @@ function loadProject($id_project, $detailed = true)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$issues = array();
-		foreach ($trackers as $key)
-		{
-			$issues[$key] = array(
-				'info' => &$context['project_tools']['issue_types'][$key],
-				'open' => $row['open_' . $key],
-				'closed' => $row['closed_' . $key],
-				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;version=' . $row['id_version'] . ';type=' . $key
-			);
-		}
-
 		if ($row['id_parent'] == 0)
 		{
 			$project['versions'][$row['id_version']] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'issues' => $issues,
 				'sub_versions' => array(),
 			);
 		}
@@ -148,7 +135,6 @@ function loadProject($id_project, $detailed = true)
 				'status' => $row['status'],
 				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
 				'released' => $row['status'] >= 4,
-				'issues' => $issues,
 			);
 		}
 

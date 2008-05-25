@@ -144,7 +144,7 @@ function template_project_view()
 							<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
 						</td>
 						<td>
-							<div class="progressbar"><div class="done" style="width: ', round($type['closed'] / $type['total'], 2), '%"></div></div>
+							<div class="progressbar"><div class="done" style="width: ', round(($type['closed'] / $type['total']) * 100, 2), '%"></div></div>
 						</td>
 					</tr>
 					<tr>
