@@ -132,8 +132,8 @@ function IssueUpdate()
 	}
 
 	// DEBUG
-	print_r(array($_POST, $issueOptions));
-	die();
+	//print_r(array($_POST, $issueOptions));
+	//die();
 
 	$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 
