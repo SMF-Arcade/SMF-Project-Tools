@@ -78,7 +78,7 @@ function ProjectView()
 		WHERE tl.id_project = {int:project}
 			AND {query_see_issue}
 		ORDER BY tl.event_time DESC
-		LIMIT 25',
+		LIMIT 12',
 		array(
 			'project' => $project,
 			'empty' => ''
