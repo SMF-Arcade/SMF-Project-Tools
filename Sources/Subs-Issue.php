@@ -339,7 +339,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 	if (isset($issueOptions['version_fixed']) && $issueOptions['version_fixed'] != $row['id_version_fixed'])
 	{
-		$issueUpdates[] = 'id_version = {int:version}';
+		$issueUpdates[] = 'id_version_fixed = {int:version_fixed}';
 
 		$event_data['changes'][] = array(
 			'target_version', $row['id_version_fixed'], $issueOptions['version_fixed'],

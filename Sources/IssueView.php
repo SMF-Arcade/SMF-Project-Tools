@@ -50,6 +50,9 @@ function IssueView()
 			$context['assign_members'] = &$context['project']['developers'];
 		}
 
+		$context['set_target'] = projectAllowedTo('issue_set_taget');
+		$context['change_status'] = projectAllowedTo('issue_change_status');
+
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
@@ -129,8 +132,8 @@ function IssueUpdate()
 	}
 
 	// DEBUG
-	//print_r(array($_POST, $issueOptions));
-	//die();
+	print_r(array($_POST, $issueOptions));
+	die();
 
 	$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 
