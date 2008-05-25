@@ -83,19 +83,39 @@ function IssueUpdate()
 	{
 		if (projectAllowedTo('issue_assign') && isset($_POST['assign']))
 		{
-			if (isset($context['project']['developers'][(int) $_POST['assign']]) && (int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
+			if ((int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
+			{
+				if (!isset($context['project']['developers'][(int) $_POST['assign']]))
+					$_POST['assign'] = 0;
+
 				$issueOptions['assignee'] = (int) $_POST['assign'];
+			}
 
 		}
 
-		if (isset($_POST['version']) && isset($context['project']['parents'][(int) $_POST['version']]) && $context['current_issue']['version']['id'] != (int) $_POST['version'])
+		if (isset($_POST['version']) && $context['current_issue']['version']['id'] != (int) $_POST['version'])
+		{
+			if (!isset($context['project']['parents'][(int) $_POST['version']]))
+				$_POST['version'] = 0;
+
 			$issueOptions['version'] = (int) $_POST['version'];
+		}
 
-		if (isset($_POST['version_fixed']) && isset($context['project']['parents'][(int) $_POST['version_fixed']]) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
+		if (isset($_POST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
+		{
+			if (!isset($context['project']['parents'][(int) $_POST['version_fixed']]))
+				$_POST['version_fixed'] = 0;
+
 			$issueOptions['version_fixed'] = (int) $_POST['version_fixed'];
+		}
 
-		if (isset($_POST['category']) && isset($context['project']['category'][(int) $_POST['category']]) && $context['current_issue']['category']['id'] != (int) $_POST['category'])
+		if (isset($_POST['category']) && $context['current_issue']['category']['id'] != (int) $_POST['category'])
+		{
+			if (!isset($context['project']['category'][(int) $_POST['category']]))
+				$_POST['category'] = 0;
+				
 			$issueOptions['category'] = (int) $_POST['category'];
+		}
 	}
 
 	// DEBUG
