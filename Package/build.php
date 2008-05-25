@@ -18,9 +18,8 @@ function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 	if ($rev === 0)
 		return;
 
-	if ($filename == 'Sources/Subs-Project.php' || $filename == 'Sources/ProjectDatbase.php')
+	if ($filename == 'Sources/Project.php' || $filename == 'Sources/ProjectDatbase.php')
 		$content = str_replace('$project_version = \'0.1 Alpha\';', '$project_version = \'0.1 Alpha rev' . $rev . '\';', $content);
-
 }
 
 ?>
