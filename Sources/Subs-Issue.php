@@ -52,26 +52,38 @@ function loadIssueTypes()
 	// Status, types, priorities
 	$context['issue']['status'] = array(
 		1 => array(
+			'id' => 1,
+			'name' => 'new',
 			'text' => $txt['issue_new'],
 			'type' => 'open',
 		),
 		2 => array(
+			'id' => 2,
+			'name' => 'feedback',
 			'text' => $txt['issue_feedback'],
 			'type' => 'open',
 		),
 		3 => array(
+			'id' => 3,
+			'name' => 'confirmed',
 			'text' => $txt['issue_confirmed'],
 			'type' => 'open',
 		),
 		4 => array(
+			'id' => 4,
+			'name' => 'assigned',
 			'text' => $txt['issue_assigned'],
 			'type' => 'open',
 		),
 		5 => array(
+			'id' => 5,
+			'name' => 'resolved',
 			'text' => $txt['issue_resolved'],
 			'type' => 'closed',
 		),
 		6 => array(
+			'id' => 6,
+			'name' => 'closed',
 			'text' => $txt['issue_closed'],
 			'type' => 'closed',
 		),
@@ -152,6 +164,7 @@ function loadIssue($id_issue)
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
+			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
 		),
 		'version' => array(
 			'id' => $row['id_version'],
@@ -393,7 +406,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		$colname = $oldStatus . '_' . $row['issue_type'];
 
 		if (!empty($row['id_version']))
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}project_versions
 				SET ' . $colname . ' = ' . $colname . '- 1
 				WHERE id_version = {int:version}',

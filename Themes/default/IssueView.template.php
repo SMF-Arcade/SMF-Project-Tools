@@ -45,7 +45,7 @@ function template_issue_view()
 					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_category'], '</span>
-							<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
+							<span class="value">', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</span>
 						</div>';
 
 	if ($context['can_edit'])
@@ -87,13 +87,35 @@ function template_issue_view()
 					</td>
 				</tr>
 				<tr class="windowbg2 smalltext">
-					<td class="infocolumn">
+					<td class="infocolumn', !empty($context['change_status']) ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_status'], '</span>
 							', $context['current_issue']['status']['text'], '
-						</div>
+						</div>';
+
+	if (!empty($context['change_status']))
+	{
+		echo '
 						<div class="edit">
-						</div>
+							<span class="dark">', $txt['issue_status'], '</span>
+							<span class="value">
+								<select name="status">
+									<option></option>';
+
+
+		foreach ($context['issue']['status'] as $status)
+		{
+			echo '
+									<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+		}
+
+		echo '
+								</select>
+							</span>
+						</div>';
+	}
+
+	echo '
 					</td>
 					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
@@ -129,13 +151,13 @@ function template_issue_view()
 
 	echo '
 					</td>
-					<td class="infocolumn">
+					<td class="infocolumn', !empty($context['set_target']) ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_version_fixed'], '</span>
 							', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
 						</div>';
 
-	if ($context['can_edit'])
+	if (!empty($context['set_target']))
 	{
 		echo '
 						<div class="edit">
