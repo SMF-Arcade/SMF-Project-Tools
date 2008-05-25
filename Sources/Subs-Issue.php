@@ -115,7 +115,7 @@ function loadIssue($id_issue)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS ma ON (ma.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver.id_version = i.id_version_fixed)
+			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE id_issue = {int:issue}
 			AND {query_see_issue}

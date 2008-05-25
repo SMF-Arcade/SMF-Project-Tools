@@ -192,6 +192,8 @@ function loadProjectTools($mode = '')
 	loadLanguage($mode != 'admin' ? 'Project' : 'Project+ProjectAdmin');
 	loadIssueTypes();
 	loadTemplate('Project', array('forum', 'project'));
+
+	$context['template_layers'][] = 'project';
 }
 
 ?>
