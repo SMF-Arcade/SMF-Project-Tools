@@ -42,21 +42,33 @@ function template_issue_view()
 			</h3>
 			<table cellspacing="1" class="bordercolor issueinfoframe">
 				<tr class="windowbg smalltext">
-					<td class="infocolumn canedit">
+					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_category'], '</span>
 							<span class="value">', !empty($context['current_issue']['category']) ? $context['current_issue']['category'] : $txt['issue_none'], '</span>
-						</div>
+						</div>';
+
+	if ($context['can_edit'])
+	{
+		echo '
 						<div class="edit">
 							<span class="dark">', $txt['issue_category'], '</span>
 							<span class="value">
-								<select>
+								<select name="category">
+									<option></option>';
 
+		foreach ($context['project']['category'] as $c)
+			echo '
+									<option value="', $c['id'], '" ', $context['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+		echo '
 								</select>
 							</span>
-						</div>
+						</div>';
+	}
+
+	echo '
 					</td>
-					<td class="infocolumn">
+					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_type'], '</span>
 							<span class="value">', $context['current_issue']['type']['name'], '</span>
@@ -83,21 +95,73 @@ function template_issue_view()
 						<div class="edit">
 						</div>
 					</td>
-					<td class="infocolumn">
+					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
 							<span class="dark">', $txt['issue_version'], '</span>
 							', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
-						</div>
+						</div>';
+
+	if ($context['can_edit'])
+	{
+		echo '
 						<div class="edit">
-						</div>
+							<span class="dark">', $txt['issue_version'], '</span>
+							<span class="value">
+								<select name="version">
+									<option></option>';
+
+
+		foreach ($context['project']['versions'] as $v)
+		{
+			echo '
+									<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+									<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+		}
+
+		echo '
+								</select>
+							</span>
+						</div>';
+	}
+
+	echo '
 					</td>
 					<td class="infocolumn">
 						<div class="display">
 							<span class="dark">', $txt['issue_version_fixed'], '</span>
 							', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
-						</div>
+						</div>';
+
+	if ($context['can_edit'])
+	{
+		echo '
 						<div class="edit">
-						</div>
+							<span class="dark">', $txt['issue_version_fixed'], '</span>
+							<span class="value">
+								<select name="version_fixed">
+									<option></option>';
+
+
+		foreach ($context['project']['versions'] as $v)
+		{
+			echo '
+									<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+									<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+		}
+
+		echo '
+								</select>
+							</span>
+						</div>';
+	}
+
+	echo '
 					</td>
 				</tr>
 				<tr class="windowbg smalltext">
@@ -111,14 +175,13 @@ function template_issue_view()
 	{
 		echo '
 						<div class="edit">
+							<span class="dark">', $txt['issue_assigned_to'], '</span>
 							<select name="assign">
 								<option></option>';
 
 		foreach ($context['assign_members'] as $mem)
-		{
 			echo '
 								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
-		}
 
 		echo '
 							</select>

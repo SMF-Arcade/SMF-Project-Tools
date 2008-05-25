@@ -297,7 +297,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		);
 	}
 
-	if (!empty($issueOptions['assignee']) && $issueOptions['assignee'] != $row['id_assigned'])
+	if (isset($issueOptions['assignee']) && $issueOptions['assignee'] != $row['id_assigned'])
 	{
 		$issueUpdates[] = 'id_assigned = {int:assignee}';
 
@@ -315,7 +315,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		);
 	}
 
-	if (!empty($issueOptions['version']) && $issueOptions['version'] != $row['id_version'])
+	if (isset($issueOptions['version']) && $issueOptions['version'] != $row['id_version'])
 	{
 		$issueUpdates[] = 'id_version = {int:version}';
 
@@ -324,7 +324,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		);
 	}
 
-	if (!empty($issueOptions['version_fixed']) && $issueOptions['version_fixed'] != $row['id_version_fixed'])
+	if (isset($issueOptions['version_fixed']) && $issueOptions['version_fixed'] != $row['id_version_fixed'])
 	{
 		$issueUpdates[] = 'id_version = {int:version}';
 
@@ -333,7 +333,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		);
 	}
 
-	if (!empty($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
+	if (isset($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
 	{
 		$issueUpdates[] = 'id_category = {int:category}';
 

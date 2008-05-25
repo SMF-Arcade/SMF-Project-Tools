@@ -40,6 +40,7 @@ function IssueView()
 
 	$context['show_update'] = false;
 	$context['can_assign'] = false;
+	$context['can_edit'] = false;
 
 	if (projectAllowedTo('issue_update_' . $type))
 	{
@@ -49,6 +50,7 @@ function IssueView()
 			$context['assign_members'] = &$context['project']['developers'];
 		}
 
+		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
 
@@ -81,10 +83,19 @@ function IssueUpdate()
 	{
 		if (projectAllowedTo('issue_assign') && isset($_POST['assign']))
 		{
-			if ((int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
+			if (isset($context['project']['developers'][(int) $_POST['assign']]) && (int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
 				$issueOptions['assignee'] = (int) $_POST['assign'];
 
 		}
+
+		if (isset($_POST['version']) && isset($context['project']['parents'][(int) $_POST['version']]) && $context['current_issue']['version']['id'] != (int) $_POST['version'])
+			$issueOptions['version'] = (int) $_POST['version'];
+
+		if (isset($_POST['version_fixed']) && isset($context['project']['parents'][(int) $_POST['version_fixed']]) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
+			$issueOptions['version_fixed'] = (int) $_POST['version_fixed'];
+
+		if (isset($_POST['category']) && isset($context['project']['category'][(int) $_POST['category']]) && $context['current_issue']['category']['id'] != (int) $_POST['category'])
+			$issueOptions['category'] = (int) $_POST['category'];
 	}
 
 	// DEBUG

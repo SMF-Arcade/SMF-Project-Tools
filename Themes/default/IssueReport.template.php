@@ -74,11 +74,6 @@ function template_report_issue()
 					<dd>
 						', template_control_richedit($context['post_box_name'], 'bbc'), '
 					</dd>
-
-					<dd>
-						', template_control_richedit($context['post_box_name'], 'smileys'), '
-					</dd>
-
 					<dd>
 						', template_control_richedit($context['post_box_name'], 'message'), '
 					</dd>';

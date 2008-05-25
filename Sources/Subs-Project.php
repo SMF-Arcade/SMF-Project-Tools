@@ -91,7 +91,7 @@ function loadProject($id_project, $detailed = true)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$project['developers'][] = array(
+		$project['developers'][$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
 		);
