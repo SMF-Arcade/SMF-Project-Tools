@@ -185,7 +185,7 @@ function ReportIssue2()
 		'type' => $_POST['type'],
 		'status' => 1,
 		'priority' => 2,
-		'category' => 0,
+		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
 		'version' => 0,
 		'assignee' => 0,
 		'body' => $_POST['details'],
