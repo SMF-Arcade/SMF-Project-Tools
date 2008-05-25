@@ -47,6 +47,32 @@ table.projectsframe td.lastissue
 	width: 20%;
 }
 
+/* Status colors */
+.issue_new
+{
+	background-color: #FFCCCC;
+}
+.issue_feedback
+{
+	background-color: #FF50A8;
+}
+.issue_confirmed
+{
+	background-color: #FFFFB0;
+}
+.issue_assigned
+{
+	background-color: #C8C8FF;
+}
+.issue_resolved
+{
+	background-color: #CCFFCC;
+}
+.issue_closed
+{
+	background-color: #E8E8E8;
+}
+
 /* ************************************* */
 /* styles from ProjectView.template      */
 /* ************************************* */
