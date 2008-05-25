@@ -401,7 +401,7 @@ function EditVersion()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
-		if (!$context['project'] = loadProject((int) $_REQUEST['project'], true))
+		if (!$context['project'] = loadProject((int) $row['id_project'], true))
 			fatal_lang_error('project_not_found');
 
 		$curVersion = array(
