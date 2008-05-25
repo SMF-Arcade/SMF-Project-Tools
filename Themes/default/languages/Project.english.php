@@ -69,6 +69,8 @@ $txt['roadmap'] = 'Roadmap';
 // Project Page - Issue lists
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
+$txt['assigned_to_me'] = 'Assigned To Me';
+$txt['new_issues'] = 'New Issues';
 
 // Project Info
 $txt['project_info'] = 'Information';

@@ -51,6 +51,18 @@ function ProjectView()
 			'where' => 'i.id_reporter = {int:member}',
 			'show' => projectAllowedTo('issue_report'),
 		),
+		'assigned' => array(
+			'title' => 'assigned_to_me',
+			'order' => 'i.updated DESC',
+			'where' => 'i.id_assigned = {int:member}',
+			'show' => $context['project']['is_developer'],
+		),
+		'new_issues' => array(
+			'title' => 'new_issues',
+			'order' => 'i.created DESC',
+			'where' => 'i.status = 1',
+			'show' => $context['project']['is_developer'],
+		),
 	);
 
 	$context['issue_list'] = array();
