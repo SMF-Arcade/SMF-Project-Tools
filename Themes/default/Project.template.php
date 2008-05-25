@@ -1,6 +1,11 @@
 <?php
 // Version: 0.1 Alpha; Project
 
+function template_project_above()
+{
+	global $scripturl, $txt, $context;
+}
+
 function template_project_list()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
@@ -55,5 +60,17 @@ function template_project_list()
 	echo '
 	</div>';
 }
+
+function template_project_below()
+{
+	global $scripturl, $txt, $context, $project_version;
+
+	// Print out copyright and version. Removing copyright is not allowed by license
+	echo '
+	<div id="project_bottom" class="smalltext" style="text-align: center;">
+		Powered by: SMF Project ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2008
+	</div>';
+}
+
 
 ?>
