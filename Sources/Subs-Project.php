@@ -181,9 +181,11 @@ function projectIsAllowedTo($permission)
 	global $context, $project;
 
 	if ($project === null)
-	{
 		fatal_error('projectAllowed(): Project not loaded');
-	}
+
+	// Developers can do anything
+	if ($context['project']['is_developer'])
+		return true;
 
 	return isAllowedTo($permission);
 }
