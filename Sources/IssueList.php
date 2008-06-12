@@ -97,7 +97,7 @@ function IssueList()
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
-			LEFT JOIN {db_prefix}members AS mu ON (mr.id_member = i.id_updater)
+			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
