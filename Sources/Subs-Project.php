@@ -27,7 +27,7 @@ if (!defined('SMF'))
 	!!!
 */
 
-function loadProject($id_project, $detailed = true)
+function loadProject($id_project)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
 
@@ -101,47 +101,6 @@ function loadProject($id_project, $detailed = true)
 	}
 	$smcFunc['db_free_result']($request);
 
-	if (!$detailed)
-		return $project;
-
-	// Load Versions
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			id_version, id_parent, version_name, release_date, status
-		FROM {db_prefix}project_versions AS ver
-		WHERE id_project = {int:project}
-			AND {query_see_version}
-		ORDER BY id_parent',
-		array(
-			'project' => $id_project,
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($row['id_parent'] == 0)
-		{
-			$project['versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'sub_versions' => array(),
-			);
-		}
-		else
-		{
-			$project['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'status' => $row['status'],
-				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
-				'released' => $row['status'] >= 4,
-			);
-		}
-
-		$project['parents'][$row['id_version']] = $row['id_parent'];
-	}
-	$smcFunc['db_free_result']($request);
-
 	// Category
 	$request = $smcFunc['db_query']('', '
 		SELECT id_category, category_name
@@ -160,6 +119,54 @@ function loadProject($id_project, $detailed = true)
 	$smcFunc['db_free_result']($request);
 
 	return $project;
+}
+
+function loadVersions($id_project)
+{
+	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
+
+	// Load Versions
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			id_version, id_parent, version_name, release_date, status
+		FROM {db_prefix}project_versions AS ver
+		WHERE id_project = {int:project}
+			AND {query_see_version}
+		ORDER BY id_parent',
+		array(
+			'project' => $id_project,
+		)
+	);
+
+	$versions = array();
+	$version_ids = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($row['id_parent'] == 0)
+		{
+			$versions[$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'sub_versions' => array(),
+			);
+		}
+		else
+		{
+			$versions[$row['id_parent']]['sub_versions'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'status' => $row['status'],
+				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
+				'released' => $row['status'] >= 4,
+			);
+		}
+
+		$version_ids[$row['id_version']] = $row['id_parent'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	return array($versions, $version_ids);
 }
 
 function projectAllowedTo($permission)

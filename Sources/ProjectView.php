@@ -31,11 +31,6 @@ function ProjectView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
-	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
-
-	$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
-
 	$issues_num = 5;
 
 	$issue_list = array(
@@ -138,6 +133,14 @@ function ProjectView()
 	// Template
 	$context['sub_template'] = 'project_view';
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
+}
+
+function ProjectRoadmap()
+{
+	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+
+	if (empty($context['project']))
+		fatal_lang_error('project_not_found');
 }
 
 function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')

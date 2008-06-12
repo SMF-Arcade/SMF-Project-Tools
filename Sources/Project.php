@@ -38,14 +38,15 @@ function Projects()
 	$subActions = array(
 		// Project
 		'list' => array('ProjectList.php', 'ProjectList'),
-		'viewProject' => array('ProjectView.php', 'ProjectView'),
+		'viewProject' => array('ProjectView.php', 'ProjectView', true),
+		'roadmap' => array('ProjectView.php', 'ProjectRoadmap', true),
 		// Issues
-		'issues' => array('IssueList.php', 'IssueList'),
-		'viewIssue' => array('IssueView.php', 'IssueView'),
-		'updateIssue' => array('IssueView.php', 'IssueUpdate'),
+		'issues' => array('IssueList.php', 'IssueList', true),
+		'viewIssue' => array('IssueView.php', 'IssueView', true),
+		'updateIssue' => array('IssueView.php', 'IssueUpdate', true),
 		// Report Issue
-		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
-		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
+		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
+		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
 	);
 
 	// Load Issue if needed
@@ -63,8 +64,10 @@ function Projects()
 	// Load Project if needed
 	if (!empty($_REQUEST['project']))
 	{
-		if (!($context['project'] = loadProject((int) $_REQUEST['project'], true)))
+		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
 			fatal_lang_error('project_not_found');
+
+		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
 		$project = $context['project']['id'];
 
@@ -74,12 +77,20 @@ function Projects()
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
-	if ($_REQUEST['sa'] == 'list' && !empty($project))
+	if (!empty($project) && empty($subActions[$_REQUEST['sa'][2]]))
 		$_REQUEST['sa'] = 'viewProject';
+	elseif (empty($project) && !empty($subActions[$_REQUEST['sa'][2]]))
+		fatal_lang_error('project_not_found');
+
+	// Linktree
+	$context['linktree'][] = array(
+		'name' => $txt['linktree_projects'],
+		'url' => $scripturl . '?action=projects'
+	);
 
 	// Check permission if needed
-	if (isset($subActions[$_REQUEST['sa']][2]))
-		isAllowedTo($subActions[$_REQUEST['sa']][2]);
+	if (isset($subActions[$_REQUEST['sa']][3]))
+		isAllowedTo($subActions[$_REQUEST['sa']][3]);
 
 	// Template if Project selected
 	if (!empty($project))
@@ -102,10 +113,6 @@ function Projects()
 		);
 
 		// Linktree
-		$context['linktree'][] = array(
-			'name' => $txt['linktree_projects'],
-			'url' => $scripturl . '?action=projects'
-		);
 		$context['linktree'][] = array(
 			'name' => $context['project']['name'],
 			'url' => $scripturl . '?project=' . $project

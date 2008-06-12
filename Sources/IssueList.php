@@ -32,9 +32,6 @@ function IssueList()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
 
-	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
-
 	// Sorting methods
 	$sort_methods = array(
 		'updated' => 'MAX(i.updated, i.created)',

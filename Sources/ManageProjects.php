@@ -260,7 +260,7 @@ function EditProject2()
 
 	$_POST['project'] = (int) $_POST['project'];
 
-	if (!empty($_POST['project']) && !loadProject($_POST['project'], false))
+	if (!empty($_POST['project']) && !loadProject($_POST['project']))
 		fatal_lang_error('project_not_found');
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
@@ -364,8 +364,10 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'newversion')
 	{
-		if (!$context['project'] = loadProject((int) $_REQUEST['project'], true))
+		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
 			fatal_lang_error('project_not_found');
+
+		list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
 
 		$curVersion = array(
 			'member_groups' => array(-1, 0),
@@ -377,7 +379,7 @@ function EditVersion()
 			'project' => $context['project']['id'],
 			'name' => '',
 			'description' => '',
-			'parent' => !empty($_REQUEST['parent']) && isset($context['project']['versions'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
+			'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
 			'status' => 0,
 			'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
 		);
@@ -401,8 +403,10 @@ function EditVersion()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
-		if (!$context['project'] = loadProject((int) $row['id_project'], true))
+		if (!$context['project'] = loadProject((int) $row['id_project']))
 			fatal_lang_error('project_not_found');
+
+		list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
 
 		$curVersion = array(
 			'member_groups' => explode(',', $row['member_groups']),
@@ -413,7 +417,7 @@ function EditVersion()
 			'project' => $row['id_project'],
 			'name' => htmlspecialchars($row['version_name']),
 			'description' => htmlspecialchars($row['description']),
-			'parent' => isset($context['project']['versions'][$row['id_parent']]) ? $row['id_parent'] : 0,
+			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
 			'status' => $row['status'],
 			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
 		);

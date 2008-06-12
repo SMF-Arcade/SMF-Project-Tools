@@ -39,7 +39,7 @@ function template_report_issue()
 							<option value=""></option>';
 
 
-		foreach ($context['project']['versions'] as $v)
+		foreach ($context['versions'] as $v)
 		{
 			echo '
 							<option value="', $v['id'], '" style="font-weight: bold"', $context['issue']['version'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';

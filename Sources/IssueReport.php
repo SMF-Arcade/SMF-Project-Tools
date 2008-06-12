@@ -39,9 +39,6 @@ function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
-	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
-
 	projectIsAllowedTo('issue_report');
 
 	$context['possible_types'] = array();
@@ -84,7 +81,9 @@ function ReportIssue()
 	$context['post_box_name'] = 'details';
 	$context['destination'] = 'reportIssue2';
 
-	$context['show_version'] = !empty($context['project']['versions']);
+	list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
+
+	$context['show_version'] = !empty($context['versions']);
 	$context['show_category'] = !empty($context['project']['category']);
 
 	checkSubmitOnce('register');

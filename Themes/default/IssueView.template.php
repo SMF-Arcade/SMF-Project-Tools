@@ -148,7 +148,7 @@ function template_issue_view()
 									<option></option>';
 
 
-		foreach ($context['project']['versions'] as $v)
+		foreach ($context['versions'] as $v)
 		{
 			echo '
 									<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
@@ -182,7 +182,7 @@ function template_issue_view()
 									<option></option>';
 
 
-		foreach ($context['project']['versions'] as $v)
+		foreach ($context['versions'] as $v)
 		{
 			echo '
 									<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
