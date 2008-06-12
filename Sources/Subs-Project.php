@@ -34,13 +34,17 @@ function loadProject($id_project)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
-			p.' . implode(', p.', $context['type_columns']) . '
+			p.' . implode(', p.', $context['type_columns']) . ',
+			IFNULL(dev.acess_level, 0)
 		FROM {db_prefix}projects AS p
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:member})
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
 		LIMIT 1',
 		array(
 			'project' => $id_project,
+			'member' => $user_info['id'],
 		)
 	);
 
@@ -62,7 +66,7 @@ function loadProject($id_project)
 		'category' => array(),
 		'trackers' => array(),
 		'developers' => array(),
-		'is_developer' => false,
+		'is_developer' => $row['acess_level'] >= 255,
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -80,7 +84,7 @@ function loadProject($id_project)
 
 	// Developers
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.id_member, mem.real_name
+		SELECT mem.id_member, mem.real_name, dev.access_level
 		FROM {db_prefix}project_developer AS dev
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
 		WHERE id_project = {int:project}',
@@ -177,7 +181,7 @@ function projectAllowedTo($permission)
 		fatal_error('projectAllowed(): Project not loaded');
 
 	// Developers can do anything
-	if ($context['project']['is_developer'])
+	if ($context['project']['is_developer'] || allowedTo('project_admin'))
 		return true;
 
 	return allowedTo($permission);

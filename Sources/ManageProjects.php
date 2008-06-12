@@ -306,13 +306,14 @@ function EditProject2()
 		{
 			foreach ($_POST['developer'] as $id_member)
 				if (is_numeric($id_member))
-					$rows[] = array($_POST['project'], (int) $id_member);
+					$rows[] = array($_POST['project'], (int) $id_member, 256);
 
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',
 				array(
 					'id_project' => 'int',
 					'id_member' => 'int',
+					'access_level' => 'int',
 				),
 				$rows,
 				array('id_project', 'id_member')

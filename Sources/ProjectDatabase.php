@@ -128,6 +128,12 @@ $tables = array(
 				'null' => false,
 				'unsigned' => true,
 			),
+			array(
+				'name' => 'acess_level',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
 		),
 		'indexes' => array(
 			array(
