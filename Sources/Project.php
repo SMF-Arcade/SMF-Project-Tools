@@ -77,9 +77,9 @@ function Projects()
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
-	if (!empty($project) && empty($subActions[$_REQUEST['sa'][2]]))
+	if (!empty($project) && empty($subActions[$_REQUEST['sa']][2]))
 		$_REQUEST['sa'] = 'viewProject';
-	elseif (empty($project) && !empty($subActions[$_REQUEST['sa'][2]]))
+	elseif (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
 		fatal_lang_error('project_not_found');
 
 	// Linktree

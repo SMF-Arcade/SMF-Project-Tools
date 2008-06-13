@@ -62,16 +62,15 @@ function loadProject($id_project)
 		'name' => $row['name'],
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
-		'member_groups' => $row['member_groups'],
 		'versions' => array(),
 		'parents' => array(),
 		'category' => array(),
 		'trackers' => array(),
 		'developers' => array(),
-		'is_owner' => $row['acess_level'] >= 50,
-		'is_admin' => $row['acess_level'] >= 45,
-		'is_developer' => $row['acess_level'] >= 40,
-		'is_member' => $row['acess_level'] >= 35,
+		'is_owner' => $row['access_level'] >= 50,
+		'is_admin' => $row['access_level'] >= 45,
+		'is_developer' => $row['access_level'] >= 40,
+		'is_member' => $row['access_level'] >= 35,
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -105,9 +104,6 @@ function loadProject($id_project)
 			'name' => $row['real_name'],
 			'level' => $row['access_level'],
 		);
-
-		if ($user_info['id'] == $row['id_member'])
-			$project['is_developer'] = true;
 	}
 	$smcFunc['db_free_result']($request);
 
