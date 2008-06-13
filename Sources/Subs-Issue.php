@@ -102,26 +102,29 @@ function loadIssue($id_issue)
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $memberContext;
 
+	if (!isset($context['project']['id']))
+		trigger_error('', E_USER_ERROR);
+
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
 			i.id_reporter, i.body,
 			i.id_assigned, ma.real_name AS a_real_name,
-			p.id_project, p.name AS project_name,
 			cat.id_category, cat.category_name,
-			ver.id_version, ver.version_name,
+			ver.id_version, ver.version_name
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}members AS ma ON (ma.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE id_issue = {int:issue}
 			AND {query_see_issue}
+			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
 			'issue' => $id_issue,
+			'project' => $context['project']['id'],
 		)
 	);
 
@@ -155,12 +158,6 @@ function loadIssue($id_issue)
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
 		'link' => $scripturl . '?issue=' . $row['id_issue'],
-		'project' => array(
-			'id' => $row['id_project'],
-			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['project_name'] . '</a>',
-			'href' => $scripturl . '?project=' . $row['id_project'],
-			'name' => $row['project_name'],
-		),
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],

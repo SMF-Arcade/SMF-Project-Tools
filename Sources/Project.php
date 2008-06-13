@@ -50,15 +50,18 @@ function Projects()
 	);
 
 	// Load Issue if needed
-	if (!empty($_REQUEST['issue']))
+	if (!empty($_REQUEST['issue']) && !isset($_REQUEST['project']))
 	{
-		if (!loadIssue((int) $_REQUEST['issue']))
-			fatal_lang_error('issue_not_found');
+		$request = $smcFunc['db_query']('', '
+			SELECT id_project
+			FROM {db_prefix}issues
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => (int) $_REQUEST['issue']
+			)
+		);
 
-		$_REQUEST['project'] = $context['current_issue']['project']['id'];
-
-		if (!isset($_REQUEST['sa']))
-			$_REQUEST['sa'] = 'viewIssue';
+		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
 	}
 
 	// Load Project if needed
@@ -81,8 +84,20 @@ function Projects()
 		else
 			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
 
-		if (!isset($_REQUEST['sa']))
-			$_REQUEST['sa'] = 'viewProject';
+		if (isset($_REQUEST['issue']))
+		{
+			if (!loadIssue((int) $_REQUEST['issue']))
+				fatal_lang_error('issue_not_found');
+
+
+			if (!isset($_REQUEST['sa']))
+				$_REQUEST['sa'] = 'viewIssue';
+		}
+		else
+		{
+			if (!isset($_REQUEST['sa']))
+				$_REQUEST['sa'] = 'viewProject';
+		}
 	}
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
