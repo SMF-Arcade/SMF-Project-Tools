@@ -134,7 +134,7 @@ function Projects()
 		$context['template_layers'][] = 'project_view';
 		loadTemplate('ProjectView');
 
-		isProjectAllowedTo('view');
+		projectIsAllowedTo('view');
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
