@@ -34,8 +34,8 @@ function loadProject($id_project)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers,
-			p.' . implode(', p.', $context['type_columns']) . ',
-			IFNULL(dev.acess_level, p.public_access) AS access_level,
+			p.' . implode(', p.', $context['type_columns']) . ', p.public_access,
+			IFNULL(dev.acess_level, -1) AS access_level,
 			p.member_groups, p.member_groups_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
@@ -61,11 +61,21 @@ function loadProject($id_project)
 	$groups = array_combine($mg, $ml);
 	unset($mg, $ml);
 
-	// Check for group level
-	foreach ($user_info['groups'] as $gid)
+	if ($user_info['is_admin'])
 	{
-		if (isset($groups[$gid]))
-			$row['access_level'] = max($row['access_level'], $groups[$gid]);
+		$row['access_level'] = 51;
+	}
+	elseif ($row['acess_level'] == -1)
+	{
+		// Check for group level
+		foreach ($user_info['groups'] as $gid)
+		{
+			if (isset($groups[$gid]) && !empty($groups[$gid]))
+				$row['access_level'] = max($row['access_level'], $groups[$gid]);
+		}
+
+		if ($row['acess_level'] == -1)
+			$row['access_level'] = $row['public_access'];
 	}
 
 	$project = array(
