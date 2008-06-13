@@ -199,8 +199,7 @@ function createIssue($issueOptions, &$posterOptions)
 	if (empty($issueOptions['created']))
 		$issueOptions['created'] = time();
 
-	$smcFunc['db_insert'](
-		'insert',
+	$smcFunc['db_insert']('insert',
 		'{db_prefix}issues',
 		array(
 			'id_project' => 'int',

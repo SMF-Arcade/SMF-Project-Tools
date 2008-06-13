@@ -35,7 +35,7 @@ function loadProject($id_project)
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers,
 			p.' . implode(', p.', $context['type_columns']) . ',
-			IFNULL(dev.acess_level, p.public_access) AS access_level
+			IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access) AS access_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
@@ -43,6 +43,7 @@ function loadProject($id_project)
 				AND ({query_devg_group}))
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
+		GROUP BY devg.id_group
 		LIMIT 1',
 		array(
 			'project' => $id_project,
@@ -71,6 +72,7 @@ function loadProject($id_project)
 		'is_admin' => $row['access_level'] >= 45,
 		'is_developer' => $row['access_level'] >= 40,
 		'is_member' => $row['access_level'] >= 35,
+		'my_level' => $row['access_level'],
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -182,11 +184,24 @@ function projectAllowedTo($permission)
 	if ($project === null)
 		fatal_error('projectAllowed(): Project not loaded');
 
-	// Developers can do anything
-	if ($context['project']['is_developer'] || allowedTo('project_admin'))
+	// Admins can do anything
+	if (allowedTo('project_admin'))
 		return true;
 
-	return allowedTo($permission);
+	$permissions = array(
+		'admin' => 50,
+		'issue_resolve' => 35,
+		'issue_moderate' => 35,
+		'issue_update' => 5,
+		'issue_report' => 5,
+		'issue_view' => 1,
+		'view' => 1,
+	);
+
+	if (isset($permissions[$permission]) && $context['project']['my_level'] >= $permissions[$permission])
+		return true;
+
+	return false;
 }
 
 function projectIsAllowedTo($permission)
@@ -196,11 +211,16 @@ function projectIsAllowedTo($permission)
 	if ($project === null)
 		fatal_error('projectAllowed(): Project not loaded');
 
-	// Developers can do anything
-	if ($context['project']['is_developer'])
-		return true;
+	if (!projectAllowedTo($permission))
+	{
+		if ($user_info['is_guest'])
+			is_not_guest($txt['cannot_project_' . $permission]);
 
-	return isAllowedTo($permission);
+		fatal_lang_error('cannot_project_' . $permission, false);
+
+		// Getting this far is a really big problem, but let's try our best to prevent any cases...
+		trigger_error('Hacking attempt...', E_USER_ERROR);
+	}
 }
 
 function createProject($projectOptions)

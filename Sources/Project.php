@@ -71,6 +71,13 @@ function Projects()
 
 		$project = $context['project']['id'];
 
+		// Show everything?
+		if (projectAllowedTo('issue_view'))
+			$user_info['query_see_issue'] = "(ver.access_level > (IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access)))";
+		// Show only own?
+		else
+			$user_info['query_see_issue'] = "((ver.access_level > (IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access))) AND i.reporter = $user_info[id])";
+
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewProject';
 	}
@@ -126,6 +133,8 @@ function Projects()
 
 		$context['template_layers'][] = 'project_view';
 		loadTemplate('ProjectView');
+
+		isProjectAllowedTo('view');
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
@@ -155,36 +164,22 @@ function loadProjectTools($mode = '')
 		{
 			$devg_group = 'devg._id_group = -1';
 			$see_project = 'p.public_access > 0';
-			$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
 		}
 		// Administrators can see all projects.
 		elseif ($user_info['is_admin'])
 		{
 			$devg_group = '1 = 1';
 			$see_project = '1 = 1';
-			$see_version = '1 = 1';
 		}
 		// Registered user.... just the groups in $user_info['groups'].
 		else
 		{
 			$see_version = '(FIND_IN_SET(' . implode(', devg.id_group) OR FIND_IN_SET(', $user_info['groups']) . ', devg.id_group))';
-			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0)';
-			$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
+			$see_project = '(IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access) > 0)';
 		}
 
 		$user_info['query_see_project'] = $see_project;
 		$user_info['query_devg_group'] = $devg_group;
-		$user_info['query_see_version'] = $see_version;
-
-		// Show everything?
-		if (allowedTo('issue_view_any'))
-			$user_info['query_see_issue'] = "($see_project AND $see_version)";
-		// Show only own?
-		elseif (allowedTo('issue_view_own'))
-			$user_info['query_see_issue'] = "($see_project AND $see_version AND i.reporter = $user_info[id])";
-		// if not then we can't show anything
-		else
-			$user_info['query_see_issue'] = "(0 = 1)";
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>

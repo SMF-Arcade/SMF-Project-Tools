@@ -204,6 +204,12 @@ $tables = array(
 				'size' => 255,
 				'null' => false,
 			),
+			array(
+				'name' => 'access_level',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
 		),
 		'indexes' => array(
 			array(

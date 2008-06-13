@@ -38,7 +38,7 @@ function ProjectView()
 			'title' => 'recent_issues',
 			'order' => 'i.updated DESC',
 			'where' => '1 = 1',
-			'show' => true,
+			'show' => projectAllowedTo('issue_view'),
 		),
 		'my_reports' => array(
 			'title' => 'reported_by_me',
@@ -50,13 +50,13 @@ function ProjectView()
 			'title' => 'assigned_to_me',
 			'order' => 'i.updated DESC',
 			'where' => 'i.id_assigned = {int:member}',
-			'show' => $context['project']['is_developer'],
+			'show' => projectAllowedTo('issue_resolve'),
 		),
 		'new_issues' => array(
 			'title' => 'new_issues',
 			'order' => 'i.created DESC',
 			'where' => 'i.status = 1',
-			'show' => $context['project']['is_developer'],
+			'show' => projectAllowedTo('issue_view'),
 		),
 	);
 

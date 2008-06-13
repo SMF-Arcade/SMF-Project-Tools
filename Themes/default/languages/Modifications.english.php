@@ -37,6 +37,10 @@ $txt['permissiongroup_simple_project'] = 'Use Project Tools';
 $txt['permissiongroup_simple_project_developer'] = 'Developer access to Project Tools';
 
 // Errors
+$txt['cannot_project_view'] = 'You are not allowed to view this project.';
+$txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
+$txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+
 $txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
 $txt['cannot_issue_report'] = 'You don\'t have permission to report issues on our Issue Tracker';
 
