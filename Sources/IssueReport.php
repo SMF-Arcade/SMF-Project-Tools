@@ -39,6 +39,8 @@ function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']['id']);
+
 	projectIsAllowedTo('issue_report');
 
 	$context['possible_types'] = array();
@@ -80,8 +82,6 @@ function ReportIssue()
 
 	$context['post_box_name'] = 'details';
 	$context['destination'] = 'reportIssue2';
-
-	list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
 
 	$context['show_version'] = !empty($context['versions']);
 	$context['show_category'] = !empty($context['project']['category']);

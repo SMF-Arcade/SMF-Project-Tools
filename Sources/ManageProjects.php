@@ -372,7 +372,7 @@ function EditVersion()
 		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
 			fatal_lang_error('project_not_found');
 
-		list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
+		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 		$curVersion = array(
 			'member_groups' => array(-1, 0),
@@ -411,7 +411,7 @@ function EditVersion()
 		if (!$context['project'] = loadProject((int) $row['id_project']))
 			fatal_lang_error('project_not_found');
 
-		list ($context['versions'], $context['versions_id']) = loadVersions((int) $_REQUEST['project']);
+		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 		$curVersion = array(
 			'member_groups' => explode(',', $row['member_groups']),
