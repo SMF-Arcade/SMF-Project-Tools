@@ -125,6 +125,8 @@
 		return $user_info['query_see_version'];
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
+	elseif ($matches[1] === 'query_devg_group')
+		return $user_info['query_devg_group'];
 ]]></add>
 		</operation>
 	</file>

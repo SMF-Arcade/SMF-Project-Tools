@@ -152,26 +152,28 @@ function loadProjectTools($mode = '')
 	{
 		// Can see project?
 		if ($user_info['is_guest'])
+		{
+			$devg_group = 'devg._id_group = -1';
 			$see_project = 'p.public_access > 0';
-
+			$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
+		}
 		// Administrators can see all projects.
 		elseif ($user_info['is_admin'])
+		{
+			$devg_group = '1 = 1';
 			$see_project = '1 = 1';
-		// Registered user.... just the groups in $user_info['groups'].
-		else
-			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0)';
-
-		// Can see version?
-		if ($user_info['is_guest'])
-			$see_version = 'FIND_IN_SET(-1, ver.member_groups)';
-		// Administrators can see all versions.
-		elseif ($user_info['is_admin'])
 			$see_version = '1 = 1';
+		}
 		// Registered user.... just the groups in $user_info['groups'].
 		else
+		{
+			$see_version = '(FIND_IN_SET(' . implode(', devg.id_group) OR FIND_IN_SET(', $user_info['groups']) . ', devg.id_group))';
+			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0)';
 			$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
+		}
 
 		$user_info['query_see_project'] = $see_project;
+		$user_info['query_devg_group'] = $devg_group;
 		$user_info['query_see_version'] = $see_version;
 
 		// Show everything?

@@ -33,12 +33,14 @@ function loadProject($id_project)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
+			p.id_project, p.name, p.description, p.long_description, p.trackers,
 			p.' . implode(', p.', $context['type_columns']) . ',
 			IFNULL(dev.acess_level, p.public_access) AS access_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
+			LEFT JOIN {db_prefix}project_developer AS devg ON (devg.id_project = p.id_project
+				AND ({query_devg_group}))
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
 		LIMIT 1',

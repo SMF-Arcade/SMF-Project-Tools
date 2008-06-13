@@ -129,7 +129,13 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'acess_level',
+				'name' => 'id_group',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'access_level',
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
