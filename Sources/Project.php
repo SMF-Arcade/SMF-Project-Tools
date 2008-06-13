@@ -71,6 +71,9 @@ function Projects()
 
 		$project = $context['project']['id'];
 
+		// Can see version
+		$user_info['query_see_version'] = '(ver.access_level <= ' . $context['project']['my_level'] . ')';
+
 		// Show everything?
 		if (projectAllowedTo('issue_view'))
 			$user_info['query_see_issue'] = '(ver.access_level <= ' . $context['project']['my_level'] . ')';

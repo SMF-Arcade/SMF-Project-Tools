@@ -165,7 +165,8 @@ function loadVersions($project)
 		array(
 			'project' => $project['id'],
 			'access_level' => $project['my_level'],
-		)	);
+		)
+	);
 
 	$versions = array();
 	$version_ids = array();
