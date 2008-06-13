@@ -194,7 +194,11 @@ function template_edit_project()
 					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
 					<select name="developer[{MEMBER_ID}][level]">
 						<option value="50">', $txt['access_level_owner'], '</a>
-					</select>
+						<option value="45">', $txt['access_level_admin'], '</a>
+						<option value="40">', $txt['access_level_developer'], '</a>
+						<option value="35">', $txt['access_level_member'], '</a>
+						<option value="30">', $txt['access_level_beta'], '</a>
+							</select>
 					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
 				</div>
 				<br />

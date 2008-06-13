@@ -52,9 +52,11 @@ function template_project_list()
 	else
 	{
 		echo '
-				<tr>
-					<td class="catbg3"><b>', $txt['no_projects'], '</b></td>
-				</tr>';
+		<table cellspacing="1" class="bordercolor projectsframe">
+			<tr>
+				<td class="catbg3 headerpadding"><b>', $txt['no_projects'], '</b></td>
+			</tr>
+		</table>';
 	}
 
 	echo '

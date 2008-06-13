@@ -209,22 +209,20 @@ function createProject($projectOptions)
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	if (empty($projectOptions['name']) || !isset($projectOptions['member_groups']) || !is_array($projectOptions['member_groups']))
-		trigger_error('createProject(): required parameters missing or invalid');
-
-	$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
+	if (empty($projectOptions['name']) || !isset($projectOptions['public_access']) || !isset($projectOptions['description']))
+		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
 
 	$smcFunc['db_insert'](
 		'insert',
 		'{db_prefix}projects',
 		array(
 			'name' => 'string',
-			'member_groups' => 'string',
+			'public_access' => 'int',
 			'description' => 'string'
 		),
 		array(
 			$projectOptions['name'],
-			$projectOptions['member_groups'],
+			$projectOptions['public_access'],
 			$projectOptions['description']
 		),
 		array()
@@ -232,7 +230,7 @@ function createProject($projectOptions)
 
 	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');
 
-	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['member_groups']);
+	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['public_access']);
 
 	// Anything left?
 	if (!empty($projectOptions))
@@ -263,10 +261,10 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
 
-	if (isset($projectOptions['member_groups']))
+	if (isset($projectOptions['public_access']))
 	{
-		$projectUpdates[] = 'member_groups = {string:member_groups}';
-		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
+		$projectUpdates[] = 'public_access = {int:public_access}';
+		$projectOptions['public_access'] = (int) $projectOptions['public_access'];
 	}
 
 	if (!empty($projectUpdates))

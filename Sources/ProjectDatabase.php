@@ -75,7 +75,7 @@ $tables = array(
 				'null' => false,
 			),
 			array(
-				'name' => 'access_level',
+				'name' => 'public_access',
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
