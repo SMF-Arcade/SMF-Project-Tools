@@ -76,10 +76,10 @@ function Projects()
 
 		// Show everything?
 		if (projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = '(ver.access_level <= ' . $context['project']['my_level'] . ')';
+			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ')';
 		// Show only own?
 		else
-			$user_info['query_see_issue'] = '(ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
+			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
 
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewProject';
@@ -189,6 +189,7 @@ function loadProjectTools($mode = '')
 	elseif ($mode == 'admin')
 	{
 		$user_info['query_see_project'] = '1 = 1';
+		$user_info['query_see_version'] = '1 = 1';
 	}
 
 	loadLanguage($mode != 'admin' ? 'Project' : 'Project+ProjectAdmin');
