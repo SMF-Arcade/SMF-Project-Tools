@@ -9,3 +9,7 @@
 
 	Release management
 		- Let users download releases of your projects
+
+ Access levels
+
+	256 - Owner

@@ -69,16 +69,16 @@ $tables = array(
 				'null' => false,
 			),
 			array(
-				'name' => 'member_groups',
+				'name' => 'trackers',
 				'type' => 'varchar',
 				'size' => 255,
 				'null' => false,
 			),
 			array(
-				'name' => 'trackers',
-				'type' => 'varchar',
-				'size' => 255,
+				'name' => 'access_level',
+				'type' => 'int',
 				'null' => false,
+				'unsigned' => true,
 			),
 			array(
 				'name' => 'open_bug',

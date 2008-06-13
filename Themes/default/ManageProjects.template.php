@@ -155,17 +155,15 @@ function template_edit_project()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['project_membergroups'], ':</b><br />
-				<span class="smalltext">', $txt['project_membergroups_desc'], '</span><br />
+				<b>', $txt['project_public_access'], ':</b><br />
+				<span class="smalltext">', $txt['project_public_access_desc'], '</span><br />
 			</td>
-			<td valign="top" align="left">';
-
-	foreach ($context['groups'] as $group)
-		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
-	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
-				<br />
+			<td valign="top" align="left">
+				<select name="public_access">
+					<option value="0"', $context['project']['public_access'] == 0 ? ' selected="selected"' : '', '>', $txt['access_level_none'], '</a>
+					<option value="1"', $context['project']['public_access'] == 1 ? ' selected="selected"' : '', '>', $txt['access_level_viewer'], '</a>
+					<option value="5"', $context['project']['public_access'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</a>
+				</select>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -178,15 +176,25 @@ function template_edit_project()
 	foreach ($context['project']['developers'] as $member)
 		echo '
 				<div id="suggest_template_developer_', $member['id'], '">
-					<input type="hidden" name="developer[]" value="', $member['id'], '" />
+					<input type="hidden" name="developer[', $member['id'], '][id]" value="', $member['id'], '" />
 					<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="developer_link_to_', $member['id'], '" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">', $member['name'], '</a>
+					<select name="developer[', $member['id'], '][level]">
+						<option value="50"', $member['level'] == 50 ? ' selected="selected"' : '', '>', $txt['access_level_owner'], '</a>
+						<option value="45"', $member['level'] == 45 ? ' selected="selected"' : '', '>', $txt['access_level_admin'], '</a>
+						<option value="40"', $member['level'] == 40 ? ' selected="selected"' : '', '>', $txt['access_level_developer'], '</a>
+						<option value="35"', $member['level'] == 35 ? ' selected="selected"' : '', '>', $txt['access_level_member'], '</a>
+						<option value="30"', $member['level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</a>
+					</select>
 					<input type="image" name="delete_developer" value="', $member['id'], '" onclick="return suggestHandledeveloper.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" />', '
 				</div>';
 
 		echo '
 				<div id="suggest_template_developer" style="visibility: hidden; display: none;">
-					<input type="hidden" name="developer[]" value="{MEMBER_ID}" />
+					<input type="hidden" name="developer[{MEMBER_ID}][id]" value="{MEMBER_ID}" />
 					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
+					<select name="developer[{MEMBER_ID}][level]">
+						<option value="50">', $txt['access_level_owner'], '</a>
+					</select>
 					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
 				</div>
 				<br />

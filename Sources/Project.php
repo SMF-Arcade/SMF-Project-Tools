@@ -152,14 +152,14 @@ function loadProjectTools($mode = '')
 	{
 		// Can see project?
 		if ($user_info['is_guest'])
-			$see_project = 'FIND_IN_SET(-1, p.member_groups)';
+			$see_project = 'p.public_access > 0';
 
 		// Administrators can see all projects.
 		elseif ($user_info['is_admin'])
 			$see_project = '1 = 1';
 		// Registered user.... just the groups in $user_info['groups'].
 		else
-			$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
+			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0)';
 
 		// Can see version?
 		if ($user_info['is_guest'])

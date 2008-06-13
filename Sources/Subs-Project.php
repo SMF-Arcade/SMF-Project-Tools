@@ -35,7 +35,7 @@ function loadProject($id_project)
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.member_groups, p.trackers,
 			p.' . implode(', p.', $context['type_columns']) . ',
-			IFNULL(dev.acess_level, 0)
+			IFNULL(dev.acess_level, p.public_access) AS access_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
@@ -66,7 +66,10 @@ function loadProject($id_project)
 		'category' => array(),
 		'trackers' => array(),
 		'developers' => array(),
-		'is_developer' => $row['acess_level'] >= 255,
+		'is_owner' => $row['acess_level'] >= 50,
+		'is_admin' => $row['acess_level'] >= 45,
+		'is_developer' => $row['acess_level'] >= 40,
+		'is_member' => $row['acess_level'] >= 35,
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -98,6 +101,7 @@ function loadProject($id_project)
 		$project['developers'][$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
+			'level' => $row['access_level'],
 		);
 
 		if ($user_info['id'] == $row['id_member'])

@@ -169,12 +169,13 @@ function EditProject()
 			'long_description' => '',
 			'trackers' => array_keys($context['project_tools']['issue_types']),
 			'developers' => array(),
+			'public_access' => 0,
 		);
 	}
 	else
 	{
 		$curProject = array(
-			'member_groups' => explode(',', $project['member_groups']),
+			//'member_groups' => explode(',', $project['member_groups']),
 		);
 
 		$context['project'] = array(
@@ -184,9 +185,11 @@ function EditProject()
 			'long_description' => htmlspecialchars($project['long_description']),
 			'trackers' => array_keys($project['trackers']),
 			'developers' => $project['developers'],
+			'public_access' => $project['public_access'],
 		);
 	}
 
+	/*
 	// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(
@@ -222,7 +225,7 @@ function EditProject()
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -271,10 +274,12 @@ function EditProject2()
 		$projectOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 		$projectOptions['long_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['long_desc']);
 
-		$projectOptions['member_groups'] = array();
+		/*$projectOptions['member_groups'] = array();
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group)
-				$projectOptions['member_groups'][] = (int) $group;
+				$projectOptions['member_groups'][] = (int) $group;*/
+
+		$projectOptions['public_access'] = (int) $_POST['public_access'];
 
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))
@@ -304,9 +309,9 @@ function EditProject2()
 
 		if (!empty($_POST['developer']))
 		{
-			foreach ($_POST['developer'] as $id_member)
+			foreach ($_POST['developer'] as $id_member => $i)
 				if (is_numeric($id_member))
-					$rows[] = array($_POST['project'], (int) $id_member, 256);
+					$rows[] = array($_POST['project'], (int) $id_member, $i['level']);
 
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',
