@@ -73,10 +73,10 @@ function Projects()
 
 		// Show everything?
 		if (projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = "(ver.access_level > (IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access)))";
+			$user_info['query_see_issue'] = "(ver.access_level > {int:access_level})";
 		// Show only own?
 		else
-			$user_info['query_see_issue'] = "((ver.access_level > (IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access))) AND i.reporter = $user_info[id])";
+			$user_info['query_see_issue'] = "((ver.access_level > {int:access_level}) AND i.reporter = $user_info[id])";
 
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewProject';
@@ -174,7 +174,7 @@ function loadProjectTools($mode = '')
 		// Registered user.... just the groups in $user_info['groups'].
 		else
 		{
-			$see_version = '(FIND_IN_SET(' . implode(', devg.id_group) OR FIND_IN_SET(', $user_info['groups']) . ', devg.id_group))';
+			$devg_group = '(FIND_IN_SET(' . implode(', devg.id_group) OR FIND_IN_SET(', $user_info['groups']) . ', devg.id_group))';
 			$see_project = '(IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access) > 0)';
 		}
 

@@ -129,7 +129,7 @@ function loadProject($id_project)
 	return $project;
 }
 
-function loadVersions($id_project)
+function loadVersions($project)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
 
@@ -142,7 +142,8 @@ function loadVersions($id_project)
 			AND {query_see_version}
 		ORDER BY id_parent',
 		array(
-			'project' => $id_project,
+			'project' => $project['id'],
+			'access_level' => $project['my_level'],
 		)
 	);
 
