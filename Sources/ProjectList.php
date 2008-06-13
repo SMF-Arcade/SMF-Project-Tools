@@ -36,10 +36,7 @@ function ProjectList()
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
-			LEFT JOIN {db_prefix}project_developer AS devg ON (devg.id_project = p.id_project
-				AND ({query_devg_group}))
-		WHERE {query_see_project}
-		GROUP BY devg.id_group',
+		WHERE {query_see_project}',
 		array(
 			'member' => $user_info['id'],
 		)

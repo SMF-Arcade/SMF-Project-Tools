@@ -75,6 +75,18 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'member_groups',
+				'type' => 'varchar',
+				'size' => 255,
+				'null' => false,
+			),
+			array(
+				'name' => 'member_groups_level',
+				'type' => 'varchar',
+				'size' => 255,
+				'null' => false,
+			),
+			array(
 				'name' => 'public_access',
 				'type' => 'int',
 				'null' => false,
@@ -124,12 +136,6 @@ $tables = array(
 			),
 			array(
 				'name' => 'id_member',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_group',
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
@@ -185,12 +191,6 @@ $tables = array(
 			array(
 				'name' => 'status',
 				'type' => 'int',
-				'null' => false,
-			),
-			array(
-				'name' => 'member_groups',
-				'type' => 'varchar',
-				'size' => 255,
 				'null' => false,
 			),
 			array(

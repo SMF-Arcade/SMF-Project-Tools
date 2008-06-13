@@ -29,21 +29,19 @@ if (!defined('SMF'))
 
 function loadProject($id_project)
 {
-	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt, $user_info;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers,
 			p.' . implode(', p.', $context['type_columns']) . ',
-			IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access) AS access_level
+			IFNULL(dev.acess_level, p.public_access) AS access_level,
+			p.member_groups, p.member_groups_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
-			LEFT JOIN {db_prefix}project_developer AS devg ON (devg.id_project = p.id_project
-				AND ({query_devg_group}))
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
-		GROUP BY devg.id_group
 		LIMIT 1',
 		array(
 			'project' => $id_project,
@@ -57,17 +55,29 @@ function loadProject($id_project)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+	$mg = explode(',', $row['member_groups']);
+	$ml = explode(',', $row['member_groups_level']);
+
+	$groups = array_combine($mg, $ml);
+	unset($mg, $ml);
+
+	// Check for group level
+	foreach ($user_info['groups'] as $gid)
+	{
+		if (isset($groups[$gid]))
+			$row['access_level'] = max($row['access_level'], $groups[$gid]);
+	}
+
 	$project = array(
 		'id' => $row['id_project'],
 		'link' => $scripturl . '?project=' . $row['id_project'],
 		'name' => $row['name'],
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
-		'versions' => array(),
-		'parents' => array(),
 		'category' => array(),
 		'trackers' => array(),
 		'developers' => array(),
+		'member_groups' => $groups,
 		'is_owner' => $row['access_level'] >= 50,
 		'is_admin' => $row['access_level'] >= 45,
 		'is_developer' => $row['access_level'] >= 40,
@@ -279,6 +289,25 @@ function updateProject($id_project, $projectOptions)
 		$projectUpdates[] = 'trackers = {string:trackers}';
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
+
+	if (isset($projectOptions['member_groups']))
+	{
+		$projectUpdates[] = 'member_groups = {string:member_groups}';
+		$projectUpdates[] = 'member_groups_level = {string:member_groups_level}';
+
+		$groups = array();
+		$levels = array();
+
+		foreach ($projectOptions['member_groups'] as $id_group => $level)
+		{
+			if (empty($level) && $level < 0)
+				continue;
+
+			$groups[] = (int) $id_group;
+			$levels[] = (int) $level;
+		}
+	}
+
 
 	if (isset($projectOptions['public_access']))
 	{

@@ -158,7 +158,7 @@ function EditProject()
 	if ($_REQUEST['sa'] == 'newproject')
 	{
 		$curProject = array(
-			'member_groups' => array(-1, 0),
+			'member_groups' => array(),
 		);
 
 		$context['project'] = array(
@@ -175,7 +175,7 @@ function EditProject()
 	else
 	{
 		$curProject = array(
-			//'member_groups' => explode(',', $project['member_groups']),
+			'member_groups' => $project['member_groups'],
 		);
 
 		$context['project'] = array(
@@ -189,19 +189,18 @@ function EditProject()
 		);
 	}
 
-	/*
 	// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['guests'],
-			'checked' => in_array('-1', $curProject['member_groups']),
+			'level' => isset($curProject['member_groups'][-1]) ? $curProject['member_groups'][-1] : 0,
 			'is_post_group' => false,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
-			'checked' => in_array('0', $curProject['member_groups']),
+			'level' => isset($curProject['member_groups'][0]) ? $curProject['member_groups'][0] : 0,
 			'is_post_group' => false,
 		)
 	);
@@ -221,11 +220,11 @@ function EditProject()
 		$context['groups'][(int) $row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
-			'checked' => in_array($row['id_group'], $curProject['member_groups']),
+			'level' => isset($curProject['member_groups'][$row['id_group']]) ? $curProject['member_groups'][$row['id_group']] : 0,
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
-	$smcFunc['db_free_result']($request);*/
+	$smcFunc['db_free_result']($request);
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -274,10 +273,10 @@ function EditProject2()
 		$projectOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 		$projectOptions['long_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['long_desc']);
 
-		/*$projectOptions['member_groups'] = array();
+		$projectOptions['member_groups'] = array();
 		if (!empty($_POST['groups']))
-			foreach ($_POST['groups'] as $group)
-				$projectOptions['member_groups'][] = (int) $group;*/
+			foreach ($_POST['groups'] as $group => $level)
+				$projectOptions['member_groups'][(int) $group] = (int) $level;
 
 		$projectOptions['public_access'] = (int) $_POST['public_access'];
 

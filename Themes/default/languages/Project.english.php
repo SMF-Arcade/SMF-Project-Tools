@@ -50,6 +50,7 @@ $txt['access_level_beta'] = 'Beta Tester'; // 30
 $txt['access_level_report'] = 'Reporter'; // 5
 $txt['access_level_viewer'] = 'Viewer'; // 1
 $txt['access_level_none'] = 'None'; // 0
+$txt['access_level_no_group'] = 'Use Default';
 
 // General
 $txt['issue'] = 'Issue';

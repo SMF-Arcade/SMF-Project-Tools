@@ -162,24 +162,20 @@ function loadProjectTools($mode = '')
 		// Can see project?
 		if ($user_info['is_guest'])
 		{
-			$devg_group = 'devg._id_group = -1';
 			$see_project = 'p.public_access > 0';
 		}
 		// Administrators can see all projects.
 		elseif ($user_info['is_admin'])
 		{
-			$devg_group = '1 = 1';
 			$see_project = '1 = 1';
 		}
 		// Registered user.... just the groups in $user_info['groups'].
 		else
 		{
-			$devg_group = '(FIND_IN_SET(' . implode(', devg.id_group) OR FIND_IN_SET(', $user_info['groups']) . ', devg.id_group))';
-			$see_project = '(IFNULL(IFNULL(dev.acess_level, MAX(devg.acess_level)), p.public_access) > 0)';
+			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0 OR (FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups)))';
 		}
 
 		$user_info['query_see_project'] = $see_project;
-		$user_info['query_devg_group'] = $devg_group;
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>
@@ -190,7 +186,6 @@ function loadProjectTools($mode = '')
 	elseif ($mode == 'admin')
 	{
 		$user_info['query_see_project'] = '1 = 1';
-		$user_info['query_see_version'] = '1 = 1';
 	}
 
 	loadLanguage($mode != 'admin' ? 'Project' : 'Project+ProjectAdmin');

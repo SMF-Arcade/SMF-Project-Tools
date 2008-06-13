@@ -193,15 +193,35 @@ function template_edit_project()
 					<input type="hidden" name="developer[{MEMBER_ID}][id]" value="{MEMBER_ID}" />
 					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
 					<select name="developer[{MEMBER_ID}][level]">
-						<option value="50">', $txt['access_level_owner'], '</a>
-						<option value="45">', $txt['access_level_admin'], '</a>
-						<option value="40">', $txt['access_level_developer'], '</a>
-						<option value="35">', $txt['access_level_member'], '</a>
-						<option value="30">', $txt['access_level_beta'], '</a>
+						<option value="50">', $txt['access_level_owner'], '</option>
+						<option value="45">', $txt['access_level_admin'], '</option>
+						<option value="40">', $txt['access_level_developer'], '</option>
+						<option value="35">', $txt['access_level_member'], '</option>
+						<option value="30">', $txt['access_level_beta'], '</option>
 							</select>
 					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
 				</div>
 				<br />
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['project_membergroups'], ':</b><br />
+				<span class="smalltext">', $txt['project_membergroups_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">';
+
+		foreach ($context['groups'] as $group)
+			echo '
+				<label for="groups_', $group['id'], '"><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label>
+				<select name="groups[', $group['id'], ']">
+					<option value="0"', $group['level'] == 0 ? ' selected="selected"' : '', '>', $txt['access_level_no_group'], '</option>
+					<option value="1"', $group['level'] == 1 ? ' selected="selected"' : '', '>', $txt['access_level_viewer'], '</option>
+					<option value="5"', $group['level'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</option>
+					<option value="30"', $group['level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</option>
+				</select>';
+
+echo '
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
