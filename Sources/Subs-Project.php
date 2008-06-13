@@ -93,6 +93,7 @@ function loadProject($id_project)
 		'is_developer' => $row['access_level'] >= 40,
 		'is_member' => $row['access_level'] >= 35,
 		'my_level' => $row['access_level'],
+		'public_access' => $row['public_access'],
 	);
 
 	$trackers = explode(',', $row['trackers']);
