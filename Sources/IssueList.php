@@ -32,7 +32,7 @@ function IssueList()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
 
-	isProjectAllowedTo('issue_view');
+	ProjectIsAllowedTo('issue_view');
 
 	// Sorting methods
 	$sort_methods = array(
