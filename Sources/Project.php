@@ -73,10 +73,10 @@ function Projects()
 
 		// Show everything?
 		if (projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = "(ver.access_level > {int:access_level})";
+			$user_info['query_see_issue'] = '(ver.access_level > ' . $context['project']['my_level'] . ')';
 		// Show only own?
 		else
-			$user_info['query_see_issue'] = "((ver.access_level > {int:access_level}) AND i.reporter = $user_info[id])";
+			$user_info['query_see_issue'] = '(ver.access_level > ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
 
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewProject';
