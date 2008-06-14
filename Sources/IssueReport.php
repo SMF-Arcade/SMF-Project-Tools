@@ -39,7 +39,7 @@ function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']['id']);
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	projectIsAllowedTo('issue_report');
 

@@ -351,17 +351,20 @@ function template_edit_version()
 	echo '
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['version_membergroups'], ':</b><br />
-				<span class="smalltext">', $txt['version_membergroups_desc'], '</span><br />
+				<b>', $txt['version_access_level'], ':</b><br />
+				<span class="smalltext">', $txt['version_access_level_desc'], '</span><br />
 			</td>
-			<td valign="top" align="left">';
-
-	foreach ($context['groups'] as $group)
-		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
-	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
-				<br />
+			<td valign="top" align="left">
+				<select name="access_level">
+					<option value="0"', $context['version']['access_level'] == 0 ? ' selected="selected"' : '', '>', $txt['access_level_no_group'], '</option>
+					<option value="1"', $context['version']['access_level'] == 1 ? ' selected="selected"' : '', '>', $txt['access_level_viewer'], '</option>
+					<option value="5"', $context['version']['access_level'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</option>
+					<option value="30"', $context['version']['access_level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</option>
+					<option value="35"', $context['version']['access_level'] == 35 ? ' selected="selected"' : '', '>', $txt['access_level_member'], '</a>
+					<option value="40"', $context['version']['access_level'] == 40 ? ' selected="selected"' : '', '>', $txt['access_level_developer'], '</a>
+					<option value="45"', $context['version']['access_level'] == 45 ? ' selected="selected"' : '', '>', $txt['access_level_admin'], '</a>
+					<option value="50"', $context['version']['access_level'] == 50 ? ' selected="selected"' : '', '>', $txt['access_level_owner'], '</a>
+				</select>
 			</td>
 		</tr>
 		<tr class="windowbg2">

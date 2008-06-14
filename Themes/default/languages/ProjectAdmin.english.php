@@ -47,8 +47,8 @@ $txt['version_description_desc'] = 'Displayed on Project Pages';
 $txt['version_release_date'] = 'Release date';
 $txt['version_release_date_desc'] = 'Format is dd.mm.yy';
 $txt['version_status'] = 'Status';
-$txt['version_membergroups'] = 'Groups';
-$txt['version_membergroups_desc'] = 'Groups which are allowed to access this version';
+$txt['version_access_level'] = 'Access Level required';
+$txt['version_access_level_desc'] = 'Access Level which is required to see this version';
 $txt['delete_version'] = 'Delete Version';
 $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues assigned to it, do you still to continue?';
 
