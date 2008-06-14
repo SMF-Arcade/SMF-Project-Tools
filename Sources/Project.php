@@ -89,7 +89,6 @@ function Projects()
 			if (!loadIssue((int) $_REQUEST['issue']))
 				fatal_lang_error('issue_not_found');
 
-
 			if (!isset($_REQUEST['sa']))
 				$_REQUEST['sa'] = 'viewIssue';
 		}
