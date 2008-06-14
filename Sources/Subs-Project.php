@@ -318,8 +318,10 @@ function updateProject($id_project, $projectOptions)
 			$groups[] = (int) $id_group;
 			$levels[] = (int) $level;
 		}
-	}
 
+		$projectOptions['member_groups'] = implode(',', $groups);
+		$projectOptions['member_groups_level'] = implode(',', $levels);
+	}
 
 	if (isset($projectOptions['public_access']))
 	{
