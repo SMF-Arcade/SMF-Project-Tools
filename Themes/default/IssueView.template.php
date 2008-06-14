@@ -40,7 +40,7 @@ function template_issue_view()
 				</div>
 				<div style="clear: both"></div>
 			</h3>
-			<table cellspacing="1" class="bordercolor issueinfoframe">
+			<table class="bordercolor issueinfoframe">
 				<tr class="windowbg smalltext">
 					<td class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
 						<div class="display">
@@ -84,7 +84,7 @@ function template_issue_view()
 
 		foreach ($context['possible_types'] as $id => $type)
 			echo '
-									<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
+									<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
 
 		echo '
 								</select>
