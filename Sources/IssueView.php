@@ -36,23 +36,13 @@ function IssueView()
 		fatal_lang_error('issue_not_found');
 
 	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
 	$context['can_assign'] = false;
 	$context['can_edit'] = false;
 
-	if (projectAllowedTo('issue_update_' . $type))
+	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
 	{
-		if (projectAllowedTo('issue_assign'))
-		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = &$context['project']['developers'];
-		}
-
-		$context['set_target'] = projectAllowedTo('issue_set_taget');
-		$context['change_status'] = projectAllowedTo('issue_change_status');
-
 		$context['possible_types'] = array();
 
 		foreach ($context['project']['trackers'] as $id => $type)
@@ -61,6 +51,19 @@ function IssueView()
 
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
+	}
+
+	if (projectAllowedTo('issue_moderate'))
+	{
+		if (projectAllowedTo('issue_assign'))
+		{
+			$context['can_assign'] = true;
+			$context['assign_members'] = &$context['project']['developers'];
+		}
+
+		$context['set_target'] = projectAllowedTo('issue_moderate');
+		$context['change_status'] = projectAllowedTo('issue_moderate');
+
 	}
 
 	// Template
