@@ -387,6 +387,7 @@ function EditVersion()
 			'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
 			'status' => 0,
 			'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
+			'access_level' => 0,
 		);
 	}
 	else
@@ -394,7 +395,7 @@ function EditVersion()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				v.id_version, v.id_project, v.id_parent, v.version_name,
-				v.status, v.member_groups, v.description, v.release_date
+				v.status, v.access_level, v.description, v.release_date
 			FROM {db_prefix}project_versions AS v
 			WHERE id_version = {int:version}',
 			array(
@@ -414,7 +415,6 @@ function EditVersion()
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 		$curVersion = array(
-			'member_groups' => explode(',', $row['member_groups']),
 		);
 
 		$context['version'] = array(
@@ -425,44 +425,9 @@ function EditVersion()
 			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
 			'status' => $row['status'],
 			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
+			'access_level' => $row['access_level'],
 		);
 	}
-
-	/*// Default membergroups.
-	$context['groups'] = array(
-		-1 => array(
-			'id' => '-1',
-			'name' => $txt['guests'],
-			'checked' => in_array('-1', $curVersion['member_groups']),
-			'is_post_group' => false,
-		),
-		0 => array(
-			'id' => '0',
-			'name' => $txt['regular_members'],
-			'checked' => in_array('0', $curVersion['member_groups']),
-			'is_post_group' => false,
-		)
-	);
-
-	// Load membergroups.
-	$request = $smcFunc['db_query']('', '
-		SELECT group_name, id_group, min_posts
-		FROM {db_prefix}membergroups
-		WHERE id_group > 3 OR id_group = 2
-		ORDER BY min_posts, id_group != 2, group_name');
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($_REQUEST['sa'] == 'newversion' && $row['min_posts'] == -1)
-			$curVersion['member_groups'][] = $row['id_group'];
-
-		$context['groups'][(int) $row['id_group']] = array(
-			'id' => $row['id_group'],
-			'name' => trim($row['group_name']),
-			'checked' => in_array($row['id_group'], $curVersion['member_groups']),
-			'is_post_group' => $row['min_posts'] != -1,
-		);
-	}
-	$smcFunc['db_free_result']($request);*/
 
 	// Template
 	$context['sub_template'] = 'edit_version';
