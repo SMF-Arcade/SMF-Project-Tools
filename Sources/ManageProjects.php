@@ -428,7 +428,7 @@ function EditVersion()
 		);
 	}
 
-	// Default membergroups.
+	/*// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(
 			'id' => '-1',
@@ -462,7 +462,7 @@ function EditVersion()
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 
 	// Template
 	$context['sub_template'] = 'edit_version';
@@ -500,10 +500,8 @@ function EditVersion2()
 				$versionOptions['status'] = 0;
 		}
 
-		$versionOptions['member_groups'] = array();
-		if (!empty($_POST['groups']))
-			foreach ($_POST['groups'] as $group)
-				$versionOptions['member_groups'][] = (int) $group;
+		$versionOptions['access_level'] = (int) $_POST['access_level'];
+
 
 		if (isset($_POST['add']))
 			createVersion($_POST['project'], $versionOptions);

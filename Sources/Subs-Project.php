@@ -345,7 +345,7 @@ function createVersion($id_project, $versionOptions)
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	if (empty($versionOptions['name']) || !isset($versionOptions['member_groups']) || !is_array($versionOptions['member_groups']))
+	if (empty($versionOptions['name']))
 		trigger_error('createVersion(): required parameters missing or invalid');
 
 	if (empty($versionOptions['release_date']) || empty($versionOptions['parent']))
@@ -377,8 +377,7 @@ function createVersion($id_project, $versionOptions)
 		$smcFunc['db_free_result']($request);
 	}
 
-	$smcFunc['db_insert'](
-		'insert',
+	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_versions',
 		array(
 			'id_project' => 'int',
@@ -419,11 +418,8 @@ function updateVersion($id_version, $versionOptions)
 	if (isset($versionOptions['release_date']))
 		$versionUpdates[] = 'release_date = {string:release_date}';
 
-	if (isset($versionOptions['member_groups']))
-	{
-		$versionUpdates[] = 'member_groups = {string:member_groups}';
-		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
-	}
+	if (isset($versionOptions['access_level']))
+		$versionUpdates[] = 'access_level = {int:access_level}';
 
 	if (isset($versionOptions['status']))
 		$versionUpdates[] = 'status = {int:status}';
@@ -447,8 +443,7 @@ function createCategory($id_project, $categoryOptions)
 {
 	global $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	$smcFunc['db_insert'](
-		'insert',
+	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_category',
 		array(
 			'id_project' => 'int',
