@@ -80,7 +80,8 @@ function loadProject($id_project)
 
 	$project = array(
 		'id' => $row['id_project'],
-		'link' => $scripturl . '?project=' . $row['id_project'],
+		'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+		'href' => $scripturl . '?project=' . $row['id_project'],
 		'name' => $row['name'],
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],

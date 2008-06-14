@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_reporter, i.body,
+			i.id_reporter, i.body, i.id_project,
 			i.id_assigned, ma.real_name AS a_real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,

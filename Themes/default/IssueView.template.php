@@ -36,7 +36,7 @@ function template_issue_view()
 					<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 				</div>
 				<div class="floatright">
-					', $txt['project'], ': ', $context['current_issue']['project']['link'], '
+					', $txt['project'], ': ', $context['project']['link'], '
 				</div>
 				<div style="clear: both"></div>
 			</h3>
