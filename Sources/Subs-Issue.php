@@ -111,7 +111,7 @@ function loadIssue($id_issue)
 			i.id_reporter, i.body,
 			i.id_assigned, ma.real_name AS a_real_name,
 			cat.id_category, cat.category_name,
-			ver.id_version, ver.version_name
+			ver.id_version, ver.version_name,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix
 		FROM {db_prefix}issues AS i
 			LEFT JOIN {db_prefix}members AS ma ON (ma.id_member = i.id_assigned)
