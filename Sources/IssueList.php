@@ -119,7 +119,13 @@ function IssueList()
 	if (!empty($context['issue_search']['title']))
 	{
 		$where = '
-			AND i.subject LIKE ({string:search_title})';
+			AND i.subject LIKE {string:search_title}';
+	}
+
+	if (!empty($context['issue_search']['type']))
+	{
+		$where = '
+			AND i.issue_type = {string:search_type}';
 	}
 
 	$issuesPerPage = 25;
@@ -139,6 +145,7 @@ function IssueList()
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
+			'search_type' => $context['issue_search']['type'],
 		)
 	);
 
@@ -172,6 +179,7 @@ function IssueList()
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
+			'search_type' => $context['issue_search']['type'],
 		)
 	);
 

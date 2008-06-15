@@ -134,6 +134,9 @@ $txt['project_fix_errors'] = 'Please fix following errors';
 $txt['project_is_missing'] = 'Required field %s is empty';
 $txt['project_invalid'] = '%s has invalid value';
 $txt['project_too_long'] = '%s is too long';
+
+$txt['error_no_tile'] = 'Title is missing';
+$txt['error_no_issue_type'] = 'Issue Type not selected';
 $txt['error_invalid_type'] = 'You didn\'t select type for issue';
 $txt['error_invalid_version'] = 'Version selected doesn\'t exist';
 
