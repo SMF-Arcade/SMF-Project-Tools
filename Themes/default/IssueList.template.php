@@ -69,7 +69,7 @@ function template_issue_list()
 			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'bottom'), '
 		</div>
-		<div class="issuelistframe tborder columnmargin">
+		<div class="issuelistframe tborder">
 			<table cellspacing="1" class="bordercolor issuetable">
 				<tr>';
 
