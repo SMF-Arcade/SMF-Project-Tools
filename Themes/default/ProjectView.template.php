@@ -89,7 +89,7 @@ function template_project_view()
 					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-					<th class="windowbg2" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+					<th class="windowbg2 headerpadding" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
 
 		echo '
 				</tr>';

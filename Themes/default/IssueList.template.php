@@ -5,6 +5,44 @@ function template_issue_list()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var issueSearch = new smfToggle("issue_search", ', empty($options['issue_search_collapse']) ? 'false' : 'true', ');
+		issueSearch.setOptions("issue_search_collapse", "', $context['session_id'], '");
+		issueSearch.addToggleImage("search_toggle", "/upshrink.gif", "/upshrink2.gif");
+		issueSearch.addTogglePanel("search_panel");
+	// ]]></script>
+	<div class="tborder">
+		<div class="titlebg headerpadding clearfix">
+			<span class="floatleft">', $txt['issue_search'], '</span>
+			<div class="floatright">
+				<a href="#" onclick="issueSearch.toggle(); return false;"><img id="search_toggle" src="', $settings['images_url'], '/', empty($options['issue_search_collapse']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" align="bottom" style="margin: 0 1ex;" /></a>
+			</div>
+		</div>
+		<div id="search_panel" class="bordercolor"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
+			<div class="windowbg2" style="padding: 0.5em 0.7em">
+				<form action="post">
+					', $txt['issue_title'], ': <input type="text" name="title" value="', $context['issue_search']['title'], ' />
+					<select name="status">
+						<option value="all"', $context['issue_search']['status'] == 'all' ? ' selected="selected"' : '', '>', $txt['issue_search_all_issues'], '</option>
+						<option value="open"', $context['issue_search']['status'] == 'open' ? ' selected="selected"' : '', '>', $txt['issue_search_open_issues'], '</option>
+						<option value="closed"', $context['issue_search']['status'] == 'closed' ? ' selected="selected"' : '', '>', $txt['issue_search_closed_issues'], '</option>
+						<option value="" disabled="disabled">--------</option>';
+
+	foreach ($context['issue']['status'] as $status)
+	{
+		echo '
+						<option value="', $status['id'], '">', $status['text'], '</option>';
+	}
+
+	echo '
+					</select>
+					<input type="submit" name="search" value="', $txt['issue_search_button'], '" />
+				</form>
+			</div>
+		</div>
+	</div>';
+
 	$buttons = array(
 		'post_issue' => array(
 			'text' => 'new_issue',

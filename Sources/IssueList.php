@@ -63,6 +63,39 @@ function IssueList()
 		$context['sort_direction'] = $ascending ? 'up' : 'down';
 	}
 
+	// Build Search info
+	$context['issue_search'] = array(
+		'title' => '',
+		'status' => 'open',
+		'version' => 0,
+		'version_fix' => 0,
+		'type' => '',
+	);
+
+	if (!empty($_REQUEST['status']))
+	{
+		$context['issue_search']['status'] = $_REQUEST['status'];
+	}
+
+	// Build where clause
+	$where = '';
+
+	if ($context['issue_search']['status'] == 'open')
+	{
+		$where = '
+			AND NOT i.status IN ({array_int:closed_status})';
+	}
+	elseif ($context['issue_search']['status'] == 'closed')
+	{
+		$where = '
+			AND i.status IN ({array_int:closed_status})';
+	}
+	elseif (is_int($context['issue_search']['status']))
+	{
+		$where = '
+			AND i.status IN ({int:search_status})';
+	}
+
 	$issuesPerPage = 25;
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_update');
@@ -74,9 +107,11 @@ function IssueList()
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 		WHERE {query_see_issue}
-			AND i.id_project = {int:project}',
+			AND i.id_project = {int:project}' . $where,
 		array(
-			'project' => $context['project']['id']
+			'project' => $context['project']['id'],
+			'closed_status' => $context['closed_status'],
+			'search_status' => $context['issue_search']['status'],
 		)
 	);
 
@@ -100,13 +135,15 @@ function IssueList()
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
-			AND i.id_project = {int:project}
+			AND i.id_project = {int:project}' . $where . '
 		ORDER BY i.updated DESC
 		LIMIT {int:start},' . $issuesPerPage,
 		array(
 			'project' => $context['project']['id'],
 			'empty' => '',
-			'start' => $_REQUEST['start']
+			'start' => $_REQUEST['start'],
+			'closed_status' => $context['closed_status'],
+			'search_status' => $context['issue_search']['status'],
 		)
 	);
 

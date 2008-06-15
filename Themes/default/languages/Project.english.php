@@ -98,6 +98,12 @@ $txt['evt_new_issue'] = 'Issue reported by %s';
 $txt['evt_update_issue'] = 'Issue updated by %s';
 
 // Issue List
+$txt['issue_search'] = 'Search Issues';
+$txt['issue_search_button'] = 'Search';
+$txt['issue_search_all_issues'] = '(All Issues)';
+$txt['issue_search_open_issues'] = 'Open Issues';
+$txt['issue_search_closed_issues'] = 'Closed Issues';
+
 $txt['new_issue'] = 'Report Issue';
 $txt['issue_list'] = 'Issue List';
 $txt['issue_no_issues'] = 'No issues, isn\'t it great?';
