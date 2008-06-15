@@ -103,6 +103,7 @@ $txt['issue_search_button'] = 'Search';
 $txt['issue_search_all_issues'] = '(All Issues)';
 $txt['issue_search_open_issues'] = 'Open Issues';
 $txt['issue_search_closed_issues'] = 'Closed Issues';
+$txt['issue_search_all_types'] = '(All Types)';
 
 $txt['new_issue'] = 'Report Issue';
 $txt['issue_list'] = 'Issue List';

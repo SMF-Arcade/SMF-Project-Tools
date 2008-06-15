@@ -63,6 +63,8 @@ function IssueList()
 		$context['sort_direction'] = $ascending ? 'up' : 'down';
 	}
 
+	$baseurl = $scripturl . '?project=' . $context['project']['id'] . ';sa=issues';
+
 	// Build Search info
 	$context['issue_search'] = array(
 		'title' => '',
@@ -72,9 +74,27 @@ function IssueList()
 		'type' => '',
 	);
 
+	$context['possible_types'] = array();
+
+	foreach ($context['project']['trackers'] as $id => $type)
+		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+
+	if (!empty($_REQUEST['title']))
+	{
+		$context['issue_search']['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
+		$baseurl .= ';title=' . $_REQUEST['title'];
+	}
+
 	if (!empty($_REQUEST['status']))
 	{
 		$context['issue_search']['status'] = $_REQUEST['status'];
+		$baseurl .= ';status=' . $_REQUEST['status'];
+	}
+
+	if (!empty($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
+	{
+		$context['issue_search']['type'] = $_REQUEST['type'];
+		$baseurl .= ';type=' . $_REQUEST['type'];
 	}
 
 	// Build where clause
@@ -90,10 +110,16 @@ function IssueList()
 		$where = '
 			AND i.status IN ({array_int:closed_status})';
 	}
-	elseif (is_int($context['issue_search']['status']))
+	elseif (is_numeric($context['issue_search']['status']))
 	{
 		$where = '
 			AND i.status IN ({int:search_status})';
+	}
+
+	if (!empty($context['issue_search']['title']))
+	{
+		$where = '
+			AND i.subject LIKE ({string:search_title})';
 	}
 
 	$issuesPerPage = 25;
@@ -112,13 +138,14 @@ function IssueList()
 			'project' => $context['project']['id'],
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
+			'search_title' => '%' . $context['issue_search']['title'] . '%',
 		)
 	);
 
 	list ($issueCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex('?project=' . $context['project']['id'] . ';sa=issues', $_REQUEST['start'], $issueCount, $issuesPerPage);
+	$context['page_index'] = constructPageIndex($baseurl, $_REQUEST['start'], $issueCount, $issuesPerPage);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -144,6 +171,7 @@ function IssueList()
 			'start' => $_REQUEST['start'],
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
+			'search_title' => '%' . $context['issue_search']['title'] . '%',
 		)
 	);
 

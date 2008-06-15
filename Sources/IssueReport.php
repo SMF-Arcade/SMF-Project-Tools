@@ -194,7 +194,7 @@ function ReportIssue2()
 
 	createIssue($issueOptions, $posterOptions);
 
-	redirectexit('project=' . $project);
+	redirectexit('project=' . $project . ';sa=issues');
 }
 
 ?>

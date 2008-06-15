@@ -21,8 +21,9 @@ function template_issue_list()
 		</div>
 		<div id="search_panel" class="bordercolor"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
 			<div class="windowbg2" style="padding: 0.5em 0.7em">
-				<form action="post">
-					', $txt['issue_title'], ': <input type="text" name="title" value="', $context['issue_search']['title'], ' />
+				<form action="', $scripturl, '?project=', $context['project']['id'], ';sa=issues" method="post">
+					', $txt['issue_title'], ':
+					<input type="text" name="title" value="', $context['issue_search']['title'], '" />
 					<select name="status">
 						<option value="all"', $context['issue_search']['status'] == 'all' ? ' selected="selected"' : '', '>', $txt['issue_search_all_issues'], '</option>
 						<option value="open"', $context['issue_search']['status'] == 'open' ? ' selected="selected"' : '', '>', $txt['issue_search_open_issues'], '</option>
@@ -32,7 +33,18 @@ function template_issue_list()
 	foreach ($context['issue']['status'] as $status)
 	{
 		echo '
-						<option value="', $status['id'], '">', $status['text'], '</option>';
+						<option value="', $status['id'], '"', $context['issue_search']['status'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+	}
+
+	echo '
+					</select>
+					<select name="type">
+						<option value="0"', empty($context['issue_search']['type']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
+
+	foreach ($context['possible_types'] as $type)
+	{
+		echo '
+						<option value="', $type['id'], '"', $context['issue_search']['type'] == $type['id'] ? ' selected="selected"' : '', '>', $type['name'], '</option>';
 	}
 
 	echo '
