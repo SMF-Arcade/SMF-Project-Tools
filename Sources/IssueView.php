@@ -38,8 +38,8 @@ function IssueView()
 	$issue = $context['current_issue']['id'];
 
 	$context['show_update'] = false;
-	$context['can_assign'] = false;
-	$context['can_edit'] = false;
+	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
+	$context['can_issue_update'] = projectAllowedTo('issue_update');
 
 	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
 	{
@@ -60,10 +60,6 @@ function IssueView()
 			$context['can_assign'] = true;
 			$context['assign_members'] = &$context['project']['developers'];
 		}
-
-		$context['set_target'] = projectAllowedTo('issue_moderate');
-		$context['change_status'] = projectAllowedTo('issue_moderate');
-
 	}
 
 	// Template
@@ -91,10 +87,10 @@ function IssueUpdate()
 
 	$issueOptions = array();
 
-	if (projectAllowedTo('issue_update_' . $type))
+	if (projectAllowedTo('issue_update'))
 	{
 		// Assigning
-		if (projectAllowedTo('issue_assign') && isset($_POST['assign']))
+		if (projectAllowedTo('issue_moderate') && isset($_POST['assign']))
 		{
 			if ((int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
 			{
@@ -115,7 +111,7 @@ function IssueUpdate()
 		}
 
 		// Version fixed
-		if (projectAllowedTo('issue_set_target') && isset($_POST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
+		if (projectAllowedTo('issue_moderate') && isset($_POST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
 		{
 			if (!isset($context['project']['parents'][(int) $_POST['version_fixed']]))
 				$_POST['version_fixed'] = 0;

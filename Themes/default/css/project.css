@@ -198,31 +198,22 @@ table.issuetable td.lastissue
 {
 	padding-left: 2%;
 }
-
-#issueinfo table
-{
-	width: 100%;
-}
-#issueinfo td
-{
-	vertical-align: middle;
-}
-#issueinfo td.infocolumn
-{
-	width: 33%;
-}
 #issueinfo .dark
 {
 	color: grey;
+	font-weight: bold;
 }
 #issueinfo div.display, #issueinfo div.edit
 {
-	height: 25px;
-	vertical-align: middle;
+	padding: 5px;
 }
 #issueinfo div.edit
 {
 	display: none;
+}
+.halfwidth
+{
+	width: 50%;
 }
 
 .infotable

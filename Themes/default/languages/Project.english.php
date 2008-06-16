@@ -118,6 +118,8 @@ $txt['issue_edit'] = 'Edit';
 $txt['reported_on'] = 'Reported on';
 $txt['issue_delete'] = 'Delete Issue';
 
+$txt['update_issue'] = 'Update Issue';
+
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';
 $txt['project_title'] = 'Projects - %s';

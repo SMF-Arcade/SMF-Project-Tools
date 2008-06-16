@@ -5,21 +5,6 @@ function template_issue_view()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
-	if ($context['show_update'])
-	{
-		echo '
-		<script language="JavaScript" type="text/javascript">
-			function startEdit(param)
-			{
-				$j("#issueupdate").show();
-				$j("#issueoptions").hide();
-
-				$j("#issueinfo td.infocolumn.canedit div.edit").show();
-				$j("#issueinfo td.infocolumn.canedit div.display").hide();
-			}
-		</script>';
-	}
-
 	$delete_button = create_button('delete.gif', 'issue_delete', 'issue_delete');
 	$modify_button = create_button('modify.gif', 'issue_edit', 'issue_edit');
 
@@ -39,51 +24,57 @@ function template_issue_view()
 					', $txt['project'], ': ', $context['project']['link'], '
 				</div>
 			</h3>
+			<div class="clearfix">
+				<div class="floatleft windowbg2 halfwidth">
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_category'], '</span>
+							', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_type'], '</span>
+							', $context['current_issue']['type']['name'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_priority'], '</span>
+							', $txt[$context['current_issue']['priority']], '
+						</div>
+					</div>
+				</div>
+				<div class="floatleft windowbg2 halfwidth">
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_status'], '</span>
+							', $context['current_issue']['status']['text'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
+								<span class="dark">', $txt['issue_version'], '</span>
+								', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_version_fixed'], '</span>
+							', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="windowbg2">
-				<div class="infocolumn', $context['can_edit'] ? ' canedit' : '', '">
-					<div class="display">
-						<span class="dark">', $txt['issue_category'], '</span>
-						<span class="value">', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</span>
-					</div>
-				</div>
 				<div>
 					<div class="display">
-						<span class="dark">', $txt['issue_type'], '</span>
-						<span class="value">', $context['current_issue']['type']['name'], '</span>
-					</div>
-				</div>
-				<div>
-					<div class="display">
-						<span class="dark">', $txt['issue_priority'], '</span>
-						', $txt[$context['current_issue']['priority']], '
-					</div>
-				</div>
-				<div>
-					<div class="display">
-						<span class="dark">', $txt['issue_status'], '</span>
-						', $context['current_issue']['status']['text'], '
-					</div>
-				</div>
-				<div>
-					<div class="display">
-							<span class="dark">', $txt['issue_version'], '</span>
-							', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
-					</div>
-				</div>
-				<div>
-					<div class="display">
-						<span class="dark">', $txt['issue_version_fixed'], '</span>
-						', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
+						<span class="dark">', $txt['issue_assigned_to'], '</span>
+						', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 					</div>
 				</div>
 			</div>
-			<div>
-				<div class="display">
-					<span class="dark">', $txt['issue_assigned_to'], '</span>
-					', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
-				</div>
-			</div>
-		</div>
+		</div><br />
 
 		<div class="tborder">
 			<div class="bordercolor">
@@ -112,8 +103,128 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-		</div>
+		</div><br />
 
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
+			<div class="smallpadding windowbg">';
+
+	if ($context['can_issue_update'])
+	{
+		// Version
+		echo '
+				<div>
+					', $txt['issue_version'], '
+					<select name="version">
+						<option></option>';
+
+
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+						<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+						<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+		}
+
+		echo '
+					</select>
+				</div>';
+
+		// Type
+		echo '
+				<div>
+					', $txt['issue_type'], '
+					<select name="type">';
+
+		foreach ($context['possible_types'] as $id => $type)
+			echo '
+						<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
+
+		echo '
+					</select>
+				</div>';
+
+		// Category
+		echo '
+				<div>
+					', $txt['issue_category'], '
+					<select name="category">
+						<option></option>';
+
+		foreach ($context['project']['category'] as $c)
+			echo '
+						<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+		echo '
+					</select>
+				</div>';
+	}
+
+	if ($context['can_issue_moderate'])
+	{
+		// Change Status
+		echo '
+				', $txt['issue_status'], ':
+				<div>
+					<select name="status">';
+
+
+		foreach ($context['issue']['status'] as $status)
+
+			echo '
+						<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+
+		echo '
+					</select>
+				</div>';
+
+		// Target Version
+		echo '
+				<div>
+					', $txt['issue_version_fixed'], '
+					<select name="version_fixed">
+						<option></option>';
+
+
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+						<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+						<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+		}
+
+		echo '
+					</select>
+				</div>';
+
+		// Assign
+		echo '
+				<div>
+					', $txt['issue_assigned_to'], '
+					<select name="assign">
+						<option></option>';
+
+		foreach ($context['assign_members'] as $mem)
+			echo '
+						<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
+
+		echo '
+					</select>
+				</div>';
+	}
+
+
+	echo '
+				<div style="text-align: right">
+					<input type="submit" />
+				</div>
+			</div>
+		</div>
 	</form>';
 }
 

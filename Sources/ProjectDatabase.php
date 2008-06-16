@@ -423,7 +423,6 @@ $tables = array(
 			),
 		),
 	),
-	/*
 	// Tags
 	'issue_tags' => array(
 		'name' => 'issue_tags',
@@ -446,7 +445,7 @@ $tables = array(
 				'columns' => array('id_issue', 'tag')
 			),
 		)
-	),*/
+	),
 );
 
 // Functions
