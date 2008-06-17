@@ -107,115 +107,129 @@ function template_issue_view()
 
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
-			<div class="smallpadding windowbg">';
+			<div class="smallpadding windowbg">
+				<table width="100%">';
 
 	if ($context['can_issue_update'])
 	{
 		// Version
 		echo '
-				<div>
-					', $txt['issue_version'], '
-					<select name="version">
-						<option></option>';
+					<tr>
+						<td width="30%">', $txt['issue_version'], '</td>
+						<td>
+							<select name="version">
+								<option></option>';
 
 
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-						<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-						<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+								<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
 		}
 
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>';
 
 		// Type
 		echo '
-				<div>
-					', $txt['issue_type'], '
-					<select name="type">';
+					<tr>
+						<td>', $txt['issue_type'], '</td>
+						<td>
+							<select name="type">';
 
 		foreach ($context['possible_types'] as $id => $type)
 			echo '
-						<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
+								<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
 
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>';
 
 		// Category
 		echo '
-				<div>
-					', $txt['issue_category'], '
-					<select name="category">
-						<option></option>';
+					<tr>
+						<td>', $txt['issue_category'], '</td>
+						<td>
+							<select name="category">
+								<option></option>';
 
 		foreach ($context['project']['category'] as $c)
 			echo '
-						<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>';
 	}
 
 	if ($context['can_issue_moderate'])
 	{
 		// Change Status
 		echo '
-				', $txt['issue_status'], ':
-				<div>
-					<select name="status">';
+					<tr>
+						<td>', $txt['issue_status'], '</td>
+						<td>
+							<select name="status">';
 
 
 		foreach ($context['issue']['status'] as $status)
 
 			echo '
-						<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>';
 
 		// Target Version
 		echo '
-				<div>
-					', $txt['issue_version_fixed'], '
-					<select name="version_fixed">
-						<option></option>';
+					<tr>
+						<td>', $txt['issue_version_fixed'], '</td>
+						<td>
+							<select name="version_fixed">
+								<option></option>';
 
 
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-						<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-						<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+								<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
 		}
 
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>';
 
 		// Assign
 		echo '
-				<div>
-					', $txt['issue_assigned_to'], '
-					<select name="assign">
-						<option></option>';
+					<tr>
+						<td>', $txt['issue_assigned_to'], '</td>
+						<td>
+							<select name="assign">
+								<option></option>';
 
 		foreach ($context['assign_members'] as $mem)
 			echo '
-						<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
+								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
 
 		echo '
-					</select>
-				</div>';
+							</select>
+						</td>
+					</tr>
+				</table>';
 	}
 
 
