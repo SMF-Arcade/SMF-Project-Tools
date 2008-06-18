@@ -44,6 +44,7 @@ function Projects()
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),
 		'updateIssue' => array('IssueView.php', 'IssueUpdate', true),
+		'deleteIssue' => array('IssueView.php', 'IssueDelete', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
@@ -75,14 +76,14 @@ function Projects()
 		$project = $context['project']['id'];
 
 		// Can see version
-		$user_info['query_see_version'] = '(ver.access_level <= ' . $context['project']['my_level'] . ')';
+		$user_info['query_see_version'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ')';
 
 		// Show everything?
 		if (projectAllowedTo('issue_view'))
 			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ')';
 		// Show only own?
 		else
-			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
+			$user_info['query_see_issue'] = '((ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
 
 		if (isset($_REQUEST['issue']))
 		{
@@ -189,7 +190,7 @@ function loadProjectTools($mode = '')
 		// Registered user.... just the groups in $user_info['groups'].
 		else
 		{
-			$see_project = '(IFNULL(dev.acess_level, p.public_access) > 0 OR (FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups)))';
+			$see_project = '(IFNULL(dev.access_level, p.public_access) > 0 OR (FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups)))';
 		}
 
 		$user_info['query_see_project'] = $see_project;

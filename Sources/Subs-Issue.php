@@ -447,4 +447,82 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	return true;
 }
 
+function deleteIssue($id_issue, $posterOptions)
+{
+	global $smcFunc, $db_prefix, $context;
+
+	if (!isset($context['issue']['status']))
+		trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			id_project, subject, id_version, status, id_category,
+			priority, issue_type, id_assigned, id_version_fixed
+		FROM {db_prefix}issues
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return false;
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$event_data = array(
+		'subject' => $row['subject'],
+		'changes' => array(),
+	);
+
+	if (!empty($row['status']))
+		$status = $context['issue']['status'][$row['status']]['type'];
+	else
+		$status = '';
+
+	$projectUpdates = array(
+		"{$status}_$row[issue_type] = {$status}_$row[issue_type] - 1"
+	);
+
+	if (!empty($projectUpdates))
+		$smcFunc['db_query']('', "
+			UPDATE {$db_prefix}projects
+			SET
+				" . implode(',
+				', $projectUpdates) . "
+			WHERE id_project = {int:project}",
+			array(
+				'project' => $row['id_project'],
+			)
+		);
+
+	if (!empty($event_data))
+	{
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_timeline',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'event' => 'string',
+				'event_time' => 'int',
+				'event_data' => 'string',
+			),
+			array(
+				$row['id_project'],
+				$id_issue,
+				$posterOptions['id'],
+				'delete_issue',
+				$issueOptions['time'],
+				serialize($event_data)
+			),
+			array()
+		);
+
+		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+	}
+
+	return true;
+}
+
 ?>

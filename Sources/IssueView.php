@@ -70,12 +70,33 @@ function IssueView()
 	loadTemplate('IssueView');
 }
 
+function IssueDelete()
+{
+	global $context, $user_info;
+
+	checkSession('get');
+
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found');
+
+	projectIsAllowedTo('issue_moderate');
+
+	$posterOptions = array(
+		'id' => $user_info['id']
+	);
+
+	deleteIssue($context['current_issue']['id'], $posterOptions);
+
+	redirectexit('project=' . $context['project']['id'] . ';sa=issues');
+}
+
 function IssueUpdate()
 {
 	global $context, $user_info;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
@@ -105,7 +126,7 @@ function IssueUpdate()
 		// Version
 		if (isset($_POST['version']) && $context['current_issue']['version']['id'] != (int) $_POST['version'])
 		{
-			if (!isset($context['project']['parents'][(int) $_POST['version']]))
+			if (!isset($context['versions_id'][(int) $_POST['version']]))
 				$_POST['version'] = 0;
 
 			$issueOptions['version'] = (int) $_POST['version'];
@@ -114,7 +135,7 @@ function IssueUpdate()
 		// Version fixed
 		if (projectAllowedTo('issue_moderate') && isset($_POST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
 		{
-			if (!isset($context['project']['parents'][(int) $_POST['version_fixed']]))
+			if (!isset($context['versions_id'][(int) $_POST['version_fixed']]))
 				$_POST['version_fixed'] = 0;
 
 			$issueOptions['version_fixed'] = (int) $_POST['version_fixed'];
@@ -130,7 +151,7 @@ function IssueUpdate()
 		}
 
 		// Status
-		if (projectAllowedTo('issue_change_status') && isset($_POST['status']) && $context['current_issue']['status']['id'] != (int) $_POST['status'])
+		if (projectAllowedTo('issue_moderate') && isset($_POST['status']) && $context['current_issue']['status']['id'] != (int) $_POST['status'])
 		{
 			if (isset($context['issue']['status'][(int) $_POST['status']]))
 				$issueOptions['status'] = (int) $_POST['status'];

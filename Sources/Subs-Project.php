@@ -65,7 +65,7 @@ function loadProject($id_project)
 	{
 		$row['access_level'] = 51;
 	}
-	elseif ($row['acess_level'] == -1)
+	elseif ($row['access_level'] == -1)
 	{
 		// Check for group level
 		foreach ($user_info['groups'] as $gid)
@@ -74,7 +74,7 @@ function loadProject($id_project)
 				$row['access_level'] = max($row['access_level'], $groups[$gid]);
 		}
 
-		if ($row['acess_level'] == -1)
+		if ($row['access_level'] == -1)
 			$row['access_level'] = $row['public_access'];
 	}
 
@@ -229,7 +229,7 @@ function projectAllowedTo($permission)
 
 function projectIsAllowedTo($permission)
 {
-	global $context, $project;
+	global $context, $project, $user_info;
 
 	if ($project === null)
 		fatal_error('projectAllowed(): Project not loaded');

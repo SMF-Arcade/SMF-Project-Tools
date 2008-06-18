@@ -219,7 +219,7 @@ function template_edit_project()
 					<option value="1"', $group['level'] == 1 ? ' selected="selected"' : '', '>', $txt['access_level_viewer'], '</option>
 					<option value="5"', $group['level'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</option>
 					<option value="30"', $group['level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</option>
-				</select>';
+				</select><br />';
 
 echo '
 			</td>

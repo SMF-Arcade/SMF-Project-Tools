@@ -103,15 +103,31 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-		</div><br />
+		</div><br />';
 
+		$mod_buttons = array(
+			'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
+		);
+
+		echo '
+		<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+
+
+		echo '
+			<div class="tborder">
+				<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
+		</div><br />';
+	}
+
+	if ($context['can_issue_update'])
+	{
+		echo '
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
 			<div class="smallpadding windowbg">
 				<table width="100%">';
 
-	if ($context['can_issue_update'])
-	{
 		// Version
 		echo '
 					<tr>
@@ -145,7 +161,7 @@ function template_issue_view()
 
 		foreach ($context['possible_types'] as $id => $type)
 			echo '
-								<option value="', $id, '" ', $type['selected'] ? ' selected="selected"' : '', '/>', $type['name'], '</option>';
+								<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '>', $type['name'], '</option>';
 
 		echo '
 							</select>
@@ -167,30 +183,29 @@ function template_issue_view()
 							</select>
 						</td>
 					</tr>';
-	}
 
-	if ($context['can_issue_moderate'])
-	{
-		// Change Status
-		echo '
+		if ($context['can_issue_moderate'])
+		{
+			// Change Status
+			echo '
 					<tr>
 						<td>', $txt['issue_status'], '</td>
 						<td>
 							<select name="status">';
 
 
-		foreach ($context['issue']['status'] as $status)
+			foreach ($context['issue']['status'] as $status)
 
-			echo '
+				echo '
 								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
-		echo '
+			echo '
 							</select>
 						</td>
 					</tr>';
 
-		// Target Version
-		echo '
+			// Target Version
+			echo '
 					<tr>
 						<td>', $txt['issue_version_fixed'], '</td>
 						<td>
@@ -198,48 +213,50 @@ function template_issue_view()
 								<option></option>';
 
 
-		foreach ($context['versions'] as $v)
-		{
-			echo '
+			foreach ($context['versions'] as $v)
+			{
+				echo '
 								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
 
-			foreach ($v['sub_versions'] as $subv)
-				echo '
+				foreach ($v['sub_versions'] as $subv)
+					echo '
 								<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
-		}
+			}
 
-		echo '
+			echo '
 							</select>
 						</td>
 					</tr>';
 
-		// Assign
-		echo '
+			// Assign
+			echo '
 					<tr>
 						<td>', $txt['issue_assigned_to'], '</td>
 						<td>
 							<select name="assign">
 								<option></option>';
 
-		foreach ($context['assign_members'] as $mem)
-			echo '
+			foreach ($context['assign_members'] as $mem)
+				echo '
 								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
 
-		echo '
+			echo '
 							</select>
 						</td>
-					</tr>
-				</table>';
-	}
+					</tr>';
+		}
 
 
 	echo '
+				</table>
 				<div style="text-align: right">
 					<input type="submit" />
 				</div>
 			</div>
 		</div>
 	</form>';
+
+	}
 }
 
 ?>

@@ -76,8 +76,7 @@ function ProjectView()
 		SELECT
 			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
 			tl.event, tl.event_data, tl.event_time, tl.id_version,
-			mem.id_member, IFNULL(mem.real_name, {string:empty}) AS user,
-			ver.member_groups
+			mem.id_member, IFNULL(mem.real_name, {string:empty}) AS user
 		FROM {db_prefix}project_timeline AS tl
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)

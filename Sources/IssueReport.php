@@ -39,9 +39,10 @@ function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	projectIsAllowedTo('issue_report');
+
+	if (!isset($context['versions']))
+		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$context['possible_types'] = array();
 
@@ -104,8 +105,10 @@ function ReportIssue2()
 {
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
-	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
+	projectIsAllowedTo('issue_report');
+
+	if (!isset($context['versions']))
+		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	if (!empty($_REQUEST['details_mode']) && isset($_REQUEST['details']))
 	{
@@ -147,6 +150,8 @@ function ReportIssue2()
 
 	if (empty($_POST['type']) || !isset($context['possible_types'][$_POST['type']]))
 		$post_errors[] = 'no_issue_type';
+	if (!empty($_POST['version']) && !isset($context['possible_types'][$_POST['type']]))
+		$post_errors[] = 'no_issue_type';
 
 	$_POST['guestname'] = $user_info['username'];
 	$_POST['email'] = $user_info['email'];
@@ -185,7 +190,7 @@ function ReportIssue2()
 		'status' => 1,
 		'priority' => 2,
 		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
-		'version' => 0,
+		'version' => $_POST['version'],
 		'assignee' => 0,
 		'body' => $_POST['details'],
 		'created' => time(),

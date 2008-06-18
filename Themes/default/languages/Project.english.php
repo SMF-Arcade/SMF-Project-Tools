@@ -117,6 +117,7 @@ $txt['preview_report_issue'] = 'Preview issue';
 $txt['issue_edit'] = 'Edit';
 $txt['reported_on'] = 'Reported on';
 $txt['issue_delete'] = 'Delete Issue';
+$txt['issue_delete_confirm'] = 'Delete Issue';
 
 $txt['update_issue'] = 'Update Issue';
 

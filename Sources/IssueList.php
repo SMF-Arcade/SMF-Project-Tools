@@ -32,7 +32,7 @@ function IssueList()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
 
-	ProjectIsAllowedTo('issue_view');
+	projectIsAllowedTo('issue_view');
 
 	// Sorting methods
 	$sort_methods = array(
@@ -98,34 +98,29 @@ function IssueList()
 	}
 
 	// Build where clause
-	$where = '';
+	$where = array();
 
 	if ($context['issue_search']['status'] == 'open')
 	{
-		$where = '
-			AND NOT i.status IN ({array_int:closed_status})';
+		$where[] = 'NOT (i.status IN ({array_int:closed_status}))';
 	}
 	elseif ($context['issue_search']['status'] == 'closed')
 	{
-		$where = '
-			AND i.status IN ({array_int:closed_status})';
+		$where[] = 'i.status IN ({array_int:closed_status})';
 	}
 	elseif (is_numeric($context['issue_search']['status']))
 	{
-		$where = '
-			AND i.status IN ({int:search_status})';
+		$where[] = 'i.status IN ({int:search_status})';
 	}
 
 	if (!empty($context['issue_search']['title']))
 	{
-		$where = '
-			AND i.subject LIKE {string:search_title}';
+		$where[] = 'i.subject LIKE {string:search_title}';
 	}
 
 	if (!empty($context['issue_search']['type']))
 	{
-		$where = '
-			AND i.issue_type = {string:search_type}';
+		$where[] = 'i.issue_type = {string:search_type}';
 	}
 
 	$issuesPerPage = 25;
@@ -139,7 +134,9 @@ function IssueList()
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 		WHERE {query_see_issue}
-			AND i.id_project = {int:project}' . $where,
+			AND i.id_project = {int:project} ' . (!empty($where) ? '
+			AND ' . implode('
+			AND ', $where) : '') . '',
 		array(
 			'project' => $context['project']['id'],
 			'closed_status' => $context['closed_status'],
@@ -169,7 +166,9 @@ function IssueList()
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE {query_see_issue}
-			AND i.id_project = {int:project}' . $where . '
+			AND i.id_project = {int:project}' . (!empty($where) ? '
+			AND ' . implode('
+			AND ', $where) : '') . '
 		ORDER BY i.updated DESC
 		LIMIT {int:start},' . $issuesPerPage,
 		array(
