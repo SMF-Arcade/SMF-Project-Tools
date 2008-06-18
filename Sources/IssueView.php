@@ -37,10 +37,11 @@ function IssueView()
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-	$context['can_issue_update'] = projectAllowedTo('issue_update');
+	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type);
 
 	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
 	{
@@ -109,7 +110,7 @@ function IssueUpdate()
 
 	$issueOptions = array();
 
-	if (projectAllowedTo('issue_update'))
+	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 	{
 		// Assigning
 		if (projectAllowedTo('issue_moderate') && isset($_POST['assign']))

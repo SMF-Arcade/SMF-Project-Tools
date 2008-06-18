@@ -24,8 +24,8 @@ function template_issue_view()
 					', $txt['project'], ': ', $context['project']['link'], '
 				</div>
 			</h3>
-			<div class="clearfix">
-				<div class="floatleft windowbg2 halfwidth">
+			<div class="clearfix windowbg2">
+				<div class="floatleft halfwidth">
 					<div>
 						<div class="display">
 							<span class="dark">', $txt['issue_category'], '</span>
@@ -45,7 +45,7 @@ function template_issue_view()
 						</div>
 					</div>
 				</div>
-				<div class="floatleft windowbg2 halfwidth">
+				<div class="floatright halfwidth">
 					<div>
 						<div class="display">
 							<span class="dark">', $txt['issue_status'], '</span>

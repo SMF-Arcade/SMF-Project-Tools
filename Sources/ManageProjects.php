@@ -276,7 +276,10 @@ function EditProject2()
 		$projectOptions['member_groups'] = array();
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group => $level)
-				$projectOptions['member_groups'][(int) $group] = (int) $level;
+			{
+				if (!empty($level))
+					$projectOptions['member_groups'][(int) $group] = (int) $level;
+			}
 
 		$projectOptions['public_access'] = (int) $_POST['public_access'];
 

@@ -31,8 +31,8 @@ function Projects()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
-	isAllowedTo('project_view');
-	
+	isAllowedTo('project_access');
+
 	$project = 0;
 
 	loadProjectTools();
@@ -50,6 +50,12 @@ function Projects()
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
+	);
+
+	// Linktree
+	$context['linktree'][] = array(
+		'name' => $txt['linktree_projects'],
+		'url' => $scripturl . '?action=projects'
 	);
 
 	// Load Issue if needed
@@ -72,6 +78,7 @@ function Projects()
 	{
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
 			fatal_lang_error('project_not_found');
+		projectIsAllowedTo('view');
 
 		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
@@ -108,12 +115,6 @@ function Projects()
 		$_REQUEST['sa'] = 'viewProject';
 	elseif (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
 		fatal_lang_error('project_not_found');
-
-	// Linktree
-	$context['linktree'][] = array(
-		'name' => $txt['linktree_projects'],
-		'url' => $scripturl . '?action=projects'
-	);
 
 	// Check permission if needed
 	if (isset($subActions[$_REQUEST['sa']][3]))
@@ -153,8 +154,6 @@ function Projects()
 
 		$context['template_layers'][] = 'project_view';
 		loadTemplate('ProjectView');
-
-		projectIsAllowedTo('view');
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);

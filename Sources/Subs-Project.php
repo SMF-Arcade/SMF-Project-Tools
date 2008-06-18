@@ -215,7 +215,8 @@ function projectAllowedTo($permission)
 		'admin' => 50,
 		'issue_resolve' => 35,
 		'issue_moderate' => 35,
-		'issue_update' => 5,
+		'issue_update_any' => 35,
+		'issue_update_own' => 5,
 		'issue_report' => 5,
 		'issue_view' => 1,
 		'view' => 1,
@@ -312,7 +313,7 @@ function updateProject($id_project, $projectOptions)
 
 		foreach ($projectOptions['member_groups'] as $id_group => $level)
 		{
-			if (empty($level) && $level < 0)
+			if (empty($level) || $level < 0)
 				continue;
 
 			$groups[] = (int) $id_group;
