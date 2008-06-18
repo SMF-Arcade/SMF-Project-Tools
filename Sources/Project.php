@@ -31,6 +31,8 @@ function Projects()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
+	isAllowedTo('project_view');
+	
 	$project = 0;
 
 	loadProjectTools();

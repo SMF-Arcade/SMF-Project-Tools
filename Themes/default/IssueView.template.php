@@ -105,20 +105,19 @@ function template_issue_view()
 			</div>
 		</div><br />';
 
-		$mod_buttons = array(
-			'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
-		);
+	$mod_buttons = array(
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
+	);
 
-		echo '
-		<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+	echo '
+	<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 
 
-		echo '
-			<div class="tborder">
-				<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-		</div><br />';
-	}
+	echo '
+		<div class="tborder">
+			<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
+	</div><br />';
 
 	if ($context['can_issue_update'])
 	{

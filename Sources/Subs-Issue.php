@@ -496,6 +496,14 @@ function deleteIssue($id_issue, $posterOptions)
 			)
 		);
 
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}issues
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue,
+		)
+	);
+
 	if (!empty($event_data))
 	{
 		$smcFunc['db_insert']('insert',
@@ -513,7 +521,7 @@ function deleteIssue($id_issue, $posterOptions)
 				$id_issue,
 				$posterOptions['id'],
 				'delete_issue',
-				$issueOptions['time'],
+				time(),
 				serialize($event_data)
 			),
 			array()

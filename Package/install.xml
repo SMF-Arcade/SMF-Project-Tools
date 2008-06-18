@@ -69,11 +69,7 @@
 			<add><![CDATA[
 			'project_access' => array(false, 'project', 'project'),
 			'project_admin' => array(false, 'project', 'administrate'),
-
-			'issue_view' => array(false, 'project', 'project'),
-			'issue_update' => array(false, 'project', 'project_developer'),
-			'issue_assign' => array(false, 'project', 'project_developer'),
-			'issue_assign_to' => array(false, 'project', 'project_developer'),]]></add>
+			'issue_view' => array(false, 'project', 'project'),]]></add>
 		</operation>
 	</file>
 
@@ -151,22 +147,17 @@ $txt['list_projects'] = 'Project List';
 // Permission Names
 $txt['permissiongroup_project'] = 'Project Tools';
 $txt['permissionname_project_access'] = 'Access Project Tools';
-$txt['permissionname_issue_view'] = 'View issues';
-$txt['permissionname_issue_view_any'] = 'Any';
-$txt['permissionname_issue_view_own'] = 'Own';
-$txt['permissionname_issue_update'] = 'Update issues';
-$txt['permissionname_issue_update_any'] = 'Any';
-$txt['permissionname_issue_update_own'] = 'Own';
-$txt['permissionname_issue_assign'] = 'Assign issues';
-$txt['permissionname_issue_assign_to'] = 'Can be assigned issues';
-$txt['permissionname_issue_report'] = 'Report issues';
 $txt['permissionname_project_admin'] = 'Administrate Project Tools';
 
 // Simple permission gropus
 $txt['permissiongroup_simple_project'] = 'Use Project Tools';
-$txt['permissiongroup_simple_project_developer'] = 'Developer access to Project Tools';
 
 // Errors
+$txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
+$txt['cannot_project_view'] = 'You are not allowed to view this project.';
+$txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
+$txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+
 $txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
 $txt['cannot_issue_report'] = 'You don\'t have permission to report issues on our Issue Tracker';]]></add>
 		</operation>
