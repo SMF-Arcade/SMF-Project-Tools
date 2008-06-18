@@ -35,7 +35,7 @@ function loadProject($id_project)
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers,
 			p.' . implode(', p.', $context['type_columns']) . ', p.public_access,
-			IFNULL(dev.acess_level, -1) AS access_level,
+			IFNULL(dev.access_level, -1) AS access_level,
 			p.member_groups, p.member_groups_level
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project

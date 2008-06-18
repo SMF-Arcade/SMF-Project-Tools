@@ -221,11 +221,6 @@ $tables = array(
 				'type' => 'index',
 				'columns' => array('id_project')
 			),
-			array(
-				'name' => 'member_groups',
-				'type' => 'index',
-				'columns' => array('member_groups')
-			),
 		)
 	),
 	// Categories/modules table
