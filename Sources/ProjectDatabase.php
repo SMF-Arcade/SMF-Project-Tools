@@ -373,7 +373,7 @@ $tables = array(
 	),
 	// Comments
 	'issues_comment' => array(
-		'name' => 'issues',
+		'name' => 'issue_comments',
 		'columns' => array(
 			array(
 				'name' => 'id_commment',
