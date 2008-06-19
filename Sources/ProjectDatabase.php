@@ -344,7 +344,7 @@ $tables = array(
 			array(
 				'name' => 'reporter_name',
 				'type' => 'varchar',
-				'size' => 60,
+				'size' => 256,
 				'null' => false,
 			),
 			array(
@@ -378,56 +378,46 @@ $tables = array(
 			array(
 				'name' => 'id_comment',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 			),
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'post_time',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'edit_time',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
-				'size' => 60,
-				'null' => false,
+				'size' => 256,
 			),
 			array(
 				'name' => 'poster_email',
 				'type' => 'varchar',
-				'size' => 60,
-				'null' => false,
-			),
-			array(
-				'name' => 'body',
-				'type' => 'text',
-				'null' => false,
+				'size' => 256,
 			),
 			array(
 				'name' => 'poster_ip',
 				'type' => 'varchar',
 				'size' => 60,
-				'null' => false,
+			),
+			array(
+				'name' => 'body',
+				'type' => 'text',
 			),
 		),
 		'indexes' => array(
@@ -475,6 +465,21 @@ $tables = array(
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
+			),
+			array(
+				'name' => 'poster_name',
+				'type' => 'varchar',
+				'size' => 256,
+			),
+			array(
+				'name' => 'poster_email',
+				'type' => 'varchar',
+				'size' => 256,
+			),
+			array(
+				'name' => 'poster_ip',
+				'type' => 'varchar',
+				'size' => 60,
 			),
 			array(
 				'name' => 'event',
