@@ -84,9 +84,12 @@ table.projectsframe td.lastissue
 	width: 50%;
 	margin-bottom: 15px;
 }
-.columnmargin
+.columnmargin_left
 {
 	margin-left: 5px;
+}
+.columnmargin_right
+{
 	margin-right: 5px;
 }
 

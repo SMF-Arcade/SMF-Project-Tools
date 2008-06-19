@@ -108,7 +108,7 @@ $txt['issue_search_all_types'] = '(All Types)';
 
 $txt['new_issue'] = 'Report Issue';
 $txt['issue_list'] = 'Issue List';
-$txt['issue_no_issues'] = 'No issues, isn\'t it great?';
+$txt['issue_no_issues'] = 'No issues';
 
 // Report issue
 $txt['report_issue'] = 'Report Issue';
@@ -116,6 +116,9 @@ $txt['preview_report_issue'] = 'Preview issue';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';
+$txt['issue_reported'] = 'Reported';
+$txt['issue_updated'] = 'Last Updated';
+
 $txt['reported_on'] = 'Reported on';
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete Issue?';

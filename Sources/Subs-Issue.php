@@ -182,7 +182,7 @@ function loadIssue($id_issue)
 		'status' => $context['issue']['status'][$row['status']],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
-		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : false,
+		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : '',
 		'body' => parse_bbc($row['body']),
 	);
 

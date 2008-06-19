@@ -71,12 +71,14 @@ function template_project_view()
 		</div>
 	</div><br />';
 
+	$side = true;
+
 	// List of latest updated issues
 	foreach ($context['issue_list'] as $issueList)
 	{
 		echo '
 	<div class="issuecolumn">
-		<div class="issuelistframe tborder columnmargin">
+		<div class="issuelistframe tborder columnmargin_', $side ? 'right' : 'left', '">
 			<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
 			<table cellspacing="1" class="bordercolor issuetable">
 				<tr>';
@@ -124,6 +126,8 @@ function template_project_view()
 			</table>
 		</div>
 	</div>';
+
+		$side = !$side;
 	}
 
 	// Statistics etc

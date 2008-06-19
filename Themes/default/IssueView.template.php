@@ -28,14 +28,20 @@ function template_issue_view()
 				<div class="floatleft halfwidth">
 					<div>
 						<div class="display">
+							<span class="dark">', $txt['issue_type'], '</span>
+							', $context['current_issue']['type']['name'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
 							<span class="dark">', $txt['issue_category'], '</span>
 							', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
 						</div>
 					</div>
 					<div>
 						<div class="display">
-							<span class="dark">', $txt['issue_type'], '</span>
-							', $context['current_issue']['type']['name'], '
+							<span class="dark">', $txt['issue_status'], '</span>
+							', $context['current_issue']['status']['text'], '
 						</div>
 					</div>
 					<div>
@@ -48,8 +54,14 @@ function template_issue_view()
 				<div class="floatright halfwidth">
 					<div>
 						<div class="display">
-							<span class="dark">', $txt['issue_status'], '</span>
-							', $context['current_issue']['status']['text'], '
+							<span class="dark">', $txt['issue_reported'], '</span>
+							', $context['current_issue']['created'], '
+						</div>
+					</div>
+					<div>
+						<div class="display">
+							<span class="dark">', $txt['issue_updated'], '</span>
+							', $context['current_issue']['updated'], '
 						</div>
 					</div>
 					<div>
