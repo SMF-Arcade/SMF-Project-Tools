@@ -337,6 +337,11 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'replies',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'body',
 				'type' => 'text',
 				'null' => false,

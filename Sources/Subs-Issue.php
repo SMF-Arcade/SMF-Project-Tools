@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_reporter, i.body, i.id_project,
+			i.id_reporter, i.body, i.id_project, i.reporter_name, i.reporter_ip, i.reporter_email,
 			i.id_assigned, ma.real_name AS a_real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
@@ -138,12 +138,12 @@ function loadIssue($id_issue)
 
 	if (!loadMemberContext($row['id_reporter']))
 	{
-		$memberContext[$row['id_reporter']]['name'] = $txt['issue_guest'];
+		$memberContext[$row['id_reporter']]['name'] = $row['reporter_name'];
 		$memberContext[$row['id_reporter']]['id'] = 0;
 		$memberContext[$row['id_reporter']]['group'] = $txt['guest_title'];
-		$memberContext[$row['id_reporter']]['link'] = $txt['issue_guest'];
-		$memberContext[$row['id_reporter']]['email'] = '';
-		$memberContext[$row['id_reporter']]['hide_email'] = true;
+		$memberContext[$row['id_reporter']]['link'] = $row['reporter_name'];
+		$memberContext[$row['id_reporter']]['email'] = $row['reporter_email'];
+		$memberContext[$row['id_reporter']]['show_email'] = showEmailAddress(true, 0);
 		$memberContext[$row['id_reporter']]['is_guest'] = true;
 	}
 	else
@@ -184,6 +184,9 @@ function loadIssue($id_issue)
 		'created' => timeformat($row['created']),
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : '',
 		'body' => parse_bbc($row['body']),
+		'ip' => $row['reporter_ip'],
+		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_reporter'] == $user_info['id'] && !empty($user_info['id'])),
+
 	);
 
 	return true;
@@ -583,6 +586,17 @@ function createComment($id_issue, $commentOptions, $posterOptions)
 	);
 
 	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issues_comment', 'id_comment');
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET replies = replies + 1
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue,
+		)
+	);
+
+	return true;
 }
 
 ?>

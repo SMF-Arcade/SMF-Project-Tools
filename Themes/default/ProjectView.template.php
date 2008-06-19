@@ -128,6 +128,10 @@ function template_project_view()
 	</div>';
 
 		$side = !$side;
+
+		if ($side)
+			echo '
+	<div class="clearfix"></div>';
 	}
 
 	// Statistics etc

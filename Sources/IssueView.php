@@ -85,7 +85,9 @@ function IssueView()
 			'post_time' => timeformat($row['post_time']),
 			'edit_time' => timeformat($row['edit_time']),
 			'body' => parse_bbc($row['body']),
-			''
+			'member' => array(
+
+			)
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -122,7 +124,7 @@ function IssueDelete()
 
 function IssueUpdate()
 {
-	global $context, $user_info;
+	global $context, $user_info, $smcFunc;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');

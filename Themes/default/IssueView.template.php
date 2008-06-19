@@ -90,6 +90,20 @@ function template_issue_view()
 				<div class="clearfix topborder windowbg largepadding">
 					<div class="floatleft poster">
 						<h4>', $reporter['link'], '</h4>
+						<ul class="smalltext">';
+
+		// Show the member's custom title, if they have one.
+		if (isset($reporter['title']) && $reporter['title'] != '')
+			echo '
+							<li>', $reporter['title'], '</li>';
+
+		// Show the member's primary group (like 'Administrator') if they have one.
+		if (isset($reporter['group']) && $reporter['group'] != '')
+			echo '
+							<li>', $reporter['group'], '</li>';
+
+	echo '
+						</ul>
 					</div>
 					<div class="postarea">
 						<div class="post">
@@ -99,7 +113,28 @@ function template_issue_view()
 					<div class="moderatorbar">
 						<div class="smalltext floatleft">
 						</div>
-						<div class="smalltext floatright">
+						<div class="smalltext floatright">';
+	echo '
+							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+
+	// Show the IP to this user for this post - because you can moderate?
+	if (allowedTo('moderate_forum') && !empty($context['current_issue']['ip']))
+		echo '
+							<a href="', $scripturl, '?action=trackip;searchip=', $context['current_issue']['ip'], '">', $context['current_issue']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+	// Or, should we show it because this is you?
+	elseif ($context['current_issue']['can_see_ip'])
+		echo '
+							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $context['current_issue']['ip'], '</a>';
+	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+	elseif (!$context['user']['is_guest'])
+		echo '
+							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+	// Otherwise, you see NOTHING!
+	else
+		echo '
+							', $txt['logged'];
+
+	echo '
 						</div>
 					</div>
 				</div>
@@ -249,6 +284,7 @@ function template_issue_view()
 
 	echo '
 				</table>
+				<textarea name="comment"></textarea>
 				<div style="text-align: right">
 					<input type="submit" />
 				</div>
