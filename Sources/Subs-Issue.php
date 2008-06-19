@@ -186,7 +186,6 @@ function loadIssue($id_issue)
 		'body' => parse_bbc($row['body']),
 		'ip' => $row['reporter_ip'],
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_reporter'] == $user_info['id'] && !empty($user_info['id'])),
-
 	);
 
 	return true;
@@ -556,12 +555,12 @@ function deleteIssue($id_issue, $posterOptions)
 	return true;
 }
 
-function createComment($id_issue, $commentOptions, $posterOptions)
+function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
 
 	$smcFunc['db_insert']('insert',
-		'{db_prefix}issues_comment',
+		'{db_prefix}issue_comments',
 		array(
 			'id_issue' => 'int',
 			'id_event' => 'int',
@@ -585,15 +584,44 @@ function createComment($id_issue, $commentOptions, $posterOptions)
 		array()
 	);
 
-	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issues_comment', 'id_comment');
+	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
 
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
-		SET replies = replies + 1
+		SET
+			replies = replies + 1, updated = {int:time}
 		WHERE id_issue = {int:issue}',
 		array(
 			'issue' => $id_issue,
+			'time' => time(),
 		)
+	);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_timeline',
+		array(
+			'id_project' => 'int',
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string',
+			'poster_email' => 'string',
+			'poster_ip' => 'string-60',
+			'event' => 'string',
+			'event_time' => 'int',
+			'event_data' => 'string',
+		),
+		array(
+			$id_project,
+			$id_issue,
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			'new_comment',
+			time(),
+			serialize(array())
+		),
+		array()
 	);
 
 	return true;

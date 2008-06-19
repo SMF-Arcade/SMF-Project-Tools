@@ -141,6 +141,77 @@ function template_issue_view()
 			</div>
 		</div><br />';
 
+	if ($context['show_comments'])
+	{
+		echo '
+		<div class="tborder">
+			<h3 class="catbg3 clearfix">
+				', $txt['issue_comments'], '
+			</h3>
+			<div class="bordercolor">';
+
+		while ($comment = getComment())
+		{
+			echo '
+				<div class="clearfix topborder windowbg largepadding">
+					<div class="floatleft poster">
+						<h4>', $comment['member']['link'], '</h4>
+						<ul class="smalltext">';
+
+		// Show the member's custom title, if they have one.
+		if (isset($comment['member']['title']) && $comment['member']['title'] != '')
+			echo '
+							<li>', $comment['member']['title'], '</li>';
+
+		// Show the member's primary group (like 'Administrator') if they have one.
+		if (isset($comment['member']['group']) && $comment['member']['group'] != '')
+			echo '
+							<li>', $comment['member']['group'], '</li>';
+
+	echo '
+						</ul>
+					</div>
+					<div class="postarea">
+						<div class="post">
+							', $comment['body'], '
+						</div>
+					</div>
+					<div class="moderatorbar">
+						<div class="smalltext floatleft">
+						</div>
+						<div class="smalltext floatright">';
+	echo '
+							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+
+	// Show the IP to this user for this post - because you can moderate?
+	if (allowedTo('moderate_forum') && !empty($comment['ip']))
+		echo '
+							<a href="', $scripturl, '?action=trackip;searchip=', $comment['ip'], '">', $comment['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+	// Or, should we show it because this is you?
+	elseif ($comment['can_see_ip'])
+		echo '
+							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $comment['ip'], '</a>';
+	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+	elseif (!$context['user']['is_guest'])
+		echo '
+							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+	// Otherwise, you see NOTHING!
+	else
+		echo '
+							', $txt['logged'];
+
+	echo '
+						</div>
+					</div>
+				</div>
+			</div>';
+		}
+
+		echo '
+			</div>
+		</div>';
+	}
+
 	$mod_buttons = array(
 		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
 	);

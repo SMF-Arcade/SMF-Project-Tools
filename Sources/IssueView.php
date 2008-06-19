@@ -64,39 +64,81 @@ function IssueView()
 		}
 	}
 
-	// Load Comments
-	$context['comments'] = array();
-
 	$request = $smcFunc['db_query']('', '
-		SELECT c.id_comment, c.post_time, c.edit_time, c.body, c.poster_ip,
-			mem.id_member, IFNULL(mem.real_name, c.poster_name) AS real_name
+		SELECT id_member
+		FROM {db_prefix}issue_comments
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $issue,
+		)
+	);
+	$posters = array();
+	$comments = 0;
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (!empty($row['id_member']))
+			$posters[] = $row['id_member'];
+		$comments++;
+	}
+	$smcFunc['db_free_result']($request);
+	$posters = array_unique($posters);
+
+	$context['show_comments'] = $comments > 0;
+
+	// Load Comments
+	$context['comment_request'] = $smcFunc['db_query']('', '
+		SELECT c.id_comment, c.post_time, c.edit_time, c.body, c.poster_name, c.poster_email, c.poster_ip, c.id_member
 		FROM {db_prefix}issue_comments AS c
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
 		WHERE id_issue = {int:issue}',
 		array(
 			'issue' => $issue,
 		)
 	);
 
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['comments'][] = array(
-			'id' => $row['id_comment'],
-			'post_time' => timeformat($row['post_time']),
-			'edit_time' => timeformat($row['edit_time']),
-			'body' => parse_bbc($row['body']),
-			'member' => array(
-
-			)
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
 	// Template
 	$context['sub_template'] = 'issue_view';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 
 	loadTemplate('IssueView');
+}
+
+function getComment()
+{
+	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings;
+
+	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
+
+	if (!$row)
+	{
+		$smcFunc['db_free_result']($context['comment_request']);
+		return false;
+	}
+
+	if (!loadMemberContext($row['id_member']))
+	{
+		$memberContext[$row['id_member']]['name'] = $row['poster_name'];
+		$memberContext[$row['id_member']]['id'] = 0;
+		$memberContext[$row['id_member']]['group'] = $txt['guest_title'];
+		$memberContext[$row['id_member']]['link'] = $row['poster_name'];
+		$memberContext[$row['id_member']]['email'] = $row['poster_email'];
+		$memberContext[$row['id_member']]['show_email'] = showEmailAddress(true, 0);
+		$memberContext[$row['id_member']]['is_guest'] = true;
+	}
+	else
+	{
+	}
+
+	censorText($row['body']);
+
+	$comment = array(
+		'id' => $row['id_comment'],
+		'member' => &$memberContext[$row['id_member']],
+		'body' => parse_bbc($row['body']),
+		'ip' => $row['poster_ip'],
+		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
+	);
+
+	return $comment;
 }
 
 function IssueDelete()
@@ -124,7 +166,7 @@ function IssueDelete()
 
 function IssueUpdate()
 {
-	global $context, $user_info, $smcFunc;
+	global $context, $user_info, $smcFunc, $sourcedir;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
@@ -147,7 +189,6 @@ function IssueUpdate()
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 	);
-
 	$issueOptions = array();
 
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
@@ -207,27 +248,22 @@ function IssueUpdate()
 			$issueOptions['type'] = $_POST['type'];
 	}
 
-	// DEBUG
-	//print_r(array($_POST, $issueOptions));
-	//die();
-
 	if (!empty($issueOptions))
-	{
 		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
-	}
 	else
-	{
 		$id_event = 0;
-	}
+
+	if ($id_event === true)
+		$id_event = 0;
 
 	$no_comment = false;
 
 	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')
-	{
 		$no_comment = true;
-	}
 	else
 	{
+		require_once($sourcedir . '/Subs-Post.php');
+
 		$_POST['comment'] = $smcFunc['htmlspecialchars']($_POST['comment'], ENT_QUOTES);
 
 		preparsecode($_POST['comment']);
@@ -243,7 +279,7 @@ function IssueUpdate()
 			'event' => $id_event,
 			'body' => $_POST['comment'],
 		);
-		createComment($issue, $commentOptions, $posterOptions);
+		createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
 	}
 
 	redirectexit('issue=' . $issue);

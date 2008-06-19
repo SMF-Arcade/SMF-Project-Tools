@@ -97,6 +97,7 @@ $txt['project_yesterday'] = 'Yesterday';
 $txt['evt_new_issue'] = 'Issue reported by %s';
 $txt['evt_update_issue'] = 'Issue updated by %s';
 $txt['evt_delete_issue'] = 'Issue deleted by %s';
+$txt['evt_new_comment'] = 'New comment added by %s';
 
 // Issue List
 $txt['issue_search'] = 'Search Issues';
@@ -120,6 +121,9 @@ $txt['issue_reported'] = 'Reported';
 $txt['issue_updated'] = 'Last Updated';
 
 $txt['reported_on'] = 'Reported on';
+
+$txt['issue_comments'] = 'Comments';
+
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete Issue?';
 
