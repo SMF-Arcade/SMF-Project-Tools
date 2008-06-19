@@ -86,9 +86,6 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-		</div><br />
-
-		<div class="tborder">
 			<div class="bordercolor">
 				<div class="clearfix topborder windowbg largepadding">
 					<div class="floatleft poster">
