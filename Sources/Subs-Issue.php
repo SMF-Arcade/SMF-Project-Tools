@@ -204,13 +204,19 @@ function createIssue($issueOptions, &$posterOptions)
 			'body' => 'string',
 			'created' => 'int',
 			'id_reporter' => 'int',
+			'reporter_name' => 'string-60',
+			'reporter_email' => 'string-256',
+			'reporter_ip' => 'string-60',
 		),
 		array(
 			$issueOptions['project'],
 			$issueOptions['subject'],
 			$issueOptions['body'],
 			$issueOptions['created'],
-			$posterOptions['id']
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip']
 		),
 		array()
 	);
@@ -223,6 +229,7 @@ function createIssue($issueOptions, &$posterOptions)
 			'id_project' => 'int',
 			'id_issue' => 'int',
 			'id_member' => 'int',
+			'poster_ip' => 'string-60',
 			'event' => 'string',
 			'event_time' => 'int',
 			'event_data' => 'string',
@@ -231,6 +238,7 @@ function createIssue($issueOptions, &$posterOptions)
 			$issueOptions['project'],
 			$id_issue,
 			$posterOptions['id'],
+			$posterOptions['ip'],
 			'new_issue',
 			$issueOptions['created'],
 			serialize(array(
@@ -426,6 +434,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 				'id_project' => 'int',
 				'id_issue' => 'int',
 				'id_member' => 'int',
+				'poster_ip' => 'string',
 				'event' => 'string',
 				'event_time' => 'int',
 				'event_data' => 'string',
@@ -434,6 +443,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 				$row['id_project'],
 				$id_issue,
 				$posterOptions['id'],
+				$posterOptions['ip'],
 				'update_issue',
 				$issueOptions['time'],
 				serialize($event_data)
@@ -531,6 +541,38 @@ function deleteIssue($id_issue, $posterOptions)
 	}
 
 	return true;
+}
+
+function createComment($id_issue, $commentOptions, $posterOptions)
+{
+	global $smcFunc, $db_prefix, $context;
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}issues_comment',
+		array(
+			'id_issue' => 'int',
+			'id_event' => 'int',
+			'body' => 'string',
+			'post_time' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string-60',
+			'poster_email' => 'string-256',
+			'poster_ip' => 'string-60',
+		),
+		array(
+			$id_issue,
+			!empty($commentOptions['event']) ? $commentOptions['event'] : 0,
+			$commentOptions['body'],
+			time(),
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip']
+		),
+		array()
+	);
+
+	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issues_comment', 'id_comment');
 }
 
 ?>

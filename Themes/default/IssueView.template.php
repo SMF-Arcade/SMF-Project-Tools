@@ -92,22 +92,14 @@ function template_issue_view()
 						<h4>', $reporter['link'], '</h4>
 					</div>
 					<div class="postarea">
-						<div class="keyinfo">
-							<div class="messageicon floatleft"><img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" /></div>
-							<h5>', $context['current_issue']['name'], '</h5>
-							<div class="smalltext">&#171; <strong>', $txt['reported_on'], ':</strong> ', $context['current_issue']['created'], ' &#187;</div>
-						</div>
-						<hr width="100%" size="1" class="hrcolor" />
 						<div class="post">
 							', $context['current_issue']['body'], '
 						</div>
 					</div>
 					<div class="moderatorbar">
 						<div class="smalltext floatleft">
-
 						</div>
 						<div class="smalltext floatright">
-
 						</div>
 					</div>
 				</div>

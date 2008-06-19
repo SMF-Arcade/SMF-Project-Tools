@@ -218,6 +218,7 @@ function projectAllowedTo($permission)
 		'issue_update_any' => 35,
 		'issue_update_own' => 5,
 		'issue_report' => 5,
+		'issue_comment' => 4,
 		'issue_view' => 1,
 		'view' => 1,
 	);

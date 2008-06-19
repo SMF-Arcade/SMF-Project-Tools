@@ -180,6 +180,7 @@ function ReportIssue2()
 
 	$posterOptions = array(
 		'id' => $user_info['id'],
+		'ip' => $user_info['ip'],
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 	);

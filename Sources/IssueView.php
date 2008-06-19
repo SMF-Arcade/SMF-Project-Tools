@@ -64,6 +64,32 @@ function IssueView()
 		}
 	}
 
+	// Load Comments
+	$context['comments'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT c.id_commment, c.post_time, c.edit_time, c.body, c.poster_ip,
+			mem.id_member, IFNULL(mem.real_name, c.poster_name) AS real_name
+		FROM {db_prefix}issue_comments AS c
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $issue,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['comments'][] = array(
+			'id' => $row['id_comment'],
+			'post_time' => timeformat($row['post_time']),
+			'edit_time' => timeformat($row['edit_time']),
+			'body' => parse_bbc($row['body']),
+			''
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
 	// Template
 	$context['sub_template'] = 'issue_view';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
@@ -104,8 +130,17 @@ function IssueUpdate()
 
 	checkSession();
 
+	$_POST['guestname'] = $user_info['username'];
+	$_POST['email'] = $user_info['email'];
+
+	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
+	$_POST['email'] = htmlspecialchars($_POST['email']);
+
 	$posterOptions = array(
-		'id' => $user_info['id']
+		'id' => $user_info['id'],
+		'ip' => $user_info['ip'],
+		'name' => $_POST['guestname'],
+		'email' => $_POST['email'],
 	);
 
 	$issueOptions = array();
@@ -171,8 +206,41 @@ function IssueUpdate()
 	//print_r(array($_POST, $issueOptions));
 	//die();
 
-	$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+	if (!empty($issueOptions))
+	{
+		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+	}
+	else
+	{
+		$id_event = 0;
+	}
 
-	redirectexit('issue=' . $_REQUEST['issue']);
+	$no_comment = false;
+
+	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')
+	{
+		$no_comment = true;
+	}
+	else
+	{
+		$_POST['comment'] = $smcFunc['htmlspecialchars']($_POST['comment'], ENT_QUOTES);
+
+		preparsecode($_POST['comment']);
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['comment'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
+			$no_comment = true;
+	}
+
+	if ($no_comment)
+		redirectexit('issue=' . $issue);
+	else
+	{
+		$commentOptions = array(
+			'event' => $id_event,
+			'body' => $_POST['comment'],
+		);
+		createComment($issue, $commentOptions, $posterOptions);
+	}
+
+	redirectexit('issue=' . $issue);
 }
 ?>
