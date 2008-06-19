@@ -150,8 +150,8 @@ function ReportIssue2()
 
 	if (empty($_POST['type']) || !isset($context['possible_types'][$_POST['type']]))
 		$post_errors[] = 'no_issue_type';
-	if (!empty($_POST['version']) && !isset($context['possible_types'][$_POST['type']]))
-		$post_errors[] = 'no_issue_type';
+	if (!empty($_POST['version']) && !isset($context['versions_id'][$_POST['version']]))
+		$_POST['version'] = 0;
 
 	$_POST['guestname'] = $user_info['username'];
 	$_POST['email'] = $user_info['email'];
@@ -191,7 +191,7 @@ function ReportIssue2()
 		'status' => 1,
 		'priority' => 2,
 		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
-		'version' => $_POST['version'],
+		'version' => !empty($_POST['version']) ? (int) $_POST['version'] : 0,
 		'assignee' => 0,
 		'body' => $_POST['details'],
 		'created' => time(),
