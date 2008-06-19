@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_reporter, i.body, i.id_project, i.reporter_name, i.reporter_ip, i.reporter_email,
+			i.id_reporter, i.id_project, i.reporter_name, i.reporter_ip, i.reporter_email,
 			i.id_assigned, ma.real_name AS a_real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
@@ -134,26 +134,6 @@ function loadIssue($id_issue)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	loadMemberData(array($row['id_reporter']));
-
-	if (!loadMemberContext($row['id_reporter']))
-	{
-		$memberContext[$row['id_reporter']]['name'] = $row['reporter_name'];
-		$memberContext[$row['id_reporter']]['id'] = 0;
-		$memberContext[$row['id_reporter']]['group'] = $txt['guest_title'];
-		$memberContext[$row['id_reporter']]['link'] = $row['reporter_name'];
-		$memberContext[$row['id_reporter']]['email'] = $row['reporter_email'];
-		$memberContext[$row['id_reporter']]['show_email'] = showEmailAddress(true, 0);
-		$memberContext[$row['id_reporter']]['is_guest'] = true;
-	}
-	else
-	{
-		$memberContext[$row['id_reporter']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_reporter'] == $user_info['id'] && allowedTo('profile_view_own'));
-		//$memberContext[$row['id_reporter']]['is_reporter'] = true;
-	}
-
-	censorText($row['body']);
-
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
@@ -171,7 +151,7 @@ function loadIssue($id_issue)
 			'id' => $row['vidfix'],
 			'name' => $row['vnamefix'],
 		),
-		'reporter' => &$memberContext[$row['id_reporter']],
+		'reporter' => $row['id_reporter'],
 		'assignee' => array(
 			'id' => $row['id_assigned'],
 			'name' => '',
@@ -183,9 +163,6 @@ function loadIssue($id_issue)
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
 		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : '',
-		'body' => parse_bbc($row['body']),
-		'ip' => $row['reporter_ip'],
-		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_reporter'] == $user_info['id'] && !empty($user_info['id'])),
 	);
 
 	return true;
@@ -203,22 +180,14 @@ function createIssue($issueOptions, &$posterOptions)
 		array(
 			'id_project' => 'int',
 			'subject' => 'string-100',
-			'body' => 'string',
 			'created' => 'int',
 			'id_reporter' => 'int',
-			'reporter_name' => 'string-60',
-			'reporter_email' => 'string-256',
-			'reporter_ip' => 'string-60',
 		),
 		array(
 			$issueOptions['project'],
 			$issueOptions['subject'],
-			$issueOptions['body'],
 			$issueOptions['created'],
 			$posterOptions['id'],
-			$posterOptions['name'],
-			$posterOptions['email'],
-			$posterOptions['ip']
 		),
 		array()
 	);
@@ -248,6 +217,16 @@ function createIssue($issueOptions, &$posterOptions)
 			)),
 		),
 		array()
+	);
+
+	createComment(
+		$issueOptions['project'],
+		$id_issue,
+		array(
+			'no_log' => true,
+			'body' => $issueOptions['body']
+		),
+		$posterOptions
 	);
 
 	unset($issueOptions['project'], $issueOptions['subject'], $issueOptions['body'], $issueOptions['created']);
@@ -295,15 +274,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 		$event_data['changes'][] = array(
 			'rename', $row['subject'], $issueOptions['subject']
-		);
-	}
-
-	if (!empty($issueOptions['body']))
-	{
-		$issueUpdates[] = 'body = {string:body}';
-
-		$event_data['changes'][] = array(
-			'details_edit'
 		);
 	}
 
@@ -519,6 +489,13 @@ function deleteIssue($id_issue, $posterOptions)
 			'issue' => $id_issue,
 		)
 	);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}issue_comments
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue,
+		)
+	);
 
 	if (!empty($event_data))
 	{
@@ -596,6 +573,9 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 			'time' => time(),
 		)
 	);
+
+	if (isset($commentOptions['no_log']))
+		return true;
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',

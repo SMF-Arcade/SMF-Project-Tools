@@ -83,11 +83,14 @@ function IssueView()
 	$smcFunc['db_free_result']($request);
 	$posters = array_unique($posters);
 
+	loadMemberData($posters);
+
 	$context['show_comments'] = $comments > 0;
 
 	// Load Comments
 	$context['comment_request'] = $smcFunc['db_query']('', '
-		SELECT c.id_comment, c.post_time, c.edit_time, c.body, c.poster_name, c.poster_email, c.poster_ip, c.id_member
+		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
+			c.poster_name, c.poster_email, c.poster_ip, c.id_member
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_issue = {int:issue}',
 		array(
@@ -104,7 +107,7 @@ function IssueView()
 
 function getComment()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings, $memberContext;
 
 	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
 

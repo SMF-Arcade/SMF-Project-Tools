@@ -341,29 +341,6 @@ $tables = array(
 				'type' => 'int',
 				'null' => false,
 			),
-			array(
-				'name' => 'body',
-				'type' => 'text',
-				'null' => false,
-			),
-			array(
-				'name' => 'reporter_name',
-				'type' => 'varchar',
-				'size' => 256,
-				'null' => false,
-			),
-			array(
-				'name' => 'reporter_email',
-				'type' => 'varchar',
-				'size' => 256,
-				'null' => false,
-			),
-			array(
-				'name' => 'reporter_ip',
-				'type' => 'varchar',
-				'size' => 60,
-				'null' => false,
-			),
 		),
 		'indexes' => array(
 			array(

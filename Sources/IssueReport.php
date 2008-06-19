@@ -120,7 +120,7 @@ function ReportIssue2()
 	}
 
 	if (isset($_REQUEST['preview']))
-		return IssueReport();
+		return ReportIssue();
 
 	require_once($sourcedir . '/Subs-Post.php');
 

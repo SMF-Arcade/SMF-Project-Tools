@@ -15,16 +15,11 @@ function template_issue_view()
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 
 		<div id="issueinfo" class="tborder">
-			<h3 class="catbg3 clearfix">
-				<div class="floatleft" style="width: 50%">
-					<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
-					<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
-				</div>
-				<div class="floatright">
-					', $txt['project'], ': ', $context['project']['link'], '
-				</div>
+			<h3 class="catbg3 headerpadding clearfix">
+				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
+				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 			</h3>
-			<div class="clearfix windowbg2">
+			<div class="clearfix windowbg">
 				<div class="floatleft halfwidth">
 					<div>
 						<div class="display">
@@ -78,7 +73,7 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-			<div class="windowbg2">
+			<div class="windowbg">
 				<div>
 					<div class="display">
 						<span class="dark">', $txt['issue_assigned_to'], '</span>
@@ -86,8 +81,16 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
+		</div><br />';
+
+		/*
+
+		<div class="tborder">
+			<h3 class="catbg3 headerpadding">
+				', $txt['issue_details'], '
+			</h3>
 			<div class="bordercolor">
-				<div class="clearfix topborder windowbg largepadding">
+				<div class="clearfix topborder windowbg 2largepadding">
 					<div class="floatleft poster">
 						<h4>', $reporter['link'], '</h4>
 						<ul class="smalltext">';
@@ -139,13 +142,15 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-		</div><br />';
+		</div><br />';*/
 
 	if ($context['show_comments'])
 	{
+		$alternate = false;
+
 		echo '
 		<div class="tborder">
-			<h3 class="catbg3 clearfix">
+			<h3 class="catbg3 headerpadding">
 				', $txt['issue_comments'], '
 			</h3>
 			<div class="bordercolor">';
@@ -153,7 +158,7 @@ function template_issue_view()
 		while ($comment = getComment())
 		{
 			echo '
-				<div class="clearfix topborder windowbg largepadding">
+				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding">
 					<div class="floatleft poster">
 						<h4>', $comment['member']['link'], '</h4>
 						<ul class="smalltext">';
@@ -203,13 +208,14 @@ function template_issue_view()
 	echo '
 						</div>
 					</div>
-				</div>
-			</div>';
+				</div>';
+
+			$alternate = !$alternate;
 		}
 
 		echo '
 			</div>
-		</div>';
+		</div><br />';
 	}
 
 	$mod_buttons = array(
