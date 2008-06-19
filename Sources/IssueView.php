@@ -70,7 +70,7 @@ function IssueView()
 	$request = $smcFunc['db_query']('', '
 		SELECT c.id_commment, c.post_time, c.edit_time, c.body, c.poster_ip,
 			mem.id_member, IFNULL(mem.real_name, c.poster_name) AS real_name
-		FROM {db_prefix}issue_comments AS c
+		FROM {db_prefix}issues_comments AS c
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
 		WHERE id_issue = {int:issue}',
 		array(

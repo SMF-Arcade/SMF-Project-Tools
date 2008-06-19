@@ -372,11 +372,11 @@ $tables = array(
 		)
 	),
 	// Comments
-	'issues_comment' => array(
+	'issues_comments' => array(
 		'name' => 'issue_comments',
 		'columns' => array(
 			array(
-				'name' => 'id_commment',
+				'name' => 'id_comment',
 				'type' => 'int',
 				'null' => false,
 				'auto' => true,
