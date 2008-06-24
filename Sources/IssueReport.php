@@ -139,7 +139,7 @@ function ReportIssue2()
 		$_POST['details'] = $smcFunc['htmlspecialchars']($_POST['details'], ENT_QUOTES);
 
 		preparsecode($_POST['details']);
-		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['details'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['details'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['details'], '[html]') === false))
 			$post_errors[] = 'no_message';
 	}
 
