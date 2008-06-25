@@ -99,7 +99,7 @@ function ManageProjectsList()
 			SELECT id_version, id_project, version_name, id_parent
 			FROM {db_prefix}project_versions
 			WHERE id_project IN ({array_int:projects})
-			ORDER BY id_project, id_parent',
+			ORDER BY id_project, id_parent, id_version',
 			array(
 				'projects' => $projects
 			)
