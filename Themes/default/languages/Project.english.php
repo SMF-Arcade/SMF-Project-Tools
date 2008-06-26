@@ -127,7 +127,12 @@ $txt['issue_comments'] = 'Comments';
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete Issue?';
 
+$txt['comment_issue'] = 'Comment Issue';
+$txt['add_comment'] = 'Add Comment';
+
 $txt['update_issue'] = 'Update Issue';
+$txt['update_issue_save'] = 'Save';
+$txt['update_issue_comment'] = 'Save with Comment';
 
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';

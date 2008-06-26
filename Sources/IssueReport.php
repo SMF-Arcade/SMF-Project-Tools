@@ -55,8 +55,8 @@ function ReportIssue()
 	$context['issue'] = array(
 		'title' => '',
 		'type' => isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]) ? $_REQUEST['type'] : '',
-		'version' => 0,
-		'category' => 0,
+		'version' => isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0,
+		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
 	$context['details'] = '';
 

@@ -497,6 +497,17 @@ function deleteIssue($id_issue, $posterOptions)
 		)
 	);
 
+	// Update Timeline entries
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}project_timeline
+		SET id_version = {int:version}
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue,
+			'version' => $row['id_version'],
+		)
+	);
+
 	if (!empty($event_data))
 	{
 		$smcFunc['db_insert']('insert',
@@ -504,6 +515,7 @@ function deleteIssue($id_issue, $posterOptions)
 			array(
 				'id_project' => 'int',
 				'id_issue' => 'int',
+				'id_version' => 'int',
 				'id_member' => 'int',
 				'poster_name' => 'string',
 				'poster_email' => 'string',
@@ -515,6 +527,7 @@ function deleteIssue($id_issue, $posterOptions)
 			array(
 				$row['id_project'],
 				$id_issue,
+				$row['id_version'],
 				$posterOptions['id'],
 				$posterOptions['name'],
 				$posterOptions['email'],
@@ -535,6 +548,20 @@ function deleteIssue($id_issue, $posterOptions)
 function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT subject
+		FROM {db_prefix}issues
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return false;
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_comments',
@@ -599,7 +626,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 			$posterOptions['ip'],
 			'new_comment',
 			time(),
-			serialize(array())
+			serialize(array('subject' => $row['subject']))
 		),
 		array()
 	);

@@ -232,6 +232,10 @@ table.issuetable td.lastissue
 {
 	border-bottom: 0;
 }
+#comment
+{
+	width: 95%;
+}
 
 /* ************************************* */
 /* styles from IssueReport.template      */

@@ -80,7 +80,7 @@ function ProjectView()
 		FROM {db_prefix}project_timeline AS tl
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = tl.id_version)
+			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = IFNULL(i.id_version, tl.id_version))
 		WHERE tl.id_project = {int:project}
 			AND {query_see_issue}
 		ORDER BY tl.event_time DESC

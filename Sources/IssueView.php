@@ -55,6 +55,9 @@ function IssueView()
 		$context['show_update'] = true;
 	}
 
+	if (projectAllowedTo('issue_comment'))
+		$context['show_comment'] = true;
+
 	if (projectAllowedTo('issue_moderate'))
 	{
 		if (projectAllowedTo('issue_assign'))
@@ -84,8 +87,6 @@ function IssueView()
 	$posters = array_unique($posters);
 
 	loadMemberData($posters);
-
-	$context['show_comments'] = $comments > 0;
 
 	// Load Comments
 	$context['comment_request'] = $smcFunc['db_query']('', '
@@ -161,7 +162,6 @@ function IssueDelete()
 		'name' => htmlspecialchars($user_info['name']),
 		'email' => htmlspecialchars($user_info['email']),
 	);
-
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
 	redirectexit('project=' . $context['project']['id'] . ';sa=issues');
@@ -173,6 +173,7 @@ function IssueUpdate()
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
+
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
@@ -194,7 +195,7 @@ function IssueUpdate()
 	);
 	$issueOptions = array();
 
-	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
+	if (empty($_POST['add_comment']) && (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate')))
 	{
 		// Assigning
 		if (projectAllowedTo('issue_moderate') && isset($_POST['assign']))
@@ -260,6 +261,9 @@ function IssueUpdate()
 		$id_event = 0;
 
 	$no_comment = false;
+
+	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']))
+		$no_comment = true;
 
 	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')
 		$no_comment = true;

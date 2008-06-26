@@ -83,81 +83,18 @@ function template_issue_view()
 			</div>
 		</div><br />';
 
-		/*
-
-		<div class="tborder">
-			<h3 class="catbg3 headerpadding">
-				', $txt['issue_details'], '
-			</h3>
-			<div class="bordercolor">
-				<div class="clearfix topborder windowbg 2largepadding">
-					<div class="floatleft poster">
-						<h4>', $reporter['link'], '</h4>
-						<ul class="smalltext">';
-
-		// Show the member's custom title, if they have one.
-		if (isset($reporter['title']) && $reporter['title'] != '')
-			echo '
-							<li>', $reporter['title'], '</li>';
-
-		// Show the member's primary group (like 'Administrator') if they have one.
-		if (isset($reporter['group']) && $reporter['group'] != '')
-			echo '
-							<li>', $reporter['group'], '</li>';
+	$alternate = false;
 
 	echo '
-						</ul>
-					</div>
-					<div class="postarea">
-						<div class="post">
-							', $context['current_issue']['body'], '
-						</div>
-					</div>
-					<div class="moderatorbar">
-						<div class="smalltext floatleft">
-						</div>
-						<div class="smalltext floatright">';
-	echo '
-							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
-
-	// Show the IP to this user for this post - because you can moderate?
-	if (allowedTo('moderate_forum') && !empty($context['current_issue']['ip']))
-		echo '
-							<a href="', $scripturl, '?action=trackip;searchip=', $context['current_issue']['ip'], '">', $context['current_issue']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
-	// Or, should we show it because this is you?
-	elseif ($context['current_issue']['can_see_ip'])
-		echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $context['current_issue']['ip'], '</a>';
-	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
-	elseif (!$context['user']['is_guest'])
-		echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
-	// Otherwise, you see NOTHING!
-	else
-		echo '
-							', $txt['logged'];
-
-	echo '
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><br />';*/
-
-	if ($context['show_comments'])
-	{
-		$alternate = false;
-
-		echo '
 		<div class="tborder">
 			<h3 class="catbg3 headerpadding">
 				', $txt['issue_comments'], '
 			</h3>
 			<div class="bordercolor">';
 
-		while ($comment = getComment())
-		{
-			echo '
+	while ($comment = getComment())
+	{
+		echo '
 				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding">
 					<div class="floatleft poster">
 						<h4>', $comment['member']['link'], '</h4>
@@ -173,7 +110,7 @@ function template_issue_view()
 			echo '
 							<li>', $comment['member']['group'], '</li>';
 
-	echo '
+		echo '
 						</ul>
 					</div>
 					<div class="postarea">
@@ -185,33 +122,33 @@ function template_issue_view()
 						<div class="smalltext floatleft">
 						</div>
 						<div class="smalltext floatright">';
-	echo '
+		echo '
 							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
-	// Show the IP to this user for this post - because you can moderate?
-	if (allowedTo('moderate_forum') && !empty($comment['ip']))
-		echo '
+		// Show the IP to this user for this post - because you can moderate?
+		if (allowedTo('moderate_forum') && !empty($comment['ip']))
+			echo '
 							<a href="', $scripturl, '?action=trackip;searchip=', $comment['ip'], '">', $comment['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
-	// Or, should we show it because this is you?
-	elseif ($comment['can_see_ip'])
-		echo '
+		// Or, should we show it because this is you?
+		elseif ($comment['can_see_ip'])
+			echo '
 							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $comment['ip'], '</a>';
-	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
-	elseif (!$context['user']['is_guest'])
-		echo '
+		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+		elseif (!$context['user']['is_guest'])
+			echo '
 							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
-	// Otherwise, you see NOTHING!
-	else
-		echo '
+		// Otherwise, you see NOTHING!
+		else
+			echo '
 							', $txt['logged'];
 
-	echo '
+		echo '
 						</div>
 					</div>
 				</div>';
 
 			$alternate = !$alternate;
-		}
+	}
 
 		echo '
 			</div>
@@ -232,7 +169,22 @@ function template_issue_view()
 			<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
 	</div><br />';
 
-	if ($context['can_issue_update'])
+	if (!empty($context['show_comment']))
+	{
+		echo '
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
+			<div class="smallpadding windowbg">
+				<textarea id="comment" name="comment"></textarea>';
+
+		echo '
+				<div style="text-align: right">
+					<input type="submit" name="add_comment" value="', $txt['add_comment'], '" />
+				</div>
+		</div>';
+	}
+
+	if (!empty($context['can_issue_update']))
 	{
 		echo '
 		<div class="tborder">
@@ -361,9 +313,9 @@ function template_issue_view()
 
 	echo '
 				</table>
-				<textarea name="comment"></textarea>
 				<div style="text-align: right">
-					<input type="submit" />
+					<input name="update_issue" value="', $txt['update_issue_save'], '" type="submit" />
+					<input name="update_issue2" value="', $txt['update_issue_comment'], '" type="submit" />
 				</div>
 			</div>
 		</div>
