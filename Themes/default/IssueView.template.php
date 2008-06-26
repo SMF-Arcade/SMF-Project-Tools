@@ -150,10 +150,9 @@ function template_issue_view()
 			$alternate = !$alternate;
 	}
 
-		echo '
+	echo '
 			</div>
 		</div><br />';
-	}
 
 	$mod_buttons = array(
 		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
@@ -311,7 +310,7 @@ function template_issue_view()
 		}
 
 
-	echo '
+		echo '
 				</table>
 				<div style="text-align: right">
 					<input name="update_issue" value="', $txt['update_issue_save'], '" type="submit" />
