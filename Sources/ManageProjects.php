@@ -189,10 +189,6 @@ function EditProject()
 				'name' => $txt['access_level_member'],
 				'access_level' => 35,
 			),
-			array(
-				'name' => $txt['access_level_developer'],
-				'access_level' => 40,
-			),
 		);*/
 	}
 	else
@@ -218,7 +214,7 @@ function EditProject()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name, member_groups, access_level
 			FROM {db_prefix}project_groups
-			WHERE id_project',
+			WHERE id_project = {int:project}',
 			array(
 				'project' => $project['id'],
 			)
@@ -323,8 +319,6 @@ function EditProject2()
 		$projectOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 		$projectOptions['long_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['long_desc']);
 
-			//$projectOptions['public_access'] = (int) $_POST['public_access'];
-
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))
 			foreach ($_POST['trackers'] as $tracker)
@@ -339,7 +333,7 @@ function EditProject2()
 		else
 			updateProject($_POST['project'], $projectOptions);
 
-		/*$developers = array();
+		$developers = array();
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}project_developer
@@ -362,12 +356,11 @@ function EditProject2()
 				array(
 					'id_project' => 'int',
 					'id_member' => 'int',
-					'access_level' => 'int',
 				),
 				$rows,
 				array('id_project', 'id_member')
 			);
-		}*/
+		}
 
 		if (!empty($_POST['groups']))
 		{
@@ -395,8 +388,8 @@ function EditProject2()
 
 			foreach ($_POST['groups'] as $group => $pgroup)
 			{
-				if (!empty($level))
-					$context['project_groups'][(int) $pgroup]['member_groups'] = (int) $group;
+				if (!empty($pgroup))
+					$context['project_groups'][(int) $pgroup]['member_groups'][] = (int) $group;
 			}
 
 			foreach ($context['project_groups'] as $pgroup)
@@ -428,7 +421,6 @@ function EditProject2()
 				'project' => $_POST['project']
 			)
 		);
-
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}project_versions
 			WHERE id_project = {int:project}',
@@ -436,7 +428,13 @@ function EditProject2()
 				'project' => $_POST['project']
 			)
 		);
-
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_groups
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $_POST['project']
+			)
+		);
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}issues
 			WHERE id_project = {int:project}',
@@ -476,15 +474,35 @@ function EditVersion()
 			'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
 			'status' => 0,
 			'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
-			'access_level' => 0,
 		);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, group_name
+			FROM {db_prefix}project_groups
+			WHERE id_project',
+			array(
+				'project' => $context['project']['id'],
+			)
+		);
+
+		$context['project_groups'] = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['project_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'selected' => false,
+			);
+		}
+		$smcFunc['db_free_result']($request);
 	}
 	else
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				v.id_version, v.id_project, v.id_parent, v.version_name,
-				v.status, v.access_level, v.description, v.release_date
+				v.status, v.project_groups, v.description, v.release_date
 			FROM {db_prefix}project_versions AS v
 			WHERE id_version = {int:version}',
 			array(
@@ -498,10 +516,33 @@ function EditVersion()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
+		$row['project_groups'] = explode(',', $row['project_groups']);
+
 		if (!$context['project'] = loadProject((int) $row['id_project']))
 			fatal_lang_error('project_not_found');
 
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, group_name
+			FROM {db_prefix}project_groups
+			WHERE id_project',
+			array(
+				'project' => $context['project']['id'],
+			)
+		);
+
+		$context['project_groups'] = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['project_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'selected' => in_array($row['id_group'], $row['project_groups']),
+			);
+		}
+		$smcFunc['db_free_result']($request);
 
 		$curVersion = array(
 		);
@@ -514,7 +555,6 @@ function EditVersion()
 			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
 			'status' => $row['status'],
 			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
-			'access_level' => $row['access_level'],
 		);
 	}
 
@@ -554,7 +594,7 @@ function EditVersion2()
 				$versionOptions['status'] = 0;
 		}
 
-		$versionOptions['access_level'] = (int) $_POST['access_level'];
+		$versionOptions['project_groups'] = $_POST['groups'];
 
 
 		if (isset($_POST['add']))

@@ -84,15 +84,9 @@ function Projects()
 
 		$project = $context['project']['id'];
 
-		// Can see version
-		$user_info['query_see_version'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ')';
-
 		// Show everything?
-		if (projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = '(ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ')';
-		// Show only own?
-		else
-			$user_info['query_see_issue'] = '((ISNULL(ver.access_level) OR ver.access_level <= ' . $context['project']['my_level'] . ") AND i.reporter = $user_info[id])";
+		if (!projectAllowedTo('issue_view_any'))
+			$user_info['query_see_issue'] = '((' . $user_info['query_see_issue'] . ") AND i.reporter = $user_info[id])";
 
 		if (isset($_REQUEST['issue']))
 		{
@@ -178,23 +172,45 @@ function loadProjectTools($mode = '')
 
 	if (empty($mode))
 	{
-		// Can see project?
-		if ($user_info['is_guest'])
-		{
-			$see_project = 'p.public_access > 0';
-		}
 		// Administrators can see all projects.
-		elseif ($user_info['is_admin'])
+		if ($user_info['is_admin'])
 		{
 			$see_project = '1 = 1';
+			$see_version = '1 = 1';
 		}
 		// Registered user.... just the groups in $user_info['groups'].
 		else
 		{
-			$see_project = '(IFNULL(dev.access_level, p.public_access) > 0 OR (FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups)))';
+			// Load my groups
+			$request = $smcFunc['db_query']('', '
+				SELECT id_group, id_project, access_level
+				FROM {db_prefix}project_groups
+				WHERE
+					(FIND_IN_SET(' . implode(', member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', member_groups))',
+				array(
+				)
+			);
+
+			$projectGroups = array();
+			$context['project_levels'] = array();
+
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				if (empty($context['project_levels'][$row['id_project']]))
+					$context['project_levels'][$row['id_project']] = $row['access_level'];
+				else
+					$context['project_levels'][$row['id_project']] = max($row['access_level'], $context['project_levels'][$row['id_project']]);
+
+				$projectGroups[] = $row['id_group'];
+			}
+			$smcFunc['db_free_result']($request);
+
+			$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
+			$see_version = '(FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups))';
 		}
 
 		$user_info['query_see_project'] = $see_project;
+		$user_info['query_see_version'] = $see_version;
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>

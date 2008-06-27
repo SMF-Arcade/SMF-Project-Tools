@@ -34,9 +34,7 @@ function loadProject($id_project)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers,
-			p.' . implode(', p.', $context['type_columns']) . ', p.public_access,
-			IFNULL(dev.access_level, -1) AS access_level,
-			p.member_groups, p.member_groups_level
+			p.' . implode(', p.', $context['type_columns']) . ', dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
@@ -55,29 +53,6 @@ function loadProject($id_project)
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	$mg = explode(',', $row['member_groups']);
-	$ml = explode(',', $row['member_groups_level']);
-
-	$groups = array_combine($mg, $ml);
-	unset($mg, $ml);
-
-	if ($user_info['is_admin'])
-	{
-		$row['access_level'] = 51;
-	}
-	elseif ($row['access_level'] == -1)
-	{
-		// Check for group level
-		foreach ($user_info['groups'] as $gid)
-		{
-			if (isset($groups[$gid]) && !empty($groups[$gid]))
-				$row['access_level'] = max($row['access_level'], $groups[$gid]);
-		}
-
-		if ($row['access_level'] == -1)
-			$row['access_level'] = $row['public_access'];
-	}
-
 	$project = array(
 		'id' => $row['id_project'],
 		'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
@@ -89,12 +64,7 @@ function loadProject($id_project)
 		'trackers' => array(),
 		'developers' => array(),
 		'member_groups' => $groups,
-		'is_owner' => $row['access_level'] >= 50,
-		'is_admin' => $row['access_level'] >= 45,
-		'is_developer' => $row['access_level'] >= 40,
-		'is_member' => $row['access_level'] >= 35,
-		'my_level' => $row['access_level'],
-		'public_access' => $row['public_access'],
+		'is_developer' => !empty($row['is_dev']),
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -225,7 +195,7 @@ function projectAllowedTo($permission)
 		'view' => 1,
 	);
 
-	if (isset($permissions[$permission]) && $context['project']['my_level'] >= $permissions[$permission])
+	if (isset($permissions[$permission]) && $context['project_levels'][$project] >= $permissions[$permission])
 		return true;
 
 	return false;
@@ -254,7 +224,7 @@ function createProject($projectOptions)
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	if (empty($projectOptions['name']) || !isset($projectOptions['public_access']) || !isset($projectOptions['description']))
+	if (empty($projectOptions['name']) || !isset($projectOptions['description']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
 
 	$smcFunc['db_insert']('insert',
@@ -272,11 +242,7 @@ function createProject($projectOptions)
 
 	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');
 
-	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['public_access']);
-
-	// Anything left?
-	if (!empty($projectOptions))
-		updateProject($id_project, $projectOptions);
+	unset($projectOptions['name'], $projectOptions['description']);
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_groups',
@@ -315,6 +281,24 @@ function createProject($projectOptions)
 		array()
 	);
 
+	$projectOptions['project_groups'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_group
+		FROM {db_prefix}project_groups
+		WHERE id_project = {int:project}',
+		array(
+			'project' => $id_project,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$projectOptions['project_groups'][] = $row['id_group'];
+	$smcFunc['db_free_result']($request);
+
+	// Anything left?
+	if (!empty($projectOptions))
+		updateProject($id_project, $projectOptions);
+
 	return $id_project;
 }
 
@@ -340,32 +324,11 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
 
-	/*if (isset($projectOptions['member_groups']))
+	if (isset($projectOptions['project_groups']))
 	{
-		$projectUpdates[] = 'member_groups = {string:member_groups}';
-		$projectUpdates[] = 'member_groups_level = {string:member_groups_level}';
-
-		$groups = array();
-		$levels = array();
-
-		foreach ($projectOptions['member_groups'] as $id_group => $level)
-		{
-			if (empty($level) || $level < 0)
-				continue;
-
-			$groups[] = (int) $id_group;
-			$levels[] = (int) $level;
-		}
-
-		$projectOptions['member_groups'] = implode(',', $groups);
-		$projectOptions['member_groups_level'] = implode(',', $levels);
+		$projectUpdates[] = 'project_groups = {string:project_groups}';
+		$projectOptions['project_groups'] = implode(',', $projectOptions['project_groups']);
 	}
-
-	if (isset($projectOptions['public_access']))
-	{
-		$projectUpdates[] = 'public_access = {int:public_access}';
-		$projectOptions['public_access'] = (int) $projectOptions['public_access'];
-	}*/
 
 	if (!empty($projectUpdates))
 		$request = $smcFunc['db_query']('', '
@@ -459,8 +422,11 @@ function updateVersion($id_version, $versionOptions)
 	if (isset($versionOptions['release_date']))
 		$versionUpdates[] = 'release_date = {string:release_date}';
 
-	if (isset($versionOptions['access_level']))
-		$versionUpdates[] = 'access_level = {int:access_level}';
+	if (isset($versionOptions['project_groups']))
+	{
+		$versionUpdates[] = 'project_groups = {string:project_groups}';
+		$versionOptions['project_groups'] = implode(',', $versionOptions['project_groups']);
+	}
 
 	if (isset($versionOptions['status']))
 		$versionUpdates[] = 'status = {int:status}';

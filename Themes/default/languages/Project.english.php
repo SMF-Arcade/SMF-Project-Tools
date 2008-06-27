@@ -41,16 +41,17 @@ $txt['version_stable'] = 'Stable';
 $txt['version_stable_rec'] = 'Stable (Recommended)';
 $txt['version_obsolute'] = 'Obsolute';
 
-// Access Levels
-$txt['access_level_owner'] = 'Owner'; // 50
-$txt['access_level_admin'] = 'Admin'; // 45
-$txt['access_level_developer'] = 'Developer'; // 40
-$txt['access_level_member'] = 'Team Member'; // 35
-$txt['access_level_beta'] = 'Beta Tester'; // 30
-$txt['access_level_report'] = 'Reporter'; // 5
-$txt['access_level_viewer'] = 'Viewer'; // 1
-$txt['access_level_none'] = 'None'; // 0
-$txt['access_level_no_group'] = 'Use Default';
+// Access Levels (Project Groups)
+$txt['access_level_owner'] = 'Owner';
+$txt['access_level_admin'] = 'Admin';
+$txt['access_level_developer'] = 'Developer';
+$txt['access_level_member'] = 'Team Member';
+$txt['access_level_beta'] = 'Beta Tester';
+$txt['access_level_report'] = 'Reporter';
+$txt['access_level_viewer'] = 'Viewer';
+
+//
+$txt['access_level_none'] = 'No Access';
 
 // General
 $txt['issue'] = 'Issue';
