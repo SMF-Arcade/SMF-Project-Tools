@@ -74,7 +74,7 @@ $tables = array(
 				'size' => 255,
 				'null' => false,
 			),
-			array(
+			/*array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
@@ -91,7 +91,7 @@ $tables = array(
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
-			),
+			),*/
 			array(
 				'name' => 'open_bug',
 				'type' => 'int',
@@ -124,7 +124,7 @@ $tables = array(
 			),
 		)
 	),
-	// Developers
+	/*// Developers
 	'project_developer' => array(
 		'name' => 'project_developer',
 		'columns' => array(
@@ -158,6 +158,59 @@ $tables = array(
 				'columns' => array('id_project')
 			),
 		)
+	),*/
+	// Project Membergroups
+	'project_groups' => array(
+		'name' => 'project_groups',
+		'columns' => array(
+			array(
+				'name' => 'id_group',
+				'type' => 'int',
+				'null' => false,
+				'auto' => true,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'group_name',
+				'type' => 'varchar',
+				'size' => 255,
+				'null' => false,
+			),
+			array(
+				'name' => 'member_groups',
+				'type' => 'varchar',
+				'size' => 255,
+				'null' => false,
+			),
+			array(
+				'name' => 'access_level',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_group')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+			array(
+				'name' => 'member_groups',
+				'type' => 'index',
+				'columns' => array('member_groups')
+			),
+		),
 	),
 	// Versions
 	'project_versions' => array(

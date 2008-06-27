@@ -171,6 +171,29 @@ function EditProject()
 			'developers' => array(),
 			'public_access' => 0,
 		);
+
+		/*$context['project_groups'] = array(
+			array(
+				'name' => $txt['access_level_viewer'],
+				'access_level' => 1,
+			),
+			array(
+				'name' => $txt['access_level_report'],
+				'access_level' => 5,
+			),
+			array(
+				'name' => $txt['access_level_beta'],
+				'access_level' => 30,
+			),
+			array(
+				'name' => $txt['access_level_member'],
+				'access_level' => 35,
+			),
+			array(
+				'name' => $txt['access_level_developer'],
+				'access_level' => 40,
+			),
+		);*/
 	}
 	else
 	{
@@ -187,6 +210,33 @@ function EditProject()
 			'developers' => $project['developers'],
 			'public_access' => $project['public_access'],
 		);
+
+		$context['project_groups'] = array();
+
+		$group_levels = array();
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, group_name, member_groups, access_level
+			FROM {db_prefix}project_groups
+			WHERE id_project',
+			array(
+				'project' => $project['id'],
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['project_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'member_groups' => explode(',', $row['member_groups']),
+				'access_level' => $row['access_level'],
+			);
+
+			foreach ($context['project_groups'][$row['id_group']]['member_groups'] as $id_group)
+				$group_levels[$id_group] = $row['id_group'];
+		}
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Default membergroups.
@@ -194,13 +244,13 @@ function EditProject()
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['guests'],
-			'level' => isset($curProject['member_groups'][-1]) ? $curProject['member_groups'][-1] : 0,
+			'level' => isset($group_levels[-1]) ? $group_levels[-1] : 0,
 			'is_post_group' => false,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
-			'level' => isset($curProject['member_groups'][0]) ? $curProject['member_groups'][0] : 0,
+			'level' => isset($group_levels[0]) ? $group_levels[0] : 0,
 			'is_post_group' => false,
 		)
 	);
@@ -220,7 +270,7 @@ function EditProject()
 		$context['groups'][(int) $row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
-			'level' => isset($curProject['member_groups'][$row['id_group']]) ? $curProject['member_groups'][$row['id_group']] : 0,
+			'level' => isset($group_levels[$row['id_group']]) ? $group_levels[$row['id_group']] : 0,
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
@@ -273,15 +323,7 @@ function EditProject2()
 		$projectOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 		$projectOptions['long_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['long_desc']);
 
-		$projectOptions['member_groups'] = array();
-		if (!empty($_POST['groups']))
-			foreach ($_POST['groups'] as $group => $level)
-			{
-				if (!empty($level))
-					$projectOptions['member_groups'][(int) $group] = (int) $level;
-			}
-
-		$projectOptions['public_access'] = (int) $_POST['public_access'];
+			//$projectOptions['public_access'] = (int) $_POST['public_access'];
 
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))
@@ -297,7 +339,7 @@ function EditProject2()
 		else
 			updateProject($_POST['project'], $projectOptions);
 
-		$developers = array();
+		/*$developers = array();
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}project_developer
@@ -325,6 +367,50 @@ function EditProject2()
 				$rows,
 				array('id_project', 'id_member')
 			);
+		}*/
+
+		if (!empty($_POST['groups']))
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_group, group_name, member_groups, access_level
+				FROM {db_prefix}project_groups
+				WHERE id_project',
+				array(
+					'project' => $_POST['project'],
+				)
+			);
+
+			$context['project_groups'] = array();
+
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				$context['project_groups'][$row['id_group']] = array(
+					'id' => $row['id_group'],
+					'name' => $row['group_name'],
+					'member_groups' => array(),
+					'access_level' => $row['access_level'],
+				);
+			}
+			$smcFunc['db_free_result']($request);
+
+			foreach ($_POST['groups'] as $group => $pgroup)
+			{
+				if (!empty($level))
+					$context['project_groups'][(int) $pgroup]['member_groups'] = (int) $group;
+			}
+
+			foreach ($context['project_groups'] as $pgroup)
+			{
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}project_groups
+					SET member_groups = {string:groups}
+					WHERE id_group = {int:group}',
+					array(
+						'group' => $pgroup['id'],
+						'groups' => implode(',', $pgroup['member_groups']),
+					)
+				);
+			}
 		}
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))

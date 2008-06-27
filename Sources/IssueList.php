@@ -36,7 +36,7 @@ function IssueList()
 
 	// Sorting methods
 	$sort_methods = array(
-		'updated' => 'MAX(i.updated, i.created)',
+		'updated' => 'i.updated',
 		'title' => 'i.subject',
 		'id' => 'i.id_issue',
 		'priority' => 'i.priority',
@@ -49,7 +49,7 @@ function IssueList()
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
 		$context['sort_by'] = 'updated';
-		$_REQUEST['sort'] = 'MAX(i.updated, i.created)';
+		$_REQUEST['sort'] = 'i.updated';
 
 		$ascending = false;
 		$context['sort_direction'] = 'down';
@@ -155,13 +155,14 @@ function IssueList()
 		SELECT
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
 			i.status, i.created, i.updated,
-			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
+			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
-			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
+			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
@@ -207,8 +208,8 @@ function IssueList()
 			'status' => &$context['issue']['status'][$row['status']],
 			'reporter' => array(
 				'id' => $row['id_reporter'],
-				'name' => empty($row['reporter']) ? $txt['issue_guest'] : $row['reporter'],
-				'link' => empty($row['reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+				'name' => $row['reporter_name'],
+				'link' => !empty($row['id_reporter']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter_name'] . '</a>' : $row['reporter_name'],
 			),
 			'updater' => array(
 				'id' => $row['id_updater'],

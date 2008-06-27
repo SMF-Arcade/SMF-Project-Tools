@@ -68,7 +68,7 @@ function IssueView()
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_member
+		SELECT id_comment, id_member
 		FROM {db_prefix}issue_comments
 		WHERE id_issue = {int:issue}',
 		array(
@@ -76,12 +76,12 @@ function IssueView()
 		)
 	);
 	$posters = array();
-	$comments = 0;
+	$comments = array($context['current_issue']['comment_first']);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (!empty($row['id_member']))
 			$posters[] = $row['id_member'];
-		$comments++;
+		$comments[] = $row['id_comment'];
 	}
 	$smcFunc['db_free_result']($request);
 	$posters = array_unique($posters);
@@ -93,9 +93,11 @@ function IssueView()
 		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 			c.poster_name, c.poster_email, c.poster_ip, c.id_member
 		FROM {db_prefix}issue_comments AS c
-		WHERE id_issue = {int:issue}',
+		WHERE id_comment IN({array_int:comments})
+		ORDER BY id_comment',
 		array(
 			'issue' => $issue,
+			'comments' => $comments,
 		)
 	);
 

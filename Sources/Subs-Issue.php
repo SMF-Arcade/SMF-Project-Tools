@@ -107,18 +107,21 @@ function loadIssue($id_issue)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_reporter, i.id_project, i.reporter_name, i.reporter_ip, i.reporter_email,
-			i.id_assigned, ma.real_name AS a_real_name,
+			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
+			i.id_comment_first,
+			rep.id_member AS id_reporter, IFNULL(rep.real_name, cf.poster_name) AS reporter_name, cf.poster_ip, cf.poster_email,
+			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix
 		FROM {db_prefix}issues AS i
-			LEFT JOIN {db_prefix}members AS ma ON (ma.id_member = i.id_assigned)
+			LEFT JOIN {db_prefix}issue_comments AS cf ON (cf.id_comment = i.id_comment_first)
+			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-		WHERE id_issue = {int:issue}
+		WHERE i.id_issue = {int:issue}
 			AND {query_see_issue}
 			AND i.id_project = {int:project}
 		LIMIT 1',
@@ -151,18 +154,23 @@ function loadIssue($id_issue)
 			'id' => $row['vidfix'],
 			'name' => $row['vnamefix'],
 		),
-		'reporter' => $row['id_reporter'],
+		'reporter' => array(
+			'id' => $row['id_reporter'],
+			'name' => $row['reporter_name'],
+			'link' => !empty($row['id_reporter']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter_name'] . '</a>' : $row['reporter_name'],
+		),
 		'assignee' => array(
-			'id' => $row['id_assigned'],
-			'name' => '',
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_assigned'] . '">' . $row['a_real_name'] . '</a>',
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 		),
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
 		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
 		'status' => $context['issue']['status'][$row['status']],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
-		'updated' => $row['updated'] > 0 ? timeformat($row['updated']) : '',
+		'updated' => timeformat($row['updated']),
+		'comment_first' => $row['id_comment_first'],
 	);
 
 	return true;

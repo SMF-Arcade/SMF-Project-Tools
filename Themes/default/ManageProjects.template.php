@@ -152,7 +152,9 @@ function template_edit_project()
 			<td valign="top" align="left">
 				<textarea name="long_desc" rows="3" cols="35">', $context['project']['long_description'], '</textarea>
 			</td>
-		</tr>
+		</tr>';
+
+	/*
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_public_access'], ':</b><br />
@@ -165,7 +167,7 @@ function template_edit_project()
 					<option value="5"', $context['project']['public_access'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</a>
 				</select>
 			</td>
-		</tr>
+		</tr>';
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_developers'], ':</b><br />
@@ -219,11 +221,46 @@ function template_edit_project()
 					<option value="1"', $group['level'] == 1 ? ' selected="selected"' : '', '>', $txt['access_level_viewer'], '</option>
 					<option value="5"', $group['level'] == 5 ? ' selected="selected"' : '', '>', $txt['access_level_report'], '</option>
 					<option value="30"', $group['level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</option>
+					<option value="35"', $group['level'] == 35 ? ' selected="selected"' : '', '>', $txt['access_level_member'], '</a>
+					<option value="40"', $group['level'] == 40 ? ' selected="selected"' : '', '>', $txt['access_level_developer'], '</a>
+					<option value="45"', $group['level'] == 45 ? ' selected="selected"' : '', '>', $txt['access_level_admin'], '</a>
+					<option value="50"', $group['level'] == 50 ? ' selected="selected"' : '', '>', $txt['access_level_owner'], '</a>
 				</select><br />';
 
-echo '
+	echo '
 			</td>
-		</tr>
+		</tr>';*/
+
+	if (isset($context['project_groups']))
+	{
+		echo '
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['project_membergroups'], ':</b><br />
+				<span class="smalltext">', $txt['project_membergroups_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">';
+
+		foreach ($context['groups'] as $group)
+		{
+			echo '
+				<label for="groups_', $group['id'], '"><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label>
+				<select name="groups[', $group['id'], ']">';
+
+			foreach ($context['project_groups'] as $pgroup)
+				echo '
+					<option value="', $pgroup['id'], '"', $pgroup['id'] == $group['id'] ? ' selected="selected"' : '', '>', $pgroup['name'], '</option>';
+
+			echo '
+				</select><br />';
+		}
+
+	echo '
+			</td>
+		</tr>';
+	}
+
+	echo '
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_trackers'], ':</b><br />

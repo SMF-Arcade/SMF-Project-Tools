@@ -257,17 +257,14 @@ function createProject($projectOptions)
 	if (empty($projectOptions['name']) || !isset($projectOptions['public_access']) || !isset($projectOptions['description']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
 
-	$smcFunc['db_insert'](
-		'insert',
+	$smcFunc['db_insert']('insert',
 		'{db_prefix}projects',
 		array(
 			'name' => 'string',
-			'public_access' => 'int',
 			'description' => 'string'
 		),
 		array(
 			$projectOptions['name'],
-			$projectOptions['public_access'],
 			$projectOptions['description']
 		),
 		array()
@@ -280,6 +277,43 @@ function createProject($projectOptions)
 	// Anything left?
 	if (!empty($projectOptions))
 		updateProject($id_project, $projectOptions);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_groups',
+		array(
+			'id_project' => 'int',
+			'group_name' => 'string',
+			'access_level' => 'int',
+		),
+		array(
+			array(
+				$id_project,
+				$txt['access_level_viewer'],
+				1,
+			),
+			array(
+				$id_project,
+				$txt['access_level_report'],
+				5,
+			),
+			array(
+				$id_project,
+				$txt['access_level_beta'],
+				30,
+			),
+			array(
+				$id_project,
+				$txt['access_level_member'],
+				35,
+			),
+			array(
+				$id_project,
+				$txt['access_level_developer'],
+				40,
+			),
+		),
+		array()
+	);
 
 	return $id_project;
 }
@@ -306,7 +340,7 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
 
-	if (isset($projectOptions['member_groups']))
+	/*if (isset($projectOptions['member_groups']))
 	{
 		$projectUpdates[] = 'member_groups = {string:member_groups}';
 		$projectUpdates[] = 'member_groups_level = {string:member_groups_level}';
@@ -331,7 +365,7 @@ function updateProject($id_project, $projectOptions)
 	{
 		$projectUpdates[] = 'public_access = {int:public_access}';
 		$projectOptions['public_access'] = (int) $projectOptions['public_access'];
-	}
+	}*/
 
 	if (!empty($projectUpdates))
 		$request = $smcFunc['db_query']('', '
