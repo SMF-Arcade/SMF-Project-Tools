@@ -219,7 +219,7 @@ function createIssue($issueOptions, &$posterOptions)
 		array()
 	);
 
-	createComment(
+	$id_comment = createComment(
 		$issueOptions['project'],
 		$id_issue,
 		array(
@@ -228,6 +228,8 @@ function createIssue($issueOptions, &$posterOptions)
 		),
 		$posterOptions
 	);
+
+	$issueOptions['comment_first'] = $id_comment;
 
 	unset($issueOptions['project'], $issueOptions['subject'], $issueOptions['body'], $issueOptions['created']);
 	$issueOptions['no_log'] = true;
@@ -320,6 +322,11 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		$event_data['changes'][] = array(
 			'target_version', $row['id_version_fixed'], $issueOptions['version_fixed'],
 		);
+	}
+
+	if (isset($issueOptions['comment_first']))
+	{
+		$issueUpdates[] = 'id_comment_first = {int:comment_first}';
 	}
 
 	if (isset($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
@@ -602,7 +609,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	);
 
 	if (isset($commentOptions['no_log']))
-		return true;
+		return $id_comment;
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',
@@ -626,12 +633,12 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 			$posterOptions['ip'],
 			'new_comment',
 			time(),
-			serialize(array('subject' => $row['subject']))
+			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
 		),
 		array()
 	);
 
-	return true;
+	return $id_comment;
 }
 
 ?>

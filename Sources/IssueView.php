@@ -109,6 +109,7 @@ function IssueView()
 function getComment()
 {
 	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings, $memberContext;
+	static $counter = 0;
 
 	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
 
@@ -134,13 +135,20 @@ function getComment()
 
 	censorText($row['body']);
 
+	$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
+
 	$comment = array(
 		'id' => $row['id_comment'],
+		'counter' => $counter,
 		'member' => &$memberContext[$row['id_member']],
+		'time' => timeformat($row['post_time']),
 		'body' => parse_bbc($row['body']),
 		'ip' => $row['poster_ip'],
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
+		'can_remove' => projectAllowedTo('delete_comment_' . $type),
 	);
+
+	$counter++;
 
 	return $comment;
 }

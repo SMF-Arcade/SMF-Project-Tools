@@ -124,8 +124,12 @@ $txt['reported_on'] = 'Reported on';
 
 $txt['issue_comments'] = 'Comments';
 
+$txt['remove_comment'] = 'Remove';
+$txt['remove_comment_alt'] = 'Remove Comment';
+$txt['remove_comment_sure'] = 'Are you sure you want to remove this comment';
+
 $txt['issue_delete'] = 'Delete Issue';
-$txt['issue_delete_confirm'] = 'Are you sure you want to delete Issue?';
+$txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
 
 $txt['comment_issue'] = 'Comment Issue';
 $txt['add_comment'] = 'Add Comment';

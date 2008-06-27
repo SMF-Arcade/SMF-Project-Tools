@@ -312,6 +312,11 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'id_comment_first',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'id_version_fixed',
 				'type' => 'int',
 				'null' => false,

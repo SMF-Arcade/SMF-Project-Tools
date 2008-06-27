@@ -216,6 +216,8 @@ function projectAllowedTo($permission)
 		'issue_resolve' => 35,
 		'issue_moderate' => 35,
 		'issue_update_any' => 35,
+		'delete_comment_any' => 35,
+		'delete_comment_own' => 6,
 		'issue_update_own' => 5,
 		'issue_report' => 5,
 		'issue_comment' => 4,

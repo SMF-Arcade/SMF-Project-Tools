@@ -92,6 +92,8 @@ function template_issue_view()
 			</h3>
 			<div class="bordercolor">';
 
+	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
+
 	while ($comment = getComment())
 	{
 		echo '
@@ -114,6 +116,20 @@ function template_issue_view()
 						</ul>
 					</div>
 					<div class="postarea">
+						<div class="keyinfo">
+							<h5>
+							</h5>
+							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
+						</div>
+						<ul class="smalltext postingbuttons">';
+
+		if ($comment['can_remove'])
+			echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+
+		echo '
+						</ul>
+						<hr width="100%" size="1" class="hrcolor" />
 						<div class="post">
 							', $comment['body'], '
 						</div>
@@ -173,14 +189,15 @@ function template_issue_view()
 		echo '
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
-			<div class="smallpadding windowbg">
-				<textarea id="comment" name="comment"></textarea>';
+			<div class="smallpadding windowbg" style="text-align: center">
+				<textarea id="comment" name="comment" rows="7" cols="75"></textarea>';
 
 		echo '
 				<div style="text-align: right">
 					<input type="submit" name="add_comment" value="', $txt['add_comment'], '" />
 				</div>
-		</div>';
+			</div>
+		</div><br />';
 	}
 
 	if (!empty($context['can_issue_update']))
