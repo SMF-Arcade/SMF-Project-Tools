@@ -37,7 +37,7 @@ function template_project_list()
 
 			foreach ($project['issues'] as $type)
 				echo '
-					', $type['total'], ' ', $type['info']['plural'], '<br />';
+					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
 
 			echo '
 				</td>

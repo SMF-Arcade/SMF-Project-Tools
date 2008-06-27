@@ -2,7 +2,8 @@
 // Build info
 $build_info = array(
 	'branch' => 'trunk',
-	'version' => '0.1',
+	'version' => '0.1 Alpha',
+	'version_str' => '0.1 Alpha',
 	'build_replaces' => 'build_replaces_project01',
 	'extra_files' => array(
 		'changelog.txt',

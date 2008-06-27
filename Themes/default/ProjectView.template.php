@@ -5,9 +5,6 @@ function template_project_view_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>';
-
 	if (!empty($context['project_tabs']))
 	{
 		echo '
@@ -51,7 +48,7 @@ function template_project_view_above()
 			echo '
 			<td class="maintab_last">&nbsp;</td>
 		</tr>
-	</table><br />';
+	</table>';
 	}
 }
 
