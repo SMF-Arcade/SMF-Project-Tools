@@ -78,15 +78,16 @@ function Projects()
 	{
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
 			fatal_lang_error('project_not_found');
+		$project = $context['project']['id'];
 		projectIsAllowedTo('view');
 
 		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
-		$project = $context['project']['id'];
-
 		// Show everything?
-		if (!projectAllowedTo('issue_view_any'))
-			$user_info['query_see_issue'] = '((' . $user_info['query_see_issue'] . ") AND i.reporter = $user_info[id])";
+		if (!projectAllowedTo('issue_view'))
+			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
+		else
+			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
 
 		if (isset($_REQUEST['issue']))
 		{
@@ -206,7 +207,7 @@ function loadProjectTools($mode = '')
 			$smcFunc['db_free_result']($request);
 
 			$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
-			$see_version = '(FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups))';
+			$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
 		}
 
 		$user_info['query_see_project'] = $see_project;

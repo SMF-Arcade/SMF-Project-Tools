@@ -63,7 +63,6 @@ function loadProject($id_project)
 		'category' => array(),
 		'trackers' => array(),
 		'developers' => array(),
-		'member_groups' => $groups,
 		'is_developer' => !empty($row['is_dev']),
 	);
 
@@ -82,7 +81,7 @@ function loadProject($id_project)
 
 	// Developers
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.id_member, mem.real_name, dev.access_level
+		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}project_developer AS dev
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
 		WHERE id_project = {int:project}',
@@ -96,7 +95,6 @@ function loadProject($id_project)
 		$project['developers'][$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
-			'level' => $row['access_level'],
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -135,7 +133,6 @@ function loadVersions($project)
 		ORDER BY id_parent',
 		array(
 			'project' => $project['id'],
-			'access_level' => $project['my_level'],
 		)
 	);
 
@@ -174,8 +171,8 @@ function projectAllowedTo($permission)
 {
 	global $context, $project;
 
-	if ($project === null)
-		fatal_error('projectAllowed(): Project not loaded');
+	if (empty($project))
+		fatal_error('projectAllowedTo(): Project not loaded');
 
 	// Admins can do anything
 	if (allowedTo('project_admin'))
@@ -271,11 +268,6 @@ function createProject($projectOptions)
 				$id_project,
 				$txt['access_level_member'],
 				35,
-			),
-			array(
-				$id_project,
-				$txt['access_level_developer'],
-				40,
 			),
 		),
 		array()

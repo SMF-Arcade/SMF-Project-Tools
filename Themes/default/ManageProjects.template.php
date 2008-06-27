@@ -165,13 +165,6 @@ function template_edit_project()
 				<div id="suggest_template_developer_', $member['id'], '">
 					<input type="hidden" name="developer[', $member['id'], '][id]" value="', $member['id'], '" />
 					<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="developer_link_to_', $member['id'], '" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">', $member['name'], '</a>
-					<select name="developer[', $member['id'], '][level]">
-						<option value="50"', $member['level'] == 50 ? ' selected="selected"' : '', '>', $txt['access_level_owner'], '</a>
-						<option value="45"', $member['level'] == 45 ? ' selected="selected"' : '', '>', $txt['access_level_admin'], '</a>
-						<option value="40"', $member['level'] == 40 ? ' selected="selected"' : '', '>', $txt['access_level_developer'], '</a>
-						<option value="35"', $member['level'] == 35 ? ' selected="selected"' : '', '>', $txt['access_level_member'], '</a>
-						<option value="30"', $member['level'] == 30 ? ' selected="selected"' : '', '>', $txt['access_level_beta'], '</a>
-					</select>
 					<input type="image" name="delete_developer" value="', $member['id'], '" onclick="return suggestHandledeveloper.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" />', '
 				</div>';
 
@@ -179,13 +172,6 @@ function template_edit_project()
 				<div id="suggest_template_developer" style="visibility: hidden; display: none;">
 					<input type="hidden" name="developer[{MEMBER_ID}][id]" value="{MEMBER_ID}" />
 					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-					<select name="developer[{MEMBER_ID}][level]">
-						<option value="50">', $txt['access_level_owner'], '</option>
-						<option value="45">', $txt['access_level_admin'], '</option>
-						<option value="40">', $txt['access_level_developer'], '</option>
-						<option value="35">', $txt['access_level_member'], '</option>
-						<option value="30">', $txt['access_level_beta'], '</option>
-							</select>
 					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
 				</div>
 				<br />
@@ -357,7 +343,7 @@ function template_edit_version()
 
 	foreach ($context['project_groups'] as $pgroup)
 		echo '
-				<input id="pg_', $pgroup['id'], '" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '><label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label><br />';
+				<input id="pg_', $pgroup['id'], '" type="checkbox" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '> <label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label><br />';
 
 	echo '
 			</td>

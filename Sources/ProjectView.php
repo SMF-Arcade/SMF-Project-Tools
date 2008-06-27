@@ -49,7 +49,7 @@ function ProjectView()
 		'assigned' => array(
 			'title' => 'assigned_to_me',
 			'order' => 'i.updated DESC',
-			'where' => 'i.id_assigned = {int:member}',
+			'where' => 'i.id_assigned = {int:member} AND NOT (i.status IN ({array_int:closed_status}))',
 			'show' => projectAllowedTo('issue_resolve'),
 		),
 		'new_issues' => array(
@@ -170,7 +170,8 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			'empty' => '',
 			'start' => 0,
 			'num_issues' => $num_issues,
-			'member' => $user_info['id']
+			'member' => $user_info['id'],
+			'closed_status' => $context['closed_status'],
 		)
 	);
 

@@ -171,30 +171,10 @@ function EditProject()
 			'developers' => array(),
 			'public_access' => 0,
 		);
-
-		/*$context['project_groups'] = array(
-			array(
-				'name' => $txt['access_level_viewer'],
-				'access_level' => 1,
-			),
-			array(
-				'name' => $txt['access_level_report'],
-				'access_level' => 5,
-			),
-			array(
-				'name' => $txt['access_level_beta'],
-				'access_level' => 30,
-			),
-			array(
-				'name' => $txt['access_level_member'],
-				'access_level' => 35,
-			),
-		);*/
 	}
 	else
 	{
 		$curProject = array(
-			'member_groups' => $project['member_groups'],
 		);
 
 		$context['project'] = array(
@@ -204,7 +184,6 @@ function EditProject()
 			'long_description' => htmlspecialchars($project['long_description']),
 			'trackers' => array_keys($project['trackers']),
 			'developers' => $project['developers'],
-			'public_access' => $project['public_access'],
 		);
 
 		$context['project_groups'] = array();
@@ -349,7 +328,7 @@ function EditProject2()
 		{
 			foreach ($_POST['developer'] as $id_member => $i)
 				if (is_numeric($id_member))
-					$rows[] = array($_POST['project'], (int) $id_member, $i['level']);
+					$rows[] = array($_POST['project'], (int) $id_member);
 
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',
@@ -367,7 +346,7 @@ function EditProject2()
 			$request = $smcFunc['db_query']('', '
 				SELECT id_group, group_name, member_groups, access_level
 				FROM {db_prefix}project_groups
-				WHERE id_project',
+				WHERE id_project =  {int:project}',
 				array(
 					'project' => $_POST['project'],
 				)
@@ -461,10 +440,6 @@ function EditVersion()
 
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
-		$curVersion = array(
-			'member_groups' => array(-1, 0),
-		);
-
 		$context['version'] = array(
 			'is_new' => true,
 			'id' => 0,
@@ -479,7 +454,7 @@ function EditVersion()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name
 			FROM {db_prefix}project_groups
-			WHERE id_project',
+			WHERE id_project = {int:project}',
 			array(
 				'project' => $context['project']['id'],
 			)
@@ -516,17 +491,27 @@ function EditVersion()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
-		$row['project_groups'] = explode(',', $row['project_groups']);
+		$project_groups = explode(',', $row['project_groups']);
 
 		if (!$context['project'] = loadProject((int) $row['id_project']))
 			fatal_lang_error('project_not_found');
 
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
+		$context['version'] = array(
+			'id' => $row['id_version'],
+			'project' => $row['id_project'],
+			'name' => htmlspecialchars($row['version_name']),
+			'description' => htmlspecialchars($row['description']),
+			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
+			'status' => $row['status'],
+			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
+		);
+
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name
 			FROM {db_prefix}project_groups
-			WHERE id_project',
+			WHERE id_project = {int:project}',
 			array(
 				'project' => $context['project']['id'],
 			)
@@ -539,23 +524,10 @@ function EditVersion()
 			$context['project_groups'][$row['id_group']] = array(
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
-				'selected' => in_array($row['id_group'], $row['project_groups']),
+				'selected' => in_array($row['id_group'], $project_groups),
 			);
 		}
 		$smcFunc['db_free_result']($request);
-
-		$curVersion = array(
-		);
-
-		$context['version'] = array(
-			'id' => $row['id_version'],
-			'project' => $row['id_project'],
-			'name' => htmlspecialchars($row['version_name']),
-			'description' => htmlspecialchars($row['description']),
-			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
-			'status' => $row['status'],
-			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
-		);
 	}
 
 	// Template

@@ -76,62 +76,66 @@ function template_project_view()
 	// List of latest updated issues
 	foreach ($context['issue_list'] as $issueList)
 	{
+		if ($side)
+			echo '
+	<div class="clearfix">';
+
 		echo '
-	<div class="issuecolumn">
-		<div class="issuelistframe tborder columnmargin_', $side ? 'right' : 'left', '">
-			<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
-			<table cellspacing="1" class="bordercolor issuetable">
-				<tr>';
+		<div class="issuecolumn">
+			<div class="issuelistframe tborder columnmargin_', $side ? 'right' : 'left', '">
+				<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
+				<table cellspacing="1" class="bordercolor issuetable">
+					<tr>';
 
 		if (!empty($issueList['issues']))
 			echo '
-					<th class="catbg3 headerpadding"></th>
-					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
+						<th class="catbg3 headerpadding"></th>
+						<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+						<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
+						<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-					<th class="windowbg2 headerpadding" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+						<th class="windowbg2 headerpadding" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
 
 		echo '
-				</tr>';
+					</tr>';
 
 		if (!empty($issueList['issues']))
 		{
 			foreach ($issueList['issues'] as $issue)
 			{
 				echo '
-				<tr>
-					<td class="windowbg icon">
-						<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
-							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
-						</a>
-					</td>
-					<td class="windowbg2 info">
-						<h4>', $issue['link'], '</h4>
-						<p class="smalltext">', $issue['reporter']['link'], '</p>
-					</td>
-					<td class="windowbg stats smalltext center issue_', $issue['status']['name'], '">
-						', $issue['status']['text'], '<br />
-					</td>
-					<td class="windowbg lastissue smalltext">
-						', $issue['updater']['link'], '<br />
-						', $issue['updated'], '
-					</td>
-				</tr>';
+					<tr>
+						<td class="windowbg icon">
+							<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+								<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+							</a>
+						</td>
+						<td class="windowbg2 info">
+							<h4>', $issue['link'], '</h4>
+							<p class="smalltext">', $issue['reporter']['link'], '</p>
+						</td>
+						<td class="windowbg stats smalltext center issue_', $issue['status']['name'], '">
+							', $issue['status']['text'], '<br />
+						</td>
+						<td class="windowbg lastissue smalltext">
+							', $issue['updater']['link'], '<br />
+							', $issue['updated'], '
+						</td>
+					</tr>';
 			}
 		}
 
 		echo '
-			</table>
-		</div>
+				</table>
+			</div>
+		</div>';
+
+		if (!$side)
+			echo '
 	</div>';
 
 		$side = !$side;
-
-		if ($side)
-			echo '
-	<div class="clearfix"></div>';
 	}
 
 	// Statistics etc
