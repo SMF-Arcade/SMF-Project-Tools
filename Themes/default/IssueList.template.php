@@ -97,13 +97,15 @@ function template_issue_list()
 							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
 						</a>
 					</td>
-					<td class="windowbg2">
-						<h4>', $issue['link'], '';
+					<td class="windowbg2 info">
+						<h4>
+							', $issue['link'], ' ';
 						// Is this topic new? (assuming they are logged in!)
-			if ($topic['new'] && $context['user']['is_logged'])
-					echo '<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
+			if ($issue['new'] && $context['user']['is_logged'])
+					echo '
+							<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
 
-			echo '</h4>
+			echo '		</h4>
 						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
 					<td class="windowbg stats smalltext center issue_', $issue['status']['name'], '">

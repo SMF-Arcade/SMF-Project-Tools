@@ -115,6 +115,7 @@ function IssueView()
 	if (!$user_info['is_guest'])
 	{
 		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_issues',
 			array(
 				'id_issue' => 'int',
 				'id_member' => 'int',
@@ -245,7 +246,7 @@ function getComment()
 		'ip' => $row['poster_ip'],
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 		'can_remove' => projectAllowedTo('delete_comment_' . $type),
-		'is_new' => empty($row['is_read']),
+		'new' => empty($row['is_read']),
 		'first_new' => $first_new && empty($row['is_read']),
 	);
 

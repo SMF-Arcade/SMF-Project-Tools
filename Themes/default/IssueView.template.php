@@ -21,7 +21,7 @@ function template_issue_view()
 
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
-		<a name="', $context['current_issue']['comment_first'], '"></a>
+		<a name="com', $context['current_issue']['comment_first'], '"></a>
 		<div id="issueinfo" class="floatright tborder">
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
 			<div class="clearfix windowbg smalltext">
@@ -75,7 +75,7 @@ function template_issue_view()
 	{
 		if ($comment['first_new'])
 		{
-			'
+			echo '
 		<a name="new"></a>';
 		}
 		if ($comment['first'])

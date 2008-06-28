@@ -114,7 +114,7 @@ function loadIssue($id_issue)
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(com.id_comment, -1) + 1) AS new_from') . '
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
 			LEFT JOIN {db_prefix}issue_comments AS cf ON (cf.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
@@ -128,7 +128,7 @@ function loadIssue($id_issue)
 			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
-			'member' => $user_info['id_member'],
+			'member' => $user_info['id'],
 			'issue' => $id_issue,
 			'project' => $context['project']['id'],
 		)
