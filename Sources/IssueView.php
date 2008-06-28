@@ -73,7 +73,7 @@ function IssueReply()
 		}
 		else
 		{
-			$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . ';comment=' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+			$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
 		}
 	}
 
@@ -104,6 +104,12 @@ function IssueView()
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found');
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
+
+	// Don't index in this case
+	if (isset($_REQUEST['comment']))
+	{
+		$context['robot_no_index'] = true;
+	}
 
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';

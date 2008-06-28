@@ -62,6 +62,16 @@ function Projects()
 	// Load Issue if needed
 	if (!empty($_REQUEST['issue']) && !isset($_REQUEST['project']))
 	{
+		if (strpos($_REQUEST['issue'], '.') !== false)
+		{
+			list ($_REQUEST['issue'], $rst) = explode('.', $_REQUEST['issue'], 2);
+
+			if (is_numeric($rst))
+				$_REQUEST['start'] = (int) $rst;
+			elseif (substr($rst, 0, 3) == 'com')
+				$_REQUEST['comment'] = (int) substr($rst, 3);
+		}
+
 		$request = $smcFunc['db_query']('', '
 			SELECT id_project
 			FROM {db_prefix}issues

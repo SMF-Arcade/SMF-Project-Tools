@@ -86,6 +86,7 @@ function template_issue_view()
 	$alternate = false;
 
 	echo '
+		<a name="', $context['current_issue']['comment_first'], '"></a>
 		<div class="tborder">
 			<h3 class="catbg3 headerpadding">
 				', $txt['issue_comments'], '
@@ -98,7 +99,7 @@ function template_issue_view()
 	while ($comment = getComment())
 	{
 		echo '
-				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding">
+				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
 					<div class="floatleft poster">
 						<h4>', $comment['member']['link'], '</h4>
 						<ul class="smalltext">';
@@ -125,10 +126,10 @@ function template_issue_view()
 							<div class="messageicon floatleft">
 								<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
 							</div>
-							<h5><a href="#" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
-							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>';
+							<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '#com', $comment['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>';
 		}
 		echo '
+							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
 						</div>
 						<ul class="smalltext postingbuttons">';
 
