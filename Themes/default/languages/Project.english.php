@@ -149,6 +149,7 @@ $txt['project_report_issue'] = '%s - Report Issue';
 $txt['project_not_found'] = 'Project not found';
 $txt['version_not_found'] = 'Version not found';
 $txt['issue_not_found'] = 'Issue not found';
+$txt['comment_not_found'] = 'Comment not found';
 
 $txt['project_fix_errors'] = 'Please fix following errors';
 $txt['project_is_missing'] = 'Required field %s is empty';

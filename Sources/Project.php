@@ -45,9 +45,9 @@ function Projects()
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),
-		'replyIssue' => array('IssueView.php', 'IssueReply', true),
-		'updateIssue' => array('IssueView.php', 'IssueUpdate', true),
-		'deleteIssue' => array('IssueView.php', 'IssueDelete', true),
+		'reply' => array('IssueView.php', 'IssueReply', true),
+		'update' => array('IssueView.php', 'IssueUpdate', true),
+		'delete' => array('IssueView.php', 'IssueDelete', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
@@ -131,7 +131,7 @@ function Projects()
 				'issues' => array(
 					'href' => $scripturl . '?project=' . $project . ';sa=issues',
 					'title' => $txt['issues'],
-					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'replyIssue')),
+					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'update', 'delete')),
 				)
 			),
 		);

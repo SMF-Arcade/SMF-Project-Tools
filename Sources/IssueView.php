@@ -37,7 +37,7 @@ function IssueReply()
 
 	$issue = $context['current_issue']['id'];
 
-	$context['destination'] = 'updateIssue;full';
+	$context['destination'] = 'update;full';
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -49,6 +49,8 @@ function IssueReply()
 
 	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 	{
+		require_once($sourcedir . '/Subs-Post.php');
+
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
@@ -66,9 +68,13 @@ function IssueReply()
 		$smcFunc['db_free_result']($request);
 
 		if (!$row)
-			break;
-
-		$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . ';comment=' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+		{
+			fatal_lang_error('comment_not_found');
+		}
+		else
+		{
+			$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . ';comment=' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+		}
 	}
 
 	$editorOptions = array(
@@ -103,6 +109,7 @@ function IssueView()
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
+	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type);
 
@@ -117,9 +124,6 @@ function IssueView()
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
-
-	if (projectAllowedTo('issue_comment'))
-		$context['show_comment'] = true;
 
 	if (projectAllowedTo('issue_moderate'))
 	{
@@ -204,6 +208,7 @@ function getComment()
 
 	$comment = array(
 		'id' => $row['id_comment'],
+		'first' => $row['id_comment'] == $context['current_issue']['comment_first'],
 		'counter' => $counter,
 		'member' => &$memberContext[$row['id_member']],
 		'time' => timeformat($row['post_time']),
@@ -350,7 +355,7 @@ function IssueUpdate()
 
 	$no_comment = false;
 
-	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']) && empty($_REQUEST['full']))
+	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']) && !isset($_REQUEST['full']))
 		$no_comment = true;
 
 	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')

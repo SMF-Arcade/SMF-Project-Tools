@@ -137,7 +137,7 @@ function template_project_view()
 
 	// Statistics etc
 	echo '
-	<div class="projectframe tborder">
+	<div class="tborder">
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
 			<div class="windowbg">

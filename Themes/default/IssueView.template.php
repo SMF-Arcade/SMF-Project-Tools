@@ -11,7 +11,7 @@ function template_issue_view()
 	$reporter = &$context['current_issue']['reporter'];
 
 	echo '
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=updateIssue" method="post">
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 
 		<div id="issueinfo" class="tborder">
@@ -92,6 +92,7 @@ function template_issue_view()
 			</h3>
 			<div class="bordercolor">';
 
+	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
 
 	while ($comment = getComment())
@@ -116,12 +117,24 @@ function template_issue_view()
 						</ul>
 					</div>
 					<div class="postarea">
-						<div class="keyinfo">
-							<h5>
-							</h5>
-							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
+						<div class="keyinfo">';
+
+		if ($comment['first'])
+		{
+			echo '
+							<div class="messageicon floatleft">
+								<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
+							</div>
+							<h5><a href="#" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
+							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>';
+		}
+		echo '
 						</div>
 						<ul class="smalltext postingbuttons">';
+
+		if ($context['can_comment'])
+			echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
 		if ($comment['can_remove'])
 			echo '
@@ -171,7 +184,7 @@ function template_issue_view()
 		</div><br />';
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=deleteIssue;sesc=' . $context['session_id']),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=delete;sesc=' . $context['session_id']),
 	);
 
 	echo '
@@ -184,7 +197,7 @@ function template_issue_view()
 			<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
 	</div><br />';
 
-	if (!empty($context['show_comment']))
+	if ($context['can_comment'])
 	{
 		echo '
 		<div class="tborder">
