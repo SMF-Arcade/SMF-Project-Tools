@@ -42,15 +42,11 @@ $txt['version_stable_rec'] = 'Stable (Recommended)';
 $txt['version_obsolute'] = 'Obsolute';
 
 // Access Levels (Project Groups)
-$txt['access_level_owner'] = 'Owner';
-$txt['access_level_admin'] = 'Admin';
 $txt['access_level_developer'] = 'Developer';
 $txt['access_level_member'] = 'Team Member';
 $txt['access_level_beta'] = 'Beta Tester';
 $txt['access_level_report'] = 'Reporter';
 $txt['access_level_viewer'] = 'Viewer';
-
-//
 $txt['access_level_none'] = 'No Access';
 
 // General
@@ -138,6 +134,9 @@ $txt['add_comment'] = 'Add Comment';
 $txt['update_issue'] = 'Update Issue';
 $txt['update_issue_save'] = 'Save';
 $txt['update_issue_comment'] = 'Save with Comment';
+
+// Reply To Issue
+$txt['issue_reply'] = 'Reply';
 
 // Title
 $txt['project_list_title'] = $context['forum_name'] . ' - Projects';

@@ -347,7 +347,7 @@ function template_issue_reply()
 	echo '
 	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
-			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
+			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
 			<div class="windowbg">
 				<dl>
 					<dd>

@@ -45,11 +45,34 @@ function IssueReply()
 	else
 		$context['comment'] = '';
 
+	if (isset($_REQUEST['quote']))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
+				c.poster_name, c.poster_email, c.poster_ip, c.id_member
+			FROM {db_prefix}issue_comments AS c
+			WHERE id_comment = {int:comment}
+			ORDER BY id_comment',
+			array(
+				'issue' => $issue,
+				'comment' => $_REQUEST['quote'],
+			)
+		);
+
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (!$row)
+			break;
+
+		$context['comment'] .= "[quote]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+	}
+
 	$editorOptions = array(
 		'id' => 'comment',
 		'value' => $context['comment'],
 		'labels' => array(
-			'post_button' => $txt['report_issue'],
+			'post_button' => $txt['issue_reply'],
 		),
 	);
 	create_control_richedit($editorOptions);
@@ -324,7 +347,7 @@ function IssueUpdate()
 
 	$no_comment = false;
 
-	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']))
+	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']) && empty($_REQUEST['full']))
 		$no_comment = true;
 
 	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')

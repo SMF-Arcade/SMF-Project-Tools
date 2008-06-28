@@ -101,29 +101,17 @@ function IssueList()
 	$where = array();
 
 	if ($context['issue_search']['status'] == 'open')
-	{
 		$where[] = 'NOT (i.status IN ({array_int:closed_status}))';
-	}
 	elseif ($context['issue_search']['status'] == 'closed')
-	{
 		$where[] = 'i.status IN ({array_int:closed_status})';
-	}
 	elseif (is_numeric($context['issue_search']['status']))
-	{
 		$where[] = 'i.status IN ({int:search_status})';
-	}
 
 	if (!empty($context['issue_search']['title']))
-	{
 		$where[] = 'i.subject LIKE {string:search_title}';
-	}
 
 	if (!empty($context['issue_search']['type']))
-	{
 		$where[] = 'i.issue_type = {string:search_type}';
-	}
-
-	$issuesPerPage = $mod;
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_update');
 
@@ -149,7 +137,7 @@ function IssueList()
 	list ($issueCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($baseurl, $_REQUEST['start'], $issueCount, $issuesPerPage);
+	$context['page_index'] = constructPageIndex($baseurl, $_REQUEST['start'], $issueCount, $context['issues_per_page']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT

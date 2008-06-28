@@ -48,7 +48,7 @@ function template_project_view_above()
 			echo '
 			<td class="maintab_last">&nbsp;</td>
 		</tr>
-	</table>';
+	</table><br />';
 	}
 }
 
@@ -57,7 +57,7 @@ function template_project_view()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div class="projectframe tborder">
+	<div class="tborder">
 		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
 		<div class="projectframe_section">
 			<div class="windowbg2 middletext">
