@@ -114,23 +114,28 @@ $txt['preview_report_issue'] = 'Preview issue';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';
+
+// Issue Details
+$txt['issue_details'] = 'Issue Details';
 $txt['issue_reported'] = 'Reported';
 $txt['issue_updated'] = 'Last Updated';
 
-$txt['reported_on'] = 'Reported on';
-
+// Comments
 $txt['issue_comments'] = 'Comments';
 
 $txt['remove_comment'] = 'Remove';
 $txt['remove_comment_alt'] = 'Remove Comment';
 $txt['remove_comment_sure'] = 'Are you sure you want to remove this comment';
 
+// ModBar
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
 
+// Reply
 $txt['comment_issue'] = 'Comment Issue';
 $txt['add_comment'] = 'Add Comment';
 
+// Update
 $txt['update_issue'] = 'Update Issue';
 $txt['update_issue_save'] = 'Save';
 $txt['update_issue_comment'] = 'Save with Comment';

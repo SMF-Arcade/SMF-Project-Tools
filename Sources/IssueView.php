@@ -49,6 +49,8 @@ function IssueReply()
 
 	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 	{
+		checkSession('get');
+
 		require_once($sourcedir . '/Subs-Post.php');
 
 		$request = $smcFunc['db_query']('', '
@@ -107,8 +109,24 @@ function IssueView()
 
 	// Don't index in this case
 	if (isset($_REQUEST['comment']))
-	{
 		$context['robot_no_index'] = true;
+
+	// Mark this issue as read
+	if (!$user_info['is_guest'])
+	{
+		$smcFunc['db_insert']('replace',
+			array(
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'id_comment' => 'int',
+			),
+			array(
+				$context['current_issue']['id'],
+				$user_info['id'],
+				$context['current_issue']['id']
+			),
+			array('id_issue', 'id_member')
+		);
 	}
 
 	$issue = $context['current_issue']['id'];
@@ -118,6 +136,8 @@ function IssueView()
 	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type);
+
+	$context['page_index'] = '';
 
 	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
 	{
@@ -164,13 +184,15 @@ function IssueView()
 	// Load Comments
 	$context['comment_request'] = $smcFunc['db_query']('', '
 		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
-			c.poster_name, c.poster_email, c.poster_ip, c.id_member
+			c.poster_name, c.poster_email, c.poster_ip, c.id_member,
+			id_comment_mod < {int:new_from} AS is_read
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_comment IN({array_int:comments})
 		ORDER BY id_comment',
 		array(
 			'issue' => $issue,
 			'comments' => $comments,
+			'new_from' => $context['current_issue']['new_from']
 		)
 	);
 
@@ -185,6 +207,7 @@ function getComment()
 {
 	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings, $memberContext;
 	static $counter = 0;
+	static $first_new = true;
 
 	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
 
@@ -222,7 +245,12 @@ function getComment()
 		'ip' => $row['poster_ip'],
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 		'can_remove' => projectAllowedTo('delete_comment_' . $type),
+		'is_new' => empty($row['is_read']),
+		'first_new' => $first_new && empty($row['is_read']),
 	);
+
+	if ($first_new && empty($row['is_read']))
+		$first_new = false;
 
 	$counter++;
 

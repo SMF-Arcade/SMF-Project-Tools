@@ -183,23 +183,30 @@ table.issuetable td.lastissue
 /* ************************************* */
 /* styles from IssueView.template        */
 /* ************************************* */
+#firstcomment
+{
+	width: 70%;
+}
+#firstcomment h3.catbg3
+{
+	padding: 0.4em;
+}
+#firstcomment h3.catbg3 img
+{
+	vertical-align: middle;
+}
+#firstcomment h3.catbg3 span
+{
+	padding-left: 2%;
+}
+
 .issueinfoframe h3
 {
 	margin: 0;
 }
-
-#issueinfo h3.catbg3
+#issueinfo
 {
-	font-weight: normal;
-	padding: 0.4em;
-}
-#issueinfo h3.catbg3 img
-{
-	vertical-align: middle;
-}
-#issueinfo h3.catbg3 span
-{
-	padding-left: 2%;
+	width: 28%;
 }
 #issueinfo .dark
 {
@@ -208,17 +215,12 @@ table.issuetable td.lastissue
 }
 #issueinfo div.display, #issueinfo div.edit
 {
-	padding: 5px;
+	padding: 2.5px 5px;
 }
 #issueinfo div.edit
 {
 	display: none;
 }
-.halfwidth
-{
-	width: 49%;
-}
-
 .infotable
 {
 	width: 33%;

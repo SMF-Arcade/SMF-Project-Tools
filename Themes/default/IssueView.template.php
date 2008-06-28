@@ -10,94 +10,85 @@ function template_issue_view()
 
 	$reporter = &$context['current_issue']['reporter'];
 
+	$buttons = array(
+		'reply' => array(
+			'text' => 'reply',
+			'image' => 'reply_issue.gif',
+			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=reply',
+			'lang' => true
+		),
+	);
+
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-
-		<div id="issueinfo" class="floatright tborder" style="width: 33%;">
-			<h3 class="catbg3 headerpadding clearfix">
-				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
-				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
-			</h3>
-			<div class="clearfix windowbg">
-				<div class="floatleft halfwidth">
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_type'], '</span>
-							', $context['current_issue']['type']['name'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_category'], '</span>
-							', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_status'], '</span>
-							', $context['current_issue']['status']['text'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_priority'], '</span>
-							', $txt[$context['current_issue']['priority']], '
-						</div>
-					</div>
+		<a name="', $context['current_issue']['comment_first'], '"></a>
+		<div id="issueinfo" class="floatright tborder">
+			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
+			<div class="clearfix windowbg smalltext">
+				<div class="display">
+					<span class="dark">', $txt['issue_type'], '</span>
+					', $context['current_issue']['type']['name'], '
 				</div>
-				<div class="floatright halfwidth">
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_reported'], '</span>
-							', $context['current_issue']['created'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_updated'], '</span>
-							', $context['current_issue']['updated'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-								<span class="dark">', $txt['issue_version'], '</span>
-								', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
-						</div>
-					</div>
-					<div>
-						<div class="display">
-							<span class="dark">', $txt['issue_version_fixed'], '</span>
-							', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
-						</div>
-					</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_category'], '</span>
+					', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_status'], '</span>
+					', $context['current_issue']['status']['text'], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_priority'], '</span>
+					', $txt[$context['current_issue']['priority']], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_reported'], '</span>
+					', $context['current_issue']['created'], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_updated'], '</span>
+					', $context['current_issue']['updated'], '
+				</div>
+				<div class="display">
+						<span class="dark">', $txt['issue_version'], '</span>
+						', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_version_fixed'], '</span>
+					', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
+				</div>
+				<div class="display">
+					<span class="dark">', $txt['issue_assigned_to'], '</span>
+					', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 				</div>
 			</div>
-			<div class="windowbg">
-				<div>
-					<div class="display">
-						<span class="dark">', $txt['issue_assigned_to'], '</span>
-						', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
-					</div>
-				</div>
-			</div>
-		</div><br />';
+		</div>';
 
 	$alternate = false;
 
-	echo '
-		<a name="', $context['current_issue']['comment_first'], '"></a>
-		<div class="tborder" style="width: 50%">
-			<h3 class="catbg3 headerpadding">
-				', $txt['issue_comments'], '
-			</h3>
-			<div class="bordercolor">';
+	echo '';
 
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
 
 	while ($comment = getComment())
 	{
+		if ($comment['first_new'])
+		{
+			'
+		<a name="new"></a>';
+		}
+		if ($comment['first'])
+		{
+			echo '
+		<div id="firstcomment" class="tborder">
+			<h3 class="catbg3 headerpadding">
+				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
+				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+			</h3>
+			<div class="bordercolor">';
+		}
+
 		echo '
 				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
 					<div class="floatleft poster">
@@ -178,10 +169,32 @@ function template_issue_view()
 				</div>';
 
 			$alternate = !$alternate;
+
+		if ($comment['first'])
+		{
+			echo '
+			</div>
+		</div><br />
+	</form>
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
+		<div class="modbuttons clearfix margintop">
+			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'bottom'), '
+		</div>
+		<div class="tborder">
+			<h3 class="catbg3 headerpadding">
+				', $txt['issue_comments'], '
+			</h3>
+			<div class="bordercolor">';
+		}
 	}
 
 	echo '
 			</div>
+		</div>
+		<div class="modbuttons clearfix marginbottom">
+			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'top'), '
 		</div><br />';
 
 	$mod_buttons = array(
@@ -349,6 +362,8 @@ function template_issue_view()
 				</div>
 			</div>
 		</div>
+
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 
 	}

@@ -352,6 +352,11 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'id_comment_mod',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'id_version_fixed',
 				'type' => 'int',
 				'null' => false,
@@ -413,6 +418,11 @@ $tables = array(
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
+			),
+			array(
+				'name' => 'id_comment_mod',
+				'type' => 'int',
+				'null' => false,
 			),
 			array(
 				'name' => 'post_time',
@@ -541,6 +551,7 @@ $tables = array(
 				'name' => 'id_issue',
 				'type' => 'int',
 				'null' => false,
+				'unsigned' => true,
 			),
 			array(
 				'name' => 'tag',
@@ -553,6 +564,39 @@ $tables = array(
 			array(
 				'type' => 'primary',
 				'columns' => array('id_issue', 'tag')
+			),
+		)
+	),
+	'log_issues' => array(
+		'name' => 'log_issues',
+		'columns' => array(
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_comment',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_issue', 'id_member')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_issue')
 			),
 		)
 	),

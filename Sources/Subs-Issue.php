@@ -113,9 +113,11 @@ function loadIssue($id_issue)
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix
+			ver2.id_version AS vidfix, ver2.version_name AS vnamefix,
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(com.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
-			LEFT JOIN {db_prefix}issue_comments AS cf ON (cf.id_comment = i.id_comment_first)
+			LEFT JOIN {db_prefix}issue_comments AS cf ON (cf.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
+			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
@@ -126,6 +128,7 @@ function loadIssue($id_issue)
 			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
+			'member' => $user_info['id_member'],
 			'issue' => $id_issue,
 			'project' => $context['project']['id'],
 		)
@@ -170,6 +173,7 @@ function loadIssue($id_issue)
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
 		'updated' => timeformat($row['updated']),
+		'new_from' => $row['new_from'],
 		'comment_first' => $row['id_comment_first'],
 	);
 
@@ -512,7 +516,7 @@ function deleteIssue($id_issue, $posterOptions)
 		)
 	);
 
-	// Update Timeline entries
+	// Update Timeline entries to make sure uses who have no permission won't see it
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}project_timeline
 		SET id_version = {int:version}
@@ -605,12 +609,24 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 
 	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
 
+	// Set this for read marks
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issue_comments
+		SET id_comment_mod = {int:comment}
+		WHERE id_comment = {int:comment}',
+		array(
+			'comment' => $id_comment,
+		)
+	);
+
+	// Update Issues table too
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
 		SET
-			replies = replies + 1, updated = {int:time}
+			replies = replies + 1, updated = {int:time}, id_comment_mod = {int:comment}
 		WHERE id_issue = {int:issue}',
 		array(
+			'comment' => $id_comment,
 			'issue' => $id_issue,
 			'time' => time(),
 		)
@@ -619,6 +635,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	if (isset($commentOptions['no_log']))
 		return $id_comment;
 
+	// Write to timeline unless it's not wanted (on new issue for example)
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',
 		array(

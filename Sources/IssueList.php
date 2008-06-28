@@ -146,9 +146,11 @@ function IssueList()
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
-			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater
+			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(com.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
+			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
@@ -164,6 +166,7 @@ function IssueList()
 			'project' => $context['project']['id'],
 			'empty' => '',
 			'start' => $_REQUEST['start'],
+			'member' => $user_info['id'],
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
@@ -204,7 +207,9 @@ function IssueList()
 				'name' => empty($row['updater']) ? $txt['issue_guest'] : $row['updater'],
 				'link' => empty($row['updater']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_updater'] . '">' . $row['updater'] . '</a>',
 			),
-			'priority' => $row['priority']
+			'priority' => $row['priority'],
+			'is_new' => $row['new_from'] <= $row['id_comment_mod'],
+			'new_href' => $scripturl . '?issue=' . $row['id_issue'] . '.com' . $row['new_from'] . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);
