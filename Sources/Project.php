@@ -45,6 +45,7 @@ function Projects()
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),
+		'replyIssue' => array('IssueView.php', 'IssueReply', true),
 		'updateIssue' => array('IssueView.php', 'IssueUpdate', true),
 		'deleteIssue' => array('IssueView.php', 'IssueDelete', true),
 		// Report Issue
@@ -157,7 +158,7 @@ function Projects()
 
 function loadProjectTools($mode = '')
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
+	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
 
 	if (!empty($project_version))
 		return;
@@ -170,6 +171,8 @@ function loadProjectTools($mode = '')
 
 	$context['project_tools'] = array();
 	$context['issue_tracker'] = array();
+
+	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
 
 	if (empty($mode))
 	{

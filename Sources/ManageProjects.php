@@ -31,7 +31,6 @@ function ManageProjects()
 
 	isAllowedTo('project_admin');
 	loadProjectTools('admin');
-	loadLanguage('ProjectAdmin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['manage_projects'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_projects_description'];

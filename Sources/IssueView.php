@@ -28,6 +28,43 @@ if (!defined('SMF'))
 
 */
 
+function IssueReply()
+{
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
+		fatal_lang_error('issue_not_found');
+
+	$context['destination'] = 'updateIssue;full';
+
+	// Editor
+	require_once($sourcedir . '/Subs-Editor.php');
+
+	if (isset($_POST['comment']))
+		$context['comment'] = $_POST['comment'];
+	else
+		$context['comment'] = '';
+
+	$editorOptions = array(
+		'id' => 'comment',
+		'value' => $context['comment'],
+		'labels' => array(
+			'post_button' => $txt['report_issue'],
+		),
+	);
+	create_control_richedit($editorOptions);
+
+	checkSubmitOnce('register');
+
+	$context['post_box_name'] = 'comment';
+
+	// Template
+	$context['sub_template'] = 'issue_reply';
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+
+	loadTemplate('IssueView');
+}
+
 function IssueView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -190,6 +227,21 @@ function IssueUpdate()
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	checkSession();
+
+	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+
+		$_REQUEST['comment'] = html_to_bbc($_REQUEST['comment']);
+		$_REQUEST['comment'] = un_htmlspecialchars($_REQUEST['comment']);
+		$_POST['comment'] = $_REQUEST['comment'];
+	}
+
+	if (isset($_REQUEST['full']))
+		checkSubmitOnce('check');
+
+	if (isset($_REQUEST['preview']))
+		return IssueReply();
 
 	$_POST['guestname'] = $user_info['username'];
 	$_POST['email'] = $user_info['email'];

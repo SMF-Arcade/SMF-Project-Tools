@@ -123,7 +123,7 @@ function IssueList()
 		$where[] = 'i.issue_type = {string:search_type}';
 	}
 
-	$issuesPerPage = 25;
+	$issuesPerPage = $mod;
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_update');
 
@@ -171,7 +171,7 @@ function IssueList()
 			AND ' . implode('
 			AND ', $where) : '') . '
 		ORDER BY i.updated DESC
-		LIMIT {int:start},' . $issuesPerPage,
+		LIMIT {int:start},' . $context['issues_per_page'],
 		array(
 			'project' => $context['project']['id'],
 			'empty' => '',

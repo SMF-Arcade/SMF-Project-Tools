@@ -3,6 +3,9 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+// Settings
+$txt['projectSettings'] = 'Project Tools';
+
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 

@@ -340,4 +340,35 @@ function template_issue_view()
 	}
 }
 
+function template_issue_reply()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+		<div class="tborder" id="reportform">
+			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
+			<div class="windowbg">
+				<dl>
+					<dd>
+						', template_control_richedit($context['post_box_name'], 'bbc'), '
+					</dd>
+					<dd>
+						', template_control_richedit($context['post_box_name'], 'message'), '
+					</dd>
+					<dd class="full center">
+						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
+						', template_control_richedit($context['post_box_name'], 'buttons'), '
+					</dd>
+					<dd class="clear"></dd>
+				</dl>
+			</div>
+		</div>
+
+		<input type="hidden" name="issue" value="', $context['current_issue']['id'], '" />
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+	</form>';
+}
+
 ?>

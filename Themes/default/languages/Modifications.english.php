@@ -17,6 +17,12 @@ $txt['manage_projects'] = 'Projects';
 $txt['list_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
 $txt['list_projects'] = 'Project List';
+$txt['project_settings'] = 'Settings';
+$txt['project_settings_main'] = 'Main';
+
+$txt['projectEnabled'] = 'Enable Project Tools';
+$txt['projectAttachements'] = 'Enable Attachements';
+$txt['issuesPerPage'] = 'Issues Per Page';
 
 // Permission Names
 $txt['permissiongroup_project'] = 'Project Tools';
