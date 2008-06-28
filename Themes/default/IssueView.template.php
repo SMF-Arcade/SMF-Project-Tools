@@ -14,7 +14,7 @@ function template_issue_view()
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 
-		<div id="issueinfo" class="tborder">
+		<div id="issueinfo" class="floatright tborder" style="width: 33%;">
 			<h3 class="catbg3 headerpadding clearfix">
 				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
 				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
@@ -87,7 +87,7 @@ function template_issue_view()
 
 	echo '
 		<a name="', $context['current_issue']['comment_first'], '"></a>
-		<div class="tborder">
+		<div class="tborder" style="width: 50%">
 			<h3 class="catbg3 headerpadding">
 				', $txt['issue_comments'], '
 			</h3>
