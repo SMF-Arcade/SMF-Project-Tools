@@ -117,6 +117,11 @@
 			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
 		$current_action = 'projects';]]></add>
 		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[|action=profile;u=\d+)'),]]></search>
+			<add><![CDATA[|(action=projects)?(sa=viewIssue;)?(;)?issue=(\d+)(;comment=(\d+))?(#com(\d+))?]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Subs-Db-mysql.php">

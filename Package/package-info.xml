@@ -73,6 +73,7 @@
 		<remove-file name="$sourcedir/IssueReport.php" />
 		<remove-file name="$sourcedir/ManageProjects.php" />
 		<remove-file name="$sourcedir/Project.php" />
+		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectList.php" />
 		<remove-file name="$sourcedir/ProjectView.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />

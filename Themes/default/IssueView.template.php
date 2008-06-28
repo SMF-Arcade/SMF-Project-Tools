@@ -125,12 +125,12 @@ function template_issue_view()
 
 		if ($comment['can_remove'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 						</ul>
 						<hr width="100%" size="1" class="hrcolor" />
-						<div class="post">
+						<div id="com_', $comment['id'], '" class="post">
 							', $comment['body'], '
 						</div>
 					</div>

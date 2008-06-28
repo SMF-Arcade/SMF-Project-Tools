@@ -35,6 +35,8 @@ function IssueReply()
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found');
 
+	$issue = $context['current_issue']['id'];
+
 	$context['destination'] = 'updateIssue;full';
 
 	// Editor
@@ -45,12 +47,13 @@ function IssueReply()
 	else
 		$context['comment'] = '';
 
-	if (isset($_REQUEST['quote']))
+	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
-				c.poster_name, c.poster_email, c.poster_ip, c.id_member
+				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
 			FROM {db_prefix}issue_comments AS c
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
 			WHERE id_comment = {int:comment}
 			ORDER BY id_comment',
 			array(
@@ -65,7 +68,7 @@ function IssueReply()
 		if (!$row)
 			break;
 
-		$context['comment'] .= "[quote]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+		$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . ';comment=' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
 	}
 
 	$editorOptions = array(
