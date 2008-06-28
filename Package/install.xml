@@ -56,7 +56,8 @@
 						'main' => array($txt['list_projects']),
 						'newproject' => array($txt['new_project']),
 					),
-				'arcadesettings' => array(
+				),
+				'projectsettings' => array(
 					'label' => $txt['project_settings'],
 					'file' => 'ProjectAdmin.php',
 					'function' => 'ProjectsAdmin',
@@ -64,7 +65,6 @@
 					'subsections' => array(
 						'main' => array($txt['project_settings_main']),
 					),
-				),
 				),
 			),
 		),]]></add>

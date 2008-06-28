@@ -110,9 +110,7 @@ function template_projects_list()
 	}
 
 	echo '
-		</table>
-	</div>
-</form>';
+	</table>';
 }
 
 function template_edit_project()
