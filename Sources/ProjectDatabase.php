@@ -645,12 +645,6 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_comment',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
 				'name' => 'id_event',
 				'type' => 'int',
 				'null' => false,

@@ -95,6 +95,7 @@ $txt['evt_new_issue'] = 'Issue reported by %s';
 $txt['evt_update_issue'] = 'Issue updated by %s';
 $txt['evt_delete_issue'] = 'Issue deleted by %s';
 $txt['evt_new_comment'] = 'New comment added by %s';
+$txt['evt_new_attachment'] = 'New attachment adeed by %s';
 
 // Issue List
 $txt['issue_search'] = 'Search Issues';

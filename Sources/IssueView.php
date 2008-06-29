@@ -181,12 +181,12 @@ function IssueUpload()
 		),
 		array(
 			$context['project']['id'],
-			$id_issue,
+			$context['current_issue']['id'],
 			$user_info['id'],
 			$user_info['name'],
 			$user_info['email'],
 			$user_info['ip'],
-			'upload_attachment',
+			'new_attachment',
 			time(),
 			serialize(array('attachments' => $attachIDs))
 		),
