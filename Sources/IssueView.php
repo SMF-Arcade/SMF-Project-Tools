@@ -111,25 +111,6 @@ function IssueView()
 	if (isset($_REQUEST['comment']))
 		$context['robot_no_index'] = true;
 
-	// Mark this issue as read
-	if (!$user_info['is_guest'])
-	{
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}log_issues',
-			array(
-				'id_issue' => 'int',
-				'id_member' => 'int',
-				'id_comment' => 'int',
-			),
-			array(
-				$context['current_issue']['id'],
-				$user_info['id'],
-				$context['current_issue']['comment_mod']
-			),
-			array('id_issue', 'id_member')
-		);
-	}
-
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
@@ -159,6 +140,70 @@ function IssueView()
 		}
 	}
 
+	// Temp
+	$commentsPerPage = 20;
+
+	// Fix start to be a number
+	if (!is_numeric($_REQUEST['start']))
+	{
+		// To first new
+		if ($_REQUEST['start'] == 'new')
+		{
+			if ($user_info['is_guest'])
+			{
+				$_REQUEST['start'] = $context['current_issue']['replies'];
+			}
+			else
+			{
+				$request = $smcFunc['db_query']('', '
+					SELECT (IFNULL(log.id_comment, -1) + 1) AS new_from
+					FROM {db_prefix}issues AS i
+						LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = {int:current_issue})
+					WHERE i.id_issue = {int:current_issue}
+					LIMIT 1',
+					array(
+						'member' => $user_info['id'],
+						'current_issue' => $issue,
+					)
+				);
+				list ($new_from) = $smcFunc['db_fetch_row']($request);
+				$smcFunc['db_free_result']($request);
+
+				$_REQUEST['start'] = 'com' . $new_from;
+			}
+		}
+
+		if (substr($_REQUEST['start'], 0, 3) == 'com')
+		{
+			$virtual_msg = (int) substr($_REQUEST['start'], 3);
+
+			if ($virtual_msg >= $context['current_issue']['comment_last'])
+				$context['start_from'] = $context['current_issue']['replies'] - 1;
+			elseif ($virtual_msg <= $topicinfo['comment_first'])
+				$context['start_from'] = 0;
+			else
+			{
+				// How many comments before this
+				$request = $smcFunc['db_query']('', '
+					SELECT (COUNT(*) - 1)
+					FROM {db_prefix}issue_comments
+					WHERE id_comment < {int:virtual_msg}
+						AND id_issue = {int:current_issue}',
+					array(
+						'current_issue' => $issue,
+						'virtual_msg' => $virtual_msg,
+					)
+				);
+				list ($context['start_from']) = $smcFunc['db_fetch_row']($request);
+				$smcFunc['db_free_result']($request);
+			}
+
+			$_REQUEST['start'] = $context['start_from'];
+		}
+	}
+
+	/*// How many replies there are (first is "details")
+	// Use
 	$request = $smcFunc['db_query']('', '
 		SELECT (COUNT(*) - 1)
 		FROM {db_prefix}issue_comments
@@ -168,11 +213,30 @@ function IssueView()
 		)
 	);
 	list ($msg) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 
-	$commentsPerPage = 20;
+	$msg = $context['current_issue']['replies'];
 
-	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue, $_REQUEST['start'], $msg, $commentsPerPage, true);
+	// Mark this issue as read
+	if (!$user_info['is_guest'])
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_issues',
+			array(
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'id_comment' => 'int',
+			),
+			array(
+				$context['current_issue']['id'],
+				$user_info['id'],
+				$context['current_issue']['comment_mod']
+			),
+			array('id_issue', 'id_member')
+		);
+	}
+
+	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $msg, $commentsPerPage, true);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_comment, id_member

@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_comment_first, i.id_comment_mod,
+			i.id_comment_first, i.id_comment_last, i.id_comment_mod, i.id_reporter, i.replies,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
@@ -168,7 +168,9 @@ function loadIssue($id_issue)
 		'updated' => timeformat($row['updated']),
 		'new_from' => $row['new_from'],
 		'comment_first' => $row['id_comment_first'],
+		'comment_last' => $row['id_comment_last'],
 		'comment_mod' => $row['id_comment_mod'],
+		'replies' => $row['replies'],
 	);
 
 	return true;
@@ -563,7 +565,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	global $smcFunc, $db_prefix, $context;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT subject
+		SELECT subject, id_comment_first
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -617,12 +619,13 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
 		SET
-			replies = replies + 1, updated = {int:time}, id_comment_mod = {int:comment}
+			replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}
 		WHERE id_issue = {int:issue}',
 		array(
 			'comment' => $id_comment,
 			'issue' => $id_issue,
 			'time' => time(),
+			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
 		)
 	);
 

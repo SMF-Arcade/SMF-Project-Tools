@@ -352,6 +352,11 @@ $tables = array(
 				'null' => false,
 			),
 			array(
+				'name' => 'id_comment_last',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
 				'null' => false,
