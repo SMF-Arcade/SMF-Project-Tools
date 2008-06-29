@@ -107,10 +107,6 @@ function IssueView()
 		fatal_lang_error('issue_not_found');
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
-	// Don't index in this case
-	if (isset($_REQUEST['comment']))
-		$context['robot_no_index'] = true;
-
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
@@ -146,6 +142,8 @@ function IssueView()
 	// Fix start to be a number
 	if (!is_numeric($_REQUEST['start']))
 	{
+		$context['robot_no_index'] = true;
+
 		// To first new
 		if ($_REQUEST['start'] == 'new')
 		{
@@ -279,6 +277,8 @@ function IssueView()
 		)
 	);
 
+	$context['counter_start'] = $_REQUEST['start'];
+
 	// Template
 	$context['sub_template'] = 'issue_view';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
@@ -291,6 +291,7 @@ function getComment()
 	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings, $memberContext;
 	static $counter = 0;
 	static $first_new = true;
+	static $first = true;
 
 	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
 
@@ -331,6 +332,12 @@ function getComment()
 		'new' => empty($row['is_read']),
 		'first_new' => $first_new && empty($row['is_read']),
 	);
+
+	if ($first)
+	{
+		$first = false;
+		$counter = $context['counter_start'];
+	}
 
 	if ($first_new && empty($row['is_read']))
 		$first_new = false;

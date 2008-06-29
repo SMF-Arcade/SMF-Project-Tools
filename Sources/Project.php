@@ -64,12 +64,7 @@ function Projects()
 	{
 		if (strpos($_REQUEST['issue'], '.') !== false)
 		{
-			list ($_REQUEST['issue'], $rst) = explode('.', $_REQUEST['issue'], 2);
-
-			if (is_numeric($rst))
-				$_REQUEST['start'] = (int) $rst;
-			elseif (substr($rst, 0, 3) == 'com')
-				$_REQUEST['comment'] = (int) substr($rst, 3);
+			list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
 		}
 
 		$request = $smcFunc['db_query']('', '
