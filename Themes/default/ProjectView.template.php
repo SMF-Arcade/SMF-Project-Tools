@@ -8,8 +8,10 @@ function template_project_view_above()
 	if (!empty($context['project_tabs']))
 	{
 		echo '
-	<div class="titlebg headerpadding clearfix">
-		<span class="floatleft">', $context['project_tabs']['title'], '</span>
+	<div class="tborder">
+		<div class="titlebg headerpadding clearfix">
+			<span class="floatleft">', $context['project_tabs']['title'], '</span>
+		</div>
 	</div>
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
 		<tr>
