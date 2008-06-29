@@ -8,17 +8,9 @@ function template_project_view_above()
 	if (!empty($context['project_tabs']))
 	{
 		echo '
-	<table class="tborder" width="100%" align="center" border="0" cellpadding="4" cellspacing="0">
-		<tr class="titlebg">
-			<td colspan="3">
-				', $context['project_tabs']['title'], '
-			</td>
-		</tr>
-		<tr class="windowbg2">
-			<td colspan="3">', $context['project_tabs']['text'], '</td>
-		</tr>
-	</table>
-
+	<div class="titlebg headerpadding clearfix">
+		<span class="floatleft">', $context['project_tabs']['title'], '</span>
+	</div>
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
 		<tr>
 			<td class="maintab_first">&nbsp;</td>';
@@ -143,10 +135,10 @@ function template_project_view()
 
 	foreach ($context['issue']['status'] as $status)
 		echo '
-		<div class="floatleft issue_', $status['name'], '">', $status['text'], '</div>';
+		<div class="floatleft expl issue_', $status['name'], '" style="width:', $width, '%"><span>', $status['text'], '</span></div>';
 
 	echo '
-	</div>';
+	</div><br />';
 
 	// Statistics etc
 	echo '

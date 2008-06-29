@@ -99,6 +99,68 @@ function IssueReply()
 	loadTemplate('IssueView');
 }
 
+function IssueUpload()
+{
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	projectIsAllowedTo('issue_attach');
+	$total_size = 0;
+
+	$attachIDs = array();
+
+	foreach ($_FILES['attachment']['tmp_name'] as $n => $dummy)
+	{
+		if ($_FILES['attachment']['name'][$n] == '')
+			continue;
+
+		$total_size += $_FILES['attachment']['size'][$n];
+		if (!empty($modSettings['attachmentPostLimit']) && $total_size > $modSettings['attachmentPostLimit'] * 1024)
+			fatal_lang_error('file_too_big', false, array($modSettings['attachmentPostLimit']));
+
+		$attachmentOptions = array(
+			'poster' => $user_info['id'],
+			'name' => $_FILES['attachment']['name'][$n],
+			'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
+			'size' => $_FILES['attachment']['size'][$n],
+			'approved' => !$modSettings['postmod_active'] || allowedTo('post_attachment'),
+		);
+
+		if (createAttachment($attachmentOptions))
+		{
+			$attachIDs[] = $attachmentOptions['id'];
+			if (!empty($attachmentOptions['thumb']))
+				$attachIDs[] = $attachmentOptions['thumb'];
+		}
+		else
+		{
+			if (in_array('could_not_upload', $attachmentOptions['errors']))
+				fatal_lang_error('attach_timeout', 'critical');
+			if (in_array('too_large', $attachmentOptions['errors']))
+				fatal_lang_error('file_too_big', false, array($modSettings['attachmentSizeLimit']));
+			if (in_array('bad_extension', $attachmentOptions['errors']))
+				fatal_error($attachmentOptions['name'] . '.<br />' . $txt['cant_upload_type'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
+			if (in_array('directory_full', $attachmentOptions['errors']))
+				fatal_lang_error('ran_out_of_space', 'critical');
+			if (in_array('bad_filename', $attachmentOptions['errors']))
+				fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['restricted_filename'] . '.', 'critical');
+			if (in_array('taken_filename', $attachmentOptions['errors']))
+				fatal_lang_error('filename_exisits');
+		}
+	}
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}attachments
+		SET id_issue = {int:issue}
+		WHERE id_ IN({array_int:attach})',
+		array(
+			'issue' => $context['current_issue']['id'],
+			'attach' => $attachIDs,
+		)
+	);
+
+	redirectexit('issue=' . $context['current_issue']['id']);
+}
+
 function IssueView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -113,9 +175,11 @@ function IssueView()
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type);
+	$context['can_issue_update'] = (projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate');
+	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
+	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 
-	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
+	if ($context['can_issue_update'])
 	{
 		$context['possible_types'] = array();
 
@@ -412,7 +476,7 @@ function IssueUpdate()
 	);
 	$issueOptions = array();
 
-	if (empty($_POST['add_comment']) && (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate')))
+	if (empty($_POST['add_comment']) && (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate')))
 	{
 		// Assigning
 		if (projectAllowedTo('issue_moderate') && isset($_POST['assign']))

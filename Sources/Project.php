@@ -47,6 +47,7 @@ function Projects()
 		'viewIssue' => array('IssueView.php', 'IssueView', true),
 		'reply' => array('IssueView.php', 'IssueReply', true),
 		'update' => array('IssueView.php', 'IssueUpdate', true),
+		'upload' => array('IssueView.php', 'IssueUpload', true),
 		'delete' => array('IssueView.php', 'IssueDelete', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),

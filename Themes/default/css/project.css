@@ -126,6 +126,16 @@ table.projectsframe td.lastissue
 	border-left: solid #a0a0a0 1px;
 }
 
+/* */
+.expl
+{
+}
+.expl span
+{
+	padding: 3px 5px;
+	display: block;
+}
+
 /* Progress bar */
 .progressbar
 {

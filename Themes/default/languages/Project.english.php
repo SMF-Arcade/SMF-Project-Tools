@@ -140,6 +140,10 @@ $txt['update_issue'] = 'Update Issue';
 $txt['update_issue_save'] = 'Save';
 $txt['update_issue_comment'] = 'Save with Comment';
 
+// Attachement
+$txt['issue_attach'] = 'Add Attachements';
+$txt['add_attach'] = 'Attach';
+
 // Reply To Issue
 $txt['issue_reply'] = 'Reply';
 

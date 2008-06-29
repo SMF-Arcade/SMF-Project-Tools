@@ -361,11 +361,37 @@ function template_issue_view()
 					<input name="update_issue2" value="', $txt['update_issue_comment'], '" type="submit" />
 				</div>
 			</div>
-		</div>
+		</div>';
 
+	}
+
+	echo '
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
+	</form>
+	';
 
+	if ($context['can_issue_attach'])
+	{
+		echo '
+		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], ';sa=attach" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+			<div class="tborder">
+				<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
+				<div class="smallpadding windowbg" style="text-align: center">
+					<input type="file" size="48" name="attachment[]" /><br />';
+
+		if (!empty($modSettings['attachmentCheckExtensions']))
+			echo '
+					', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+		echo '
+					', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
+
+		echo '
+				<div style="text-align: right">
+					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
+				</div>
+			</div>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		</form>';
 	}
 }
 

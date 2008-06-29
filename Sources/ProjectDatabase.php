@@ -605,6 +605,24 @@ $tables = array(
 			),
 		)
 	),
+	'attachments' => array(
+		'name' => 'attachments',
+		'smf' => true,
+		'columns' => array(
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'index',
+				'columns' => array('id_issue')
+			),
+		)
+	),
 );
 
 // Functions
