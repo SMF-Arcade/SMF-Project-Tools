@@ -496,7 +496,9 @@ function IssueUpdate()
 			'event' => $id_event,
 			'body' => $_POST['comment'],
 		);
-		createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+
+		redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
 	}
 
 	redirectexit('issue=' . $issue);
