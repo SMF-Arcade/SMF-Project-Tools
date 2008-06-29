@@ -185,7 +185,7 @@ table.issuetable td.lastissue
 /* ************************************* */
 #firstcomment
 {
-	width: 70%;
+	width: 78%;
 }
 #firstcomment h3.catbg3
 {
@@ -206,7 +206,7 @@ table.issuetable td.lastissue
 }
 #issueinfo
 {
-	width: 28%;
+	width: 21%;
 }
 #issueinfo .dark
 {
@@ -220,19 +220,6 @@ table.issuetable td.lastissue
 #issueinfo div.edit
 {
 	display: none;
-}
-.infotable
-{
-	width: 33%;
-}
-.infotable div
-{
-	height: 20px;
-	border-bottom: 1px solid black;
-}
-.infotable div.last
-{
-	border-bottom: 0;
 }
 #comment
 {

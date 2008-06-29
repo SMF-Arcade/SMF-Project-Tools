@@ -153,9 +153,11 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
-			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater
+			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
+			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)

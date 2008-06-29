@@ -88,7 +88,6 @@ function template_project_view()
 			echo '
 						<th class="catbg3 headerpadding"></th>
 						<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-						<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
 						<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
@@ -108,12 +107,13 @@ function template_project_view()
 								<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
 							</a>
 						</td>
-						<td class="windowbg2 info">
-							<h4>', $issue['link'], '</h4>
+						<td class="windowbg2 info issue_', $issue['status']['name'], '">
+							<h4>', $issue['link'], ' ';
+						// Is this topic new? (assuming they are logged in!)
+				if ($issue['new'] && $context['user']['is_logged'])
+					echo '<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
+				echo '</h4>
 							<p class="smalltext">', $issue['reporter']['link'], '</p>
-						</td>
-						<td class="windowbg stats smalltext center issue_', $issue['status']['name'], '">
-							', $issue['status']['text'], '<br />
 						</td>
 						<td class="windowbg lastissue smalltext">
 							', $issue['updater']['link'], '<br />
@@ -134,6 +134,19 @@ function template_project_view()
 
 		$side = !$side;
 	}
+
+	//
+	$width = 100 / count($context['issue']['status']);
+
+	echo '
+	<div class="tborder clearfix">';
+
+	foreach ($context['issue']['status'] as $status)
+		echo '
+		<div class="floatleft issue_', $status['name'], '">', $status['text'], '</div>';
+
+	echo '
+	</div>';
 
 	// Statistics etc
 	echo '
