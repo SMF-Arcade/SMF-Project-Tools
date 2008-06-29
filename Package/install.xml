@@ -128,7 +128,7 @@
 
 		<operation>
 			<search position="after"><![CDATA[|action=profile;u=\d+)'),]]></search>
-			<add><![CDATA[|(action=projects)?(sa=viewIssue;)?(;)?issue=(\d+)(\.com\d|;comment=(\d+))?(#com(\d+))?]]></add>
+			<add><![CDATA[|(action=projects)?(sa=viewIssue;)?(;)?issue=(\d+)(\.com\d+)?(#com(\d+))?]]></add>
 		</operation>
 	</file>
 
