@@ -177,7 +177,7 @@ function IssueView()
 
 			if ($virtual_msg >= $context['current_issue']['comment_last'])
 				$context['start_from'] = $context['current_issue']['replies'] - 1;
-			elseif ($virtual_msg <= $topicinfo['comment_first'])
+			elseif ($virtual_msg <= $context['current_issue']['comment_first'])
 				$context['start_from'] = 0;
 			else
 			{
