@@ -124,7 +124,7 @@ function IssueView()
 			array(
 				$context['current_issue']['id'],
 				$user_info['id'],
-				$context['current_issue']['id']
+				$context['current_issue']['comment_mod']
 			),
 			array('id_issue', 'id_member')
 		);

@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_comment_first,
+			i.id_comment_first, i.id_comment_mod,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, cf.poster_name) AS reporter_name, cf.poster_ip, cf.poster_email,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
@@ -175,6 +175,7 @@ function loadIssue($id_issue)
 		'updated' => timeformat($row['updated']),
 		'new_from' => $row['new_from'],
 		'comment_first' => $row['id_comment_first'],
+		'comment_mod' => $row['id_comment_mod'],
 	);
 
 	return true;
