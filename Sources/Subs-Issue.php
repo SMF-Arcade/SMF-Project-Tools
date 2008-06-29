@@ -109,16 +109,13 @@ function loadIssue($id_issue)
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
 			i.id_comment_first, i.id_comment_mod,
-			rep.id_member AS id_reporter, IFNULL(rep.real_name, cf.poster_name) AS reporter_name, cf.poster_ip, cf.poster_email,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
-		FROM {db_prefix}issues AS i
-			LEFT JOIN {db_prefix}issue_comments AS cf ON (cf.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
+		FROM {db_prefix}issues AS i' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
-			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
@@ -157,11 +154,7 @@ function loadIssue($id_issue)
 			'id' => $row['vidfix'],
 			'name' => $row['vnamefix'],
 		),
-		'reporter' => array(
-			'id' => $row['id_reporter'],
-			'name' => $row['reporter_name'],
-			'link' => !empty($row['id_reporter']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter_name'] . '</a>' : $row['reporter_name'],
-		),
+		'id_reporter' => $row['id_reporter'],
 		'assignee' => array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],

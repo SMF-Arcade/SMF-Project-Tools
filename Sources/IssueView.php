@@ -138,8 +138,6 @@ function IssueView()
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type);
 
-	$context['page_index'] = '';
-
 	if ((projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate'))
 	{
 		$context['possible_types'] = array();
@@ -162,14 +160,34 @@ function IssueView()
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_comment, id_member
+		SELECT (COUNT(*) - 1)
 		FROM {db_prefix}issue_comments
 		WHERE id_issue = {int:issue}',
 		array(
 			'issue' => $issue,
 		)
 	);
-	$posters = array();
+	list ($msg) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	$commentsPerPage = 20;
+
+	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue, $_REQUEST['start'], $msg, $commentsPerPage, true);
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_comment, id_member
+		FROM {db_prefix}issue_comments
+		WHERE id_issue = {int:issue}
+			AND NOT (id_comment = {int:comment_first})
+		LIMIT {int:start}, {int:perpage}',
+		array(
+			'issue' => $issue,
+			'comment_first' => $context['current_issue']['comment_first'],
+			'start' => $_REQUEST['start'],
+			'perpage' => $commentsPerPage,
+		)
+	);
+	$posters = array($context['current_issue']['id_reporter']);
 	$comments = array($context['current_issue']['comment_first']);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
