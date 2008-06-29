@@ -367,16 +367,15 @@ function template_issue_view()
 
 	echo '
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>
-	';
+	</form><br />';
 
 	if ($context['can_issue_attach'])
 	{
 		echo '
-		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], ';sa=attach" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], ';sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 			<div class="tborder">
 				<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
-				<div class="smallpadding windowbg" style="text-align: center">
+				<div class="smallpadding windowbg">
 					<input type="file" size="48" name="attachment[]" /><br />';
 
 		if (!empty($modSettings['attachmentCheckExtensions']))
@@ -386,8 +385,9 @@ function template_issue_view()
 					', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
 
 		echo '
-				<div style="text-align: right">
-					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
+					<div style="text-align: right">
+						<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
+					</div>
 				</div>
 			</div>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />

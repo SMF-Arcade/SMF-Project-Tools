@@ -103,6 +103,8 @@ function IssueUpload()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
+	require_once($sourcedir . '/Subs-Post.php');
+
 	projectIsAllowedTo('issue_attach');
 	$total_size = 0;
 
@@ -151,11 +153,63 @@ function IssueUpload()
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}attachments
 		SET id_issue = {int:issue}
-		WHERE id_ IN({array_int:attach})',
+		WHERE id_attach IN({array_int:attach})',
 		array(
 			'issue' => $context['current_issue']['id'],
 			'attach' => $attachIDs,
 		)
+	);
+
+	$posterOptions = array(
+		'id' => $user_info['id'],
+		'name' => $user_info['name'],
+		'ip' => $user_info['name'],
+	);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_timeline',
+		array(
+			'id_project' => 'int',
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string',
+			'poster_email' => 'string',
+			'poster_ip' => 'string-60',
+			'event' => 'string',
+			'event_time' => 'int',
+			'event_data' => 'string',
+		),
+		array(
+			$context['project']['id'],
+			$id_issue,
+			$user_info['id'],
+			$user_info['name'],
+			$user_info['email'],
+			$user_info['ip'],
+			'upload_attachment',
+			time(),
+			serialize(array('attachments' => $attachIDs))
+		),
+		array()
+	);
+
+	$id_event = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+
+	$rows = array();
+
+	foreach ($attachIDs as $id)
+		$rows[] = array($context['current_issue']['id'], $id, $user_info['id'], $id_event);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}issue_attachments',
+		array(
+			'id_issue' => 'int',
+			'id_attach' => 'int',
+			'id_member' => 'int',
+			'id_event' => 'int',
+		),
+		$rows,
+		array('id_issue', 'id_attach')
 	);
 
 	redirectexit('issue=' . $context['current_issue']['id']);

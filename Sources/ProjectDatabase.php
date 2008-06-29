@@ -623,6 +623,51 @@ $tables = array(
 			),
 		)
 	),
+	'issue_attachments' => array(
+		'name' => 'issue_attachments',
+		'columns' => array(
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_attach',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_comment',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_event',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_issue', 'id_attach')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_issue')
+			),
+		)
+	),
 );
 
 // Functions
