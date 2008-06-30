@@ -26,11 +26,9 @@ function template_project_list()
 				<td class="windowbg icon">
 					<a href="', $project['href'], '">';
 
-				// If the board or children is new, show an indicator.
 				if ($project['new'])
 					echo '
-						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" border="0" />';
-				// No new posts at all! The agony!!
+						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" />';
 				else
 					echo '
 						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';
