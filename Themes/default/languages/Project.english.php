@@ -68,7 +68,8 @@ $txt['issue_replies'] = 'Replies';
 
 // Project List
 $txt['project_description'] = 'Description';
-$txt['select_project'] = 'Select Project';
+$txt['new_issues'] = 'New Issues';
+$txt['old_issues'] = 'No New Issues';
 $txt['total_issues'] = 'Total Issues';
 
 // Project Page Tabs

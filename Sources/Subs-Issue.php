@@ -629,6 +629,17 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 		)
 	);
 
+	// Uand projects
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}projects
+		SET id_comment_mod = {int:comment}
+		WHERE id_project = {int:project}',
+		array(
+			'comment' => $id_comment,
+			'project' => $id_project,
+		)
+	);
+
 	if (isset($commentOptions['no_log']))
 		return $id_comment;
 

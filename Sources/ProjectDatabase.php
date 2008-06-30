@@ -53,6 +53,11 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
+				'name' => 'id_comment_mod',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
 				'name' => 'name',
 				'type' => 'varchar',
 				'size' => 255,
@@ -569,6 +574,39 @@ $tables = array(
 			array(
 				'type' => 'primary',
 				'columns' => array('id_issue', 'tag')
+			),
+		)
+	),
+	'log_projects' => array(
+		'name' => 'log_projects',
+		'columns' => array(
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_comment',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_project', 'id_member')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_project')
 			),
 		)
 	),

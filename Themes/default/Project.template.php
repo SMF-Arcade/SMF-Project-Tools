@@ -24,9 +24,22 @@ function template_project_list()
 			echo '
 			<tr>
 				<td class="windowbg icon">
+					<a href="', $project['href'], '">';
+
+				// If the board or children is new, show an indicator.
+				if ($project['new'])
+					echo '
+						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" border="0" />';
+				// No new posts at all! The agony!!
+				else
+					echo '
+						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';
+
+				echo '
+					</a>
 				</td>
 				<td class="windowbg2 info">
-					<h4><a href="', $project['link'], '">', $project['name'], '</a></h4>
+					<h4><a href="', $project['href'], '">', $project['name'], '</a></h4>
 					<p class="smalltext">', $project['description'], '</p>
 				</td>
 				<td class="windowbg stats smalltext">';
