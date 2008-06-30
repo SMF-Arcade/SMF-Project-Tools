@@ -79,6 +79,7 @@
 			<add><![CDATA[
 	elseif (isset($_REQUEST['issue']))
 	{
+		global $project;
 		require_once($sourcedir . '/Project.php');
 		loadProjectTools('smf');
 
@@ -98,6 +99,7 @@
 
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
 			fatal_lang_error('project_not_found');
+
 		$project = $context['project']['id'];
 		projectIsAllowedTo('view');
 
