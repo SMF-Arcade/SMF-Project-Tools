@@ -82,6 +82,7 @@ function template_project_view()
 			echo '
 						<th class="catbg3 headerpadding"></th>
 						<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+						<th class="catbg3 headerpadding">', $txt['issue_replies'], '</th>
 						<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
@@ -102,14 +103,20 @@ function template_project_view()
 							</a>
 						</td>
 						<td class="windowbg2 info issue_', $issue['status']['name'], '">
-							<h4>', $issue['link'], ' ';
+							<h4>
+								', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
 						// Is this topic new? (assuming they are logged in!)
 				if ($issue['new'] && $context['user']['is_logged'])
-					echo '<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
-				echo '</h4>
-							<p class="smalltext">', $issue['reporter']['link'], '</p>
+					echo '
+								<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
+				echo '
+							</h4>
+							<p class="smalltext">', !empty($issue['version']['link']) ? '[' . $issue['version']['link'] . '] ' : '', $issue['reporter']['link'], '</p>
 						</td>
-						<td class="windowbg lastissue smalltext">
+						<td class="windowbg replies smalltext">
+							', $issue['replies'], '
+						</td>
+						<td class="windowbg2 lastissue smalltext">
 							', $issue['updater']['link'], '<br />
 							', $issue['updated'], '
 						</td>

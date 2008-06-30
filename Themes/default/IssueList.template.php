@@ -77,7 +77,9 @@ function template_issue_list()
 			echo '
 					<th class="catbg3 headerpadding"></th>
 					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
+					<th class="catbg3 headerpadding">', $txt['issue_replies'], '</th>
 					<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
+					<th class="catbg3 headerpadding">', $txt['issue_version'], '</th>
 					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
@@ -99,7 +101,7 @@ function template_issue_list()
 					</td>
 					<td class="windowbg2 info">
 						<h4>
-							', $issue['link'], ' ';
+							', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
 						// Is this topic new? (assuming they are logged in!)
 			if ($issue['new'] && $context['user']['is_logged'])
 					echo '
@@ -108,10 +110,16 @@ function template_issue_list()
 			echo '		</h4>
 						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
-					<td class="windowbg stats smalltext center issue_', $issue['status']['name'], '">
+					<td class="windowbg replies smalltext">
+						', $issue['replies'], '
+					</td>
+					<td class="windowbg status smalltext center issue_', $issue['status']['name'], '">
 						', $issue['status']['text'], '<br />
 					</td>
-					<td class="windowbg lastissue smalltext">
+					<td class="windowbg version smalltext">
+						', $issue['version']['link'], '
+					</td>
+					<td class="windowbg2 lastissue smalltext">
 						', $issue['updater']['link'], '<br />
 						', $issue['updated'], '
 					</td>

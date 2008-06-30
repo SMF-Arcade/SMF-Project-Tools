@@ -64,6 +64,7 @@ $txt['issue_assigned_to'] = 'Assigned to';
 $txt['issue_none'] = '(none)';
 $txt['issue_category'] = 'Category';
 $txt['issue_last_update'] = 'Last Update';
+$txt['issue_replies'] = 'Replies';
 
 // Project List
 $txt['project_description'] = 'Description';

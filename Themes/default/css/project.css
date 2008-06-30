@@ -185,6 +185,12 @@ table.issuetable td.info p
 	padding: 0 0.4em 0.5em 0.4em;
 	margin: 0;
 }
+table.issuetable td.replies, table.issuetable td.status, table.issuetable td.version
+{
+	width: 5%;
+	text-align: center;
+	padding: 0.4em;
+}
 table.issuetable td.lastissue
 {
 	padding: 0.4em;

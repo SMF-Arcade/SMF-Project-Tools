@@ -149,7 +149,7 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
-			i.status, i.created, i.updated, i.id_comment_mod,
+			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
@@ -210,6 +210,7 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 				'name' => empty($row['updater']) ? $txt['issue_guest'] : $row['updater'],
 				'link' => empty($row['updater']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_updater'] . '">' . $row['updater'] . '</a>',
 			),
+			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_comment_mod'],
 			'new_href' => $scripturl . '?issue=' . $row['id_issue'] . '.com' . $row['new_from'] . '#new',
