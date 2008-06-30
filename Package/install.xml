@@ -71,6 +71,57 @@
 		</operation>
 	</file>
 
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="after"><![CDATA[
+	// This is just a regular attachment...
+	else]]></search>
+			<add><![CDATA[
+	elseif (isset($_REQUEST['issue']))
+	{
+		require_once($sourcedir . '/Project.php');
+		loadProjectTools('smf');
+
+		if (strpos($_REQUEST['issue'], '.') !== false)
+			list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_project
+			FROM {db_prefix}issues
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => (int) $_REQUEST['issue']
+			)
+		);
+
+		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
+
+		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
+			fatal_lang_error('project_not_found');
+		$project = $context['project']['id'];
+		projectIsAllowedTo('view');
+
+		// Show everything?
+		if (!projectAllowedTo('issue_view'))
+			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
+		else
+			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
+
+		// Make sure this attachment is on this board.
+		$request = $smcFunc['db_query']('', '
+			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			FROM {db_prefix}attachments AS a
+				INNER JOIN {db_prefix}issues AS i ON (i.id_issue = a.id_issue AND {query_see_issue})
+			WHERE a.id_attach = {int:attach}
+			LIMIT 1',
+			array(
+				'attach' => $_REQUEST['attach'],
+			)
+		);
+	}]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/ManagePermissions.php">
 		<operation>
 			<search position="before"><![CDATA[			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),]]></search>

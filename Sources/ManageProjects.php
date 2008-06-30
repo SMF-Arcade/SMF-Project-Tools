@@ -192,7 +192,7 @@ function EditProject()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name, member_groups, access_level
 			FROM {db_prefix}project_groups
-			WHERE id_project = {int:project}',
+			WHERE id_project = {int:project} OR id_project = 0',
 			array(
 				'project' => $project['id'],
 			)
@@ -453,7 +453,7 @@ function EditVersion()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name
 			FROM {db_prefix}project_groups
-			WHERE id_project = {int:project}',
+			WHERE id_project = {int:project} OR id_project = 0',
 			array(
 				'project' => $context['project']['id'],
 			)
@@ -510,7 +510,7 @@ function EditVersion()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name
 			FROM {db_prefix}project_groups
-			WHERE id_project = {int:project}',
+			WHERE id_project = {int:project} OR id_project = 0',
 			array(
 				'project' => $context['project']['id'],
 			)

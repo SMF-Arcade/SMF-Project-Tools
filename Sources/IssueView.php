@@ -413,17 +413,30 @@ function IssueView()
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['attachments'][] = array(
+		$context['attachments'][$row['id_attach']] = array(
 			'id' => $row['id_attach'],
-			'href' => '#',
-			'name' => $row['filename'],
-			'extension' => $row['flieext'],
+			'name' => preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', htmlspecialchars($row['filename'])),
+			'href' => $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $row['id_attach'],
+			'link' => '<a href="' . $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $row['id_attach'] . '">' . htmlspecialchars($row['filename']) . '</a>',
+			'extension' => $row['fileext'],
 			'downloads' => comma_format($row['downloads']),
-			'poster' => $row['poster_name'],
+			'poster' => $row['real_name'],
 			'ip' => $row['poster_ip'],
-			'size' => $row['size'],
-			'is_image' => false,
+			'size' => round($row['size'] / 1024, 2) . ' ' . $txt['kilobyte'],
+			'byte_size' => $row['size'],
+			'is_image' => !empty($row['width']) && !empty($row['height']) && !empty($modSettings['attachmentShowImages']),
 		);
+
+		/*if (!$context['attachments'][$row['id_attach']]['is_image'])
+			continue;
+
+		$context['attachments'][$row['id_attach']] += array(
+			'real_width' => $row['width'],
+			'width' => $row['width'],
+			'real_height' => $row['height'],
+			'height' => $row['height'],
+		);*/
+
 	}
 	$smcFunc['db_fetch_assoc']($request);
 
