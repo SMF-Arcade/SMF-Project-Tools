@@ -140,7 +140,7 @@ function loadIssue($id_issue)
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
-		'link' => $scripturl . '?issue=' . $row['id_issue'],
+		'link' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],

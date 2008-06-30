@@ -212,7 +212,7 @@ function IssueUpload()
 		array('id_issue', 'id_attach')
 	);
 
-	redirectexit('issue=' . $context['current_issue']['id']);
+	redirectexit('issue=' . $context['current_issue']['id'] . '.0');
 }
 
 function IssueView()
@@ -659,7 +659,7 @@ function IssueUpdate()
 	}
 
 	if ($no_comment)
-		redirectexit('issue=' . $issue);
+		redirectexit('issue=' . $issue . '.0');
 	else
 	{
 		$commentOptions = array(
@@ -671,6 +671,6 @@ function IssueUpdate()
 		redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
 	}
 
-	redirectexit('issue=' . $issue);
+	redirectexit('issue=' . $issue . '.0');
 }
 ?>

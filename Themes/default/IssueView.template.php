@@ -14,7 +14,7 @@ function template_issue_view()
 		'reply' => array(
 			'text' => 'reply',
 			'image' => 'reply_issue.gif',
-			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=reply',
+			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
 			'lang' => true
 		),
 	);
@@ -117,7 +117,7 @@ function template_issue_view()
 							<div class="messageicon floatleft">
 								<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
 							</div>
-							<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '#com', $comment['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>';
+							<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '.0#com', $comment['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>';
 		}
 		echo '
 							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
@@ -126,11 +126,11 @@ function template_issue_view()
 
 		if ($context['can_comment'])
 			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
 		if ($comment['can_remove'])
 			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 						</ul>
@@ -204,7 +204,7 @@ function template_issue_view()
 			</div>
 		</div><br />
 	</form>
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=update" method="post">
 		<div class="modbuttons clearfix margintop">
 			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'bottom'), '
@@ -226,7 +226,7 @@ function template_issue_view()
 		</div><br />';
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . ';sa=delete;sesc=' . $context['session_id']),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=delete;sesc=' . $context['session_id']),
 	);
 
 	echo '
@@ -400,7 +400,7 @@ function template_issue_view()
 	if ($context['can_issue_attach'])
 	{
 		echo '
-		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], ';sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], '.0;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 			<div class="tborder">
 				<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
 				<div class="smallpadding windowbg">

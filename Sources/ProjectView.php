@@ -122,7 +122,7 @@ function ProjectView()
 		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
-			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
+			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'data' => $data,
 		);
@@ -184,8 +184,8 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 		$return[] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>',
-			'href' => $scripturl . '?issue=' . $row['id_issue'],
+			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>',
+			'href' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],

@@ -181,8 +181,8 @@ function IssueList()
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '">' . $row['subject'] . '</a>',
-			'href' => $scripturl . '?issue=' . $row['id_issue'],
+			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>',
+			'href' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
