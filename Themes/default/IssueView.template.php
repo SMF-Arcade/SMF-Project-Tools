@@ -140,7 +140,35 @@ function template_issue_view()
 						</div>
 					</div>
 					<div class="moderatorbar">
-						<div class="smalltext floatleft">
+						<div class="smalltext floatleft">';
+
+		// Show attachments
+		if ($comment['first'] && !empty($context['attachments']))
+		{
+			echo '
+						<hr width="100%" size="1" class="hrcolor" />
+						<div style="overflow: auto; width: 100%;">';
+			foreach ($context['attachments'] as $attachment)
+			{
+				if ($attachment['is_image'])
+				{
+					if ($attachment['thumbnail']['has_thumb'])
+						echo '
+								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+					else
+						echo '
+								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
+				}
+				echo '
+								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a>
+										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+			}
+
+			echo '
+						</div>';
+		}
+
+		echo '
 						</div>
 						<div class="smalltext floatright">';
 		echo '

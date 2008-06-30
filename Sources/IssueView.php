@@ -395,6 +395,38 @@ function IssueView()
 		)
 	);
 
+	$context['attachments'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			at.id_attach, at.filename, at.fileext, at.downloads,
+			at.attachment_type, at.size, at.width, at.height, at.mime_type,
+			IFNULL(mem.real_name, t.poster_name) AS real_name, t.poster_ip
+		FROM {db_prefix}issue_attachments AS ia
+			INNER JOIN {db_prefix}attachments AS at ON (at.id_attach = ia.id_attach)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ia.id_member)
+			LEFT JOIN {db_prefix}project_timeline AS t ON (t.id_event = ia.id_event)
+		WHERE ia.id_issue = {int:issue}',
+		array(
+			'issue' => $issue,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['attachments'][] = array(
+			'id' => $row['id_attach'],
+			'href' => '#',
+			'name' => $row['filename'],
+			'extension' => $row['flieext'],
+			'downloads' => comma_format($row['downloads']),
+			'poster' => $row['poster_name'],
+			'ip' => $row['poster_ip'],
+			'size' => $row['size'],
+			'is_image' => false,
+		);
+	}
+	$smcFunc['db_fetch_assoc']($request);
+
 	$context['counter_start'] = $_REQUEST['start'];
 
 	// Template
