@@ -33,7 +33,7 @@ function loadProject($id_project)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.long_description, p.trackers,
+			p.id_project, p.name, p.description, p.long_description, p.trackers, id_comment_mod,
 			p.' . implode(', p.', $context['type_columns']) . ', dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
@@ -64,6 +64,7 @@ function loadProject($id_project)
 		'trackers' => array(),
 		'developers' => array(),
 		'is_developer' => !empty($row['is_dev']),
+		'comment_mod' => $row['id_comment_mod'],
 	);
 
 	$trackers = explode(',', $row['trackers']);

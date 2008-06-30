@@ -31,6 +31,32 @@ function ProjectView()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
+	if (!$user_info['is_guest'])
+	{
+		// We can't know they read it if we allow prefetches.
+		if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
+		{
+			ob_end_clean();
+			header('HTTP/1.1 403 Prefetch Forbidden');
+			die;
+		}
+
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_projects',
+			array(
+				'id_project' => 'int',
+				'id_member' => 'int',
+				'id_comment' => 'int',
+			),
+			array(
+				$context['project']['id'],
+				$user_info['id'],
+				$context['project']['comment_mod']
+			),
+			array('id_project', 'id_member')
+		);
+	}
+
 	$issues_num = 5;
 
 	$issue_list = array(

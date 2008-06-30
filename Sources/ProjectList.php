@@ -53,7 +53,8 @@ function ProjectList()
 	{
 		$context['projects'][$row['id_project']] = array(
 			'id' => $row['id_project'],
-			'link' => $scripturl . '?project=' . $row['id_project'],
+			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+			'href' => $scripturl . '?project=' . $row['id_project'],
 			'name' => $row['name'],
 			'description' => $row['description'],
 			'trackers' =>  explode(',', $row['trackers']),
