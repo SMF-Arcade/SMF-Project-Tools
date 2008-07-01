@@ -136,6 +136,10 @@ function template_project_view()
 		$side = !$side;
 	}
 
+	if (!$side)
+		echo '
+	</div>';
+
 	//
 	$width = 100 / count($context['issue']['status']);
 
