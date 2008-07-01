@@ -31,10 +31,9 @@ function Projects()
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
 
-	isAllowedTo('project_access');
-
 	$project = 0;
 
+	isAllowedTo('project_access');
 	loadProjectTools();
 
 	$subActions = array(
@@ -64,9 +63,7 @@ function Projects()
 	if (!empty($_REQUEST['issue']) && !isset($_REQUEST['project']))
 	{
 		if (strpos($_REQUEST['issue'], '.') !== false)
-		{
 			list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
-		}
 
 		$request = $smcFunc['db_query']('', '
 			SELECT id_project
@@ -78,6 +75,9 @@ function Projects()
 		);
 
 		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
+
+		if (!$_REQUEST['project'])
+			fatal_lang_error('issue_not_found');
 	}
 
 	// Load Project if needed
@@ -185,7 +185,7 @@ function loadProjectTools($mode = '')
 	else
 	{
 		// !!! CACHE THIS
-		
+
 		// Load my groups
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, id_project, access_level
@@ -218,11 +218,11 @@ function loadProjectTools($mode = '')
 				$onlyOwn[] = $project;
 		}
 
-		// Show everything?
+		/*// Show everything?
 		if (!projectAllowedTo('issue_view'))
 			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
 		else
-			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
+			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';*/
 
 		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
 		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
