@@ -90,12 +90,6 @@ function Projects()
 
 		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
-		// Show everything?
-		if (!projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
-		else
-			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
-
 		if (isset($_REQUEST['issue']))
 		{
 			if (!loadIssue((int) $_REQUEST['issue']))
@@ -184,11 +178,14 @@ function loadProjectTools($mode = '')
 	if ($user_info['is_admin'])
 	{
 		$see_project = '1 = 1';
+		$see_issue = '1 = 1';
 		$see_version = '1 = 1';
 	}
 	// Registered user.... just the groups in $user_info['groups'].
 	else
 	{
+		// !!! CACHE THIS
+		
 		// Load my groups
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, id_project, access_level
@@ -200,6 +197,7 @@ function loadProjectTools($mode = '')
 		);
 
 		$projectGroups = array();
+		$onlyOwn = array();
 		$context['project_levels'] = array();
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -213,12 +211,31 @@ function loadProjectTools($mode = '')
 		}
 		$smcFunc['db_free_result']($request);
 
+		foreach ($context['project_levels'] as $project => $level)
+		{
+			// !!! TEMP
+			if ($level < 5)
+				$onlyOwn[] = $project;
+		}
+
+		// Show everything?
+		if (!projectAllowedTo('issue_view'))
+			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
+		else
+			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
+
 		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
 		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
+
+		if (!empty($onlyOwn))
+			$see_issue = "($see_version AND (i.reporter = $user_info[id] OR NOT (i.id_project IN (" . implode(', ', $onlyOwn) . "))))";
+		else
+			$see_issue = $see_version;
 	}
 
 	$user_info['query_see_project'] = $see_project;
 	$user_info['query_see_version'] = $see_version;
+	$user_info['query_see_issue'] = $see_issue;
 
 	if (empty($mode))
 	{
