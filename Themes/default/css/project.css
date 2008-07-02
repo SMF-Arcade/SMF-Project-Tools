@@ -159,12 +159,11 @@ table.projectsframe td.lastissue
 .progressbar
 {
 	border: 1px solid #5294de;
-	padding: 0.25em;
-	width: 100%;
+	padding: 0.1em;
 }
 .progressbar div
 {
-	height: 1em;
+	height: 0.8em;
 	background: #5294de;;
 }
 

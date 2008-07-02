@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 function IssueList()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
+	global $project, $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
 
 	projectIsAllowedTo('issue_view');
 
@@ -69,9 +69,9 @@ function IssueList()
 	$context['issue_search'] = array(
 		'title' => '',
 		'status' => 'open',
-		'version' => 0,
-		'version_fix' => 0,
 		'type' => '',
+		'version' => 0,
+		'versions' => array()
 	);
 
 	$context['possible_types'] = array();
@@ -97,6 +97,25 @@ function IssueList()
 		$baseurl .= ';type=' . $_REQUEST['type'];
 	}
 
+	if (!empty($_REQUEST['version']) && isset($context['possible_types'][$_REQUEST['type']]))
+	{
+		$_REQUEST['version'] = (int) trim($_REQUEST['version']);
+
+		list ($ver, $ver_parent) = loadVersions($project);
+
+		if (isset($ver[$_REQUEST['version']]))
+		{
+			$context['issue_search']['version'] = $_REQUEST['version'];
+			$context['issue_search']['versions'][] = array_merge(array($_REQUEST['version']), array_keys($ver[$_REQUEST['version']]['sub_versions']));
+
+			$baseurl .= ';version=' . $_REQUEST['version'];
+		}
+		else
+		{
+
+		}
+	}
+
 	// Build where clause
 	$where = array();
 
@@ -112,6 +131,9 @@ function IssueList()
 
 	if (!empty($context['issue_search']['type']))
 		$where[] = 'i.issue_type = {string:search_type}';
+
+	if (!empty($context['issue_search']['versions']))
+		$where[] = '((i.id_version = {array_int:versions} AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_update');
 
@@ -131,6 +153,7 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_type' => $context['issue_search']['type'],
+			'versions' => $context['issue_search']['versions'],
 		)
 	);
 

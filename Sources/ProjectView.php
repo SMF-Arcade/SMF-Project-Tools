@@ -224,7 +224,7 @@ function ProjectRoadmap()
 		FROM {db_prefix}issues AS ver
 		WHERE
 			(id_version IN({array_int:versions})
-				AND (id_version = id_version_fixed OR id_version_fixed = 0))
+				AND (id_version_fixed IN({array_int:versions} OR id_version_fixed = 0))
 			OR (id_version_fixed IN({array_int:versions}))
 		GROUP BY id_version, id_version_fixed, status',
 		array(
@@ -261,7 +261,7 @@ function ProjectRoadmap()
 	foreach ($context['roadmap'] as $id => $d)
 	{
 		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
-		$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'], 2);
+		$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
 
 		// Back to array
 		$context['roadmap'][$id] = $d;

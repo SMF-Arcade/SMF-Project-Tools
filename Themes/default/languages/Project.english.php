@@ -95,6 +95,10 @@ $txt['evt_delete_issue'] = 'Issue deleted by %s';
 $txt['evt_new_comment'] = 'New comment added by %s';
 $txt['evt_new_attachment'] = 'New attachment adeed by %s';
 
+// Roadmap
+$txt['open_issues'] = '%d open issues';
+$txt['closed_issues'] = '%d closed issues';
+
 // Issue List
 $txt['issue_search'] = 'Search Issues';
 $txt['issue_search_button'] = 'Search';
