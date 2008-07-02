@@ -125,6 +125,25 @@ table.projectsframe td.lastissue
 	padding: 0.3em;
 	border-left: solid #a0a0a0 1px;
 }
+.projectframe_section div.timeline
+{
+	margin-left: 3%;
+	border-left: solid #a0a0a0 1px;
+}
+.projectframe_section div.timeline h5
+{
+	padding: 0.5em;
+	border-top: solid #a0a0a0 1px;
+	border-bottom: solid #a0a0a0 1px;
+}
+.projectframe_section div.timeline h5.first
+{
+	border-top: 0;
+}
+.projectframe_section div.timeline ul
+{
+	padding: 0.5em 1em;
+}
 
 /* */
 .expl
@@ -139,12 +158,14 @@ table.projectsframe td.lastissue
 /* Progress bar */
 .progressbar
 {
+	border: 1px solid #5294de;
+	padding: 0.25em;
 	width: 100%;
 }
-.progressbar div.done
+.progressbar div
 {
 	height: 1em;
-	background: url("../images/bar.gif") repeat;
+	background: #5294de;;
 }
 
 /* ************************************* */

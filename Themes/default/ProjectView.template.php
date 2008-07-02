@@ -167,17 +167,17 @@ function template_project_view()
 	// TODO: Move calculations to ProjectView.php
 	foreach ($context['project']['trackers'] as $type)
 		echo '
-					<tr>
-						<td width="10%">
-							<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
-						</td>
-						<td>
-							<div class="progressbar"><div class="done" style="width: ', round(($type['closed'] / max(1, $type['total'])) * 100, 2), '%"></div></div>
-						</td>
-					</tr>
-					<tr>
-						<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
-					</tr>';
+						<tr>
+							<td width="10%">
+								<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
+							</td>
+							<td>
+								<div class="progressbar"><div class="done" style="width: ', round(($type['closed'] / max(1, $type['total'])) * 100, 2), '%"></div></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
+						</tr>';
 
 	echo '
 					</table>
@@ -188,16 +188,27 @@ function template_project_view()
 			<div class="windowbg">
 				<h4 class="headerpadding titlebg">', $txt['project_timeline'], '</h4>
 				<p class="section"></p>
-				<div class="windowbg2 sectionbody middletext">';
+				<div class="windowbg2 timeline middletext">';
+
+	$first = true;
 
 	foreach ($context['events'] as $date)
 	{
 		echo '
-				<div class="windowbg"><h5>', $date['date'], '</h5></div>';
+					<h5 class="windowbg', $first ? ' first' : '' ,'">', $date['date'], '</h5>
+					<ul>';
 
 		foreach ($date['events'] as $event)
 			echo '
-					<div>', $event['time'], ' - ', $event['link'], '<br /><span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span></div>';
+						<li>
+							', $event['time'], ' - ', $event['link'], '<br />
+							<span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span>
+						</li>';
+
+		echo '
+					</ul>';
+
+		$first = false;
 	}
 
 	echo '
@@ -214,12 +225,17 @@ function template_project_roadmap()
 	foreach ($context['roadmap'] as $version)
 	{
 		echo '
-	<div class="projectframe_section">
-		<h3 class="headerpadding catbg">', $version['name'], '</h3>
-		<div class="windowbg2 smallpadding">
-			', $version['description'], '';
+	<div class="tborder">
+		<div class="projectframe_section">
+			<h3 class="headerpadding catbg">', $version['name'], '</h3>
+			<div class="headerpadding windowbg2">
+				', $version['description'], '<br /><br />
+				<div class="progressbar">
+					<div style="width: ', $version['progress'], '%"></div>
+				</div>';
 
 		echo '
+			</div>
 		</div>
 	</div><br />';
 

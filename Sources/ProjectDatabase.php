@@ -577,6 +577,7 @@ $tables = array(
 			),
 		)
 	),
+	// Log tables for read marks
 	'log_projects' => array(
 		'name' => 'log_projects',
 		'columns' => array(
