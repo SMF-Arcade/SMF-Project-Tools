@@ -97,7 +97,7 @@ function IssueList()
 		$baseurl .= ';type=' . $_REQUEST['type'];
 	}
 
-	if (!empty($_REQUEST['version']) && isset($context['possible_types'][$_REQUEST['type']]))
+	if (!empty($_REQUEST['version']))
 	{
 		$_REQUEST['version'] = (int) trim($_REQUEST['version']);
 
@@ -106,13 +106,15 @@ function IssueList()
 		if (isset($ver[$_REQUEST['version']]))
 		{
 			$context['issue_search']['version'] = $_REQUEST['version'];
-			$context['issue_search']['versions'][] = array_merge(array($_REQUEST['version']), array_keys($ver[$_REQUEST['version']]['sub_versions']));
+			$context['issue_search']['versions'] = array_merge(array($_REQUEST['version']), array_keys($ver[$_REQUEST['version']]['sub_versions']));
 
 			$baseurl .= ';version=' . $_REQUEST['version'];
 		}
 		else
 		{
+			$context['issue_search']['versions'][] = $_REQUEST['version'];
 
+			$baseurl .= ';version=' . $_REQUEST['version'];
 		}
 	}
 
@@ -133,7 +135,7 @@ function IssueList()
 		$where[] = 'i.issue_type = {string:search_type}';
 
 	if (!empty($context['issue_search']['versions']))
-		$where[] = '((i.id_version = {array_int:versions} AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
+		$where[] = '((i.id_version IN({array_int:versions}) AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_update');
 
@@ -194,6 +196,7 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_type' => $context['issue_search']['type'],
+			'versions' => $context['issue_search']['versions'],
 		)
 	);
 

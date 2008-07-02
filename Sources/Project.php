@@ -128,6 +128,11 @@ function Projects()
 					'title' => $txt['project'],
 					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
 				),
+				'roadmap' => array(
+					'href' => $scripturl . '?project=' . $project . ';sa=roadmap',
+					'title' => $txt['roadmap'],
+					'is_selected' => in_array($_REQUEST['sa'], array('roadmap')),
+				),
 				'issues' => array(
 					'href' => $scripturl . '?project=' . $project . ';sa=issues',
 					'title' => $txt['issues'],
@@ -146,6 +151,11 @@ function Projects()
 			$context['linktree'][] = array(
 				'name' => $txt['linktree_issues'],
 				'url' => $scripturl . '?project=' . $project . ';sa=issues',
+			);
+		elseif ($context['project_tabs']['tabs']['roadmap']['is_selected'])
+			$context['linktree'][] = array(
+				'name' => $txt['linktree_roadmap'],
+				'url' => $scripturl . '?project=' . $project . ';sa=roadmap',
 			);
 
 		$context['template_layers'][] = 'project_view';
