@@ -186,7 +186,7 @@ function ProjectRoadmap()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if (empty($row['id_parent']))
+		if (!empty($row['id_parent']))
 		{
 			$parents[$row['id_version']] = $row['id_parent'];
 
@@ -206,9 +206,8 @@ function ProjectRoadmap()
 		}
 	}
 
-	// DEBUG
-	print_r($context['roadmap']);
-	die();
+	// Template
+	$context['sub_template'] = 'project_roadmap';
 }
 
 function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')

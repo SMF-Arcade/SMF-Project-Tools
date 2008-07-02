@@ -207,6 +207,25 @@ function template_project_view()
 	</div>';
 }
 
+function template_project_roadmap()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	foreach ($context['roadmap'] as $version)
+	{
+		echo '
+	<div class="projectframe_section">
+		<h3 class="headerpadding catbg">', $version['name'], '</h3>
+		<div class="windowbg2 smallpadding">
+			', $version['description'], '';
+
+		echo '
+		</div>
+	</div><br />';
+
+	}
+}
+
 function template_project_view_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
