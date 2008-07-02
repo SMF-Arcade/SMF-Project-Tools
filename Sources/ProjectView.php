@@ -196,6 +196,7 @@ function ProjectRoadmap()
 			$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
+				'description' => parse_bbc($row['description']),
 				'issues' => array(
 					'open' => 0,
 					'closed' => 0,
@@ -254,6 +255,11 @@ function ProjectRoadmap()
 				$context['roadmap'][$parents[$row['id_version']]]['issues']['open'] += $row['num'];
 			else
 				$context['roadmap'][$parents[$row['id_version']]]['issues']['closed'] += $row['num'];
+
+			if ($open)
+				$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['open'] += $row['num'];
+			else
+				$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['closed'] += $row['num'];
 		}
 	}
 	$smcFunc['db_free_result']($request);
@@ -262,6 +268,15 @@ function ProjectRoadmap()
 	{
 		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
 		$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
+
+		foreach ($d['versions'] as $idx => $dx)
+		{
+			$dx['issues']['total'] = $dx['issues']['open'] + $dx['issues']['closed'];
+			$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
+
+			// Back to array
+			$d['versions'][$idx] = $dx;
+		}
 
 		// Back to array
 		$context['roadmap'][$id] = $d;
