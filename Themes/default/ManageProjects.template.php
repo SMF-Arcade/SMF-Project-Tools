@@ -321,12 +321,8 @@ function template_edit_version()
 			<td valign="top" align="left">
 				<select name="status">
 					<option value="0"', $context['version']['status'] == 0 ? ' selected="selected"' : '', '>', $txt['version_future'], '</option>
-					<option value="1"', $context['version']['status'] == 1 ? ' selected="selected"' : '', '>', $txt['version_alpha'], '</option>
-					<option value="2"', $context['version']['status'] == 2 ? ' selected="selected"' : '', '>', $txt['version_beta'], '</option>
-					<option value="3"', $context['version']['status'] == 3 ? ' selected="selected"' : '', '>', $txt['version_rc'], '</option>
-					<option value="4"', $context['version']['status'] == 4 ? ' selected="selected"' : '', '>', $txt['version_stable'], '</option>
-					<option value="5"', $context['version']['status'] == 5 ? ' selected="selected"' : '', '>', $txt['version_stable_rec'], '</option>
-					<option value="6"', $context['version']['status'] == 6 ? ' selected="selected"' : '', '>', $txt['version_obsolute'], '</option>
+					<option value="1"', $context['version']['status'] == 1 ? ' selected="selected"' : '', '>', $txt['version_testing'], '</option>
+					<option value="2"', $context['version']['status'] == 2 ? ' selected="selected"' : '', '>', $txt['version_current'], '</option>
 				</select>
 			</td>
 		</tr>';

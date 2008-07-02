@@ -34,12 +34,8 @@ $txt['issue_closed'] = 'Closed';
 
 // Version statuses
 $txt['version_future'] = 'Future';
-$txt['version_alpha'] = 'In Development (Alpha)';
-$txt['version_beta'] = 'Beta';
-$txt['version_rc'] = 'RC';
-$txt['version_stable'] = 'Stable';
-$txt['version_stable_rec'] = 'Stable (Recommended)';
-$txt['version_obsolute'] = 'Obsolute';
+$txt['version_testing'] = 'In Development';
+$txt['version_current'] = 'Current';
 
 // Access Levels (Project Groups)
 $txt['access_level_developer'] = 'Developer';

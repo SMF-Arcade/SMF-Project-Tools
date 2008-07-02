@@ -166,6 +166,49 @@ function ProjectRoadmap()
 
 	if (empty($context['project']))
 		fatal_lang_error('project_not_found');
+
+	$parents = array();
+	$context['roadmap'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			ver.id_version, ver.id_parent, ver.version_name, ver.status,
+			ver.description, ver.release_date
+		FROM {db_prefix}project_versions AS ver
+		WHERE {query_see_version}
+			AND id_project = {int:project}
+			AND (id_parent = 0 OR status IN (0,1))
+		ORDER BY id_parent',
+		array(
+			'project' => $project,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (empty($row['id_parent']))
+		{
+			$parents[$row['id_version']] = $row['id_parent'];
+
+			$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+			);
+		}
+		else
+		{
+			$context['roadmap'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'description' => parse_bbc($row['description']),
+				'versions' => array()
+			);
+		}
+	}
+
+	// DEBUG
+	print_r($context['roadmap']);
+	die();
 }
 
 function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')

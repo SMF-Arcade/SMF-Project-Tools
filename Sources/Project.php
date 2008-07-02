@@ -214,7 +214,7 @@ function loadProjectTools($mode = '')
 		foreach ($context['project_levels'] as $project => $level)
 		{
 			// !!! TEMP
-			if ($level < 5)
+			if ($level < 1)
 				$onlyOwn[] = $project;
 		}
 
@@ -227,8 +227,10 @@ function loadProjectTools($mode = '')
 		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
 		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
 
-		if (!empty($onlyOwn))
-			$see_issue = "($see_version AND (i.reporter = $user_info[id] OR NOT (i.id_project IN (" . implode(', ', $onlyOwn) . "))))";
+		if (!empty($onlyOwn) && $user_info['is_guest'])
+			$see_issue = '0 = 1';
+		elseif (!empty($onlyOwn))
+			$see_issue = "($see_version AND ((i.id_reporter = $user_info[id]) OR NOT (i.id_project IN (" . implode(', ', $onlyOwn) . "))))";
 		else
 			$see_issue = $see_version;
 	}
