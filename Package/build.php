@@ -15,6 +15,8 @@ $build_info = array(
 
 function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 {
+	global $build_info;
+	
 	if ($rev === 0)
 		return;
 
