@@ -163,6 +163,7 @@ function loadIssue($id_issue)
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
 		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
 		'status' => $context['issue']['status'][$row['status']],
+		'priority_num' => $row['priority'],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
 		'updated' => timeformat($row['updated']),

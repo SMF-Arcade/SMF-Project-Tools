@@ -282,49 +282,56 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	// Assigning
-	if (projectAllowedTo('issue_moderate') && isset($_POST['assign']))
+	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['assign']))
 	{
-		if ((int) $_POST['assign'] != $context['current_issue']['assignee']['id'])
+		if ((int) $_REQUEST['assign'] != $context['current_issue']['assignee']['id'])
 		{
-			if (!isset($context['project']['developers'][(int) $_POST['assign']]))
-				$_POST['assign'] = 0;
+			if (!isset($context['project']['developers'][(int) $_REQUEST['assign']]))
+				$_REQUEST['assign'] = 0;
 
-			$issueOptions['assignee'] = (int) $_POST['assign'];
+			$issueOptions['assignee'] = (int) $_REQUEST['assign'];
 		}
 	}
 
-	// Version
-	if (isset($_POST['version']) && $context['current_issue']['version']['id'] != (int) $_POST['version'])
+	// Priority
+	if (isset($_REQUEST['priority']) && $context['current_issue']['priority_num'] != (int) $_REQUEST['priority'])
 	{
-		if (!isset($context['versions_id'][(int) $_POST['version']]))
-			$_POST['version'] = 0;
+		if (isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
+			$issueOptions['priority'] = (int) $_REQUEST['priority'];
+	}
 
-		$issueOptions['version'] = (int) $_POST['version'];
+	// Version
+	if (isset($_REQUEST['version']) && $context['current_issue']['version']['id'] != (int) $_REQUEST['version'])
+	{
+		if (!isset($context['versions_id'][(int) $_REQUEST['version']]))
+			$_REQUEST['version'] = 0;
+
+		$issueOptions['version'] = (int) $_REQUEST['version'];
 	}
 
 	// Version fixed
-	if (projectAllowedTo('issue_moderate') && isset($_POST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_POST['version_fixed'])
+	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_REQUEST['version_fixed'])
 	{
-		if (!isset($context['versions_id'][(int) $_POST['version_fixed']]))
-			$_POST['version_fixed'] = 0;
+		if (!isset($context['versions_id'][(int) $_REQUEST['version_fixed']]))
+			$_REQUEST['version_fixed'] = 0;
 
-		$issueOptions['version_fixed'] = (int) $_POST['version_fixed'];
+		$issueOptions['version_fixed'] = (int) $_REQUEST['version_fixed'];
 	}
 
 	// Category
-	if (isset($_POST['category']) && $context['current_issue']['category']['id'] != (int) $_POST['category'])
+	if (isset($_REQUEST['category']) && $context['current_issue']['category']['id'] != (int) $_REQUEST['category'])
 	{
-		if (!isset($context['project']['category'][(int) $_POST['category']]))
-			$_POST['category'] = 0;
+		if (!isset($context['project']['category'][(int) $_REQUEST['category']]))
+			$_REQUEST['category'] = 0;
 
-		$issueOptions['category'] = (int) $_POST['category'];
+		$issueOptions['category'] = (int) $_REQUEST['category'];
 	}
 
 	// Status
-	if (projectAllowedTo('issue_moderate') && isset($_POST['status']) && $context['current_issue']['status']['id'] != (int) $_POST['status'])
+	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['status']) && $context['current_issue']['status']['id'] != (int) $_REQUEST['status'])
 	{
-		if (isset($context['issue']['status'][(int) $_POST['status']]))
-			$issueOptions['status'] = (int) $_POST['status'];
+		if (isset($context['issue']['status'][(int) $_REQUEST['status']]))
+			$issueOptions['status'] = (int) $_REQUEST['status'];
 	}
 
 	$context['possible_types'] = array();
@@ -332,8 +339,8 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	foreach ($context['project']['trackers'] as $id => $type)
 		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
 
-	if (isset($context['possible_types'][$_POST['type']]))
-		$issueOptions['type'] = $_POST['type'];
+	if (isset($context['possible_types'][$_REQUEST['type']]))
+		$issueOptions['type'] = $_REQUEST['type'];
 }
 
 function IssueUpdate()

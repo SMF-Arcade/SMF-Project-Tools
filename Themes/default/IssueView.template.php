@@ -48,7 +48,7 @@ function template_issue_view()
 
 			function editMouseLeave()
 			{
-				editTimer = setTimeout(editEndBody, 2000)
+				editTimer = setTimeout(editEndBody, 500)
 			}
 			function editMouseOver()
 			{
@@ -111,17 +111,47 @@ function template_issue_view()
 							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
-					<li>
+					<li class="', $context['can_issue_moderate'] ? 'canedit' : '', '">
 						<dl>
 							<dt>', $txt['issue_status'], '</dt>
 							<dd>', $context['current_issue']['status']['text'], '</dd>
-						</dl>
+						</dl>';
+
+	if (!empty($context['can_issue_moderate']))
+	{
+		echo '
+						<ul class="options">';
+
+			foreach ($context['issue']['status'] as $status)
+				echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';status=', $status['id'], '">', $status['text'], '</a></li>';
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
-					<li>
+					<li class="', $context['can_issue_moderate'] ? 'canedit' : '', '">
 						<dl>
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
-						</dl>
+						</dl>';
+
+	if (!empty($context['can_issue_moderate']))
+	{
+		echo '
+						<ul class="options">';
+
+			foreach ($context['issue']['priority'] as $id => $text)
+				echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';priority=', $id, '">', $txt[$text], '</a></li>';
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
 					<li>
 						<dl>
@@ -135,11 +165,32 @@ function template_issue_view()
 							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
-					<li>
+					<li class="', !empty($context['can_issue_update']) ? 'canedit' : '', '">
 						<dl>
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
-						</dl>
+						</dl>';
+
+	if (!empty($context['can_issue_update']))
+	{
+		echo '
+						<ul class="options">
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=0">', $txt['issue_none'], '</a></li>';
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+							<li style="font-weight: bold"><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=', $v['id'], '">', $v['name'], '</a></li>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=', $subv['id'], '">', $subv['name'], '</a></li>';
+		}
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
 					<li>
 						<dl>
@@ -356,45 +407,6 @@ function template_issue_view()
 			<div class="smallpadding windowbg">
 				<table width="100%">';
 
-		// Version
-		echo '
-					<tr>
-						<td width="30%">', $txt['issue_version'], '</td>
-						<td>
-							<select name="version">
-								<option></option>';
-
-
-		foreach ($context['versions'] as $v)
-		{
-			echo '
-								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
-								<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
-		}
-
-		echo '
-							</select>
-						</td>
-					</tr>';
-
-		// Type
-		echo '
-					<tr>
-						<td>', $txt['issue_type'], '</td>
-						<td>
-							<select name="type">';
-
-		foreach ($context['possible_types'] as $id => $type)
-			echo '
-								<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '>', $type['name'], '</option>';
-
-		echo '
-							</select>
-						</td>
-					</tr>';
 
 		// Category
 		echo '
@@ -407,6 +419,7 @@ function template_issue_view()
 		foreach ($context['project']['category'] as $c)
 			echo '
 								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+
 		echo '
 							</select>
 						</td>
@@ -422,10 +435,6 @@ function template_issue_view()
 							<select name="status">';
 
 
-			foreach ($context['issue']['status'] as $status)
-
-				echo '
-								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
 			echo '
 							</select>
