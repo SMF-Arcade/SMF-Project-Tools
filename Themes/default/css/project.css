@@ -249,30 +249,71 @@ table.issuetable td.lastissue
 	color: grey;
 	font-weight: bold;
 }
-
-#issueinfot div
+#issueinfot ul.details
 {
-	padding: 2.5px 5px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
-#issueinfot div div.edit
+#issueinfot ul.details li
 {
-	display: none;
+	border: 1px solid transparent;
+	margin: 1px 2.5px;
 }
-#issueinfot div.hover
+#issueinfot li.canedit:hover, #issueinfot li.selected
 {
-	border: 1px solid black;
+	border: 1px solid black !important;
 	background: white;
 }
-#issueinfot div.selected
+#issueinfot li.selected dl
 {
-	border: 1px solid black;
-	border-bottom: 0;
 }
-#issueinfot div.selected div.edit
+#issueinfot li.selected ul.options
+{
+	display: block;
+}
+#issueinfot dt
+{
+	margin: 0;
+	margin-right: 5px;
+	padding: 1px 2.5px;
+	float: left;
+	color: grey;
+	font-weight: bold;
+}
+#issueinfot dd
+{
+	margin: 0;
+	padding: 1px 2.5px;
+}
+#issueinfot ul.options
 {
 	border: 1px solid black;
 	border-top: 0;
+	background: white;
+	display: none;
+	position: absolute;
+	width: 25em;
+	margin: -1px;
+}
+#issueinfot ul.options li
+{
+	border: 0;
+	margin: 0;
+	padding: 1px 2.5px;
+}
+#issueinfot ul.options li a
+{
+	color: black;
 	display: block;
+}
+#issueinfot li ul li a:hover
+{
+	text-decoration: none;
+}
+#issueinfot li ul li:hover
+{
+	background: #3399ff;
 }
 
 #comment

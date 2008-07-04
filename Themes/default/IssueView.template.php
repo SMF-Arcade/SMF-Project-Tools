@@ -23,20 +23,53 @@ function template_issue_view()
 	{
 		echo '
 		<script language="JavaScript" type="text/javascript">
+			var editing = false;
+			var editItem;
+			var editTimer;
+
 			$j(document).bind("ready", function()
 			{
-				$j("#infotable div.canedit").hover(function()
-				{
-					$j(this).addClass("hover");
-				}, function()
-				{
-					$j(this).removeClass("hover");
-				}).bind("click", function()
-				{
-					$j(this).addClass("selected");
-				});
+				$j("#issueinfot li.canedit").bind("click", editStart).bind("dblclick", editEnd).bind("mouseout", editMouseLeave).bind("mouseover", editMouseOver);
+			});
 
-			});';
+			function editStart()
+			{
+				if (editing)
+				{
+					editEnd2(editItem);
+				}
+
+				editing = true;
+				editItem = this;
+
+				$j(this).addClass("selected");
+				$j(this).children("ul").width($j(this).width());
+			}
+
+			function editMouseLeave()
+			{
+				editTimer = setTimeout(editEndBody, 2000)
+			}
+			function editMouseOver()
+			{
+				clearTimeout(editTimer);
+			}
+
+			function editEndBody()
+			{
+				editEnd2(editItem);
+			}
+
+			function editEnd()
+			{
+				editEnd2(this);
+			}
+
+			function editEnd2(item)
+			{
+				$j(item).removeClass("selected");
+				editing = false;
+			}';
 
 		echo '
 		</script>';
@@ -47,43 +80,80 @@ function template_issue_view()
 		<a name="com', $context['current_issue']['comment_first'], '"></a>
 		<div id="issueinfo" class="floatright tborder">
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
-			<div id="issueinfot" class="clearfix windowbg smalltext">
-				<div class="canedit">
-					<span class="dark">', $txt['issue_type'], '</span>
-					', $context['current_issue']['type']['name'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_category'], '</span>
-					', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_status'], '</span>
-					', $context['current_issue']['status']['text'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_priority'], '</span>
-					', $txt[$context['current_issue']['priority']], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_reported'], '</span>
-					', $context['current_issue']['created'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_updated'], '</span>
-					', $context['current_issue']['updated'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_version'], '</span>
-					', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_version_fixed'], '</span>
-					', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
-				</div>
-				<div>
-					<span class="dark">', $txt['issue_assigned_to'], '</span>
-					', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
-				</div>
+			<div id="issueinfot" class="clearfix topborder windowbg smalltext">
+				<ul class="details">
+					<li class="', !empty($context['can_issue_update']) ? 'canedit' : '', '">
+						<dl>
+							<dt>', $txt['issue_type'], '</dt>
+							<dd>
+								', $context['current_issue']['type']['name'], '
+							</dd>
+						</dl>';
+
+	if (!empty($context['can_issue_update']))
+	{
+		echo '
+						<ul class="options">';
+
+		foreach ($context['possible_types'] as $id => $type)
+			echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';type=', $id, '">', $type['name'], '</a></li>';
+
+		echo '
+						</ul>';
+	}
+
+	echo '
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_category'], '</dt>
+							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_status'], '</dt>
+							<dd>', $context['current_issue']['status']['text'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_priority'], '</dt>
+							<dd>', $txt[$context['current_issue']['priority']], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_reported'], '</dt>
+							<dd>	', $context['current_issue']['created'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_updated'], '</dt>
+							<dd>', $context['current_issue']['updated'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_version'], '</dt>
+							<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_version_fixed'], '</dt>
+							<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>', $txt['issue_assigned_to'], '</dt>
+							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
+						</dl>
+					</li>
+				</ul>
 			</div>
 		</div>';
 
