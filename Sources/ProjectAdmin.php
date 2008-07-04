@@ -63,6 +63,7 @@ function ProjectsAdminSettings($return_config = false)
 			array('check', 'projectAttachements'),
 		'',
 			array('int', 'issuesPerPage'),
+			array('int', 'commentsPerPage'),
 		'',
 	);
 

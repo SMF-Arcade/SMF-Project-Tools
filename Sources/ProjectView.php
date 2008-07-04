@@ -267,12 +267,20 @@ function ProjectRoadmap()
 	foreach ($context['roadmap'] as $id => $d)
 	{
 		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
-		$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
+
+		if ($d['issues']['total'] > 0)
+			$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
+		else
+			$d['progress'] = 0;
 
 		foreach ($d['versions'] as $idx => $dx)
 		{
 			$dx['issues']['total'] = $dx['issues']['open'] + $dx['issues']['closed'];
-			$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
+
+			if ($dx['issues']['total'] > 0)
+				$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
+			else
+				$dx['progress'] = 0;
 
 			// Back to array
 			$d['versions'][$idx] = $dx;
