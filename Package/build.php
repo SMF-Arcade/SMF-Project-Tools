@@ -7,7 +7,6 @@ $build_info = array(
 	'build_replaces' => 'build_replaces_project01',
 	'extra_files' => array(
 		'changelog.txt',
-		'readme.txt',
 		'modification.xsl' => 'Package/modification.xsl',
 		'package-info.xsl' => 'Package/package-info.xsl',
 		'Themes/default/languages/Modifications.english.php',
