@@ -20,6 +20,12 @@ function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 
 	if ($filename == 'Sources/Project.php' || $filename == 'Sources/ProjectDatabase.php')
 		$content = str_replace('$project_version = \'0.1 Alpha\';', '$project_version = \'0.1 Alpha rev' . $rev . '\';', $content);
+	elseif (in_array($filename, array('readme.txt', 'install.xml',  'package-info.xml')))
+	{
+		$content = strtr($content, array(
+			'{version}' => $rev ? $build_info['version_str'] . ' rev' . $rev : $build_info['version_str']
+		));
+	}
 }
 
 ?>
