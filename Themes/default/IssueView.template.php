@@ -19,45 +19,68 @@ function template_issue_view()
 		),
 	);
 
+	if ($context['can_issue_update'])
+	{
+		echo '
+		<script language="JavaScript" type="text/javascript">
+			$j(document).bind("ready", function()
+			{
+				$j("#infotable div.canedit").hover(function()
+				{
+					$j(this).addClass("hover");
+				}, function()
+				{
+					$j(this).removeClass("hover");
+				}).bind("click", function()
+				{
+					$j(this).addClass("selected");
+				});
+
+			});';
+
+		echo '
+		</script>';
+	}
+
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
 		<a name="com', $context['current_issue']['comment_first'], '"></a>
 		<div id="issueinfo" class="floatright tborder">
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
-			<div class="clearfix windowbg smalltext">
-				<div class="display">
+			<div id="issueinfot" class="clearfix windowbg smalltext">
+				<div class="canedit">
 					<span class="dark">', $txt['issue_type'], '</span>
 					', $context['current_issue']['type']['name'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_category'], '</span>
 					', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_status'], '</span>
 					', $context['current_issue']['status']['text'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_priority'], '</span>
 					', $txt[$context['current_issue']['priority']], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_reported'], '</span>
 					', $context['current_issue']['created'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_updated'], '</span>
 					', $context['current_issue']['updated'], '
 				</div>
-				<div class="display">
-						<span class="dark">', $txt['issue_version'], '</span>
-						', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
+				<div>
+					<span class="dark">', $txt['issue_version'], '</span>
+					', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_version_fixed'], '</span>
 					', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '
 				</div>
-				<div class="display">
+				<div>
 					<span class="dark">', $txt['issue_assigned_to'], '</span>
 					', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '
 				</div>

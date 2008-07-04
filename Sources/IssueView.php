@@ -44,6 +44,7 @@ function IssueView()
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = (projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
+
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 
 	if ($context['can_issue_update'])

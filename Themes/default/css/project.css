@@ -249,14 +249,32 @@ table.issuetable td.lastissue
 	color: grey;
 	font-weight: bold;
 }
-#issueinfo div.display, #issueinfo div.edit
+
+#issueinfot div
 {
 	padding: 2.5px 5px;
 }
-#issueinfo div.edit
+#issueinfot div div.edit
 {
 	display: none;
 }
+#issueinfot div.hover
+{
+	border: 1px solid black;
+	background: white;
+}
+#issueinfot div.selected
+{
+	border: 1px solid black;
+	border-bottom: 0;
+}
+#issueinfot div.selected div.edit
+{
+	border: 1px solid black;
+	border-top: 0;
+	display: block;
+}
+
 #comment
 {
 	width: 95%;
