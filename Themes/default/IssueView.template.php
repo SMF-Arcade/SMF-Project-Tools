@@ -268,7 +268,7 @@ function template_issue_view()
 
 			foreach ($context['assign_members'] as $mem)
 				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';asssign=', $mem['id'], '">', $mem['name'], '</a></li>';
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';assign=', $mem['id'], '">', $mem['name'], '</a></li>';
 
 		echo '
 						</ul>';

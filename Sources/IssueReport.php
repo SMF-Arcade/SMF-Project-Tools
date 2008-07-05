@@ -212,7 +212,7 @@ function IssueReply()
 
 	$issue = $context['current_issue']['id'];
 
-	$context['destination'] = 'update;full';
+	$context['destination'] = 'reply2';
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -272,6 +272,138 @@ function IssueReply()
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 
 	loadTemplate('IssueView');
+}
+
+function IssueReply2()
+{
+	global $context, $user_info, $smcFunc, $sourcedir;
+
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found');
+
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
+
+	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+
+	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+
+		$_REQUEST['comment'] = html_to_bbc($_REQUEST['comment']);
+		$_REQUEST['comment'] = un_htmlspecialchars($_REQUEST['comment']);
+		$_POST['comment'] = $_REQUEST['comment'];
+	}
+
+	if (isset($_REQUEST['preview']))
+		return IssueReply();
+
+	require_once($sourcedir . '/Subs-Post.php');
+
+	checkSubmitOnce('check');
+
+	$post_errors = array();
+
+	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')
+		$post_errors[] = 'no_message';
+	else
+	{
+		$_POST['comment'] = $smcFunc['htmlspecialchars']($_POST['comment'], ENT_QUOTES);
+
+		preparsecode($_POST['comment']);
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['comment'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
+			$post_errors[] = 'no_message';
+	}
+
+	if (!empty($post_errors))
+	{
+		loadLanguage('Errors');
+		$_REQUEST['preview'] = true;
+
+		$context['post_error'] = array('messages' => array());
+		foreach ($post_errors as $post_error)
+		{
+			$context['post_error'][$post_error] = true;
+			$context['post_error']['messages'][] = $txt['error_' . $post_error];
+		}
+
+		return IssueReply();
+	}
+
+	$_POST['guestname'] = $user_info['username'];
+	$_POST['email'] = $user_info['email'];
+
+	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
+	$_POST['email'] = htmlspecialchars($_POST['email']);
+
+	$posterOptions = array(
+		'id' => $user_info['id'],
+		'ip' => $user_info['ip'],
+		'name' => $_POST['guestname'],
+		'email' => $_POST['email'],
+	);
+	$issueOptions = array();
+
+	if (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate'))
+		handleUpdate($posterOptions, $issueOptions);
+
+	if (!empty($issueOptions))
+		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+	else
+		$id_event = 0;
+
+	if ($id_event === true)
+		$id_event = 0;
+
+	$commentOptions = array(
+		'event' => $id_event,
+		'body' => $_POST['comment'],
+	);
+	$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+
+	redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
+}
+
+function IssueUpdate()
+{
+	global $context, $user_info, $smcFunc, $sourcedir;
+
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found');
+
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
+
+	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+
+	checkSession('get');
+
+	$_POST['guestname'] = $user_info['username'];
+	$_POST['email'] = $user_info['email'];
+
+	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
+	$_POST['email'] = htmlspecialchars($_POST['email']);
+
+	$posterOptions = array(
+		'id' => $user_info['id'],
+		'ip' => $user_info['ip'],
+		'name' => $_POST['guestname'],
+		'email' => $_POST['email'],
+	);
+	$issueOptions = array();
+
+	if (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate'))
+		handleUpdate($posterOptions, $issueOptions);
+
+	if (!empty($issueOptions))
+		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+	else
+		$id_event = 0;
+
+	if ($id_event === true)
+		$id_event = 0;
+
+	redirectexit('issue=' . $issue . '.0');
 }
 
 function handleUpdate(&$posterOptions, &$issueOptions)
@@ -343,93 +475,6 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 		$issueOptions['type'] = $_REQUEST['type'];
 }
 
-function IssueUpdate()
-{
-	global $context, $user_info, $smcFunc, $sourcedir;
-
-	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
-
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
-	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
-
-	checkSession('request');
-
-	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
-	{
-		require_once($sourcedir . '/Subs-Editor.php');
-
-		$_REQUEST['comment'] = html_to_bbc($_REQUEST['comment']);
-		$_REQUEST['comment'] = un_htmlspecialchars($_REQUEST['comment']);
-		$_POST['comment'] = $_REQUEST['comment'];
-	}
-
-	if (isset($_REQUEST['full']))
-		checkSubmitOnce('check');
-
-	if (isset($_REQUEST['preview']))
-		return IssueReply();
-
-	$_POST['guestname'] = $user_info['username'];
-	$_POST['email'] = $user_info['email'];
-
-	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
-	$_POST['email'] = htmlspecialchars($_POST['email']);
-
-	$posterOptions = array(
-		'id' => $user_info['id'],
-		'ip' => $user_info['ip'],
-		'name' => $_POST['guestname'],
-		'email' => $_POST['email'],
-	);
-	$issueOptions = array();
-
-	if (empty($_POST['add_comment']) && (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate')))
-		handleUpdate($posterOptions, $issueOptions);
-
-	if (!empty($issueOptions))
-		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
-	else
-		$id_event = 0;
-
-	if ($id_event === true)
-		$id_event = 0;
-
-	$no_comment = false;
-
-	if (empty($_POST['update_issue2']) && empty($_POST['add_comment']) && !isset($_REQUEST['full']))
-		$no_comment = true;
-
-	if (htmltrim__recursive(htmlspecialchars__recursive($_POST['comment'])) == '')
-		$no_comment = true;
-	else
-	{
-		require_once($sourcedir . '/Subs-Post.php');
-
-		$_POST['comment'] = $smcFunc['htmlspecialchars']($_POST['comment'], ENT_QUOTES);
-
-		preparsecode($_POST['comment']);
-		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['comment'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
-			$no_comment = true;
-	}
-
-	if ($no_comment)
-		redirectexit('issue=' . $issue . '.0');
-	else
-	{
-		$commentOptions = array(
-			'event' => $id_event,
-			'body' => $_POST['comment'],
-		);
-		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
-
-		redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
-	}
-
-	redirectexit('issue=' . $issue . '.0');
-}
 
 function IssueUpload()
 {
