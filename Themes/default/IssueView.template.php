@@ -524,8 +524,147 @@ function template_issue_reply()
 					<dd class="clear"></dd>
 				</dl>
 			</div>
-		</div>
+		</div>';
 
+	if (!empty($context['can_issue_update']))
+	{
+		echo '
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
+			<div class="smallpadding windowbg">
+				<table width="100%">';
+
+		// Version
+		echo '
+					<tr>
+						<td width="30%">', $txt['issue_version'], '</td>
+						<td>
+							<select name="version">
+								<option></option>';
+
+
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+								<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+		}
+
+		echo '
+							</select>
+						</td>
+					</tr>';
+
+		// Type
+		echo '
+					<tr>
+						<td>', $txt['issue_type'], '</td>
+						<td>
+							<select name="type">';
+
+		foreach ($context['possible_types'] as $id => $type)
+			echo '
+								<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '>', $type['name'], '</option>';
+
+		echo '
+							</select>
+						</td>
+					</tr>';
+
+		// Category
+		echo '
+					<tr>
+						<td>', $txt['issue_category'], '</td>
+						<td>
+							<select name="category">
+								<option></option>';
+
+		foreach ($context['project']['category'] as $c)
+			echo '
+								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+		echo '
+							</select>
+						</td>
+					</tr>';
+
+		if ($context['can_issue_moderate'])
+		{
+			// Change Status
+			echo '
+					<tr>
+						<td>', $txt['issue_status'], '</td>
+						<td>
+							<select name="status">';
+
+
+			foreach ($context['issue']['status'] as $status)
+
+				echo '
+								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+
+			echo '
+							</select>
+						</td>
+					</tr>';
+
+			// Target Version
+			echo '
+					<tr>
+						<td>', $txt['issue_version_fixed'], '</td>
+						<td>
+							<select name="version_fixed">
+								<option></option>';
+
+
+			foreach ($context['versions'] as $v)
+			{
+				echo '
+								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+
+				foreach ($v['sub_versions'] as $subv)
+					echo '
+								<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+			}
+
+			echo '
+							</select>
+						</td>
+					</tr>';
+
+			// Assign
+			echo '
+					<tr>
+						<td>', $txt['issue_assigned_to'], '</td>
+						<td>
+							<select name="assign">
+								<option></option>';
+
+			foreach ($context['assign_members'] as $mem)
+				echo '
+								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
+
+			echo '
+							</select>
+						</td>
+					</tr>';
+		}
+
+
+		echo '
+				</table>
+				<div style="text-align: right">
+					<input name="update_issue" value="', $txt['update_issue_save'], '" type="submit" />
+					<input name="update_issue2" value="', $txt['update_issue_comment'], '" type="submit" />
+				</div>
+			</div>
+		</div>';
+
+	}
+
+	echo '
 		<input type="hidden" name="issue" value="', $context['current_issue']['id'], '" />
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
