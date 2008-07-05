@@ -283,8 +283,16 @@ table.issuetable td.lastissue
 }
 #issueinfot dd
 {
+	float: left;
 	margin: 0;
 	padding: 1px 2.5px;
+}
+#issueinfot li.canedit dd.button
+{
+	width: 9px;
+	height: 1.6em;
+	float: right;
+	background: url(../images/pdropdown.gif) no-repeat center center;
 }
 #issueinfot ul.options
 {

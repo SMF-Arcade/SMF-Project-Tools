@@ -24,26 +24,38 @@ function template_issue_view()
 		echo '
 		<script language="JavaScript" type="text/javascript">
 			var editing = false;
-			var editItem;
+			var editItem = 0;
 			var editTimer;
 
 			$j(document).bind("ready", function()
 			{
-				$j("#issueinfot li.canedit").bind("click", editStart).bind("dblclick", editEnd).bind("mouseout", editMouseLeave).bind("mouseover", editMouseOver);
+				$j("#issueinfot li.canedit dl").bind("click", dropDownEvent);
+				$j("#issueinfot li.canedit").bind("mouseout", editMouseLeave).bind("mouseover", editMouseOver);
 			});
 
-			function editStart()
+			function dropDownEvent()
 			{
 				if (editing)
 				{
-					editEnd2(editItem);
+					if (editItem == this)
+						return editEnd2(editItem);
+
+					editEnd2(editItem)
 				}
 
-				editing = true;
-				editItem = this;
+				editStart(this);
+			}
 
-				$j(this).addClass("selected");
-				$j(this).children("ul").width($j(this).width());
+			function editStart(item)
+			{
+				if (editing)
+					editEnd2(editItem);
+
+				editing = true;
+				editItem = item;
+
+				$j(item).parent("li").addClass("selected");
+				$j(item).parent("li").children("ul").width($j(item).width());
 			}
 
 			function editMouseLeave()
@@ -67,7 +79,7 @@ function template_issue_view()
 
 			function editEnd2(item)
 			{
-				$j(item).removeClass("selected");
+				$j(item).parent("li").removeClass("selected");
 				editing = false;
 			}';
 
@@ -82,12 +94,13 @@ function template_issue_view()
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
 			<div id="issueinfot" class="clearfix topborder windowbg smalltext">
 				<ul class="details">
-					<li class="', !empty($context['can_issue_update']) ? 'canedit' : '', '">
-						<dl>
+					<li class="clearfix', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_type'], '</dt>
 							<dd>
 								', $context['current_issue']['type']['name'], '
 							</dd>
+							<dd class="button"></dd>
 						</dl>';
 
 	if (!empty($context['can_issue_update']))
@@ -105,16 +118,34 @@ function template_issue_view()
 
 	echo '
 					</li>
-					<li>
-						<dl>
+					<li class="clearfix', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_category'], '</dt>
 							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
-						</dl>
+							<dd class="button"></dd>
+						</dl>';
+
+	if (!empty($context['can_issue_update']))
+	{
+		echo '
+						<ul class="options">
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';category=0">', $txt['issue_none'],'</a></li>';
+
+		foreach ($context['project']['category'] as $c)
+			echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';category=',$c['id'], '">', $c['name'],'</a></li>';
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
-					<li class="', $context['can_issue_moderate'] ? 'canedit' : '', '">
-						<dl>
+					<li class="clearfix', $context['can_issue_moderate'] ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_status'], '</dt>
 							<dd>', $context['current_issue']['status']['text'], '</dd>
+							<dd class="button"></dd>
 						</dl>';
 
 	if (!empty($context['can_issue_moderate']))
@@ -132,10 +163,11 @@ function template_issue_view()
 
 	echo '
 					</li>
-					<li class="', $context['can_issue_moderate'] ? 'canedit' : '', '">
-						<dl>
+					<li class="clearfix', $context['can_issue_moderate'] ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
+							<dd class="button"></dd>
 						</dl>';
 
 	if (!empty($context['can_issue_moderate']))
@@ -154,21 +186,22 @@ function template_issue_view()
 	echo '
 					</li>
 					<li>
-						<dl>
+						<dl class="clearfix">
 							<dt>', $txt['issue_reported'], '</dt>
 							<dd>	', $context['current_issue']['created'], '</dd>
 						</dl>
 					</li>
 					<li>
-						<dl>
+						<dl class="clearfix">
 							<dt>', $txt['issue_updated'], '</dt>
 							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
-					<li class="', !empty($context['can_issue_update']) ? 'canedit' : '', '">
-						<dl>
+					<li class="clearfix ', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
+							<dd class="button"></dd>
 						</dl>';
 
 	if (!empty($context['can_issue_update']))
@@ -192,17 +225,56 @@ function template_issue_view()
 
 	echo '
 					</li>
-					<li>
-						<dl>
+					<li class="clearfix', !empty($context['can_issue_moderate']) ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_version_fixed'], '</dt>
 							<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
-						</dl>
+							<dd class="button"></dd>
+						</dl>';
+
+	if (!empty($context['can_issue_moderate']))
+	{
+		echo '
+						<ul class="options">
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=0">', $txt['issue_none'], '</a></li>';
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+							<li style="font-weight: bold"><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=', $v['id'], '">', $v['name'], '</a></li>';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=', $subv['id'], '">', $subv['name'], '</a></li>';
+		}
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
-					<li>
-						<dl>
+					<li class="clearfix', !empty($context['can_issue_moderate']) ? ' canedit' : '', '">
+						<dl class="clearfix">
 							<dt>', $txt['issue_assigned_to'], '</dt>
 							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
-						</dl>
+							<dd class="button"></dd>
+						</dl>';
+
+	if (!empty($context['can_issue_moderate']))
+	{
+		echo '
+						<ul class="options">
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';assign=0">', $txt['issue_none'], '</a></li>';
+
+			foreach ($context['assign_members'] as $mem)
+				echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';asssign=', $mem['id'], '">', $mem['name'], '</a></li>';
+
+		echo '
+						</ul>';
+	}
+
+	echo '
 					</li>
 				</ul>
 			</div>
@@ -397,102 +469,6 @@ function template_issue_view()
 				</div>
 			</div>
 		</div><br />';
-	}
-
-	if (!empty($context['can_issue_update']))
-	{
-		echo '
-		<div class="tborder">
-			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
-			<div class="smallpadding windowbg">
-				<table width="100%">';
-
-
-		// Category
-		echo '
-					<tr>
-						<td>', $txt['issue_category'], '</td>
-						<td>
-							<select name="category">
-								<option></option>';
-
-		foreach ($context['project']['category'] as $c)
-			echo '
-								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
-
-		echo '
-							</select>
-						</td>
-					</tr>';
-
-		if ($context['can_issue_moderate'])
-		{
-			// Change Status
-			echo '
-					<tr>
-						<td>', $txt['issue_status'], '</td>
-						<td>
-							<select name="status">';
-
-
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-
-			// Target Version
-			echo '
-					<tr>
-						<td>', $txt['issue_version_fixed'], '</td>
-						<td>
-							<select name="version_fixed">
-								<option></option>';
-
-
-			foreach ($context['versions'] as $v)
-			{
-				echo '
-								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
-
-				foreach ($v['sub_versions'] as $subv)
-					echo '
-								<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
-			}
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-
-			// Assign
-			echo '
-					<tr>
-						<td>', $txt['issue_assigned_to'], '</td>
-						<td>
-							<select name="assign">
-								<option></option>';
-
-			foreach ($context['assign_members'] as $mem)
-				echo '
-								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-		}
-
-
-		echo '
-				</table>
-				<div style="text-align: right">
-					<input name="update_issue" value="', $txt['update_issue_save'], '" type="submit" />
-					<input name="update_issue2" value="', $txt['update_issue_comment'], '" type="submit" />
-				</div>
-			</div>
-		</div>';
-
 	}
 
 	echo '
