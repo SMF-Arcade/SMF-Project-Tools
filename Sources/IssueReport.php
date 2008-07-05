@@ -211,6 +211,13 @@ function IssueReply()
 		fatal_lang_error('issue_not_found');
 
 	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+
+	$context['show_update'] = false;
+	$context['can_comment'] = projectAllowedTo('issue_comment');
+	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
+	$context['can_issue_update'] = (projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate');
+	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
 
 	$context['destination'] = 'reply2';
 

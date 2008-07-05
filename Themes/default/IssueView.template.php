@@ -655,10 +655,6 @@ function template_issue_reply()
 
 		echo '
 				</table>
-				<div style="text-align: right">
-					<input name="update_issue" value="', $txt['update_issue_save'], '" type="submit" />
-					<input name="update_issue2" value="', $txt['update_issue_comment'], '" type="submit" />
-				</div>
 			</div>
 		</div>';
 
