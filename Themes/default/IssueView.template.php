@@ -29,8 +29,8 @@ function template_issue_view()
 
 			$j(document).bind("ready", function()
 			{
+				$j(document).bind("click", dropdownBodyClick);
 				$j("#issueinfot li.canedit dl").bind("click", dropDownEvent);
-				$j("#issueinfot li.canedit").bind("mouseout", editMouseLeave).bind("mouseover", editMouseOver);
 			});
 
 			function dropDownEvent()
@@ -38,24 +38,46 @@ function template_issue_view()
 				if (editing)
 				{
 					if (editItem == this)
-						return editEnd2(editItem);
+						return dropDownEditEnd(editItem);
 
-					editEnd2(editItem)
+					dropDownEditEnd(editItem)
 				}
 
-				editStart(this);
+				dropDownEditStart(this);
 			}
 
-			function editStart(item)
+			function dropDownEditStart(item)
 			{
 				if (editing)
-					editEnd2(editItem);
+					dropDownEditEnd(editItem);
 
 				editing = true;
 				editItem = item;
 
 				$j(item).parent("li").addClass("selected");
-				$j(item).parent("li").children("ul").width($j(item).width());
+				$j(item).parent("li").children("ul").width($j(item).width()).addClass("selected");
+			}
+
+			function dropDownEditEnd(item)
+			{
+				$j(item).parent("li").removeClass("selected");
+				$j(item).parent("li").children("ul").removeClass("selected")
+				editing = false;
+			}
+
+			function dropdownBodyClick(event)
+			{
+				if (!editing)
+					return false;
+
+				if (event.target == editItem || $j(event.target).is("li"))
+				{
+
+				}
+				else
+				{
+					dropDownEditEnd(editItem);
+				}
 			}
 
 			function editMouseLeave()
@@ -75,12 +97,6 @@ function template_issue_view()
 			function editEnd()
 			{
 				editEnd2(this);
-			}
-
-			function editEnd2(item)
-			{
-				$j(item).parent("li").removeClass("selected");
-				editing = false;
 			}';
 
 		echo '
