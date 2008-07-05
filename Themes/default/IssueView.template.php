@@ -19,90 +19,6 @@ function template_issue_view()
 		),
 	);
 
-	if ($context['can_issue_update'])
-	{
-		echo '
-		<script language="JavaScript" type="text/javascript">
-			var editing = false;
-			var editItem = 0;
-			var editTimer;
-
-			$j(document).bind("ready", function()
-			{
-				$j(document).bind("click", dropdownBodyClick);
-				$j("#issueinfot li.canedit dl").bind("click", dropDownEvent);
-			});
-
-			function dropDownEvent()
-			{
-				if (editing)
-				{
-					if (editItem == this)
-						return dropDownEditEnd(editItem);
-
-					dropDownEditEnd(editItem)
-				}
-
-				dropDownEditStart(this);
-			}
-
-			function dropDownEditStart(item)
-			{
-				if (editing)
-					dropDownEditEnd(editItem);
-
-				editing = true;
-				editItem = item;
-
-				$j(item).parent("li").addClass("selected");
-				$j(item).parent("li").children("ul").width($j(item).width()).addClass("selected");
-			}
-
-			function dropDownEditEnd(item)
-			{
-				$j(item).parent("li").removeClass("selected");
-				$j(item).parent("li").children("ul").removeClass("selected")
-				editing = false;
-			}
-
-			function dropdownBodyClick(event)
-			{
-				if (!editing)
-					return false;
-
-				if (event.target == editItem || $j(event.target).is("li"))
-				{
-
-				}
-				else
-				{
-					dropDownEditEnd(editItem);
-				}
-			}
-
-			function editMouseLeave()
-			{
-				editTimer = setTimeout(editEndBody, 500)
-			}
-			function editMouseOver()
-			{
-				clearTimeout(editTimer);
-			}
-
-			function editEndBody()
-			{
-				editEnd2(editItem);
-			}
-
-			function editEnd()
-			{
-				editEnd2(this);
-			}';
-
-		echo '
-		</script>';
-	}
-
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
 		<a name="com', $context['current_issue']['comment_first'], '"></a>
@@ -110,96 +26,31 @@ function template_issue_view()
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
 			<div id="issueinfot" class="clearfix topborder windowbg smalltext">
 				<ul class="details">
-					<li class="clearfix', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+					<li id="issue_type" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_type'], '</dt>
 							<dd>
 								', $context['current_issue']['type']['name'], '
 							</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_update']))
-	{
-		echo '
-						<ul class="options">';
-
-		foreach ($context['possible_types'] as $id => $type)
-			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';type=', $id, '">', $type['name'], '</a></li>';
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
-					<li class="clearfix', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+					<li id="issue_category" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_category'], '</dt>
 							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_update']))
-	{
-		echo '
-						<ul class="options">
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';category=0">', $txt['issue_none'],'</a></li>';
-
-		foreach ($context['project']['category'] as $c)
-			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';category=',$c['id'], '">', $c['name'],'</a></li>';
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
-					<li class="clearfix', $context['can_issue_moderate'] ? ' canedit' : '', '">
+					<li id="issue_status" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_status'], '</dt>
 							<dd>', $context['current_issue']['status']['text'], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_moderate']))
-	{
-		echo '
-						<ul class="options">';
-
-			foreach ($context['issue']['status'] as $status)
-				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';status=', $status['id'], '">', $status['text'], '</a></li>';
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
-					<li class="clearfix', $context['can_issue_moderate'] ? ' canedit' : '', '">
+					<li id="issue_priority" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_moderate']))
-	{
-		echo '
-						<ul class="options">';
-
-			foreach ($context['issue']['priority'] as $id => $text)
-				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';priority=', $id, '">', $txt[$text], '</a></li>';
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
 					<li>
 						<dl class="clearfix">
@@ -213,84 +64,23 @@ function template_issue_view()
 							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
-					<li class="clearfix ', !empty($context['can_issue_update']) ? ' canedit' : '', '">
+					<li id="issue_version" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_update']))
-	{
-		echo '
-						<ul class="options">
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=0">', $txt['issue_none'], '</a></li>';
-		foreach ($context['versions'] as $v)
-		{
-			echo '
-							<li style="font-weight: bold"><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=', $v['id'], '">', $v['name'], '</a></li>';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version=', $subv['id'], '">', $subv['name'], '</a></li>';
-		}
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
-					<li class="clearfix', !empty($context['can_issue_moderate']) ? ' canedit' : '', '">
+					<li id="issue_verfix" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_version_fixed'], '</dt>
 							<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_moderate']))
-	{
-		echo '
-						<ul class="options">
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=0">', $txt['issue_none'], '</a></li>';
-		foreach ($context['versions'] as $v)
-		{
-			echo '
-							<li style="font-weight: bold"><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=', $v['id'], '">', $v['name'], '</a></li>';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';version_fixed=', $subv['id'], '">', $subv['name'], '</a></li>';
-		}
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
-					<li class="clearfix', !empty($context['can_issue_moderate']) ? ' canedit' : '', '">
+					<li id="issue_assign" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_assigned_to'], '</dt>
 							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
-							<dd class="button"></dd>
-						</dl>';
-
-	if (!empty($context['can_issue_moderate']))
-	{
-		echo '
-						<ul class="options">
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';assign=0">', $txt['issue_none'], '</a></li>';
-
-			foreach ($context['assign_members'] as $mem)
-				echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update;sesc=', $context['session_id'], ';assign=', $mem['id'], '">', $mem['name'], '</a></li>';
-
-		echo '
-						</ul>';
-	}
-
-	echo '
+						</dl>
 					</li>
 				</ul>
 			</div>
@@ -298,7 +88,80 @@ function template_issue_view()
 
 	$alternate = false;
 
-	echo '';
+	echo '
+	';
+
+	if (!empty($context['can_issue_update']))
+	{
+		echo '
+	<script language="JavaScript" type="text/javascript">
+		var ddIssueType = new PTDropdown("issue_type", "', $context['session_id'], '");
+		var ddIssueCate = new PTDropdown("issue_category", "', $context['session_id'], '");
+		var ddIssueVers = new PTDropdown("issue_version", "', $context['session_id'], '");
+		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
+
+		// Types
+		foreach ($context['possible_types'] as $id => $type)
+			echo '
+		ddIssueType.addOption("', $id, '", "', $type['name'], '");';
+
+		// Categories
+		foreach ($context['project']['category'] as $c)
+			echo '
+		ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
+
+		// Versions
+		foreach ($context['versions'] as $v)
+		{
+			echo '
+		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '");';
+
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+		ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '");';
+		}
+
+		if ($context['can_issue_moderate'])
+		{
+			echo '
+		var ddIssueStat = new PTDropdown("issue_status", "', $context['session_id'], '");
+		var ddIssueAssi = new PTDropdown("issue_assign", "', $context['session_id'], '");
+		var ddIssueFixv = new PTDropdown("issue_verfix", "', $context['session_id'], '")
+		var ddIssuePrio = new PTDropdown("issue_priority", "', $context['session_id'], '");
+		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
+
+			// Status
+			foreach ($context['issue']['status'] as $status)
+				echo '
+		ddIssueStat.addOption(', $status['id'], ', "', $status['text'], '");';
+
+			// Members
+			foreach ($context['assign_members'] as $mem)
+				echo '
+		ddIssueAssi.addOption(', $mem['id'], ', "', $mem['name'], '");';
+
+			// Versions
+			foreach ($context['versions'] as $v)
+			{
+				echo '
+		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '");';
+
+				foreach ($v['sub_versions'] as $subv)
+					echo '
+		ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '");';
+			}
+
+			// Priorities
+			foreach ($context['issue']['priority'] as $id => $text)
+				echo '
+		ddIssuePrio.addOption(', $id, ', "', $txt[$text], '");';
+
+		}
+
+	echo '
+		</script>';
+	}
+
 
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');

@@ -254,6 +254,7 @@ function loadProjectTools($mode = '')
 	if (empty($mode))
 	{
 		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var $j = jQuery.noConflict();

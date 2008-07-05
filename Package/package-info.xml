@@ -52,6 +52,7 @@
 		<require-file name="Themes/default/css/project.css" destination="$themedir/css" />
 
 		<!-- Scripts -->
+		<require-file name="Themes/default/scripts/project.js" destination="$themedir/scripts" />
 		<require-file name="Themes/default/scripts/jquery.js" destination="$themedir/scripts" />
 
 		<!-- Images -->
@@ -94,6 +95,7 @@
 		<remove-file name="$themedir/css/project.css" />
 
 		<!-- Scripts -->
+		<remove-file name="$themedir/scripts/project.js" />
 		<remove-file name="$themedir/scripts/jquery.js" />
 
 		<!-- Images -->

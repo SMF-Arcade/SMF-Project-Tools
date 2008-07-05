@@ -252,26 +252,15 @@ table.issuetable td.lastissue
 #issueinfot ul.details
 {
 	list-style: none;
-	margin: 0;
+	margin: 0 2.5px;
 	padding: 0;
 }
 #issueinfot ul.details li
 {
 	border: 1px solid transparent;
-	margin: 1px 2.5px;
+	margin: 1.5px 0;
 }
-#issueinfot li.canedit:hover, #issueinfot li.selected
-{
-	border: 1px solid black !important;
-	background: white;
-}
-#issueinfot li.selected dl
-{
-}
-#issueinfot li.selected ul.options
-{
-	display: block;
-}
+
 #issueinfot dt
 {
 	margin: 0;
@@ -287,39 +276,46 @@ table.issuetable td.lastissue
 	margin: 0;
 	padding: 1px 2.5px;
 }
-#issueinfot li.canedit dd.button
+
+.dropdown:hover, .dropdown_selected
+{
+	border: 1px solid black !important;
+	background: white;
+}
+
+.dropdown dd.button
 {
 	width: 9px;
 	height: 1.6em;
-	float: right;
+	float: right !important;
 	background: url(../images/pdropdown.gif) no-repeat center center;
 }
-#issueinfot ul.options
+
+.dropdown ul
 {
 	border: 1px solid black;
 	border-top: 0;
 	background: white;
-	display: none;
 	position: absolute;
-	width: 25em;
-	margin: -1px;
-}
-#issueinfot ul.options li
-{
-	border: 0;
 	margin: 0;
-	padding: 1px 2.5px;
+	margin-left: -1px;
 }
-#issueinfot ul.options li a
+.dropdown ul li
+{
+	border: 0 !important;
+	margin: 0 !important;
+	padding: 1px 2.5px !important;
+}
+.dropdown ul li a
 {
 	color: black;
 	display: block;
 }
-#issueinfot li ul li a:hover
+.dropdown ul li a:hover
 {
 	text-decoration: none;
 }
-#issueinfot li ul li:hover
+.dropdown ul li:hover
 {
 	background: #3399ff;
 }
