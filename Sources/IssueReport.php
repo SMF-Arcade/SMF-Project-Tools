@@ -219,6 +219,29 @@ function IssueReply()
 	$context['can_issue_update'] = (projectAllowedTo('issue_update') && $context['current_issue']['is_mine']) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
 
+	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
+
+	if ($context['can_issue_update'])
+	{
+		$context['possible_types'] = array();
+
+		foreach ($context['project']['trackers'] as $id => $type)
+			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
+
+		$context['can_edit'] = true;
+		$context['show_update'] = true;
+	}
+
+	if (projectAllowedTo('issue_moderate'))
+	{
+		if (projectAllowedTo('issue_assign'))
+		{
+			$context['can_assign'] = true;
+			$context['assign_members'] = &$context['project']['developers'];
+		}
+	}
+
 	$context['destination'] = 'reply2';
 
 	// Editor
