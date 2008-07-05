@@ -44,10 +44,12 @@ function Projects()
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),
-		'reply' => array('IssueReport.php', 'IssueReply', true),
 		'update' => array('IssueReport.php', 'IssueUpdate', true),
 		'upload' => array('IssueReport.php', 'IssueUpload', true),
 		'delete' => array('IssueView.php', 'IssueDelete', true),
+		// Reply
+		'reply' => array('IssueReport.php', 'IssueReply', true),
+		'reply2' => array('IssueReport.php', 'IssueReply2', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
