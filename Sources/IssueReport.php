@@ -461,12 +461,26 @@ function IssueUpdate()
 	if (!empty($issueOptions))
 		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 	else
-		$id_event = 0;
+		$context['update_success'] = false;
 
 	if ($id_event === true)
 		$id_event = 0;
 
-	redirectexit('issue=' . $issue . '.0');
+	$context['update_success'] = true;
+
+	// Template
+	loadTemplate('Xml');
+	$context['sub_template'] = 'issue_update';
+}
+
+function template_issue_update()
+{
+	global $context, $settings, $options, $txt;
+
+	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
+<smf>
+	<update success="', $context['update_success'] ? 1 : 0, '"></update>
+</smf>';
 }
 
 function handleUpdate(&$posterOptions, &$issueOptions)
@@ -537,7 +551,6 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	if (isset($context['possible_types'][$_REQUEST['type']]))
 		$issueOptions['type'] = $_REQUEST['type'];
 }
-
 
 function IssueUpload()
 {

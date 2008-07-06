@@ -59,6 +59,7 @@
 		<require-file name="Themes/default/images/bug.png" destination="$imagesdir" />
 		<require-file name="Themes/default/images/feature.png" destination="$imagesdir" />
 		<require-file name="Themes/default/images/pdropdown.gif" destination="$imagesdir" />
+		<require-file name="Themes/default/images/ploading.gif" destination="$imagesdir" />
 
 		<!-- Langauges -->
 		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
@@ -102,6 +103,7 @@
 		<remove-file name="$imagesdir/bug.png" />
 		<remove-file name="$imagesdir/feature.png" />
 		<remove-file name="$imagesdir/pdropdown.gif" />
+		<remove-file name="$imagesdir/ploading.gif" />
 
 		<!-- Languages -->
 		<remove-file name="$languagedir/Project.english.php" />

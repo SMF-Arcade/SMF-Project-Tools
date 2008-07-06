@@ -29,9 +29,7 @@ function template_issue_view()
 					<li id="issue_type" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_type'], '</dt>
-							<dd>
-								', $context['current_issue']['type']['name'], '
-							</dd>
+							<dd>', $context['current_issue']['type']['name'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_category" class="clearfix">
@@ -97,9 +95,9 @@ function template_issue_view()
 	<script language="JavaScript" type="text/javascript">
 		var currentIssue = ', $context['current_issue']['id'], ';
 
-		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type'], '", PTDCallback);
-		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', PTDCallback);
-		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', PTDCallback);
+		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type'], '", PTDCallback, "', $context['session_id'], '");
+		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', PTDCallback, "', $context['session_id'], '");
+		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', PTDCallback, "', $context['session_id'], '");
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
 		// Types
@@ -126,10 +124,10 @@ function template_issue_view()
 		if ($context['can_issue_moderate'])
 		{
 			echo '
-		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', PTDCallback);
-		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', PTDCallback);
-		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', PTDCallback)
-		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', PTDCallback);
+		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', PTDCallback, "', $context['session_id'], '");
+		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', PTDCallback, "', $context['session_id'], '");
+		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', PTDCallback, "', $context['session_id'], '")
+		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', PTDCallback, "', $context['session_id'], '");
 		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
 
 			// Status

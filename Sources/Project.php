@@ -160,8 +160,9 @@ function Projects()
 				'url' => $scripturl . '?project=' . $project . ';sa=roadmap',
 			);
 
-		$context['template_layers'][] = 'project_view';
 		loadTemplate('ProjectView');
+		if (!isset($_REQUEST['xml']))
+			$context['template_layers'][] = 'project_view';
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
@@ -270,7 +271,8 @@ function loadProjectTools($mode = '')
 	loadIssueTypes();
 	loadTemplate('Project', array('forum', 'project'));
 
-	$context['template_layers'][] = 'project';
+	if (!isset($_REQUEST['xml']))
+		$context['template_layers'][] = 'project';
 }
 
 ?>

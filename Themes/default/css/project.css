@@ -285,10 +285,17 @@ table.issuetable td.lastissue
 
 .dropdown dd.button
 {
-	width: 9px;
+	width: 16px;
 	height: 1.6em;
 	float: right !important;
 	background: url(../images/pdropdown.gif) no-repeat center center;
+}
+.dropdown dd.button
+{
+	width: 16px;
+	height: 1.6em;
+	float: right !important;
+	background: url(../images/ploading.gif) no-repeat center center;
 }
 
 .dropdown ul

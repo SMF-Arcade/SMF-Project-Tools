@@ -1,5 +1,5 @@
 
-function PTDropdown(name, fieldName, currentValue, callback)
+function PTDropdown(name, fieldName, currentValue, callback, sessionID)
 {
 	var object;
 	var options = [];
@@ -11,6 +11,7 @@ function PTDropdown(name, fieldName, currentValue, callback)
 	var dropdownValue = dropdownDL.getElementsByTagName('dd')[0];
 	var dropdownBtn = null;
 	var handled = true;
+	var selectedItem = null;
 
 	this.addOption = addOption;
 	this.fieldName = fieldName;
@@ -43,9 +44,13 @@ function PTDropdown(name, fieldName, currentValue, callback)
 		{
 			newOption = document.createElement('li');
 			newOption.optionValue = options[i]['id'];
+			newOption.optionItem = options[i];
 			createEventListener(dropDownItemClick);
 			newOption.addEventListener('click', dropDownItemClick, false);
 			newOption.innerHTML = options[i]['name'];
+
+			if (options[i]['id'] == currentValue)
+				selectedItem = options[i];
 
 			dropdownMenu.appendChild(newOption);
 		}
@@ -76,11 +81,34 @@ function PTDropdown(name, fieldName, currentValue, callback)
 		if (evt.target.optionValue != currentValue)
 		{
 			dropdownBtn.className = "button_work";
-			callback(fieldName, name, evt.target.optionValue);
-			dropdownBtn.className = "button_button";
+			xmlRequestHandle = callback(fieldName, name, evt.target.optionValue, sessionID);
+
+			checkReadyState(xmlRequestHandle);
+
+			selectedItem = evt.target.optionItem;
 		}
 
 		dropDownHide();
+	}
+
+	function checkReadyState(xmlRequestHandle)
+	{
+		if (xmlRequestHandle.readyState == 4)
+		{
+			dropdownBtn.className = "button";
+			if (xmlRequestHandle.getElementsByTagName('update')[0].nodeValue != '')
+			{
+				dropdownItem.innerHTML = xmlRequestHandle.getElementsByTagName('update')[0].nodeValue;
+			}
+			else
+			{
+				dropdownItem.innerHTML = selectedItem['name'];
+			}
+		}
+		else
+		{
+			setTimeout(checkReadyState, 500, xmlRequestHandle);
+		}
 	}
 
 	function checkParent(domItem)
@@ -136,23 +164,18 @@ function PTDropdown(name, fieldName, currentValue, callback)
 	init();
 }
 
-function PTDCallback(fieldName, name, value)
+function PTDCallback(fieldName, name, value, sessionID)
 {
 	xmlRequestHandle = null;
 
-	xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + value + ';xml', function (oXMLDoc)
+	xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + value + ';xml;sesc=' + sessionID, function (oXMLDoc)
 		{
 			if (xmlRequestHandle.readyState != 4)
 				return true;
-
-			alert(fieldName + ": " + value);
 
 			return true;
 		}
 	);
 
-	while (xmlRequestHandle.readyState != 4)
-	{
-	}
-	return true;
+	return xmlRequestHandle;
 }
