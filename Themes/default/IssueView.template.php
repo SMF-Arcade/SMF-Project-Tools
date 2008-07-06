@@ -26,16 +26,22 @@ function template_issue_view()
 			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
 			<div id="issueinfot" class="clearfix topborder windowbg smalltext">
 				<ul class="details">
+					<li>
+						<dl class="clearfix">
+							<dt>', $txt['issue_reported'], '</dt>
+							<dd>', $context['current_issue']['created'], '</dd>
+						</dl>
+					</li>
+					<li>
+						<dl class="clearfix">
+							<dt>', $txt['issue_updated'], '</dt>
+							<dd>', $context['current_issue']['updated'], '</dd>
+						</dl>
+					</li>
 					<li id="issue_type" class="clearfix">
 						<dl class="clearfix">
 							<dt>', $txt['issue_type'], '</dt>
 							<dd>', $context['current_issue']['type']['name'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_category" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_category'], '</dt>
-							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_status" class="clearfix">
@@ -48,18 +54,6 @@ function template_issue_view()
 						<dl class="clearfix">
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
-						</dl>
-					</li>
-					<li>
-						<dl class="clearfix">
-							<dt>', $txt['issue_reported'], '</dt>
-							<dd>', $context['current_issue']['created'], '</dd>
-						</dl>
-					</li>
-					<li>
-						<dl class="clearfix">
-							<dt>', $txt['issue_updated'], '</dt>
-							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_version" class="clearfix">
@@ -78,6 +72,12 @@ function template_issue_view()
 						<dl class="clearfix">
 							<dt>', $txt['issue_assigned_to'], '</dt>
 							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
+						</dl>
+					</li>
+					<li id="issue_category" class="clearfix">
+						<dl class="clearfix">
+							<dt>', $txt['issue_category'], '</dt>
+							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
 				</ul>

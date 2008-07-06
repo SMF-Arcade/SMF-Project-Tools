@@ -1,5 +1,5 @@
 
-function PTDropdown(name, fieldName, currentValue, callback, sessionID)
+function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 {
 	var object;
 	var options = [];
@@ -49,9 +49,6 @@ function PTDropdown(name, fieldName, currentValue, callback, sessionID)
 			newOption.addEventListener('click', dropDownItemClick, false);
 			newOption.innerHTML = options[i]['name'];
 
-			if (options[i]['id'] == currentValue)
-				selectedItem = options[i];
-
 			dropdownMenu.appendChild(newOption);
 		}
 
@@ -78,14 +75,15 @@ function PTDropdown(name, fieldName, currentValue, callback, sessionID)
 	{
 		handled = true;
 
-		if (evt.target.optionItem != selectedItem)
+		if (evt.target.optionValue != selectedValue)
 		{
+			selectedValue = evt.target.optionValue;
+			selectedItem = evt.target.optionItem
+
 			dropdownBtn.className = "button_work";
 			xmlRequestHandle = callback(fieldName, name, evt.target.optionValue, sessionID);
 
 			checkReadyState(xmlRequestHandle);
-
-			selectedItem = evt.target.optionItem;
 		}
 
 		dropDownHide();
