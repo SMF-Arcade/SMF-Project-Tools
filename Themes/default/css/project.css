@@ -290,7 +290,7 @@ table.issuetable td.lastissue
 	float: right !important;
 	background: url(../images/pdropdown.gif) no-repeat center center;
 }
-.dropdown dd.button
+.dropdown dd.button_work
 {
 	width: 16px;
 	height: 1.6em;

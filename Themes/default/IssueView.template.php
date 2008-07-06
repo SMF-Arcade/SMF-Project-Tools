@@ -95,7 +95,7 @@ function template_issue_view()
 	<script language="JavaScript" type="text/javascript">
 		var currentIssue = ', $context['current_issue']['id'], ';
 
-		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type'], '", PTDCallback, "', $context['session_id'], '");
+		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type']['id'], '", PTDCallback, "', $context['session_id'], '");
 		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', PTDCallback, "', $context['session_id'], '");
 		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', PTDCallback, "', $context['session_id'], '");
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';

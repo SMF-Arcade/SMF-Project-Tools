@@ -78,7 +78,7 @@ function PTDropdown(name, fieldName, currentValue, callback, sessionID)
 	{
 		handled = true;
 
-		if (evt.target.optionValue != currentValue)
+		if (evt.target.optionItem != selectedItem)
 		{
 			dropdownBtn.className = "button_work";
 			xmlRequestHandle = callback(fieldName, name, evt.target.optionValue, sessionID);
@@ -96,13 +96,16 @@ function PTDropdown(name, fieldName, currentValue, callback, sessionID)
 		if (xmlRequestHandle.readyState == 4)
 		{
 			dropdownBtn.className = "button";
-			if (xmlRequestHandle.getElementsByTagName('update')[0].nodeValue != '')
+
+			var node = xmlRequestHandle.responseXML.getElementsByTagName('update')[0];
+
+			if (node.nodeValue == '' || node.nodeValue == null || node.nodeValue == undefined)
 			{
-				dropdownItem.innerHTML = xmlRequestHandle.getElementsByTagName('update')[0].nodeValue;
+				dropdownValue.innerHTML = selectedItem['name'];
 			}
 			else
 			{
-				dropdownItem.innerHTML = selectedItem['name'];
+				dropdownValue.innerHTML = xmlRequestHandle.responseXML.getElementsByTagName('update')[0].nodeValue;
 			}
 		}
 		else

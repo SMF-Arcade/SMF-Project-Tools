@@ -548,7 +548,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	foreach ($context['project']['trackers'] as $id => $type)
 		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
 
-	if (isset($context['possible_types'][$_REQUEST['type']]))
+	if (isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
 		$issueOptions['type'] = $_REQUEST['type'];
 }
 
