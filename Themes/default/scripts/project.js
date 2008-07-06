@@ -1,6 +1,7 @@
 
-function PTDropdown(name, currentValue, callback)
+function PTDropdown(name, fieldName, currentValue, callback)
 {
+	var object;
 	var options = [];
 	var visible = false;
 	var dropdownHandle = document.getElementById(name);
@@ -12,6 +13,7 @@ function PTDropdown(name, currentValue, callback)
 	var handled = true;
 
 	this.addOption = addOption;
+	this.fieldName = fieldName;
 
 	function addOption(id, text)
 	{
@@ -52,6 +54,7 @@ function PTDropdown(name, currentValue, callback)
 
 		visible = true;
 	}
+
 	function dropDownChange(evt)
 	{
 		handled = true;
@@ -72,7 +75,9 @@ function PTDropdown(name, currentValue, callback)
 
 		if (evt.target.optionValue != currentValue)
 		{
-			callback(name, evt.target.optionValue);
+			dropdownBtn.className = "button_work";
+			callback(fieldName, name, evt.target.optionValue);
+			dropdownBtn.className = "button_button";
 		}
 
 		dropDownHide();
@@ -129,4 +134,25 @@ function PTDropdown(name, currentValue, callback)
 	}
 
 	init();
+}
+
+function PTDCallback(fieldName, name, value)
+{
+	xmlRequestHandle = null;
+
+	xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + value + ';xml', function (oXMLDoc)
+		{
+			if (xmlRequestHandle.readyState != 4)
+				return true;
+
+			alert(fieldName + ": " + value);
+
+			return true;
+		}
+	);
+
+	while (xmlRequestHandle.readyState != 4)
+	{
+	}
+	return true;
 }
