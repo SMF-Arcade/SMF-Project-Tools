@@ -1,5 +1,5 @@
 
-function PTDropdown(name, sessionid)
+function PTDropdown(name, currentValue, callback)
 {
 	var options = [];
 	var visible = false;
@@ -68,14 +68,24 @@ function PTDropdown(name, sessionid)
 
 	function dropDownItemClick(evt)
 	{
-		alert(evt.target.optionValue);
 		handled = true;
+
+		if (evt.target.optionValue != currentValue)
+		{
+			callback(name, evt.target.optionValue);
+		}
+
+		dropDownHide();
 	}
 
 	function checkParent(domItem)
 	{
 		if (domItem == dropdownHandle)
 			return true;
+		else if (domItem.tagName == 'BODY')
+		{
+			return false;
+		}
 		else
 		{
 			if (domItem.parentNode.tagName != 'BODY')

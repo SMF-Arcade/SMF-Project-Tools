@@ -55,7 +55,7 @@ function template_issue_view()
 					<li>
 						<dl class="clearfix">
 							<dt>', $txt['issue_reported'], '</dt>
-							<dd>	', $context['current_issue']['created'], '</dd>
+							<dd>', $context['current_issue']['created'], '</dd>
 						</dl>
 					</li>
 					<li>
@@ -95,9 +95,13 @@ function template_issue_view()
 	{
 		echo '
 	<script language="JavaScript" type="text/javascript">
-		var ddIssueType = new PTDropdown("issue_type", "', $context['session_id'], '");
-		var ddIssueCate = new PTDropdown("issue_category", "', $context['session_id'], '");
-		var ddIssueVers = new PTDropdown("issue_version", "', $context['session_id'], '");
+		function PTDCallback(name, value)
+		{
+			alert(name + ": " + value);
+		}
+		var ddIssueType = new PTDropdown("issue_type", "', $context['current_issue']['type'], '", PTDCallback);
+		var ddIssueCate = new PTDropdown("issue_category", ', (int) $context['current_issue']['category']['id'], ', PTDCallback);
+		var ddIssueVers = new PTDropdown("issue_version", ', (int) $context['current_issue']['version']['id'], ', PTDCallback);
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
 		// Types
@@ -124,10 +128,10 @@ function template_issue_view()
 		if ($context['can_issue_moderate'])
 		{
 			echo '
-		var ddIssueStat = new PTDropdown("issue_status", "', $context['session_id'], '");
-		var ddIssueAssi = new PTDropdown("issue_assign", "', $context['session_id'], '");
-		var ddIssueFixv = new PTDropdown("issue_verfix", "', $context['session_id'], '")
-		var ddIssuePrio = new PTDropdown("issue_priority", "', $context['session_id'], '");
+		var ddIssueStat = new PTDropdown("issue_status", ', (int) $context['current_issue']['status']['id'], ', PTDCallback);
+		var ddIssueAssi = new PTDropdown("issue_assign", ', (int) $context['current_issue']['assignee']['id'], ', PTDCallback);
+		var ddIssueFixv = new PTDropdown("issue_verfix", ', (int) $context['current_issue']['version_fixed']['id'], ', PTDCallback)
+		var ddIssuePrio = new PTDropdown("issue_priority", ', (int) $context['current_issue']['priority_num'], ', PTDCallback);
 		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
 
 			// Status
