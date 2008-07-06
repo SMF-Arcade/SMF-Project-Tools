@@ -208,7 +208,7 @@ function IssueReply()
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
-		fatal_lang_error('issue_not_found');
+		fatal_lang_error('issue_not_found', false);
 
 	if (!isset($context['versions']))
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
@@ -278,13 +278,9 @@ function IssueReply()
 		$smcFunc['db_free_result']($request);
 
 		if (!$row)
-		{
-			fatal_lang_error('comment_not_found');
-		}
+			fatal_lang_error('comment_not_found', false);
 		else
-		{
 			$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
-		}
 	}
 
 	$editorOptions = array(
@@ -312,7 +308,7 @@ function IssueReply2()
 	global $context, $user_info, $smcFunc, $sourcedir;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
-		fatal_lang_error('issue_not_found');
+		fatal_lang_error('issue_not_found', false);
 
 	if (!isset($context['versions']))
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
@@ -432,7 +428,7 @@ function IssueUpdate()
 	global $context, $user_info, $smcFunc, $sourcedir;
 
 	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
+		fatal_lang_error('issue_not_found', false);
 
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 

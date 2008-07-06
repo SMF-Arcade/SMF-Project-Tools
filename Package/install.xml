@@ -98,7 +98,7 @@
 		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
 
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
-			fatal_lang_error('project_not_found');
+			fatal_lang_error('project_not_found', false);
 
 		$project = $context['project']['id'];
 		projectIsAllowedTo('view');

@@ -165,7 +165,7 @@ function ProjectRoadmap()
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 
 	if (empty($context['project']))
-		fatal_lang_error('project_not_found');
+		fatal_lang_error('project_not_found', false);
 
 	$parents = array();
 	$ids = array();

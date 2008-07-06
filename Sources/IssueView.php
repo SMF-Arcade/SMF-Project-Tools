@@ -33,7 +33,7 @@ function IssueView()
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
+		fatal_lang_error('issue_not_found', false);
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
@@ -318,7 +318,7 @@ function IssueDelete()
 	checkSession('get');
 
 	if (!isset($context['current_issue']))
-		fatal_lang_error('issue_not_found');
+		fatal_lang_error('issue_not_found', false);
 
 	projectIsAllowedTo('issue_moderate');
 

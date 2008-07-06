@@ -79,14 +79,14 @@ function Projects()
 		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
 
 		if (!$_REQUEST['project'])
-			fatal_lang_error('issue_not_found');
+			fatal_lang_error('issue_not_found', false);
 	}
 
 	// Load Project if needed
 	if (!empty($_REQUEST['project']))
 	{
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
-			fatal_lang_error('project_not_found');
+			fatal_lang_error('project_not_found', false);
 		$project = $context['project']['id'];
 		projectIsAllowedTo('view');
 
@@ -95,7 +95,7 @@ function Projects()
 		if (isset($_REQUEST['issue']))
 		{
 			if (!loadIssue((int) $_REQUEST['issue']))
-				fatal_lang_error('issue_not_found');
+				fatal_lang_error('issue_not_found', false);
 
 			if (!isset($_REQUEST['sa']))
 				$_REQUEST['sa'] = 'viewIssue';
@@ -112,7 +112,7 @@ function Projects()
 	if (!empty($project) && empty($subActions[$_REQUEST['sa']][2]))
 		$_REQUEST['sa'] = 'viewProject';
 	elseif (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
-		fatal_lang_error('project_not_found');
+		fatal_lang_error('project_not_found', false);
 
 	// Check permission if needed
 	if (isset($subActions[$_REQUEST['sa']][3]))

@@ -287,7 +287,7 @@ function EditProject2()
 	$_POST['project'] = (int) $_POST['project'];
 
 	if (!empty($_POST['project']) && !loadProject($_POST['project']))
-		fatal_lang_error('project_not_found');
+		fatal_lang_error('project_not_found', false);
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
@@ -304,7 +304,7 @@ function EditProject2()
 					$projectOptions['trackers'][] = $tracker;
 
 		if (count($projectOptions['trackers']) == 0)
-			fatal_lang_error('no_issue_types');
+			fatal_lang_error('no_issue_types', false);
 
 		if (isset($_POST['add']))
 			$_POST['project'] = createProject($projectOptions);
@@ -435,7 +435,7 @@ function EditVersion()
 	if ($_REQUEST['sa'] == 'newversion')
 	{
 		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
-			fatal_lang_error('project_not_found');
+			fatal_lang_error('project_not_found', false);
 
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
@@ -485,7 +485,7 @@ function EditVersion()
 		);
 
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('version_not_found');
+			fatal_lang_error('version_not_found', false);
 
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
@@ -493,7 +493,7 @@ function EditVersion()
 		$project_groups = explode(',', $row['project_groups']);
 
 		if (!$context['project'] = loadProject((int) $row['id_project']))
-			fatal_lang_error('project_not_found');
+			fatal_lang_error('project_not_found', false);
 
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 

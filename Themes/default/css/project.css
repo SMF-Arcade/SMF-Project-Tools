@@ -213,6 +213,7 @@ table.issuetable td.replies, table.issuetable td.status, table.issuetable td.ver
 }
 table.issuetable td.lastissue
 {
+	width: 15%;
 	padding: 0.4em;
 }
 
