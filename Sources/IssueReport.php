@@ -407,7 +407,7 @@ function IssueReply2()
 	);
 	$issueOptions = array();
 
-	if (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate'))
+	if ((projectAllowedTo('issue_update') && $type == 'own') || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
 
 	if (!empty($issueOptions))
@@ -455,7 +455,7 @@ function IssueUpdate()
 	);
 	$issueOptions = array();
 
-	if (projectAllowedTo('issue_update') || projectAllowedTo('issue_moderate'))
+	if ((projectAllowedTo('issue_update') && $type == 'own') || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
 
 	if (!empty($issueOptions))
