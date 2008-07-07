@@ -532,7 +532,7 @@ function EditVersion()
 		);
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_group, group_name
+			SELECT id_group, group_name, id_project
 			FROM {db_prefix}project_groups
 			WHERE id_project = {int:project} OR id_project = 0',
 			array(
@@ -548,6 +548,7 @@ function EditVersion()
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
 				'selected' => in_array($row['id_group'], $project_groups),
+				'global' => $row['id_project'] == 0,
 			);
 		}
 		$smcFunc['db_free_result']($request);

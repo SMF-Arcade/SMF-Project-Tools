@@ -175,12 +175,6 @@ $tables = array(
 				'size' => 255,
 				'null' => false,
 			),
-			array(
-				'name' => 'access_level',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
 		),
 		'indexes' => array(
 			array(
@@ -196,6 +190,34 @@ $tables = array(
 				'name' => 'member_groups',
 				'type' => 'index',
 				'columns' => array('member_groups')
+			),
+		),
+	),
+	'project_groups' => array(
+		'name' => 'project_groups',
+		'columns' => array(
+			array(
+				'name' => 'id_group',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'permission',
+				'type' => 'varchar',
+				'size' => 30,
+				'null' => false,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_group', 'permission')
+			),
+			array(
+				'name' => 'id_group',
+				'type' => 'index',
+				'columns' => array('id_group')
 			),
 		),
 	),

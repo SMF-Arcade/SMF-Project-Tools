@@ -62,7 +62,7 @@ function loadProject($id_project)
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
 		'category' => array(),
-		'groups' => explode('', $row['project_groups']),
+		'groups' => explode(',', $row['project_groups']),
 		'trackers' => array(),
 		'developers' => array(),
 		'is_developer' => !empty($row['is_dev']),
@@ -181,21 +181,7 @@ function projectAllowedTo($permission)
 	if (allowedTo('project_admin'))
 		return true;
 
-	$permissions = array(
-		'admin' => 50,
-		'issue_resolve' => 35,
-		'issue_moderate' => 35,
-		'delete_comment_any' => 35,
-		'delete_comment_own' => 6,
-		'issue_attach' => 5,
-		'issue_update' => 5,
-		'issue_report' => 5,
-		'issue_comment' => 4,
-		'issue_view' => 1,
-		'view' => 1,
-	);
-
-	if (isset($permissions[$permission]) && $context['project_levels'][$project] >= $permissions[$permission])
+	if (isset($context['project_permissions'][$permission]) && $context['project_permissions'][$permission])
 		return true;
 
 	return false;
