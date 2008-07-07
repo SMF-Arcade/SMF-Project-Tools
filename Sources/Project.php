@@ -254,6 +254,9 @@ function loadProjectPermission($project = 0)
 		}
 		$smcFunc['db_free_result']($request);
 
+		if (empty($projectGroups))
+			fatal_lang_error('cannot_project_access', false);
+
 		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
 		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
 		$see_issue = $see_version;

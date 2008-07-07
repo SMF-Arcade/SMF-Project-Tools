@@ -7,6 +7,7 @@ July 2008
 --------------------------------------------------------------------------------
  + Advanced Permission system done
  ! Could view issues without permission
+ ! Database error when no permissions to any project
 
 April 2008
 --------------------------------------------------------------------------------

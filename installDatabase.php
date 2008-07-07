@@ -50,7 +50,9 @@ $request = $smcFunc['db_query']('', '
 	FROM {db_prefix}project_groups');
 
 // Install default groups
-if ($smcFunc['db_num_rows']($request) == 0)
+list ($count) = $smcFunc['db_fetch_row']($request);
+$smcFunc['db_free_result']($request);
+if ($count)
 {
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_groups',
