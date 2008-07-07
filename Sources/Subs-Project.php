@@ -242,52 +242,6 @@ function createProject($projectOptions)
 
 	unset($projectOptions['name'], $projectOptions['description']);
 
-	/*$smcFunc['db_insert']('insert',
-		'{db_prefix}project_groups',
-		array(
-			'id_project' => 'int',
-			'group_name' => 'string',
-			'access_level' => 'int',
-		),
-		array(
-			array(
-				$id_project,
-				$txt['access_level_viewer'],
-				1,
-			),
-			array(
-				$id_project,
-				$txt['access_level_report'],
-				5,
-			),
-			array(
-				$id_project,
-				$txt['access_level_beta'],
-				30,
-			),
-			array(
-				$id_project,
-				$txt['access_level_member'],
-				35,
-			),
-		),
-		array()
-	);
-
-	$projectOptions['project_groups'] = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT id_group
-		FROM {db_prefix}project_groups
-		WHERE id_project = {int:project}',
-		array(
-			'project' => $id_project,
-		)
-	);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$projectOptions['project_groups'][] = $row['id_group'];
-	$smcFunc['db_free_result']($request);*/
-
 	// Anything left?
 	if (!empty($projectOptions))
 		updateProject($id_project, $projectOptions);
