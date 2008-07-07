@@ -157,7 +157,6 @@ function EditProject()
 	if ($_REQUEST['sa'] == 'newproject')
 	{
 		$curProject = array(
-			'member_groups' => array(),
 		);
 
 		$context['project'] = array(
@@ -170,6 +169,29 @@ function EditProject()
 			'developers' => array(),
 			'public_access' => 0,
 		);
+
+		$context['project_groups'] = array();
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, id_project, group_name, member_groups, access_level
+			FROM {db_prefix}project_groups
+			WHERE id_project = 0',
+			array(
+				'project' => $project['id'],
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['project_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'member_groups' => explode(',', $row['member_groups']),
+				'access_level' => $row['access_level'],
+				'global' => true,
+			);
+		}
+		$smcFunc['db_free_result']($request);
 	}
 	else
 	{
@@ -187,10 +209,8 @@ function EditProject()
 
 		$context['project_groups'] = array();
 
-		$group_levels = array();
-
 		$request = $smcFunc['db_query']('', '
-			SELECT id_group, group_name, member_groups, access_level
+			SELECT id_group, id_project, group_name, member_groups, access_level
 			FROM {db_prefix}project_groups
 			WHERE id_project = {int:project} OR id_project = 0',
 			array(
@@ -205,15 +225,13 @@ function EditProject()
 				'name' => $row['group_name'],
 				'member_groups' => explode(',', $row['member_groups']),
 				'access_level' => $row['access_level'],
+				'global' => $row['id_project'] == 0,
 			);
-
-			foreach ($context['project_groups'][$row['id_group']]['member_groups'] as $id_group)
-				$group_levels[$id_group] = $row['id_group'];
 		}
 		$smcFunc['db_free_result']($request);
 	}
 
-	// Default membergroups.
+	/*// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(
 			'id' => '-1',
@@ -248,7 +266,7 @@ function EditProject()
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -303,6 +321,11 @@ function EditProject2()
 				if (isset($context['project_tools']['issue_types'][$tracker]))
 					$projectOptions['trackers'][] = $tracker;
 
+		$projectOptions['project_groups'] = array();
+		if (!empty($_POST['project_groups']))
+			foreach ($_POST['project_groups'] as $group)
+				$projectOptions['project_groups'][] = $group;
+
 		if (count($projectOptions['trackers']) == 0)
 			fatal_lang_error('no_issue_types', false);
 
@@ -340,7 +363,7 @@ function EditProject2()
 			);
 		}
 
-		if (!empty($_POST['groups']))
+		/*if (!empty($_POST['groups']))
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT id_group, group_name, member_groups, access_level
@@ -382,7 +405,7 @@ function EditProject2()
 					)
 				);
 			}
-		}
+		}*/
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))
 	{

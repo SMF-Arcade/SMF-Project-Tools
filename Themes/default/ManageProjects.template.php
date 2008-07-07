@@ -186,22 +186,13 @@ function template_edit_project()
 			</td>
 			<td valign="top" align="left">';
 
-		foreach ($context['groups'] as $group)
-		{
+		foreach ($context['project_groups'] as $pgroup)
 			echo '
-				<label for="groups_', $group['id'], '"><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label>
-				<select name="groups[', $group['id'], ']">
-					<option value="0">', $txt['access_level_none'], '</option>';
+				<input id="pg_', $pgroup['id'], '" type="checkbox" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '> <label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label>', $pgroup['global'] ? ' <i class="smalltext">('. $txt['project_global'] . ')</i>' : '', '<br />';
 
-			foreach ($context['project_groups'] as $pgroup)
-				echo '
-					<option value="', $pgroup['id'], '"', $group['level'] == $pgroup['id'] ? ' selected="selected"' : '', '>', $pgroup['name'], '</option>';
-
-			echo '
-				</select><br />';
-		}
-
-	echo '
+		echo '
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<br />
 			</td>
 		</tr>';
 	}
@@ -216,7 +207,7 @@ function template_edit_project()
 
 	foreach ($context['project_tools']['issue_types'] as $key => $type)
 		echo '
-				<label for="tracker_', $key, '"><input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /><span>', $type['name'], '</span></label><br />';
+				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
 
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'trackers[]\');" /><br />
@@ -302,6 +293,7 @@ function template_edit_version()
 		</tr>';
 
 	if (!empty($context['version']['parent']))
+	{
 		echo '
 		<tr valign="top" class="windowbg2">
 			<td>
@@ -326,6 +318,7 @@ function template_edit_version()
 				</select>
 			</td>
 		</tr>';
+	}
 
 	echo '
 		<tr valign="top" class="windowbg2">
@@ -337,9 +330,11 @@ function template_edit_version()
 
 	foreach ($context['project_groups'] as $pgroup)
 		echo '
-				<input id="pg_', $pgroup['id'], '" type="checkbox" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '> <label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label><br />';
+				<input id="pg_', $pgroup['id'], '" type="checkbox" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '> <label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label>', $pgroup['global'] ? ' <i class="smalltext">('. $txt['project_global'] . ')</i>' : '', '<br />';
 
 	echo '
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<br />
 			</td>
 		</tr>
 		<tr class="windowbg2">

@@ -278,6 +278,11 @@ table.issuetable td.lastissue
 	padding: 1px 2.5px;
 }
 
+.dropdown
+{
+	cursor: pointer;
+}
+
 .dropdown:hover, .dropdown_selected
 {
 	border: 1px solid black !important;

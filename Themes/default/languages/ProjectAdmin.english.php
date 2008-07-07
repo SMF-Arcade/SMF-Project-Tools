@@ -19,6 +19,8 @@ $txt['new_version'] = 'New Version';
 $txt['edit_version'] = 'Edit Version';
 $txt['edit_category'] = 'Edit Category';
 
+$txt['project_global'] = 'Global';
+
 // Edit Project
 $txt['project_name'] = 'Project Name';
 $txt['project_description'] = 'Short description for project';

@@ -242,7 +242,7 @@ function createProject($projectOptions)
 
 	unset($projectOptions['name'], $projectOptions['description']);
 
-	$smcFunc['db_insert']('insert',
+	/*$smcFunc['db_insert']('insert',
 		'{db_prefix}project_groups',
 		array(
 			'id_project' => 'int',
@@ -286,7 +286,7 @@ function createProject($projectOptions)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$projectOptions['project_groups'][] = $row['id_group'];
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 
 	// Anything left?
 	if (!empty($projectOptions))
