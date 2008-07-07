@@ -92,7 +92,6 @@ function Projects()
 			fatal_lang_error('project_not_found', false);
 
 		$project = $context['project']['id'];
-		projectIsAllowedTo('view');
 
 		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
@@ -263,7 +262,7 @@ function loadProjectPermission($project = 0)
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT permission
-				FROM {db_prefix}project_groups AS g
+				FROM {db_prefix}project_permissions AS g
 				WHERE id_group IN({array_int:groups})',
 				array(
 					'groups' => $projectGroups_this,

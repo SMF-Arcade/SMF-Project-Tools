@@ -238,11 +238,8 @@ function IssueReply()
 
 	if (projectAllowedTo('issue_moderate'))
 	{
-		if (projectAllowedTo('issue_assign'))
-		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = &$context['project']['developers'];
-		}
+		$context['can_assign'] = true;
+		$context['assign_members'] = &$context['project']['developers'];
 	}
 
 	$context['destination'] = 'reply2';
@@ -338,11 +335,8 @@ function IssueReply2()
 
 	if (projectAllowedTo('issue_moderate'))
 	{
-		if (projectAllowedTo('issue_assign'))
-		{
 			$context['can_assign'] = true;
 			$context['assign_members'] = &$context['project']['developers'];
-		}
 	}
 
 	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
@@ -451,7 +445,7 @@ function IssueUpdate()
 	);
 	$issueOptions = array();
 
-	if ((projectAllowedTo('issue_update') && $type == 'own') || projectAllowedTo('issue_moderate'))
+	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
 
 	if (!empty($issueOptions))

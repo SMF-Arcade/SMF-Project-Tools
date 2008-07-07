@@ -34,6 +34,9 @@ function IssueView()
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
+
+	projectIsAllowedTo('issue_view');
+
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
@@ -61,11 +64,8 @@ function IssueView()
 
 	if (projectAllowedTo('issue_moderate'))
 	{
-		if (projectAllowedTo('issue_assign'))
-		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = &$context['project']['developers'];
-		}
+		$context['can_assign'] = true;
+		$context['assign_members'] = &$context['project']['developers'];
 	}
 
 	// Temp

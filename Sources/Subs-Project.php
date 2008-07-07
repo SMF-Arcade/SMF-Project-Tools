@@ -189,7 +189,7 @@ function projectAllowedTo($permission)
 
 function projectIsAllowedTo($permission)
 {
-	global $context, $project, $user_info;
+	global $context, $project, $txt, $user_info;
 
 	if ($project === null)
 		fatal_error('projectAllowed(): Project not loaded');

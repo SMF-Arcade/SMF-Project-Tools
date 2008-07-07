@@ -193,8 +193,8 @@ $tables = array(
 			),
 		),
 	),
-	'project_groups' => array(
-		'name' => 'project_groups',
+	'project_permissions' => array(
+		'name' => 'project_permissions',
 		'columns' => array(
 			array(
 				'name' => 'id_group',

@@ -37,6 +37,7 @@ $txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
 $txt['cannot_project_view'] = 'You are not allowed to view this project.';
 $txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
 $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+$txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 
 $txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
 $txt['cannot_issue_report'] = 'You don\'t have permission to report issues on our Issue Tracker';

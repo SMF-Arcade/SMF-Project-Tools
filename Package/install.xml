@@ -97,17 +97,12 @@
 
 		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
 
+		loadProjectPermission($_REQUEST['project']);
+
 		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
 			fatal_lang_error('project_not_found', false);
 
 		$project = $context['project']['id'];
-		projectIsAllowedTo('view');
-
-		// Show everything?
-		if (!projectAllowedTo('issue_view'))
-			$user_info['query_see_issue'] = '((' . $user_info['query_see_version'] . ") AND i.reporter = $user_info[id])";
-		else
-			$user_info['query_see_issue'] = '(' . $user_info['query_see_version'] . ')';
 
 		// Make sure this attachment is on this board.
 		$request = $smcFunc['db_query']('', '
