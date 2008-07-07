@@ -174,11 +174,7 @@ function template_edit_project()
 				</div>
 				<br />
 			</td>
-		</tr>';
-
-	if (isset($context['project_groups']))
-	{
-		echo '
+		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_membergroups'], ':</b><br />
@@ -195,7 +191,6 @@ function template_edit_project()
 				<br />
 			</td>
 		</tr>';
-	}
 
 	echo '
 		<tr valign="top" class="windowbg2">
