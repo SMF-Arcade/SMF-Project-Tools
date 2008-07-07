@@ -91,7 +91,7 @@ if ($count == 0)
 		array()
 	);
 	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_groups',
+		'{db_prefix}project_permissions',
 		array(
 			'id_group' => 'int',
 			'permission' => 'string',
