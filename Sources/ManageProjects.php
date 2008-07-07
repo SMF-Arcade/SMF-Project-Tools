@@ -177,7 +177,6 @@ function EditProject()
 			FROM {db_prefix}project_groups
 			WHERE id_project = 0',
 			array(
-				'project' => $project['id'],
 			)
 		);
 
@@ -204,6 +203,7 @@ function EditProject()
 			'description' => htmlspecialchars($project['description']),
 			'long_description' => htmlspecialchars($project['long_description']),
 			'trackers' => array_keys($project['trackers']),
+			'groups' => $project['groups'],
 			'developers' => $project['developers'],
 		);
 
@@ -226,6 +226,7 @@ function EditProject()
 				'member_groups' => explode(',', $row['member_groups']),
 				'access_level' => $row['access_level'],
 				'global' => $row['id_project'] == 0,
+				'selected' => in_array($row['id_group'], $project['groups']),
 			);
 		}
 		$smcFunc['db_free_result']($request);
