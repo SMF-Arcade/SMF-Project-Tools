@@ -90,8 +90,6 @@ function loadTimeline($project = 0)
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'data' => $data,
 		);
-
-		die(print_r($data));
 	}
 	$smcFunc['db_free_result']($request);
 }

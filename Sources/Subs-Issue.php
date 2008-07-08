@@ -465,7 +465,8 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				AND id_issue = {int:issue}
 				AND event = {string:event}
 				AND id_member = {int:member}
-				AND event_time > {int:event_time}',
+				AND event_time > {int:event_time}
+			ORDER BY id_event DESC',
 			array(
 				'issue' => $id_issue,
 				'project' => $id_project,
@@ -475,9 +476,11 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 			)
 		);
 
-		if ($smcFunc['db_num_rows'] == 1)
+		if ($smcFunc['db_num_rows']($request) > 0)
 		{
-			list ($id_event, $event_data2) = $smcFunc['db_fetch_row']($request);
+			list ($id_event, $event_name2, $event_data2) = $smcFunc['db_fetch_row']($request);
+
+			$event_data2 = unserialize($event_data2);
 
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}project_timeline

@@ -453,7 +453,7 @@ function IssueUpdate()
 	else
 		$context['update_success'] = false;
 
-	if ($id_event === true)
+	if (!isset($id_event) || $id_event === true)
 		$id_event = 0;
 
 	$context['update_success'] = true;
