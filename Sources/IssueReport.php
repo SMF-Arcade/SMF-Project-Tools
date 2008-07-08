@@ -335,8 +335,8 @@ function IssueReply2()
 
 	if (projectAllowedTo('issue_moderate'))
 	{
-			$context['can_assign'] = true;
-			$context['assign_members'] = &$context['project']['developers'];
+		$context['can_assign'] = true;
+		$context['assign_members'] = &$context['project']['developers'];
 	}
 
 	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
