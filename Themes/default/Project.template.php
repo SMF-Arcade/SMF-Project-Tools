@@ -71,6 +71,42 @@ function template_project_list()
 	}
 
 	echo '
+	</div><br />';
+
+	// Statistics etc
+	echo '
+	<div class="tborder">
+		<h3 class="catbg headerpadding">', $txt['project_timeline'], '</h3>
+		<div class="projectframe_section">
+			<div class="windowbg">
+				<p class="section"></p>
+				<div class="windowbg2 timeline middletext">';
+
+	$first = true;
+
+	foreach ($context['events'] as $date)
+	{
+		echo '
+					<h5 class="windowbg', $first ? ' first' : '' ,'">', $date['date'], '</h5>
+					<ul>';
+
+		foreach ($date['events'] as $event)
+			echo '
+						<li>
+							', $event['time'], ' - ', $event['link'], '<br />
+							<span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span>
+						</li>';
+
+		echo '
+					</ul>';
+
+		$first = false;
+	}
+
+	echo '
+				</div>
+			</div>
+		</div>
 	</div>';
 }
 

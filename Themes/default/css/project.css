@@ -244,6 +244,7 @@ table.issuetable td.lastissue
 #issueinfo
 {
 	width: 21%;
+	margin-bottom: 30px;
 }
 #issueinfo .dark
 {
@@ -260,6 +261,11 @@ table.issuetable td.lastissue
 {
 	border: 1px solid transparent;
 	margin: 1.5px 0;
+}
+
+#issueinfot dl
+{
+	margin: 0;
 }
 
 #issueinfot dt

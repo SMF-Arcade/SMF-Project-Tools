@@ -13,6 +13,7 @@ function template_issue_view()
 	$buttons = array(
 		'reply' => array(
 			'text' => 'reply',
+			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
 			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
 			'lang' => true
@@ -85,9 +86,6 @@ function template_issue_view()
 		</div>';
 
 	$alternate = false;
-
-	echo '
-	';
 
 	if (!empty($context['can_issue_update']))
 	{
@@ -326,14 +324,12 @@ function template_issue_view()
 	);
 
 	echo '
-	<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />';
-
+		<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	echo '
 		<div class="tborder">
 			<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-	</div><br />';
+		</div><br />';
 
 	if ($context['can_comment'])
 	{
@@ -358,11 +354,11 @@ function template_issue_view()
 	if ($context['can_issue_attach'])
 	{
 		echo '
-		<form action="', $scripturl , '?issue=', $context['current_issue']['id'], '.0;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
-			<div class="tborder">
-				<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
-				<div class="smallpadding windowbg">
-					<input type="file" size="48" name="attachment[]" /><br />';
+	<form action="', $scripturl , '?issue=', $context['current_issue']['id'], '.0;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
+			<div class="smallpadding windowbg">
+				<input type="file" size="48" name="attachment[]" /><br />';
 
 		if (!empty($modSettings['attachmentCheckExtensions']))
 			echo '
@@ -371,13 +367,13 @@ function template_issue_view()
 					', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
 
 		echo '
-					<div style="text-align: right">
-						<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
-					</div>
+				<div style="text-align: right">
+					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
 				</div>
 			</div>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		</form>';
+		</div>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
 	}
 }
 

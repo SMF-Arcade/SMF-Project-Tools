@@ -27,6 +27,69 @@ if (!defined('SMF'))
 	!!!
 */
 
+function loadTimeline($project)
+{
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+
+	// Load timeline
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
+			tl.id_project, tl.event, tl.event_data, tl.event_time, tl.id_version,
+			mem.id_member, IFNULL(mem.real_name, {string:empty}) AS user
+		FROM {db_prefix}project_timeline AS tl
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
+			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
+			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = IFNULL(i.id_version, tl.id_version))
+		WHERE {query_see_issue}' . (!empty($project) ? '
+			AND tl.id_project = {int:project}' : '') . '
+		ORDER BY tl.event_time DESC
+		LIMIT 12',
+		array(
+			'project' => $project,
+			'empty' => ''
+		)
+	);
+
+	$context['events'] = array();
+
+	$nowtime = forum_time();
+	$now = @getdate($nowtime);
+	$clockFromat = strpos($user_info['time_format'], '%I') === false ? '%H:%M' : '%I:%M %p';
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$data = unserialize($row['event_data']);
+
+		$index = date('Ymd', forum_time(true, $row['event_time']));
+		$date = @getdate(forum_time(true, $row['event_time']));
+
+		if (!isset($context['events'][$index]))
+		{
+			$context['events'][$index] = array(
+				'date' => '',
+				'events' => array(),
+			);
+
+			if ($date['yday'] == $now['yday'] && $date['year'] == $now['year'])
+				$context['events'][$index]['date'] = $txt['project_today'];
+			elseif (($date['yday'] == $now['yday'] - 1 && $date['year'] == $now['year']) || ($now['yday'] == 0 && $date['year'] == $now['year'] - 1) && $date['mon'] == 12 && $date['mday'] == 31)
+				$context['events'][$index]['date'] = $txt['project_yesterday'];
+			else
+				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
+		}
+
+		$context['events'][$index]['events'][] = array(
+			'event' => $row['event'],
+			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
+			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
+			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
+			'data' => $data,
+		);
+	}
+	$smcFunc['db_free_result']($request);
+}
+
 function loadProject($id_project)
 {
 	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt, $user_info;

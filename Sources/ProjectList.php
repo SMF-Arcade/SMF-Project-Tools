@@ -75,6 +75,8 @@ function ProjectList()
 	}
 	$smcFunc['db_free_result']($request);
 
+	loadTimeline();
+
 	// Template
 	$context['linktrgee'][] = array(
 		'name' => $txt['projects'],
