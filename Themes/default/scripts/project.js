@@ -61,6 +61,9 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 	{
 		handled = true;
 
+		if (evt.target.tagName == 'A' && checkParent(evt.target))
+			return;
+
 		if (visible)
 		{
 			dropDownHide();
