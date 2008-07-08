@@ -269,6 +269,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 	if ($smcFunc['db_num_rows']($request) == 0)
 		return false;
+
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
@@ -416,7 +417,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 	if (!isset($issueOptions['no_log']) && !empty($event_data))
 	{
-		$smcFunc['db_insert']('insert',
+		/*$smcFunc['db_insert']('insert',
 			'{db_prefix}project_timeline',
 			array(
 				'id_project' => 'int',
@@ -443,10 +444,101 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 			array()
 		);
 
-		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');*/
+
+		return createTimelineEvent($id_issue, $row['id_project'], 'update_issue', $event_data, $posterOptions, $issueOptions);
 	}
 
 	return true;
+}
+
+function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $posterOptions, $issueOptions)
+{
+	global $smcFunc, $db_prefix, $context;
+
+	if ($posterOptions['id'] != 0 && $event_name == 'update_issue')
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event, event, event_data
+			FROM {db_prefix}project_timeline
+			WHERE id_project = {int:project}
+				AND id_issue = {int:issue}
+				AND event = {string:event}
+				AND id_member = {int:member}
+				AND event_time > {int:event_time}',
+			array(
+				'issue' => $id_issue,
+				'project' => $id_project,
+				'member' => $posterOptions['id'],
+				'event' => 'update_issue',
+				'event_time' => time() - 120,
+			)
+		);
+
+		if ($smcFunc['db_num_rows'] == 1)
+		{
+			list ($id_event, $event_data2) = $smcFunc['db_fetch_row']($request);
+
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_timeline
+				WHERE id_event = {int:event}',
+				array(
+					'event' => $id_event,
+				)
+			);
+
+			if (isset($event_data2['changes']) && isset($event_data['changes']))
+				$new_changes = array_merge($event_data['changes'], $event_data2['changes']);
+			elseif (isset($event_data2['changes']))
+				$new_changes = $event_data2['changes'];
+			elseif (isset($event_data['changes']))
+				$new_changes = $event_data['changes'];
+
+			$temp = array();
+			foreach ($new_changes as $id => $d)
+			{
+				if (in_array($d[0], $temp))
+					unset($new_changes[$id]);
+				else
+					$temp[] = $d[0];
+			}
+
+			$event_data['changes'] = $new_changes;
+		}
+
+		$smcFunc['db_free_result']($request);
+	}
+
+	sort($event_data['changes']);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_timeline',
+		array(
+			'id_project' => 'int',
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string',
+			'poster_email' => 'string',
+			'poster_ip' => 'string-60',
+			'event' => 'string',
+			'event_time' => 'int',
+			'event_data' => 'string',
+		),
+		array(
+			$id_project,
+			$id_issue,
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			$event_name,
+			$issueOptions['time'],
+			serialize($event_data)
+		),
+		array()
+	);
+
+	return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
 }
 
 function deleteIssue($id_issue, $posterOptions)

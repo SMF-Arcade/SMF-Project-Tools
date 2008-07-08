@@ -27,7 +27,7 @@ if (!defined('SMF'))
 	!!!
 */
 
-function loadTimeline($project)
+function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
 
@@ -36,12 +36,15 @@ function loadTimeline($project)
 		SELECT
 			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
 			tl.id_project, tl.event, tl.event_data, tl.event_time, tl.id_version,
-			mem.id_member, IFNULL(mem.real_name, {string:empty}) AS user
+			mem.id_member, IFNULL(mem.real_name, tl.poster_name) AS user,
+			p.id_project, p.name
 		FROM {db_prefix}project_timeline AS tl
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = tl.id_project)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = IFNULL(i.id_version, tl.id_version))
-		WHERE {query_see_issue}' . (!empty($project) ? '
+		WHERE {query_see_project}
+			AND {query_see_issue}' . (!empty($project) ? '
 			AND tl.id_project = {int:project}' : '') . '
 		ORDER BY tl.event_time DESC
 		LIMIT 12',
@@ -81,11 +84,14 @@ function loadTimeline($project)
 
 		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
+			'project_link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
 			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'data' => $data,
 		);
+
+		die(print_r($data));
 	}
 	$smcFunc['db_free_result']($request);
 }
