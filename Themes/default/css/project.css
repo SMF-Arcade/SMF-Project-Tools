@@ -192,7 +192,6 @@ table.issuetable td.icon
 }
 table.issuetable td.info
 {
-	width: 40%;
 	padding: 0;
 }
 table.issuetable td.info h4
@@ -213,7 +212,7 @@ table.issuetable td.replies, table.issuetable td.status, table.issuetable td.ver
 }
 table.issuetable td.lastissue
 {
-	width: 15%;
+	width: 20%;
 	padding: 0.4em;
 }
 

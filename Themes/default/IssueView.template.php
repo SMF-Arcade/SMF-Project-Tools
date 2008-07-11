@@ -120,7 +120,7 @@ function template_issue_view()
 		ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '");';
 		}
 
-		if ($context['can_issue_moderate'])
+		if (!empty($context['can_issue_moderate']))
 		{
 			echo '
 		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', PTDCallback, "', $context['session_id'], '");

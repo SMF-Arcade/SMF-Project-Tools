@@ -115,123 +115,126 @@ function ProjectRoadmap()
 	$ids = array();
 	$context['roadmap'] = array();
 
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			ver.id_version, ver.id_parent, ver.version_name, ver.status,
-			ver.description, ver.release_date
-		FROM {db_prefix}project_versions AS ver
-		WHERE {query_see_version}
-			AND id_project = {int:project}
-			AND (id_parent = 0 OR status IN (0,1))
-		ORDER BY id_parent',
-		array(
-			'project' => $project,
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	if (!empty($ids))
 	{
-		$ids[] = $row['id_version'];
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				ver.id_version, ver.id_parent, ver.version_name, ver.status,
+				ver.description, ver.release_date
+			FROM {db_prefix}project_versions AS ver
+			WHERE {query_see_version}
+				AND id_project = {int:project}
+				AND (id_parent = 0 OR status IN (0,1))
+			ORDER BY id_parent',
+			array(
+				'project' => $project,
+			)
+		);
 
-		if (!empty($row['id_parent']))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			$parents[$row['id_version']] = $row['id_parent'];
+			$ids[] = $row['id_version'];
 
-			$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'description' => parse_bbc($row['description']),
-				'issues' => array(
-					'open' => 0,
-					'closed' => 0,
-				),
-			);
-		}
-		else
-		{
-			$context['roadmap'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'description' => parse_bbc($row['description']),
-				'versions' => array(),
-				'issues' => array(
-					'open' => 0,
-					'closed' => 0,
-				),
-			);
-		}
-	}
-	$smcFunc['db_free_result']($request);
+			if (!empty($row['id_parent']))
+			{
+				$parents[$row['id_version']] = $row['id_parent'];
 
-	// Load issue counts
-	$request = $smcFunc['db_query']('', '
-		SELECT id_version, id_version_fixed, status, COUNT(*) AS num
-		FROM {db_prefix}issues AS ver
-		WHERE
-			(id_version IN({array_int:versions})
-				AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0))
-			OR (id_version_fixed IN({array_int:versions}))
-		GROUP BY id_version, id_version_fixed, status',
-		array(
-			'project' => $project,
-			'versions' => $ids,
-		)
-	);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$row['id_version_real'] = $row['id_version'];
-
-		if (!empty($row['id_version_fixed']))
-			$row['id_version'] = $row['id_version_fixed'];
-
-		$open = !in_array($row['status'], $context['closed_status']);
-
-		if (!isset($parents[$row['id_version']]))
-		{
-			if ($open)
-				$context['roadmap'][$row['id_version']]['issues']['open'] += $row['num'];
+				$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
+					'id' => $row['id_version'],
+					'name' => $row['version_name'],
+					'description' => parse_bbc($row['description']),
+					'issues' => array(
+						'open' => 0,
+						'closed' => 0,
+					),
+				);
+			}
 			else
-				$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['num'];
+			{
+				$context['roadmap'][$row['id_version']] = array(
+					'id' => $row['id_version'],
+					'name' => $row['version_name'],
+					'description' => parse_bbc($row['description']),
+					'versions' => array(),
+					'issues' => array(
+						'open' => 0,
+						'closed' => 0,
+					),
+				);
+			}
 		}
-		else
-		{
-			if ($open)
-				$context['roadmap'][$parents[$row['id_version']]]['issues']['open'] += $row['num'];
-			else
-				$context['roadmap'][$parents[$row['id_version']]]['issues']['closed'] += $row['num'];
+		$smcFunc['db_free_result']($request);
 
-			if ($open)
-				$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['open'] += $row['num'];
+		// Load issue counts
+		$request = $smcFunc['db_query']('', '
+			SELECT id_version, id_version_fixed, status, COUNT(*) AS num
+			FROM {db_prefix}issues AS ver
+			WHERE
+				(id_version IN({array_int:versions})
+					AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0))
+				OR (id_version_fixed IN({array_int:versions}))
+			GROUP BY id_version, id_version_fixed, status',
+			array(
+				'project' => $project,
+				'versions' => $ids,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$row['id_version_real'] = $row['id_version'];
+
+			if (!empty($row['id_version_fixed']))
+				$row['id_version'] = $row['id_version_fixed'];
+
+			$open = !in_array($row['status'], $context['closed_status']);
+
+			if (!isset($parents[$row['id_version']]))
+			{
+				if ($open)
+					$context['roadmap'][$row['id_version']]['issues']['open'] += $row['num'];
+				else
+					$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['num'];
+			}
 			else
-				$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['closed'] += $row['num'];
+			{
+				if ($open)
+					$context['roadmap'][$parents[$row['id_version']]]['issues']['open'] += $row['num'];
+				else
+					$context['roadmap'][$parents[$row['id_version']]]['issues']['closed'] += $row['num'];
+
+				if ($open)
+					$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['open'] += $row['num'];
+				else
+					$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['closed'] += $row['num'];
+			}
 		}
-	}
-	$smcFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
-	foreach ($context['roadmap'] as $id => $d)
-	{
-		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
-
-		if ($d['issues']['total'] > 0)
-			$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
-		else
-			$d['progress'] = 0;
-
-		foreach ($d['versions'] as $idx => $dx)
+		foreach ($context['roadmap'] as $id => $d)
 		{
-			$dx['issues']['total'] = $dx['issues']['open'] + $dx['issues']['closed'];
+			$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
 
-			if ($dx['issues']['total'] > 0)
-				$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
+			if ($d['issues']['total'] > 0)
+				$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
 			else
-				$dx['progress'] = 0;
+				$d['progress'] = 0;
+
+			foreach ($d['versions'] as $idx => $dx)
+			{
+				$dx['issues']['total'] = $dx['issues']['open'] + $dx['issues']['closed'];
+
+				if ($dx['issues']['total'] > 0)
+					$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
+				else
+					$dx['progress'] = 0;
+
+				// Back to array
+				$d['versions'][$idx] = $dx;
+			}
 
 			// Back to array
-			$d['versions'][$idx] = $dx;
+			$context['roadmap'][$id] = $d;
 		}
-
-		// Back to array
-		$context['roadmap'][$id] = $d;
 	}
 
 	// Template

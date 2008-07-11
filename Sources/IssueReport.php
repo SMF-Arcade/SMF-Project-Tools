@@ -302,7 +302,7 @@ function IssueReply()
 
 function IssueReply2()
 {
-	global $context, $user_info, $smcFunc, $sourcedir;
+	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
