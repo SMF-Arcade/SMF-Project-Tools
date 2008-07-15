@@ -173,7 +173,7 @@ function EditProject()
 		$context['project_groups'] = array();
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_group, id_project, group_name, member_groups, access_level
+			SELECT id_group, id_project, group_name, member_groups
 			FROM {db_prefix}project_groups
 			WHERE id_project = 0',
 			array(
@@ -186,7 +186,6 @@ function EditProject()
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
 				'member_groups' => explode(',', $row['member_groups']),
-				'access_level' => $row['access_level'],
 				'global' => true,
 			);
 		}
@@ -210,7 +209,7 @@ function EditProject()
 		$context['project_groups'] = array();
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_group, id_project, group_name, member_groups, access_level
+			SELECT id_group, id_project, group_name, member_groups
 			FROM {db_prefix}project_groups
 			WHERE id_project = {int:project} OR id_project = 0',
 			array(
@@ -224,50 +223,12 @@ function EditProject()
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
 				'member_groups' => explode(',', $row['member_groups']),
-				'access_level' => $row['access_level'],
 				'global' => $row['id_project'] == 0,
 				'selected' => in_array($row['id_group'], $project['groups']),
 			);
 		}
 		$smcFunc['db_free_result']($request);
 	}
-
-	/*// Default membergroups.
-	$context['groups'] = array(
-		-1 => array(
-			'id' => '-1',
-			'name' => $txt['guests'],
-			'level' => isset($group_levels[-1]) ? $group_levels[-1] : 0,
-			'is_post_group' => false,
-		),
-		0 => array(
-			'id' => '0',
-			'name' => $txt['regular_members'],
-			'level' => isset($group_levels[0]) ? $group_levels[0] : 0,
-			'is_post_group' => false,
-		)
-	);
-
-	// Load membergroups.
-	$request = $smcFunc['db_query']('', '
-		SELECT group_name, id_group, min_posts
-		FROM {db_prefix}membergroups
-		WHERE id_group > 3 OR id_group = 2
-		ORDER BY min_posts, id_group != 2, group_name');
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($_REQUEST['sa'] == 'newproject' && $row['min_posts'] == -1)
-			$curProject['member_groups'][] = $row['id_group'];
-
-		$context['groups'][(int) $row['id_group']] = array(
-			'id' => $row['id_group'],
-			'name' => trim($row['group_name']),
-			'level' => isset($group_levels[$row['id_group']]) ? $group_levels[$row['id_group']] : 0,
-			'is_post_group' => $row['min_posts'] != -1,
-		);
-	}
-	$smcFunc['db_free_result']($request);*/
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -363,50 +324,6 @@ function EditProject2()
 				array('id_project', 'id_member')
 			);
 		}
-
-		/*if (!empty($_POST['groups']))
-		{
-			$request = $smcFunc['db_query']('', '
-				SELECT id_group, group_name, member_groups, access_level
-				FROM {db_prefix}project_groups
-				WHERE id_project =  {int:project}',
-				array(
-					'project' => $_POST['project'],
-				)
-			);
-
-			$context['project_groups'] = array();
-
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-			{
-				$context['project_groups'][$row['id_group']] = array(
-					'id' => $row['id_group'],
-					'name' => $row['group_name'],
-					'member_groups' => array(),
-					'access_level' => $row['access_level'],
-				);
-			}
-			$smcFunc['db_free_result']($request);
-
-			foreach ($_POST['groups'] as $group => $pgroup)
-			{
-				if (!empty($pgroup))
-					$context['project_groups'][(int) $pgroup]['member_groups'][] = (int) $group;
-			}
-
-			foreach ($context['project_groups'] as $pgroup)
-			{
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}project_groups
-					SET member_groups = {string:groups}
-					WHERE id_group = {int:group}',
-					array(
-						'group' => $pgroup['id'],
-						'groups' => implode(',', $pgroup['member_groups']),
-					)
-				);
-			}
-		}*/
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))
 	{
