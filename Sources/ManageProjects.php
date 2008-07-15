@@ -143,6 +143,7 @@ function ManageProjectsList()
 		$smcFunc['db_free_result']($request);
 	}
 
+	// Template
 	$context['sub_template'] = 'projects_list';
 }
 

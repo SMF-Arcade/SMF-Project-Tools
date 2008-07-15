@@ -65,7 +65,7 @@ function IssueView()
 	if (projectAllowedTo('issue_moderate'))
 	{
 		$context['can_assign'] = true;
-		$context['assign_members'] = &$context['project']['developers'];
+		$context['assign_members'] = $context['project']['developers'];
 	}
 
 	// Temp

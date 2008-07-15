@@ -57,6 +57,15 @@
 						'newproject' => array($txt['new_project']),
 					),
 				),
+				'manageversions' => array(
+					'label' => $txt['manage_versions'],
+					'file' => 'ManageVersions.php',
+					'function' => 'ManageVersions',
+					'permission' => array('project_admin'),
+					'subsections' => array(
+						'main' => array($txt['list_projects']),
+					),
+				),
 				'projectsettings' => array(
 					'label' => $txt['project_settings'],
 					'file' => 'ProjectAdmin.php',
@@ -212,7 +221,8 @@ $txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
 $txt['manage_projects'] = 'Projects';
 $txt['list_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
-$txt['list_projects'] = 'Project List';
+$txt['manage_versions'] = 'Versions';
+
 $txt['project_settings'] = 'Settings';
 $txt['project_settings_main'] = 'Main';
 
@@ -233,6 +243,7 @@ $txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
 $txt['cannot_project_view'] = 'You are not allowed to view this project.';
 $txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
 $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+$txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 
 $txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
 $txt['cannot_issue_report'] = 'You don\'t have permission to report issues on our Issue Tracker';]]></add>

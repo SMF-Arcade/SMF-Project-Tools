@@ -33,6 +33,7 @@
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageVersions.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
@@ -45,6 +46,7 @@
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ManageVersions.template.php" destination="$themedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 
@@ -77,6 +79,7 @@
 		<remove-file name="$sourcedir/IssueView.php" />
 		<remove-file name="$sourcedir/IssueReport.php" />
 		<remove-file name="$sourcedir/ManageProjects.php" />
+		<remove-file name="$sourcedir/ManageVersions.php" />
 		<remove-file name="$sourcedir/Project.php" />
 		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectList.php" />
@@ -89,6 +92,7 @@
 		<remove-file name="$themedir/IssueReport.template.php" />
 		<remove-file name="$themedir/IssueView.template.php" />
 		<remove-file name="$themedir/ManageProjects.template.php" />
+		<remove-file name="$themedir/ManageVersions.template.php" />
 		<remove-file name="$themedir/Project.template.php" />
 		<remove-file name="$themedir/ProjectView.template.php" />
 
@@ -109,5 +113,4 @@
 		<remove-file name="$languagedir/Project.english.php" />
 		<remove-file name="$languagedir/ProjectAdmin.english.php" />
 	</uninstall>
-
 </package-info>

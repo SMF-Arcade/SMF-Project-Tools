@@ -16,7 +16,8 @@ $txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
 $txt['manage_projects'] = 'Projects';
 $txt['list_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
-$txt['list_projects'] = 'Project List';
+$txt['manage_versions'] = 'Versions';
+
 $txt['project_settings'] = 'Settings';
 $txt['project_settings_main'] = 'Main';
 
