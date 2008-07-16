@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectsAdmin()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 	require_once($sourcedir . '/ManageServer.php');
@@ -56,7 +56,7 @@ function ProjectsAdmin()
 
 function ProjectsAdminSettings($return_config = false)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$config_vars = array(
 			array('check', 'projectEnabled'),

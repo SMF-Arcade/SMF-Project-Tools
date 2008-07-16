@@ -205,7 +205,7 @@ function ReportIssue2()
 
 function IssueReply()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -302,7 +302,7 @@ function IssueReply()
 
 function IssueReply2()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -544,7 +544,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 
 function IssueUpload()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	require_once($sourcedir . '/Subs-Post.php');
 

@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 function ManageVersions()
 {
-	global $context, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $sourcedir, $scripturl, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 
@@ -54,7 +54,7 @@ function ManageVersions()
 
 function ManageVersionsList()
 {
-	global $context, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_project, p.name, p.description
@@ -144,7 +144,7 @@ function ManageVersionsList()
 
 function list_getVersions($project)
 {
-	global $context, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_version, version_name

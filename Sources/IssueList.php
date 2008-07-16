@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 function IssueList()
 {
-	global $project, $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $board;
+	global $project, $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $board;
 
 	projectIsAllowedTo('issue_view');
 

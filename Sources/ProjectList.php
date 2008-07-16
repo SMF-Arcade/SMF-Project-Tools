@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectList()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT

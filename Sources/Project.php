@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function Projects()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $project;
 
 	$project = 0;
 

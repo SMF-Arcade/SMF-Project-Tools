@@ -22,7 +22,7 @@
 
 function loadIssueTypes()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$context['project_tools']['issue_types'] = array(
 		'bug' => array(
@@ -100,7 +100,7 @@ function loadIssueTypes()
 
 function loadIssue($id_issue)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $memberContext;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $memberContext;
 
 	if (!isset($context['project']['id']))
 		trigger_error('', E_USER_ERROR);
@@ -179,7 +179,7 @@ function loadIssue($id_issue)
 
 function createIssue($issueOptions, &$posterOptions)
 {
-	global $smcFunc, $db_prefix;
+	global $smcFunc;
 
 	if (empty($issueOptions['created']))
 		$issueOptions['created'] = time();
@@ -251,7 +251,7 @@ function createIssue($issueOptions, &$posterOptions)
 
 function updateIssue($id_issue, $issueOptions, $posterOptions)
 {
-	global $smcFunc, $db_prefix, $context;
+	global $smcFunc, $context;
 
 	if (!isset($context['issue']['status']))
 		trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
@@ -404,12 +404,12 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		$issueOptions['project'] = $row['id_project'];
 
 	if (!empty($projectUpdates))
-		$smcFunc['db_query']('', "
-			UPDATE {$db_prefix}projects
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}projects
 			SET
-				" . implode(',
-				', $projectUpdates) . "
-			WHERE id_project = {int:project}",
+				' . implode(',
+				', $projectUpdates) . '
+			WHERE id_project = {int:project}',
 			array(
 				'project' => $issueOptions['project'],
 			)
@@ -454,7 +454,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $posterOptions, $issueOptions)
 {
-	global $smcFunc, $db_prefix, $context;
+	global $smcFunc, $context;
 
 	if ($posterOptions['id'] != 0 && $event_name == 'update_issue')
 	{

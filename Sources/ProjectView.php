@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectView()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $project;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $project;
 
 	if (!$user_info['is_guest'])
 	{

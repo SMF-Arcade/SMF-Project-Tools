@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 function ManageProjects()
 {
-	global $context, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $sourcedir, $scripturl, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 
@@ -68,7 +68,7 @@ function ManageProjects()
 
 function ManageProjectsList()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_project, p.name, p.description
@@ -149,7 +149,7 @@ function ManageProjectsList()
 
 function EditProject()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
 	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProject($_REQUEST['project']))
@@ -261,7 +261,7 @@ function EditProject()
 
 function EditProject2()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	checkSession();
 
@@ -369,7 +369,7 @@ function EditProject2()
 
 function EditVersion()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$_REQUEST['version'] = isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0;
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
@@ -478,7 +478,7 @@ function EditVersion()
 
 function EditVersion2()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	checkSession();
 
@@ -532,7 +532,7 @@ function EditVersion2()
 
 function EditCategory()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	if ($_REQUEST['sa'] == 'newcategory')
 	{
@@ -583,7 +583,7 @@ function EditCategory()
 
 function EditCategory2()
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	checkSession();
 

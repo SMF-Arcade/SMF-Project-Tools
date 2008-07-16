@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function loadTimeline($project = 0)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	// Load timeline
 	$request = $smcFunc['db_query']('', '
@@ -96,7 +96,7 @@ function loadTimeline($project = 0)
 
 function loadProject($id_project)
 {
-	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt, $user_info;
+	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -191,7 +191,7 @@ function loadProject($id_project)
 
 function loadVersions($project)
 {
-	global $context, $smcFunc, $db_prefix, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $scripturl, $user_info, $txt;
 
 	// Load Versions
 	$request = $smcFunc['db_query']('', '
@@ -275,7 +275,7 @@ function projectIsAllowedTo($permission)
 
 function createProject($projectOptions)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (empty($projectOptions['name']) || !isset($projectOptions['description']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
@@ -306,7 +306,7 @@ function createProject($projectOptions)
 
 function updateProject($id_project, $projectOptions)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	require_once($sourcedir . '/Subs-Boards.php');
 
@@ -349,7 +349,7 @@ function updateProject($id_project, $projectOptions)
 
 function createVersion($id_project, $versionOptions)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	if (empty($versionOptions['name']))
 		trigger_error('createVersion(): required parameters missing or invalid');
@@ -411,7 +411,7 @@ function createVersion($id_project, $versionOptions)
 
 function updateVersion($id_version, $versionOptions)
 {
-	global $context, $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$versionUpdates = array();
 
@@ -450,7 +450,7 @@ function updateVersion($id_version, $versionOptions)
 
 function createCategory($id_project, $categoryOptions)
 {
-	global $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_category',
@@ -470,7 +470,7 @@ function createCategory($id_project, $categoryOptions)
 
 function updateCategory($id_category, $categoryOptions)
 {
-	global $smcFunc, $db_prefix, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$categoryUpdates = array();
 

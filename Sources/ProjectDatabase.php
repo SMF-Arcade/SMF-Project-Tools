@@ -789,7 +789,7 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 
 function doSettings($addSettings, $smf2 = true)
 {
-	global $smcFunc, $db_prefix;
+	global $smcFunc;
 
 	$update = array();
 
