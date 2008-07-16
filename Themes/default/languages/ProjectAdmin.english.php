@@ -21,6 +21,9 @@ $txt['edit_category'] = 'Edit Category';
 
 $txt['project_global'] = 'Global';
 
+// Version List
+$txt['header_version'] = 'Version';
+
 // Edit Project
 $txt['project_name'] = 'Project Name';
 $txt['project_description'] = 'Short description for project';

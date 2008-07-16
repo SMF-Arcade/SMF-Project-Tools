@@ -7,4 +7,5 @@ function template_versions_list()
 
 	template_show_list('versions_list');
 }
+
 ?>
