@@ -3,6 +3,9 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+// General
+$txt['project_global'] = 'Global';
+
 // Settings
 $txt['projectSettings'] = 'Project Tools';
 
@@ -14,15 +17,16 @@ $txt['new_project'] = 'New Project';
 $txt['edit_projects'] = 'Edit Projects';
 $txt['edit_project'] = 'Edit Project';
 
-$txt['new_version_group'] = 'New Version Group';
-$txt['new_version'] = 'New Version';
-$txt['edit_version'] = 'Edit Version';
 $txt['edit_category'] = 'Edit Category';
 
-$txt['project_global'] = 'Global';
+// Manage Versions
+$txt['manage_versions_description'] = 'Here you can create and edit versions groups and versions';
 
 // Version List
 $txt['header_version'] = 'Version';
+$txt['new_version_group'] = 'New Version Group';
+$txt['new_version'] = 'New Version';
+$txt['edit_version'] = 'Edit Version';
 
 // Edit Project
 $txt['project_name'] = 'Project Name';

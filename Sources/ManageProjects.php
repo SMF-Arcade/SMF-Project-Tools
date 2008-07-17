@@ -90,36 +90,6 @@ function ManageProjectsList()
 
 	if (!empty($projects))
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT id_version, id_project, version_name, id_parent
-			FROM {db_prefix}project_versions
-			WHERE id_project IN ({array_int:projects})
-			ORDER BY id_project, id_parent, id_version',
-			array(
-				'projects' => $projects
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			if ($row['id_parent'] == 0)
-			{
-				$context['projects'][$row['id_project']]['versions'][$row['id_version']] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-					'sub_versions' => array(),
-				);
-			}
-			else
-			{
-				$context['projects'][$row['id_project']]['versions'][$row['id_parent']]['sub_versions'][] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-				);
-			}
-		}
-		$smcFunc['db_free_result']($request);
-
 		$request = $smcFunc['db_query']('', "
 			SELECT id_category, id_project, category_name
 			FROM {db_prefix}issue_category

@@ -33,7 +33,7 @@ function ManageVersions()
 	loadProjectTools('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['manage_versions'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_projects_description'];
+	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_versions_description'];
 
 	$context['page_title'] = &$txt['manage_versions'];
 
@@ -137,12 +137,19 @@ function ManageVersionsList()
 			),
 			'actions' => array(
 				'header' => array(
-					'value' => '',
+					'value' => '<a href="' .  $scripturl . '?action=admin;area=manageversions;sa=new;project=' . $id_project . '">' . $txt['new_version_group'] . '</a>',
+					'style' => 'width: 16%; text-align: right;',
 				),
 				'data' => array(
 					'function' => create_function('$list_item', '
-						return \'\';
+						global $txt, $scripturl;
+						return (empty($list_item[\'level\']) ? \'<a href="\' .  $scripturl . \'?action=admin;area=manageversions;sa=new;project=' . $id_project . ';parent=\' . $list_item[\'id\'] . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 					'),
+					'style' => 'text-align: right;',
+				),
+				'sort' => array(
+					'default' => 'ver.version_name',
+					'reverse' => 'ver.version_name DESC',
 				),
 			),
 		),
@@ -180,7 +187,7 @@ function EditVersion()
 	$_REQUEST['version'] = isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0;
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
 
-	if ($_REQUEST['sa'] == 'newversion')
+	if ($_REQUEST['sa'] == 'new')
 	{
 		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
 			fatal_lang_error('project_not_found', false);
@@ -199,7 +206,7 @@ function EditVersion()
 		);
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_group, group_name
+			SELECT id_project, id_group, group_name
 			FROM {db_prefix}project_groups
 			WHERE id_project = {int:project} OR id_project = 0',
 			array(
@@ -214,6 +221,7 @@ function EditVersion()
 			$context['project_groups'][$row['id_group']] = array(
 				'id' => $row['id_group'],
 				'name' => $row['group_name'],
+				'global' => $row['id_project'] == 0,
 				'selected' => false,
 			);
 		}

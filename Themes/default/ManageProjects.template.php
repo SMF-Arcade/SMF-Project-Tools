@@ -21,52 +21,6 @@ function template_projects_list()
 		</tr>
 		<tr>
 			<td class="windowbg2" valign="top" width="100%">
-				<form action="', $scripturl, '?action=admin;area=manageprojects;sa=newversion;project=', $project['id'], '" method="post" accept-charset="', $context['character_set'], '">
-					<table width="100%" border="0" cellpadding="1" cellspacing="0">
-						<tr>
-							<td style="padding-left: 1ex;" colspan="3"><b>', $txt['version_name'], '</b></td>
-						</tr>';
-
-			$alternate = false;
-
-			foreach ($project['versions'] as $version)
-			{
-				echo '
-						<tr class="windowbg', $alternate ? '2' : '', '">
-							<td style="padding-left: 5px;">', $version['name'], '</td>
-							<td width="10%" align="right">
-								<a href="', $scripturl, '?action=admin;area=manageprojects;sa=version;version=', $version['id'], '">', $txt['edit_version'], '</a>
-							</td>
-							<td width="10%" style="padding-right: 1ex;" align="right">
-								<a href="', $scripturl, '?action=admin;area=manageprojects;sa=newversion;project=', $project['id'], ';parent=', $version['id'], '">', $txt['new_version'], '</a>
-							</td>
-						</tr>';
-
-				$alternate = !$alternate;
-
-				foreach ($version['sub_versions'] as $subversion)
-				{
-					echo '
-						<tr class="windowbg', $alternate ? '2' : '', '">
-							<td style="padding-left: 35px;">', $subversion['name'], '</td>
-							<td width="10%" align="right">
-								<a href="', $scripturl, '?action=admin;area=manageprojects;sa=version;version=', $subversion['id'], '">', $txt['edit_version'], '</a>
-							</td>
-							<td width="10%" style="padding-right: 1ex;" align="right"></td>
-						</tr>';
-
-					$alternate = !$alternate;
-				}
-			}
-
-			echo '
-						<tr>
-							<td colspan="3" align="right"><br /><input type="submit" value="', $txt['new_version_group'], '" /></td>
-						</tr>
-					</table>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				</form>
-
 				<form action="', $scripturl, '?action=admin;area=manageprojects;sa=newcategory;project=', $project['id'], '" method="post" accept-charset="', $context['character_set'], '">
 					<table width="100%" border="0" cellpadding="1" cellspacing="0">
 						<tr>
