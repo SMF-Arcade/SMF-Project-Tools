@@ -20,6 +20,9 @@ $txt['new_project'] = 'New Project';
 $txt['manage_versions'] = 'Versions';
 $txt['list_versions'] = 'Modify Versions';
 
+$txt['manage_project_category'] = 'Categories';
+$txt['list_project_category'] = 'Modify Categories';
+
 $txt['project_settings'] = 'Settings';
 $txt['project_settings_main'] = 'Main';
 

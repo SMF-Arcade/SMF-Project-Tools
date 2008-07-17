@@ -352,7 +352,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 		SELECT ver.id_version, ver.version_name, ver.id_parent
 		FROM {db_prefix}project_versions AS ver
 		WHERE ver.id_project = {int:project}
-		ORDER BY ver.id_parent',
+		ORDER BY ver.id_parent, ver.version_name',
 		array(
 			'project' => $project
 		)

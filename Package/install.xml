@@ -66,6 +66,15 @@
 						'main' => array($txt['list_versions']),
 					),
 				),
+				'managecategories' => array(
+					'label' => $txt['manage_versions'],
+					'file' => 'ManageProjects.php',
+					'function' => 'ManageCategories',
+					'permission' => array('project_admin'),
+					'subsections' => array(
+						'main' => array($txt['list_versions']),
+					),
+				),
 				'projectsettings' => array(
 					'label' => $txt['project_settings'],
 					'file' => 'ProjectAdmin.php',

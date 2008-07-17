@@ -17,16 +17,16 @@ $txt['new_project'] = 'New Project';
 $txt['edit_projects'] = 'Edit Projects';
 $txt['edit_project'] = 'Edit Project';
 
+// Category List
+$txt['manage_project_category_description'] = 'Here you can create and edit issue categories';
+
 $txt['edit_category'] = 'Edit Category';
 
-// Manage Versions
-$txt['manage_versions_description'] = 'Here you can create and edit versions groups and versions';
-
-// Version List
-$txt['header_version'] = 'Version';
-$txt['new_version_group'] = 'New Version Group';
-$txt['new_version'] = 'New Version';
-$txt['edit_version'] = 'Edit Version';
+// Edit Category
+$txt['new_category'] = 'New category';
+$txt['category_name'] = 'Category name';
+$txt['delete_category'] = 'Delete Category';
+$txt['cdelete_warning'] = 'Are you sure?';
 
 // Edit Project
 $txt['project_name'] = 'Project Name';
@@ -52,6 +52,15 @@ $txt['confirm_project_delete'] = 'Confirm delete of project';
 $txt['confirm_delete'] = 'Confirm';
 $txt['cancel_delete'] = 'Cancel';
 
+// Manage Versions
+$txt['manage_versions_description'] = 'Here you can create and edit versions groups and versions';
+
+// Version List
+$txt['header_version'] = 'Version';
+$txt['new_version_group'] = 'New Version Group';
+$txt['new_version'] = 'New Version';
+$txt['edit_version'] = 'Edit Version';
+
 // Edit Version
 $txt['version_name'] = 'Name';
 $txt['version_description'] = 'Description for version';
@@ -63,12 +72,6 @@ $txt['version_projectgroups'] = 'Project Groups Access';
 $txt['version_projectgroups_desc'] = 'Which Project Groups can see this version';
 $txt['delete_version'] = 'Delete Version';
 $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues assigned to it, do you still to continue?';
-
-// Category
-$txt['new_category'] = 'New category';
-$txt['category_name'] = 'Category name';
-$txt['delete_category'] = 'Delete Category';
-$txt['cdelete_warning'] = 'Are you sure?';
 
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
