@@ -424,6 +424,8 @@ function IssueUpdate()
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
 
+	is_not_guest();
+
 	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];

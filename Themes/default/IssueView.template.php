@@ -298,7 +298,7 @@ function template_issue_view()
 			</div>
 		</div><br />
 	</form>
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=update" method="post">
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply2" method="post">
 		<div class="modbuttons clearfix margintop">
 			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'bottom'), '
