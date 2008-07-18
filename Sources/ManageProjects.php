@@ -467,7 +467,7 @@ function ManageCategoriesList()
 	$context['sub_template'] = 'categories_list';
 }
 
-function list_getVersions($start, $items_per_page, $sort, $project)
+function list_getCategories($start, $items_per_page, $sort, $project)
 {
 	global $smcFunc, $scripturl;
 
@@ -567,6 +567,6 @@ function EditCategory2()
 			updateCategory($_POST['category'], $categoryOptions);
 	}
 
-	redirectexit('action=admin;area=manageprojects');
+	redirectexit('action=admin;area=managecategories;project=' . $_POST['project']);
 }
 ?>

@@ -214,7 +214,7 @@ function template_edit_category()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageprojects;sa=category2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=admin;area=managecategories;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="category" value="', $context['category']['id'], '" />
 	<input type="hidden" name="project" value="', $context['category']['project'], '" />
 
