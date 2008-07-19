@@ -209,6 +209,13 @@ function template_confirm_project_delete()
 </form>';
 }
 
+function template_categories_list()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	template_show_list('versions_list');
+}
+
 function template_edit_category()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;

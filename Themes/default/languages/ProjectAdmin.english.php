@@ -17,17 +17,6 @@ $txt['new_project'] = 'New Project';
 $txt['edit_projects'] = 'Edit Projects';
 $txt['edit_project'] = 'Edit Project';
 
-// Category List
-$txt['manage_project_category_description'] = 'Here you can create and edit issue categories';
-
-$txt['edit_category'] = 'Edit Category';
-
-// Edit Category
-$txt['new_category'] = 'New category';
-$txt['category_name'] = 'Category name';
-$txt['delete_category'] = 'Delete Category';
-$txt['cdelete_warning'] = 'Are you sure?';
-
 // Edit Project
 $txt['project_name'] = 'Project Name';
 $txt['project_description'] = 'Short description for project';
@@ -51,6 +40,21 @@ $txt['pdelete_warning'] = 'Deleting project will delete permanently everything r
 $txt['confirm_project_delete'] = 'Confirm delete of project';
 $txt['confirm_delete'] = 'Confirm';
 $txt['cancel_delete'] = 'Cancel';
+
+// Manage Categories
+$txt['manage_project_category_description'] = 'Here you can create and edit issue categories';
+
+// Category List
+$txt['header_category'] = 'Category';
+$txt['edit_category'] = 'Edit Category';
+
+// Edit Category
+$txt['new_category'] = 'New category';
+$txt['category_name'] = 'Category name';
+$txt['delete_category'] = 'Delete Category';
+$txt['cdelete_warning'] = 'Are you sure?';
+
+
 
 // Manage Versions
 $txt['manage_versions_description'] = 'Here you can create and edit versions groups and versions';
