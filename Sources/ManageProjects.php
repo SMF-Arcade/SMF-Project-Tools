@@ -39,11 +39,9 @@ function ManageProjects()
 
 	$subActions = array(
 		'list' => array('ManageProjectsList'),
-		// Project
-		'newproject' => array('EditProject'),
-		'project' => array('EditProject'),
-		'project2' => array('EditProject2'),
-
+		'new' => array('EditProject'),
+		'edit' => array('EditProject'),
+		'edit2' => array('EditProject2'),
 		'permissions' => array('EditPermissions'),
 	);
 
@@ -62,51 +60,92 @@ function ManageProjectsList()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
+	$listOptions = array(
+		'id' => 'projects_list',
+		'base_href' => $scripturl . '?action=admin;area=manageprojects',
+		'get_items' => array(
+			'function' => 'list_getProjects',
+		),
+		'columns' => array(
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'style' => 'width: 4%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="projects[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+			'name' => array(
+				'header' => array(
+					'value' => $txt['header_project'],
+				),
+				'data' => array(
+					'db' => 'link',
+				),
+				'sort' => array(
+					'default' => 'p.name',
+					'reverse' => 'p.name DESC',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=managecategories',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'top_of_list',
+				'value' => '
+					<select name="project">' . $projectsHtml . '</select>
+					<input type="submit" name="go" value="' . $txt['go'] . '" />',
+				'class' => 'catbg',
+				'align' => 'right',
+			),
+		),
+		'no_items_label' => $txt['no_projects'],
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	// Template
+	$context['sub_template'] = 'projects_list';
+}
+
+function list_getProjects($start, $items_per_page, $sort, $project)
+{
+	global $smcFunc, $scripturl;
+
+	$projects = array();
+
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_project, p.name, p.description
 		FROM {db_prefix}projects AS p');
 
-	$context['projects'] = array();
-	$projects = array();
-
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['projects'][$row['id_project']] = array(
+		$projects[] = array(
 			'id' => $row['id_project'],
-			'link' => $scripturl . '?action=admin;area=manageprojects;sa=project;project=' . $row['id_project'],
+			'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+			'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
 			'name' => $row['name'],
 			'description' => $row['description'],
-			'versions' => array(),
-			'categories' => array(),
 		);
-
-		$projects[] = $row['id_project'];
 	}
 	$smcFunc['db_free_result']($request);
 
-	if (!empty($projects))
-	{
-		$request = $smcFunc['db_query']('', "
-			SELECT id_category, id_project, category_name
-			FROM {db_prefix}issue_category
-			WHERE id_project IN ({array_int:projects})",
-			array(
-				'projects' => $projects
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$context['projects'][$row['id_project']]['categories'][] = array(
-				'id' => $row['id_category'],
-				'name' => $row['category_name']
-			);
-		}
-		$smcFunc['db_free_result']($request);
-	}
-
-	// Template
-	$context['sub_template'] = 'projects_list';
+	return $projects;
 }
 
 function EditProject()
@@ -403,7 +442,7 @@ function ManageCategoriesList()
 	}
 
 	$listOptions = array(
-		'id' => 'versions_list',
+		'id' => 'categories_list',
 		'base_href' => $scripturl . '?action=admin;area=managecategories',
 		'get_items' => array(
 			'function' => 'list_getCategories',
@@ -488,7 +527,7 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 		$categories[] = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=managecategories;sa=edit;category= ' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . $scripturl . '?action=admin;area=managecategories;sa=edit;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -500,7 +539,7 @@ function EditCategory()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
-	if ($_REQUEST['sa'] == 'newcategory')
+	if ($_REQUEST['sa'] == 'new')
 	{
 		$context['category'] = array(
 			'is_new' => true,

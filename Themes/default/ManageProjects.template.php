@@ -5,66 +5,7 @@ function template_projects_list()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
-	<table class="bordercolor" align="center" border="0" cellpadding="4" cellspacing="1" width="100%">
-		<tr class="titlebg">
-			<td><span style="float: left">', $txt['edit_projects'], '</span><span style="float: right"><a href="', $scripturl, '?action=admin;area=manageprojects;sa=newproject">', $txt['new_project'], '</a></span></td>
-		</tr>';
-
-	if (count($context['projects']) > 0)
-	{
-		foreach ($context['projects'] as $i => $project)
-		{
-			echo '
-		<tr>
-			<td class="catbg" height="18">', $project['name'], ' (<a href="', $project['link'], '">', $txt['edit_project'], '</a>)</td>
-		</tr>
-		<tr>
-			<td class="windowbg2" valign="top" width="100%">
-				<form action="', $scripturl, '?action=admin;area=manageprojects;sa=newcategory;project=', $project['id'], '" method="post" accept-charset="', $context['character_set'], '">
-					<table width="100%" border="0" cellpadding="1" cellspacing="0">
-						<tr>
-							<td style="padding-left: 1ex;" colspan="3"><b>', $txt['category_name'], '</b></td>
-						</tr>';
-
-			$alternate = false;
-
-			foreach ($project['categories'] as $cat)
-			{
-				echo '
-						<tr class="windowbg', $alternate ? '2' : '', '">
-							<td style="padding-left: 5px;">', $cat['name'], '</td>
-
-							<td width="10%" style="padding-right: 1ex;" align="right">
-								<a href="', $scripturl, '?action=admin;area=manageprojects;sa=category;category=', $cat['id'], '">', $txt['edit_category'], '</a>
-							</td>
-						</tr>';
-
-				$alternate = !$alternate;
-			}
-
-			echo '
-						<tr>
-							<td colspan="3" align="right"><br /><input type="submit" value="', $txt['new_category'], '" /></td>
-						</tr>
-					</table>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-
-				</form>
-			</td>
-		</tr>';
-		}
-	}
-	else
-	{
-		echo '
-		<tr>
-			<td class="catbg3" colspan="3"><b>', $txt['no_projects'], '</b></td>
-		</tr>';
-	}
-
-	echo '
-	</table>';
+	template_show_list('projects_list');
 }
 
 function template_edit_project()
@@ -213,7 +154,7 @@ function template_categories_list()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	template_show_list('versions_list');
+	template_show_list('categories_list');
 }
 
 function template_edit_category()

@@ -13,9 +13,7 @@ $txt['projectSettings'] = 'Project Tools';
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 
 // Project List
-$txt['new_project'] = 'New Project';
-$txt['edit_projects'] = 'Edit Projects';
-$txt['edit_project'] = 'Edit Project';
+$txt['header_project'] = 'Project';
 
 // Edit Project
 $txt['project_name'] = 'Project Name';
