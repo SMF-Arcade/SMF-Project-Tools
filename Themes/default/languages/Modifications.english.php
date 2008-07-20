@@ -14,14 +14,19 @@ $txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
 
 // SMF Project tools admin
 $txt['manage_projects'] = 'Projects';
-$txt['list_projects'] = 'Modify Projects';
+$txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
 
 $txt['manage_versions'] = 'Versions';
-$txt['list_versions'] = 'Modify Versions';
+$txt['modify_versions'] = 'Modify Versions';
 
 $txt['manage_project_category'] = 'Categories';
-$txt['list_project_category'] = 'Modify Categories';
+$txt['modify_project_category'] = 'Modify Categories';
+
+$txt['manage_project_groups'] = 'Groups';
+$txt['modify_project_groups'] = 'Modify Groups';
+$txt['new_project_group'] = 'New Group';
+$txt['project_permissions'] = 'Permissions';
 
 $txt['project_settings'] = 'Settings';
 $txt['project_settings_main'] = 'Main';
@@ -29,6 +34,7 @@ $txt['project_settings_main'] = 'Main';
 $txt['projectEnabled'] = 'Enable Project Tools';
 $txt['projectAttachements'] = 'Enable Attachements';
 $txt['issuesPerPage'] = 'Issues Per Page';
+$txt['commentsPerPage'] = 'Comments Per Page';
 
 // Permission Names
 $txt['permissiongroup_project'] = 'Project Tools';
