@@ -491,7 +491,7 @@ function ManageCategoriesList()
 					<a href="' . $scripturl . '?action=admin;area=managecategories;sa=new;project=' . $id_project . '">
 						' . $txt['new_category'] . '
 					</a>',
-				'class' => 'catbg3',
+				'class' => 'catbg',
 				'align' => 'right',
 			),
 		),

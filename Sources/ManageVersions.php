@@ -137,7 +137,7 @@ function ManageVersionsList()
 			),
 			'actions' => array(
 				'header' => array(
-					'value' => '<a href="' .  $scripturl . '?action=admin;area=manageversions;sa=new;project=' . $id_project . '">' . $txt['new_version_group'] . '</a>',
+					'value' => $txt['new_version'],
 					'style' => 'width: 16%; text-align: right;',
 				),
 				'data' => array(
@@ -176,7 +176,7 @@ function ManageVersionsList()
 					<a href="' . $scripturl . '?action=admin;area=manageversions;sa=new;project=' . $id_project . '">
 						' . $txt['new_version_group'] . '
 					</a>',
-				'class' => 'catbg3',
+				'class' => 'catbg',
 				'align' => 'right',
 			),
 		),

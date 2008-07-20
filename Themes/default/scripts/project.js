@@ -16,12 +16,17 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 	this.addOption = addOption;
 	this.fieldName = fieldName;
 
-	function addOption(id, text)
+	function addOption(id, text, style)
 	{
 		i = options.length;
-		options[i] = new Array(2);
+		options[i] = new Array(3);
 		options[i]['id'] = id;
 		options[i]['name'] = text;
+
+		if (style == undefined)
+			style = "";
+
+		options[i]['style'] = style;
 	}
 
 	function dropDownHide()
@@ -47,7 +52,7 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 			newOption.optionItem = options[i];
 			createEventListener(dropDownItemClick);
 			newOption.addEventListener('click', dropDownItemClick, false);
-			newOption.innerHTML = options[i]['name'];
+			newOption.innerHTML = '<span style="' + options[i]['style'] + '">' + options[i]['name'] + '</span>';
 
 			dropdownMenu.appendChild(newOption);
 		}
