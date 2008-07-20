@@ -32,10 +32,10 @@ function ManageProjects()
 	isAllowedTo('project_admin');
 	loadProjectTools('admin');
 
-	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['manage_projects'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_projects_description'];
+	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_projects'];
+	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_projects_description'];
 
-	$context['page_title'] = &$txt['manage_projects'];
+	$context['page_title'] = $txt['manage_projects'];
 
 	$subActions = array(
 		'list' => array('ManageProjectsList'),
@@ -120,7 +120,7 @@ function list_getProjects($start, $items_per_page, $sort)
 	$projects = array();
 
 	$request = $smcFunc['db_query']('', '
-		SELECT p.id_project, p.name, p.description
+		SELECT p.id_project, p.name
 		FROM {db_prefix}projects AS p');
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -130,7 +130,6 @@ function list_getProjects($start, $items_per_page, $sort)
 			'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
 			'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
 			'name' => $row['name'],
-			'description' => $row['description'],
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -367,10 +366,10 @@ function ManageCategories()
 	isAllowedTo('project_admin');
 	loadProjectTools('admin');
 
-	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['manage_project_category'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_project_category_description'];
+	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_category'];
+	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_project_category_description'];
 
-	$context['page_title'] = &$txt['manage_project_category'];
+	$context['page_title'] = $txt['manage_project_category'];
 
 	$subActions = array(
 		'list' => array('ManageCategoriesList'),

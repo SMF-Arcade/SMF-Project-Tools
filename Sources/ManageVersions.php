@@ -32,10 +32,10 @@ function ManageVersions()
 	isAllowedTo('project_admin');
 	loadProjectTools('admin');
 
-	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['manage_versions'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = &$txt['manage_versions_description'];
+	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_versions'];
+	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_versions_description'];
 
-	$context['page_title'] = &$txt['manage_versions'];
+	$context['page_title'] = $txt['manage_versions'];
 
 	$subActions = array(
 		'list' => array('ManageVersionsList'),

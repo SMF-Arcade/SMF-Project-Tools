@@ -10,7 +10,6 @@ $txt['project_global'] = 'Global';
 $txt['projectSettings'] = 'Project Tools';
 
 // Manage Projects
-$txt['manage_projects'] = 'Projects';
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 
 // Project List
