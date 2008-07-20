@@ -170,6 +170,15 @@ function ManageVersionsList()
 				'class' => 'catbg',
 				'align' => 'right',
 			),
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '
+					<a href="' . $scripturl . '?action=admin;area=manageversions;sa=new;project=' . $id_project . '">
+						' . $txt['new_version_group'] . '
+					</a>',
+				'class' => 'catbg3',
+				'align' => 'right',
+			),
 		),
 	);
 
