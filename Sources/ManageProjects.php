@@ -113,7 +113,7 @@ function ManageProjectsList()
 	$context['sub_template'] = 'projects_list';
 }
 
-function list_getProjects($start, $items_per_page, $sort, $project)
+function list_getProjects($start, $items_per_page, $sort)
 {
 	global $smcFunc, $scripturl;
 

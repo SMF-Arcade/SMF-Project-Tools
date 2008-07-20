@@ -53,11 +53,6 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_comment_mod',
-				'type' => 'int',
-				'null' => false,
-			),
-			array(
 				'name' => 'name',
 				'type' => 'varchar',
 				'size' => 255,
@@ -108,6 +103,11 @@ $tables = array(
 				'type' => 'int',
 				'null' => false,
 				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_comment_mod',
+				'type' => 'int',
+				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -193,6 +193,7 @@ $tables = array(
 			),
 		),
 	),
+	// Permissions
 	'project_permissions' => array(
 		'name' => 'project_permissions',
 		'columns' => array(

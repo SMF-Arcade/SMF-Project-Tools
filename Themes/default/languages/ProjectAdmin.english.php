@@ -10,12 +10,14 @@ $txt['project_global'] = 'Global';
 $txt['projectSettings'] = 'Project Tools';
 
 // Manage Projects
+$txt['manage_projects'] = 'Projects';
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 
 // Project List
 $txt['header_project'] = 'Project';
 
 // Edit Project
+$txt['edit_project'] = 'Edit Project';
 $txt['project_name'] = 'Project Name';
 $txt['project_description'] = 'Short description for project';
 $txt['project_description_desc'] = 'Displayed on board index';
