@@ -31,6 +31,8 @@ function loadProjectToolsPermissions($project = 0)
 {
 	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
 
+	$user_info['project_groups'] = array();
+
 	// Administrators can see all projects.
 	if ($user_info['is_admin'])
 	{
@@ -38,7 +40,6 @@ function loadProjectToolsPermissions($project = 0)
 		$see_issue = '1 = 1';
 		$see_version = '1 = 1';
 	}
-	// Registered user.... just the groups in $user_info['groups'].
 	else
 	{
 		// !!! CACHE THIS
@@ -51,8 +52,6 @@ function loadProjectToolsPermissions($project = 0)
 			)
 		);
 
-		$user_info['project_groups'] = array();
-
 		$projectGroups = array();
 		$projectGroups_this = array();
 
@@ -63,7 +62,7 @@ function loadProjectToolsPermissions($project = 0)
 			if (!isset($user_info['project_groups'][$row['id_project']]))
 				$user_info['project_groups'][$row['id_project']] = array();
 
-			$user_info['project_groups'][$row['id_project']] = $row['id_group'];
+			$user_info['project_groups'][$row['id_project']][] = $row['id_group'];
 		}
 		$smcFunc['db_free_result']($request);
 
@@ -88,7 +87,7 @@ function loadProjectToolsPermissions($project = 0)
 
 function loadProjectPermissions($project)
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
+	global $context, $smcFunc, $modSettings, $user_info, $txt, $settings;
 
 	if ($user_info['is_admin'])
 		return;
