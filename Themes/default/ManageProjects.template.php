@@ -13,7 +13,7 @@ function template_edit_project()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageprojects;sa=project2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="project" value="', $context['project']['id'], '" />
 
 	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">

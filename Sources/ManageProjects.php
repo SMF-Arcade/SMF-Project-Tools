@@ -485,6 +485,15 @@ function ManageCategoriesList()
 				'class' => 'catbg',
 				'align' => 'right',
 			),
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '
+					<a href="' . $scripturl . '?action=admin;area=managecategories;sa=new;project=' . $id_project . '">
+						' . $txt['new_category'] . '
+					</a>',
+				'class' => 'catbg3',
+				'align' => 'right',
+			),
 		),
 	);
 
