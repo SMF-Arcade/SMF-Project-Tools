@@ -213,7 +213,7 @@
 	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ b.id_project, p.name AS project_name]]></add>
+			<add><![CDATA[ b.id_project, p.name AS project_name,]]></add>
 		</operation>
 
 		<operation>

@@ -680,6 +680,8 @@ $tables = array(
 				'unsigned' => true,
 			),
 		),
+		'indexes' => array(
+		),
 	),
 	// SMF Attachements table
 	'attachments' => array(
