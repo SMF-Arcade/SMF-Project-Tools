@@ -218,7 +218,7 @@
 
 		<operation>
 			<search position="replace"><![CDATA[WHERE {query_see_board}]]></search>
-			<add><![CDATA[WHERE ((ISNULL(p.id_project) AND {query_see_board}) OR ((p.id_project IS NOT NULL AND {query_see_project}))]]></add>
+			<add><![CDATA[WHERE ((ISNULL(p.id_project) AND {query_see_board}) OR (NOT ISNULL(p.id_project) AND {query_see_project}))]]></add>
 		</operation>
 
 		<operation>
