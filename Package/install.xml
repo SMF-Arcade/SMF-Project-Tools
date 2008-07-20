@@ -198,6 +198,31 @@
 		</operation>
 	</file>
 
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="after"><![CDATA[
+	// Build the list of boards they WANT to see.]]></search>
+			<add><![CDATA[
+	require_once($sourcedir . '/Subs-Project.php');
+	loadProjectToolsPermissions();
+	]]></add>
+		</operation>
+
+	</file>
+
+	<!--<file name="$sourcedir/Subs-BoardIndex.php">
+		<operation>
+			<search position="before"><![CDATA[b.description,]]></search>
+			<add><![CDATA[ b.id_project, p.name]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+]]></search>
+			<add><![CDATA[			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)]]></add>
+		</operation>
+	</file>-->
+
 	<file name="$sourcedir/Subs-Db-mysql.php">
 		<operation>
 			<search position="after"><![CDATA[

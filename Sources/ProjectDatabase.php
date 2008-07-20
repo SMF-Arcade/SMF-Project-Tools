@@ -667,6 +667,21 @@ $tables = array(
 			),
 		)
 	),
+	// SMF Boards
+	'boards' => array(
+		'name' => 'boards',
+		'smf' => true,
+		'columns' => array(
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'default' => 0,
+				'null' => false,
+				'unsigned' => true,
+			),
+		),
+	),
+	// SMF Attachements table
 	'attachments' => array(
 		'name' => 'attachments',
 		'smf' => true,
@@ -685,6 +700,7 @@ $tables = array(
 			),
 		)
 	),
+	// Issue Attachements
 	'issue_attachments' => array(
 		'name' => 'issue_attachments',
 		'columns' => array(

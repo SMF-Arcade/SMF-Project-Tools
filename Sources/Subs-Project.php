@@ -27,6 +27,99 @@ if (!defined('SMF'))
 	!!!
 */
 
+function loadProjectToolsPermissions($project = 0)
+{
+	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
+
+	// Administrators can see all projects.
+	if ($user_info['is_admin'])
+	{
+		$see_project = '1 = 1';
+		$see_issue = '1 = 1';
+		$see_version = '1 = 1';
+	}
+	// Registered user.... just the groups in $user_info['groups'].
+	else
+	{
+		// !!! CACHE THIS
+		// Load my groups
+		$request = $smcFunc['db_query']('', '
+			SELECT g.id_group, g.id_project
+			FROM {db_prefix}project_groups AS g
+			WHERE (FIND_IN_SET(' . implode(', g.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', g.member_groups))',
+			array(
+			)
+		);
+
+		$user_info['project_groups'] = array();
+
+		$projectGroups = array();
+		$projectGroups_this = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$projectGroups[] = $row['id_group'];
+
+			if (!isset($user_info['project_groups'][$row['id_project']]))
+				$user_info['project_groups'][$row['id_project']] = array();
+
+			$user_info['project_groups'][$row['id_project']] = $row['id_group'];
+		}
+		$smcFunc['db_free_result']($request);
+
+		if (empty($projectGroups))
+		{
+			$user_info['query_see_project'] = '0 = 1';
+			$user_info['query_see_version'] = '0 = 1';
+			$user_info['query_see_issue'] = '0 = 1';
+
+			return;
+		}
+
+		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
+		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
+		$see_issue = $see_version;
+	}
+
+	$user_info['query_see_project'] = $see_project;
+	$user_info['query_see_version'] = $see_version;
+	$user_info['query_see_issue'] = $see_issue;
+}
+
+function loadProjectPermissions($project)
+{
+	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
+
+	if ($user_info['is_admin'])
+		return;
+
+	$context['project_permissions'] = array();
+
+	if (empty($user_info['project_groups'][0]))
+		$user_info['project_groups'][0] = array();
+	if (empty($user_info['project_groups'][$project]))
+		$user_info['project_groups'][$project] = array();
+
+	$projectGroups_this = array_merge($user_info['project_groups'][$project], $user_info['project_groups'][0]);
+
+	if (!empty($projectGroups_this))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT permission
+			FROM {db_prefix}project_permissions AS g
+			WHERE id_group IN({array_int:groups})',
+			array(
+				'groups' => $projectGroups_this,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_permissions'][$row['permission']] = true;
+
+		$smcFunc['db_free_result']($request);
+	}
+}
+
 function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
