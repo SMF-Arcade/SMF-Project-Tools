@@ -177,7 +177,6 @@ function loadProjectTools($mode = '')
 	if (!empty($project_version))
 		return;
 
-	require_once($sourcedir . '/Subs-Project.php');
 	require_once($sourcedir . '/Subs-Issue.php');
 
 	// Which version this is?
