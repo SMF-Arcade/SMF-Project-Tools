@@ -96,21 +96,11 @@ function ManageProjectsList()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=managecategories',
+			'href' => $scripturl . '?action=admin;area=manageprojects',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
 				'sc' => $context['session_id'],
-			),
-		),
-		'additional_rows' => array(
-			array(
-				'position' => 'top_of_list',
-				'value' => '
-					<select name="project">' . $projectsHtml . '</select>
-					<input type="submit" name="go" value="' . $txt['go'] . '" />',
-				'class' => 'catbg',
-				'align' => 'right',
 			),
 		),
 		'no_items_label' => $txt['no_projects'],
