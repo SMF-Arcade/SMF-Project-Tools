@@ -232,7 +232,10 @@
 
 						foreach ($file[\'actions\'] as $action)
 						{
-							$style = \'height: 1em;\';
+							$style = \'\';
+
+							if (trim($action[1]) == '')
+								$action[1] = '&nbsp;';
 
 							if (empty($action[0]))
 								$style = \'\';
