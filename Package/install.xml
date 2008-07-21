@@ -248,9 +248,9 @@
 								continue;
 							}
 							elseif ($action[0] == \'a\')
-								$style .= \' background-color: yellowgreen\';
+								$style .= \' background-color: #DDFFDD\';
 							elseif ($action[0] == \'d\')
-								$style .= \' background-color: #ff8080\';
+								$style .= \' background-color: #FFDDDD\';
 
 							if (!$section)
 								$data .= \'<div class="windowbg2 smallpadding" style="font-family: monospace">\';
