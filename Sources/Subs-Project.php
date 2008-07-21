@@ -587,4 +587,74 @@ function updateCategory($id_category, $categoryOptions)
 	return true;
 }
 
+function DiffParser($text)
+{
+	$text = explode("\n", $text);
+
+	$data = array();
+	$file = array();
+
+	$inFile = false;
+
+	foreach ($text as $line)
+	{
+		$trim = trim($line);
+		if (substr($trim, 0, 6) == 'Index:')
+			continue;
+		if (!empty($file) && str_repeat('=', strlen($line)) == $line)
+		{
+			$data[] = $file;
+			$file = array();
+			$inFile = false;
+		}
+
+		if (!$inFile)
+		{
+			if (substr($line, 0, 3) == '---')
+			{
+				$info = explode("\t", substr($line, 4), 2);
+				$file['name_before'] = $info[0];
+			}
+			elseif (substr($line, 0, 3) == '+++')
+			{
+				$info = explode("\t", substr($line, 4), 2);
+				$file['name_after'] = $info[0];
+
+				$inFile = true;
+			}
+		}
+		else
+		{
+			$act = substr($line, 0, 1);
+			$line = substr($line, 1);
+
+			if ($act == '@')
+			{
+				$lines = substr($line, 3, -3);
+				$file['actions'][] = array(
+					'@',
+					$lines,
+				);
+					continue;
+			}
+			elseif ($act == '-')
+				$act = 'd';
+			elseif ($act == '+')
+				$act = 'a';
+			else
+				$act = '';
+
+			$file['actions'][] = array(
+				$act,
+				$line
+			);
+		}
+	}
+
+	if (!empty($file))
+		$data[] = $file;
+
+	return $data;
+}
+
 ?>

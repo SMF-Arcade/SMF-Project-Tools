@@ -207,6 +207,64 @@
 			<search position="after"><![CDATA[|action=profile;u=\d+)'),]]></search>
 			<add><![CDATA[|(action=projects)?(sa=viewIssue;)?(;)?issue=(\d+)(\.com(\d+))?(#com(\d+))?]]></add>
 		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[			array(
+				'tag' => 'pre',]]></search>
+			<add><![CDATA[
+			array(
+				'tag' => 'patch',
+				'type' => 'unparsed_content',
+				'before' => '<div>',
+				'content' => '$1',
+				'after' => '</div>',
+				'validate' => create_function('&$tag, &$data, $disabled', '
+					$data = strtr($data, array(\'<br />\' => "\n"));;
+					$diff = DiffParser($data);
+
+					$data = \'\';
+					foreach ($diff as $file)
+					{
+						$data .= \'<div class="tborder">\';
+						$data .= \'<h3 class="titlebg headerpadding">\' . $file[\'name_before\'] . \'</h3>\';
+
+						$section = false;
+
+						foreach ($file[\'actions\'] as $action)
+						{
+							$style = \'height: 1em;\';
+
+							if (empty($action[0]))
+								$style = \'\';
+							elseif ($action[0] == \'@\')
+							{
+								if ($section)
+									$data .= \'</div>\';
+
+								$data .= \'<h4 class="catbg headerpadding">\' . $action[1] . \'</h4><div class="windowbg2 smallpadding" style="font-family: monospace; white-space: pre;">\';
+
+								$section = true;
+
+								continue;
+							}
+							elseif ($action[0] == \'a\')
+								$style .= \' background-color: yellowgreen\';
+							elseif ($action[0] == \'d\')
+								$style .= \' background-color: #ff8080\';
+
+							if (!$section)
+								$data .= \'<div class="windowbg2 smallpadding" style="font-family: monospace">\';
+							$section = true;
+
+							$data .= \'<div style="\' . $style . \'">\' . $action[1] . \'</div>\';
+						}
+
+						$data .= \'</div></div><br />\';
+					}'
+				),
+				'block_level' => true,
+			),]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Load.php">
