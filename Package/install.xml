@@ -146,6 +146,23 @@
 		);
 	}]]></add>
 		</operation>
+
+		<operation>
+			<search position="replace"><![CDATA[	if ($attachment_type != 3)]]></search>
+			<add><![CDATA[	if ($attachment_type != 3 && (($file_ext != 'patch' && $file_ext != 'diff') || isset($_REQUEST['dl'])))]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach'], $id_folder);]]></search>
+			<add><![CDATA[
+	if (!isset($_REQUEST['dl']) && ($file_ext == 'patch' || $file_ext == 'diff'))
+	{
+		loadTemplate('PatchView');
+		$context['diff'] = DiffParser(file_get_contents($filename));
+		$context['download'] = $scripturl;
+		return;
+	}]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/ManagePermissions.php">
