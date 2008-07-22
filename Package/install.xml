@@ -226,10 +226,10 @@
 		</operation>
 
 		<operation>
-			<search position="after"><![CDATA[			array(
-				'tag' => 'pre',]]></search>
-			<add><![CDATA[
+			<search position="after"><![CDATA[
 			array(
+				'tag' => 'pre',]]></search>
+			<add><![CDATA[			array(
 				'tag' => 'patch',
 				'type' => 'unparsed_content',
 				'before' => '<div>',
@@ -251,7 +251,7 @@
 						{
 							$style = \'\';
 
-							if (trim($action[1]) == '')
+							if (trim($action[1]) == \'\')
 								$action[1] = '&nbsp;';
 
 							if (empty($action[0]))
