@@ -156,7 +156,7 @@
 			<add><![CDATA[
 	if (!isset($_REQUEST['dl']) && ($file_ext == 'patch' || $file_ext == 'diff'))
 	{
-		loadTemplate('PatchView');
+		loadTemplate('PatchView', array('project'));
 		$context['diff'] = DiffParser(file_get_contents($filename));
 		$context['download'] = $scripturl;
 

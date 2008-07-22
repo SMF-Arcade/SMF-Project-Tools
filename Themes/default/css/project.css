@@ -389,3 +389,27 @@ table.issuetable td.lastissue
 {
 	text-align: center;
 }
+
+/* ************************************* */
+/* styles from PatchView.template        */
+/* ************************************* */
+.patch dl
+{
+	margin: 0;
+	padding: 0;
+}
+.patch dt
+{
+	margin: 0;
+	padding: 0;
+	width: 1%;
+	float: left;
+}
+.patch dd
+{
+	margin: 0;
+	margin-left: 1%;
+	padding: 0;
+	font-family: monospace;
+	white-space: pre;
+}

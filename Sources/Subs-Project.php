@@ -572,6 +572,9 @@ function DiffParser($text)
 
 	$inFile = false;
 
+	$lineNum = 0;
+	$lineNumNew = 0;
+
 	foreach ($text as $line)
 	{
 		$trim = trim($line);
@@ -607,22 +610,43 @@ function DiffParser($text)
 			if ($act == '@')
 			{
 				$lines = substr($line, 3, -3);
+
 				$file['actions'][] = array(
 					'@',
 					$lines,
 				);
-					continue;
+
+				list ($old, $new) = explode(' +', $lines, 2);
+
+				list ($lineNum, )  = explode(',', $lines, 2);
+				list ($lineNumNew, )  = explode(',', $lines, 2);
+				$lineNum--;
+				$lineNumNew--;
+
+				continue;
 			}
 			elseif ($act == '-')
+			{
 				$act = 'd';
+				$lineNum++;
+			}
 			elseif ($act == '+')
+			{
 				$act = 'a';
+				$lineNumNew++;
+			}
 			else
+			{
 				$act = '';
+				$lineNum++;
+				$lineNumNew++;
+			}
 
 			$file['actions'][] = array(
 				$act,
-				$line
+				$line,
+				$lineNum,
+				$lineNumNew,
 			);
 		}
 	}

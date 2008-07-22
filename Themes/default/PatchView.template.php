@@ -8,7 +8,7 @@ function template_main()
 	foreach ($context['diff'] as $file)
 	{
 		echo '
-	<div class="tborder">
+	<div class="tborder patch">
 		<h3 class="titlebg headerpadding">', $file['name_before'], '</h3>';
 
 		$section = false;
@@ -28,6 +28,7 @@ function template_main()
 			{
 				if ($section)
 					echo '
+			</dl>
 		</div>';
 
 				echo '
@@ -39,17 +40,20 @@ function template_main()
 				continue;
 			}
 			elseif ($action[0] == 'a')
-				$style .= 'white-space: pre; background-color: #DDFFDD';
+				$style .= 'background-color: #DDFFDD';
 			elseif ($action[0] == 'd')
-				$style .= 'white-space: pre; background-color: #FFDDDD';
+				$style .= 'background-color: #FFDDDD';
 
 			if (!$section)
 				echo '
-		<div class="windowbg2 smallpadding" style="font-family: monospace">';
+		<div class="windowbg2 smallpadding">';
 			$section = true;
 
 			echo '
-			<div style="' . $style . '">' . $action[1] . '</div>';
+			<dl class="clearfix">
+				<dt>', $action[2], '</dt>
+				<dd>', $action[1], '</dd>
+			</dl>';
 		}
 
 		echo '
