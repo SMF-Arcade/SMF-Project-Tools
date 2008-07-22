@@ -198,7 +198,7 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'new')
 	{
-		$member_groups = array();
+		$member_groups = array('-1', '0');
 
 		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
 			fatal_lang_error('project_not_found', false);
@@ -258,13 +258,13 @@ function EditVersion()
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['guests'],
-			'checked' => in_array('-1', $curProject['member_groups']),
+			'checked' => in_array('-1', $member_groups),
 			'is_post_group' => false,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
-			'checked' => in_array('0', $curProject['member_groups']),
+			'checked' => in_array('0', $member_groups),
 			'is_post_group' => false,
 		)
 	);

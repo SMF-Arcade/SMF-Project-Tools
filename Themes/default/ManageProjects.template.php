@@ -63,9 +63,9 @@ function template_edit_project()
 
 		echo '
 				<div id="suggest_template_developer" style="visibility: hidden; display: none;">
-					<input type="hidden" name="developer[{MEMBER_ID}][id]" value="{MEMBER_ID}" />
-					<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="developer_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-					<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
+					<input type="hidden" name="developer[::MEMBER_ID::][id]" value="::MEMBER_ID::" />
+					<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="developer_link_to_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
+					<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" /></a>
 				</div>
 				<br />
 			</td>

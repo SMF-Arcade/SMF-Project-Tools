@@ -148,7 +148,7 @@ function EditProject()
 	if ($_REQUEST['sa'] == 'new')
 	{
 		$curProject = array(
-			'member_groups' => array(),
+			'member_groups' => array('-1', '0'),
 		);
 
 		$context['project'] = array(
@@ -270,10 +270,10 @@ function EditProject2()
 				if (isset($context['project_tools']['issue_types'][$tracker]))
 					$projectOptions['trackers'][] = $tracker;
 
-		$projectOptions['groups'] = array();
+		$projectOptions['member_groups'] = array();
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group)
-				$projectOptions['groups'][] = $group;
+				$projectOptions['member_groups'][] = $group;
 
 		if (count($projectOptions['trackers']) == 0)
 			fatal_lang_error('no_issue_types', false);
