@@ -9,7 +9,8 @@ function template_main()
 	{
 		echo '
 	<div class="tborder patch">
-		<h3 class="titlebg headerpadding">', $file['name_before'], '</h3>';
+		<h3 class="titlebg headerpadding">', $file['name_before'], '</h3>
+			<div class="windowbg">';
 
 		$section = false;
 
@@ -23,19 +24,19 @@ function template_main()
 				$action[1] = htmlspecialchars($action[1]);
 
 			if (empty($action[0]))
-				$style = 'white-space: pre;';
+				$style = '';
 			elseif ($action[0] == '@')
 			{
-				if ($section)
-					echo '
-			</dl>
-		</div>';
-
+				if (!$section)
+				{
+					$section = true;
+					continue;
+				}
 				echo '
-		<h4 class="catbg headerpadding">' . $action[1] . '</h4>
-		<div class="windowbg2 smallpadding" style="font-family: monospace;">';
-
-				$section = true;
+			<dl class="clearfix">
+				<dt>...</dt>
+				<dd class="windowbg2" style="', $style, '"> </dd>
+			</dl>';
 
 				continue;
 			}
@@ -44,15 +45,10 @@ function template_main()
 			elseif ($action[0] == 'd')
 				$style .= 'background-color: #FFDDDD';
 
-			if (!$section)
-				echo '
-		<div class="windowbg2 smallpadding">';
-			$section = true;
-
 			echo '
 			<dl class="clearfix">
 				<dt>', $action[2], '</dt>
-				<dd>', $action[1], '</dd>
+				<dd class="windowbg2" style="', $style, '">', $action[1], '</dd>
 			</dl>';
 		}
 

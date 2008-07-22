@@ -160,7 +160,7 @@
 		$context['diff'] = DiffParser(file_get_contents($filename));
 		$context['download'] = $scripturl;
 
-		$context['page_title'] = sprintf($txt['patch_highlight'], filename);
+		$context['page_title'] = sprintf($txt['patch_highlight'], $real_filename);
 
 		return;
 	}]]></add>
