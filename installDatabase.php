@@ -88,8 +88,8 @@ if ($count == 0)
 			array(1, 2, 'issue_update_own'),
 			array(1, 2, 'issue_update_any'),
 			array(1, 2, 'issue_attach'),
-			array(1, 2, 'issue_attach'),
 			array(1, 2, 'issue_moderate'),
+			array(1, 2, 'delete_comment_own'),
 			array(1, 2, 'delete_comment_any'),
 		),
 		array()
