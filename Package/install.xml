@@ -295,8 +295,15 @@
 			<search position="after"><![CDATA[
 	// Build the list of boards they WANT to see.]]></search>
 			<add><![CDATA[
+	// Project Tools
+	$context['project_tools'] = array();
+	$context['issue_tracker'] = array();
+
 	require_once($sourcedir . '/Subs-Project.php');
+	require_once($sourcedir . '/Subs-Issue.php');
 	loadProjectToolsPermissions();
+	loadLanguage('Project');
+	loadIssueTypes();
 	]]></add>
 		</operation>
 
@@ -305,7 +312,8 @@
 	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ b.id_project, p.name AS project_name, p.description AS pdescription, p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
+			<add><![CDATA[ b.id_project, p.name AS project_name, p.trackers, p.description AS pdescription, ' . implode(', p.', $context['type_columns']) . ',
+			p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
 		</operation>
 
 		<operation>
@@ -327,12 +335,68 @@
 			if (!empty($row_board['id_moderator']))]]></search>
 			<add><![CDATA[				if (!empty($row_board['id_project']))
 				{
+					$this_category[$row_board['id_board']]['id'] = $row_board['id_project'];
 					$this_category[$row_board['id_board']]['new'] = $row_board['project_new_from'] <= $row_board['id_comment_mod'] && !$user_info['is_guest'];
 					$this_category[$row_board['id_board']]['name'] = $row_board['project_name'];
 					$this_category[$row_board['id_board']]['description'] = $row_board['pdescription'];
 					$this_category[$row_board['id_board']]['href'] = $scripturl . '?project=' . $row_board['id_project'];
 					$this_category[$row_board['id_board']]['link'] = '<a href="' . $scripturl . '?project=' . $row_board['id_project'] . '">' . $row_board['project_name'] . '</a>';
 					$this_category[$row_board['id_board']]['is_project'] = true;
+					$this_category[$row_board['id_board']]['issues'] = array();
+
+					foreach (explode(',', $row_board['trackers']) as $key)
+					{
+						$this_category[$row_board['id_board']]['issues'][$key] = array(
+							'info' => &$context['project_tools']['issue_types'][$key],
+							'open' => $row['open_' . $key],
+							'closed' => $row['closed_' . $key],
+							'total' => $row['open_' . $key] + $row['closed_' . $key],
+							'link' => $scripturl . '?project='. $row['id_project'] . ';sa=issues;type=' . $key
+						);
+					}
+				}]]></add>
+		</operation>
+	</file>
+
+	<file name="$themedir/BoardIndex.template.php">
+		<operation>
+			<search position="before"><![CDATA[			foreach ($category['boards'] as $board)
+			{]]></search>
+			<add><![CDATA[
+				if (!empty($board['is_project']))
+				{
+					echo '
+			<tr>
+				<td class="windowbg icon">
+					<a href="', $board['href'], '">';
+
+					if ($board['new'])
+						echo '
+						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" />';
+					else
+						echo '
+						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';
+
+					echo '
+					</a>
+				</td>
+				<td class="windowbg2 info">
+					<h4><a href="', $board['href'], '">', $board['name'], '</a></h4>
+					<p class="smalltext">', $board['description'], '</p>
+				</td>
+				<td class="windowbg stats smalltext">';
+
+					foreach ($board['issues'] as $type)
+						echo '
+					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
+
+					echo '
+				</td>
+				<td class="windowbg lastissue">
+				</td>
+			</tr>';
+
+					continue;
 				}]]></add>
 		</operation>
 	</file>
