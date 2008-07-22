@@ -113,7 +113,7 @@ function template_issue_view()
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '");';
+		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", "font-weight: bold");';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '

@@ -64,7 +64,7 @@ function loadProjectPermissions($project)
 		FROM {db_prefix}projects
 		WHERE id_project = {int:project}',
 		array(
-			'profile' => $project,
+			'project' => $project,
 		)
 	);
 
