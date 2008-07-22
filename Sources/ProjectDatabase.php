@@ -172,12 +172,7 @@ $tables = array(
 		'indexes' => array(
 			array(
 				'type' => 'primary',
-				'columns' => array('id_group')
-			),
-			array(
-				'name' => 'id_project',
-				'type' => 'index',
-				'columns' => array('id_project')
+				'columns' => array('id_profile')
 			),
 		),
 	),
@@ -207,12 +202,12 @@ $tables = array(
 		'indexes' => array(
 			array(
 				'type' => 'primary',
-				'columns' => array('id_group', 'permission')
+				'columns' => array('id_profile', 'id_group', 'permission')
 			),
 			array(
 				'name' => 'id_group',
 				'type' => 'index',
-				'columns' => array('id_group')
+				'columns' => array('id_profile', 'id_group')
 			),
 		),
 	),
