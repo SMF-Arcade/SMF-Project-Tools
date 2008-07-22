@@ -305,7 +305,7 @@
 	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ b.id_project, p.name AS project_name,]]></add>
+			<add><![CDATA[ b.id_project, p.name AS project_name, p.description AS pdescription, p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(log.id_comment, -1) + 1) AS project_new_from') . ']]></add>
 		</operation>
 
 		<operation>
@@ -316,7 +316,11 @@
 		<operation>
 			<search position="before"><![CDATA[			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
 ]]></search>
-			<add><![CDATA[			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)]]></add>
+			<add><![CDATA[
+			LEFT JOIN {db_prefix}log_projects AS plog ON (plog.id_member = {int:member} AND plog.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:member})]]></add>
 		</operation>
 
 		<operation>
@@ -324,9 +328,12 @@
 			if (!empty($row_board['id_moderator']))]]></search>
 			<add><![CDATA[				if (!empty($row_board['id_project']))
 				{
+					$this_category[$row_board['id_board']]['new'] = $row['project_new_from'] <= $row['id_comment_mod'] && !$user_info['is_guest'];
 					$this_category[$row_board['id_board']]['name'] = $row_board['project_name'];
+					$this_category[$row_board['id_board']]['description'] = $row_board['pdescription'];
 					$this_category[$row_board['id_board']]['href'] = $scripturl . '?project=' . $row_board['id_project'];
 					$this_category[$row_board['id_board']]['link'] = '<a href="' . $scripturl . '?project=' . $row_board['id_project'] . '">' . $row_board['project_name'] . '</a>';
+					$this_category[$row_board['id_board']]['is_project'] = true;
 				}]]></add>
 		</operation>
 	</file>
