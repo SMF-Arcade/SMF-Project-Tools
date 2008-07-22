@@ -190,7 +190,6 @@ $tables = array(
 				'name' => 'id_group',
 				'type' => 'int',
 				'null' => false,
-				'unsigned' => true,
 			),
 			array(
 				'name' => 'permission',
