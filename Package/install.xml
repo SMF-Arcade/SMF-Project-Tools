@@ -348,10 +348,10 @@
 					{
 						$this_category[$row_board['id_board']]['issues'][$key] = array(
 							'info' => &$context['project_tools']['issue_types'][$key],
-							'open' => $row['open_' . $key],
-							'closed' => $row['closed_' . $key],
-							'total' => $row['open_' . $key] + $row['closed_' . $key],
-							'link' => $scripturl . '?project='. $row['id_project'] . ';sa=issues;type=' . $key
+							'open' => $row_board['open_' . $key],
+							'closed' => $row_board['closed_' . $key],
+							'total' => $row_board['open_' . $key] + row_board['closed_' . $key],
+							'link' => $scripturl . '?project='. $row_board['id_project'] . ';sa=issues;type=' . $key
 						);
 					}
 				}]]></add>
@@ -392,7 +392,7 @@
 
 					echo '
 				</td>
-				<td class="windowbg lastissue">
+				<td class="windowbg2 lastissue">
 				</td>
 			</tr>';
 

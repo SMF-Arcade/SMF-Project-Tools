@@ -42,17 +42,13 @@ function template_project_list()
 				</td>
 				<td class="windowbg stats smalltext">';
 
-			/*foreach ($project['issues'] as $type)
-				echo '
-				<div class="smalltext" title="', sprintf($txt['project_open_closed'], $type['open'], $type['closed']), '"><span><a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a></span> <span><a href="', $type['link'], '">', $type['total'], '</a></span></div>';*/
-
 			foreach ($project['issues'] as $type)
 				echo '
 					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
 
 			echo '
 				</td>
-				<td class="windowbg lastissue">
+				<td class="windowbg2 lastissue">
 				</td>
 			</tr>';
 		}
