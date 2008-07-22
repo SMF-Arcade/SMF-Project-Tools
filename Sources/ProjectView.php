@@ -115,56 +115,56 @@ function ProjectRoadmap()
 	$ids = array();
 	$context['roadmap'] = array();
 
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			ver.id_version, ver.id_parent, ver.version_name, ver.status,
+			ver.description, ver.release_date
+		FROM {db_prefix}project_versions AS ver
+		WHERE {query_see_version}
+			AND id_project = {int:project}
+			AND (id_parent = 0 OR status IN (0,1))
+		ORDER BY id_parent',
+		array(
+			'project' => $project,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$ids[] = $row['id_version'];
+
+		if (!empty($row['id_parent']))
+		{
+			$parents[$row['id_version']] = $row['id_parent'];
+
+			$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'description' => parse_bbc($row['description']),
+				'issues' => array(
+					'open' => 0,
+					'closed' => 0,
+				),
+			);
+		}
+		else
+		{
+			$context['roadmap'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'description' => parse_bbc($row['description']),
+				'versions' => array(),
+				'issues' => array(
+					'open' => 0,
+					'closed' => 0,
+				),
+			);
+		}
+	}
+	$smcFunc['db_free_result']($request);
+
 	if (!empty($ids))
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				ver.id_version, ver.id_parent, ver.version_name, ver.status,
-				ver.description, ver.release_date
-			FROM {db_prefix}project_versions AS ver
-			WHERE {query_see_version}
-				AND id_project = {int:project}
-				AND (id_parent = 0 OR status IN (0,1))
-			ORDER BY id_parent',
-			array(
-				'project' => $project,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$ids[] = $row['id_version'];
-
-			if (!empty($row['id_parent']))
-			{
-				$parents[$row['id_version']] = $row['id_parent'];
-
-				$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-					'description' => parse_bbc($row['description']),
-					'issues' => array(
-						'open' => 0,
-						'closed' => 0,
-					),
-				);
-			}
-			else
-			{
-				$context['roadmap'][$row['id_version']] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-					'description' => parse_bbc($row['description']),
-					'versions' => array(),
-					'issues' => array(
-						'open' => 0,
-						'closed' => 0,
-					),
-				);
-			}
-		}
-		$smcFunc['db_free_result']($request);
-
 		// Load issue counts
 		$request = $smcFunc['db_query']('', '
 			SELECT id_version, id_version_fixed, status, COUNT(*) AS num
