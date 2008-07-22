@@ -316,7 +316,7 @@
 		<operation>
 			<search position="before"><![CDATA[			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)]]></search>
 			<add><![CDATA[' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_projects AS plog ON (plog.id_member = {int:member} AND plog.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}log_projects AS plog ON (plog.id_member = {int:current_member} AND plog.id_project = p.id_project)') . '
 			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})]]></add>
