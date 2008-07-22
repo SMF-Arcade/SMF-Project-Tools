@@ -23,8 +23,8 @@ $txt['modify_versions'] = 'Modify Versions';
 $txt['manage_project_category'] = 'Categories';
 $txt['modify_project_category'] = 'Modify Categories';
 
-$txt['manage_project_groups'] = 'Groups';
-$txt['modify_project_groups'] = 'Modify Groups';
+$txt['manage_project_permissions'] = 'Permissions';
+$txt['modify_project_profiles'] = 'Modify Profiles';
 $txt['new_project_group'] = 'New Group';
 $txt['project_permissions'] = 'Permissions';
 

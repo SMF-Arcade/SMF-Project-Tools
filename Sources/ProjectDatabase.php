@@ -75,7 +75,7 @@ $tables = array(
 				'null' => false,
 			),
 			array(
-				'name' => 'project_groups',
+				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
 				'null' => false,
@@ -106,6 +106,11 @@ $tables = array(
 			),
 			array(
 				'name' => 'id_comment_mod',
+				'type' => 'int',
+				'null' => false,
+			),
+			array(
+				'name' => 'id_profile',
 				'type' => 'int',
 				'null' => false,
 			),
@@ -146,31 +151,19 @@ $tables = array(
 			),
 		)
 	),
-	// Project Membergroups
-	'project_groups' => array(
-		'name' => 'project_groups',
+	// Project Permission Profiles
+	'project_profiles' => array(
+		'name' => 'project_profiles',
 		'columns' => array(
 			array(
-				'name' => 'id_group',
+				'name' => 'id_profile',
 				'type' => 'int',
 				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_project',
-				'type' => 'int',
-				'null' => false,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'group_name',
-				'type' => 'varchar',
-				'size' => 255,
-				'null' => false,
-			),
-			array(
-				'name' => 'member_groups',
+				'name' => 'profile_name',
 				'type' => 'varchar',
 				'size' => 255,
 				'null' => false,
@@ -186,17 +179,18 @@ $tables = array(
 				'type' => 'index',
 				'columns' => array('id_project')
 			),
-			array(
-				'name' => 'member_groups',
-				'type' => 'index',
-				'columns' => array('member_groups')
-			),
 		),
 	),
 	// Permissions
 	'project_permissions' => array(
 		'name' => 'project_permissions',
 		'columns' => array(
+			array(
+				'name' => 'id_profile',
+				'type' => 'int',
+				'null' => false,
+				'unsigned' => true,
+			),
 			array(
 				'name' => 'id_group',
 				'type' => 'int',
@@ -268,7 +262,7 @@ $tables = array(
 				'null' => false,
 			),
 			array(
-				'name' => 'project_groups',
+				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
 				'null' => false,

@@ -198,6 +198,8 @@ function EditVersion()
 
 	if ($_REQUEST['sa'] == 'new')
 	{
+		$member_groups = array();
+
 		if (!$context['project'] = loadProject((int) $_REQUEST['project']))
 			fatal_lang_error('project_not_found', false);
 
@@ -213,35 +215,13 @@ function EditVersion()
 			'status' => 0,
 			'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
 		);
-
-		$request = $smcFunc['db_query']('', '
-			SELECT id_project, id_group, group_name
-			FROM {db_prefix}project_groups
-			WHERE id_project = {int:project} OR id_project = 0',
-			array(
-				'project' => $context['project']['id'],
-			)
-		);
-
-		$context['project_groups'] = array();
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$context['project_groups'][$row['id_group']] = array(
-				'id' => $row['id_group'],
-				'name' => $row['group_name'],
-				'global' => $row['id_project'] == 0,
-				'selected' => false,
-			);
-		}
-		$smcFunc['db_free_result']($request);
 	}
 	else
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				v.id_version, v.id_project, v.id_parent, v.version_name,
-				v.status, v.project_groups, v.description, v.release_date
+				v.status, v.member_groups, v.description, v.release_date
 			FROM {db_prefix}project_versions AS v
 			WHERE id_version = {int:version}',
 			array(
@@ -255,7 +235,7 @@ function EditVersion()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
-		$project_groups = explode(',', $row['project_groups']);
+		$member_groups = explode(',', $row['member_groups']);
 
 		if (!$context['project'] = loadProject((int) $row['id_project']))
 			fatal_lang_error('project_not_found', false);
@@ -271,29 +251,45 @@ function EditVersion()
 			'status' => $row['status'],
 			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
 		);
-
-		$request = $smcFunc['db_query']('', '
-			SELECT id_group, group_name, id_project
-			FROM {db_prefix}project_groups
-			WHERE id_project = {int:project} OR id_project = 0',
-			array(
-				'project' => $context['project']['id'],
-			)
-		);
-
-		$context['project_groups'] = array();
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$context['project_groups'][$row['id_group']] = array(
-				'id' => $row['id_group'],
-				'name' => $row['group_name'],
-				'selected' => in_array($row['id_group'], $project_groups),
-				'global' => $row['id_project'] == 0,
-			);
-		}
-		$smcFunc['db_free_result']($request);
 	}
+
+	// Default membergroups.
+	$context['groups'] = array(
+		-1 => array(
+			'id' => '-1',
+			'name' => $txt['guests'],
+			'checked' => in_array('-1', $curProject['member_groups']),
+			'is_post_group' => false,
+		),
+		0 => array(
+			'id' => '0',
+			'name' => $txt['regular_members'],
+			'checked' => in_array('0', $curProject['member_groups']),
+			'is_post_group' => false,
+		)
+	);
+
+	// Load membergroups.
+	$request = $smcFunc['db_query']('', '
+		SELECT group_name, id_group, min_posts
+		FROM {db_prefix}membergroups
+		WHERE id_group > 3 OR id_group = 2
+		ORDER BY min_posts, id_group != 2, group_name');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($_REQUEST['sa'] == 'new' && $row['min_posts'] == -1)
+			$member_groups[] = $row['id_group'];
+
+		$context['groups'][(int) $row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => trim($row['group_name']),
+			'checked' => in_array($row['id_group'], $member_groups),
+			'is_post_group' => $row['min_posts'] != -1,
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
 
 	// Template
 	$context['sub_template'] = 'edit_version';
@@ -331,7 +327,7 @@ function EditVersion2()
 				$versionOptions['status'] = 0;
 		}
 
-		$versionOptions['project_groups'] = $_POST['groups'];
+		$versionOptions['member_groups'] = $_POST['groups'];
 
 
 		if (isset($_POST['add']))

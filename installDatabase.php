@@ -47,7 +47,7 @@ doPermission($permissions);
 
 $request = $smcFunc['db_query']('', '
 	SELECT COUNT(*)
-	FROM {db_prefix}project_groups');
+	FROM {db_prefix}project_profiles');
 
 // Install default groups
 list ($count) = $smcFunc['db_fetch_row']($request);
@@ -55,37 +55,15 @@ $smcFunc['db_free_result']($request);
 if ($count == 0)
 {
 	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_groups',
+		'{db_prefix}project_profiles',
 		array(
-			'id_group' => 'int',
-			'id_project' => 'int',
-			'group_name' => 'string',
-			'member_groups' => 'string',
+			'id_profile' => 'int',
+			'profile_name' => 'string',
 		),
 		array(
 			array(
 				1,
-				0,
-				'Viewer',
-				'-1'
-			),
-			array(
-				2,
-				0,
-				'Reporter',
-				'0'
-			),
-			array(
-				3,
-				0,
-				'Beta Tester',
-				'3',
-			),
-			array(
-				4,
-				0,
-				'Team Member',
-				'1',
+				'Default',
 			),
 		),
 		array()
@@ -93,97 +71,26 @@ if ($count == 0)
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_permissions',
 		array(
+			'id_profile' => 'int',
 			'id_group' => 'int',
 			'permission' => 'string',
 		),
 		array(
-			// Viewer
-			array(
-				1,
-				'issue_view',
-			),
-
-			// Reporter
-			array(
-				2,
-				'issue_view',
-			),
-			array(
-				2,
-				'issue_report',
-			),
-			array(
-				2,
-				'issue_comment',
-			),
-			array(
-				2,
-				'issue_update_own',
-			),
-			array(
-				2,
-				'issue_attach',
-			),
-
-			// Beta Tester
-			array(
-				3,
-				'issue_view',
-			),
-			array(
-				3,
-				'issue_report',
-			),
-			array(
-				3,
-				'issue_comment',
-			),
-			array(
-				3,
-				'issue_update_own',
-			),
-			array(
-				3,
-				'issue_attach',
-			),
-
-			// Team Member
-			array(
-				4,
-				'issue_view',
-			),
-			array(
-				4,
-				'issue_report',
-			),
-			array(
-				4,
-				'issue_comment',
-			),
-			array(
-				4,
-				'issue_update_own',
-			),
-			array(
-				4,
-				'issue_update_any',
-			),
-			array(
-				4,
-				'delete_comment_own',
-			),
-			array(
-				4,
-				'delete_comment_any',
-			),
-			array(
-				4,
-				'issue_moderate',
-			),
-			array(
-				4,
-				'issue_attach',
-			),
+			array(1, -1, 'issue_view'),
+			array(1, 0, 'issue_view'),
+			array(1, 0, 'issue_report'),
+			array(1, 0, 'issue_comment'),
+			array(1, 0, 'issue_update_own'),
+			array(1, 0, 'issue_attach'),
+			array(1, 2, 'issue_view'),
+			array(1, 2, 'issue_report'),
+			array(1, 2, 'issue_comment'),
+			array(1, 2, 'issue_update_own'),
+			array(1, 2, 'issue_update_any'),
+			array(1, 2, 'issue_attach'),
+			array(1, 2, 'issue_attach'),
+			array(1, 2, 'issue_moderate'),
+			array(1, 2, 'delete_comment_any'),
 		),
 		array()
 	);

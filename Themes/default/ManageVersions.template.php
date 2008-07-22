@@ -71,15 +71,14 @@ function template_edit_version()
 	echo '
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['version_projectgroups'], ':</b><br />
-				<span class="smalltext">', $txt['version_projectgroups_desc'], '</span><br />
+				<b>', $txt['version_membergroups'], ':</b><br />
+				<span class="smalltext">', $txt['version_membergroups_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">';
 
-	foreach ($context['project_groups'] as $pgroup)
+	foreach ($context['groups'] as $group)
 		echo '
-				<input id="pg_', $pgroup['id'], '" type="checkbox" name="groups[]" value="', $pgroup['id'], '"', !empty($pgroup['selected']) ? ' checked="checked"' : '', '> <label for="pg_', $pgroup['id'], '">', $pgroup['name'], '</label>', $pgroup['global'] ? ' <i class="smalltext">('. $txt['project_global'] . ')</i>' : '', '<br />';
-
+				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
 				<br />

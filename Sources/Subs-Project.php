@@ -29,9 +29,7 @@ if (!defined('SMF'))
 
 function loadProjectToolsPermissions($project = 0)
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
-
-	$user_info['project_groups'] = array();
+	global $modSettings, $user_info;
 
 	// Administrators can see all projects.
 	if ($user_info['is_admin'])
@@ -42,41 +40,8 @@ function loadProjectToolsPermissions($project = 0)
 	}
 	else
 	{
-		// !!! CACHE THIS
-		// Load my groups
-		$request = $smcFunc['db_query']('', '
-			SELECT g.id_group, g.id_project
-			FROM {db_prefix}project_groups AS g
-			WHERE (FIND_IN_SET(' . implode(', g.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', g.member_groups))',
-			array(
-			)
-		);
-
-		$projectGroups = array();
-		$projectGroups_this = array();
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$projectGroups[] = $row['id_group'];
-
-			if (!isset($user_info['project_groups'][$row['id_project']]))
-				$user_info['project_groups'][$row['id_project']] = array();
-
-			$user_info['project_groups'][$row['id_project']][] = $row['id_group'];
-		}
-		$smcFunc['db_free_result']($request);
-
-		if (empty($projectGroups))
-		{
-			$user_info['query_see_project'] = '0 = 1';
-			$user_info['query_see_version'] = '0 = 1';
-			$user_info['query_see_issue'] = '0 = 1';
-
-			return;
-		}
-
-		$see_project = '(FIND_IN_SET(' . implode(', p.project_groups) OR FIND_IN_SET(', $projectGroups) . ', p.project_groups))';
-		$see_version = '(ISNULL(ver.project_groups) OR (FIND_IN_SET(' . implode(', ver.project_groups) OR FIND_IN_SET(', $projectGroups) . ', ver.project_groups)))';
+		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
+		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
 		$see_issue = $see_version;
 	}
 
@@ -94,29 +59,36 @@ function loadProjectPermissions($project)
 
 	$context['project_permissions'] = array();
 
-	if (empty($user_info['project_groups'][0]))
-		$user_info['project_groups'][0] = array();
-	if (empty($user_info['project_groups'][$project]))
-		$user_info['project_groups'][$project] = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT id_profile
+		FROM {db_prefix}projects
+		WHERE id_project = {int:project}',
+		array(
+			'profile' => $project,
+		)
+	);
 
-	$projectGroups_this = array_merge($user_info['project_groups'][$project], $user_info['project_groups'][0]);
+	list ($profile) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
-	if (!empty($projectGroups_this))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT permission
-			FROM {db_prefix}project_permissions AS g
-			WHERE id_group IN({array_int:groups})',
-			array(
-				'groups' => $projectGroups_this,
-			)
-		);
+	if (!$profile)
+		return;
 
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_permissions'][$row['permission']] = true;
+	$request = $smcFunc['db_query']('', '
+		SELECT permission
+		FROM {db_prefix}project_permissions
+		WHERE id_group IN({array_int:groups})
+			AND id_profile = {int:profile}',
+		array(
+			'profile' => $profile,
+			'groups' => $user_info['groups'],
+		)
+	);
 
-		$smcFunc['db_free_result']($request);
-	}
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['project_permissions'][$row['permission']] = true;
+
+	$smcFunc['db_free_result']($request);
 }
 
 function loadTimeline($project = 0)
@@ -192,7 +164,7 @@ function loadProject($id_project)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.long_description, p.trackers, p.project_groups,
+			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
 			p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ',
 			dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
@@ -221,7 +193,7 @@ function loadProject($id_project)
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
 		'category' => array(),
-		'groups' => explode(',', $row['project_groups']),
+		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
 		'developers' => array(),
 		'is_developer' => !empty($row['is_dev']),
@@ -369,25 +341,29 @@ function createProject($projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	if (empty($projectOptions['name']) || !isset($projectOptions['description']))
+	if (empty($projectOptions['name']) || !isset($projectOptions['description']) || !isset($projectOptions['member_groups']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}projects',
 		array(
 			'name' => 'string',
-			'description' => 'string'
+			'description' => 'string',
+			'member_groups' => 'string',
+			'id_profile' => 'int',
 		),
 		array(
 			$projectOptions['name'],
-			$projectOptions['description']
+			$projectOptions['description'],
+			implode(',', $projectOptions['member_groups']),
+			1,
 		),
 		array()
 	);
 
 	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');
 
-	unset($projectOptions['name'], $projectOptions['description']);
+	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['member_groups']);
 
 	// Anything left?
 	if (!empty($projectOptions))
@@ -418,10 +394,10 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
 
-	if (isset($projectOptions['project_groups']))
+	if (isset($projectOptions['member_groups']))
 	{
-		$projectUpdates[] = 'project_groups = {string:project_groups}';
-		$projectOptions['project_groups'] = implode(',', $projectOptions['project_groups']);
+		$projectUpdates[] = 'member_groups = {string:member_groups}';
+		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
 	}
 
 	if (!empty($projectUpdates))
@@ -516,10 +492,10 @@ function updateVersion($id_version, $versionOptions)
 	if (isset($versionOptions['release_date']))
 		$versionUpdates[] = 'release_date = {string:release_date}';
 
-	if (isset($versionOptions['project_groups']))
+	if (isset($versionOptions['member_groups']))
 	{
-		$versionUpdates[] = 'project_groups = {string:project_groups}';
-		$versionOptions['project_groups'] = implode(',', $versionOptions['project_groups']);
+		$versionUpdates[] = 'member_groups = {string:member_groups}';
+		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
 	}
 
 	if (isset($versionOptions['status']))

@@ -58,14 +58,13 @@
 					),
 				),
 				'projectgroups' => array(
-					'label' => $txt['manage_project_groups'],
+					'label' => $txt['manage_project_permissions'],
 					'file' => 'ManageProjects.php',
-					'function' => 'ManageProjectGroups',
+					'function' => 'ManageProjectPermissions',
 					'permission' => array('project_admin'),
 					'subsections' => array(
-						'main' => array($txt['modify_project_groups']),
+						'main' => array($txt['modify_project_profiles']),
 						'new' => array($txt['new_project_group']),
-						'permissions' => array($txt['project_permissions']),
 					),
 				),
 				'manageversions' => array(
