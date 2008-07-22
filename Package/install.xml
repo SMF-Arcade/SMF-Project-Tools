@@ -327,7 +327,7 @@
 			if (!empty($row_board['id_moderator']))]]></search>
 			<add><![CDATA[				if (!empty($row_board['id_project']))
 				{
-					$this_category[$row_board['id_board']]['new'] = $row['project_new_from'] <= $row['id_comment_mod'] && !$user_info['is_guest'];
+					$this_category[$row_board['id_board']]['new'] = $row_board['project_new_from'] <= $row_board['id_comment_mod'] && !$user_info['is_guest'];
 					$this_category[$row_board['id_board']]['name'] = $row_board['project_name'];
 					$this_category[$row_board['id_board']]['description'] = $row_board['pdescription'];
 					$this_category[$row_board['id_board']]['href'] = $scripturl . '?project=' . $row_board['id_project'];
