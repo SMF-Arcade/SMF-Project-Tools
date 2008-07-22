@@ -143,12 +143,12 @@ function EditProject()
 
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
 	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProject($_REQUEST['project']))
-		$_REQUEST['sa'] = 'newproject';
+		$_REQUEST['sa'] = 'new';
 
-	if ($_REQUEST['sa'] == 'newproject')
+	if ($_REQUEST['sa'] == 'new')
 	{
 		$curProject = array(
-			'member_groups' => array(-1, 0, 2),
+			'member_groups' => array(),
 		);
 
 		$context['project'] = array(
@@ -204,7 +204,7 @@ function EditProject()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if ($_REQUEST['sa'] == 'newproject' && $row['min_posts'] == -1)
+		if ($_REQUEST['sa'] == 'new' && $row['min_posts'] == -1)
 			$curProject['member_groups'][] = $row['id_group'];
 
 		$context['groups'][(int) $row['id_group']] = array(
@@ -270,10 +270,10 @@ function EditProject2()
 				if (isset($context['project_tools']['issue_types'][$tracker]))
 					$projectOptions['trackers'][] = $tracker;
 
-		$projectOptions['member_groups'] = array();
-		if (!empty($_POST['member_groups']))
-			foreach ($_POST['member_groups'] as $group)
-				$projectOptions['member_groups'][] = $group;
+		$projectOptions['groups'] = array();
+		if (!empty($_POST['groups']))
+			foreach ($_POST['groups'] as $group)
+				$projectOptions['groups'][] = $group;
 
 		if (count($projectOptions['trackers']) == 0)
 			fatal_lang_error('no_issue_types', false);
