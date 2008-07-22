@@ -350,7 +350,7 @@
 							'info' => &$context['project_tools']['issue_types'][$key],
 							'open' => $row_board['open_' . $key],
 							'closed' => $row_board['closed_' . $key],
-							'total' => $row_board['open_' . $key] + row_board['closed_' . $key],
+							'total' => $row_board['open_' . $key] + $row_board['closed_' . $key],
 							'link' => $scripturl . '?project='. $row_board['id_project'] . ';sa=issues;type=' . $key
 						);
 					}
