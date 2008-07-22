@@ -11,6 +11,7 @@ $txt['project'] = 'Project';
 $txt['projects'] = 'Projects';
 $txt['core_settings_item_pj'] = 'Project Tools';
 $txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
+$txt['patch_highlight'] = 'Viewing Highlight of Patch: %s';
 
 // SMF Project tools admin
 $txt['manage_projects'] = 'Projects';

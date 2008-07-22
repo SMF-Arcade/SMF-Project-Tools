@@ -19,26 +19,29 @@ function template_main()
 
 			if (trim($action[1]) == '')
 				$action[1] = '&nbsp;';
+			else
+				$action[1] = htmlspecialchars($action[1]);
 
 			if (empty($action[0]))
-				$style = '';
+				$style = 'white-space: pre;';
 			elseif ($action[0] == '@')
 			{
 				if ($section)
-					$data .= '</div>';
+					echo '
+		</div>';
 
 				echo '
 		<h4 class="catbg headerpadding">' . $action[1] . '</h4>
-		<div class="windowbg2 smallpadding" style="font-family: monospace; white-space: pre;">';
+		<div class="windowbg2 smallpadding" style="font-family: monospace;">';
 
 				$section = true;
 
 				continue;
 			}
 			elseif ($action[0] == 'a')
-				$style .= ' background-color: #DDFFDD';
+				$style .= 'white-space: pre; background-color: #DDFFDD';
 			elseif ($action[0] == 'd')
-				$style .= ' background-color: #FFDDDD';
+				$style .= 'white-space: pre; background-color: #FFDDDD';
 
 			if (!$section)
 				echo '

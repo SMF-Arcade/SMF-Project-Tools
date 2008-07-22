@@ -565,7 +565,7 @@ function updateCategory($id_category, $categoryOptions)
 
 function DiffParser($text)
 {
-	$text = explode("\n", $text);
+	$text = explode("\n", str_replace(array("\r\n", "\r"), "\n", $text));
 
 	$data = array();
 	$file = array();
