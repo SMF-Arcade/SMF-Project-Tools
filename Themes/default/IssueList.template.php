@@ -31,10 +31,8 @@ function template_issue_list()
 						<option value="" disabled="disabled">--------</option>';
 
 	foreach ($context['issue']['status'] as $status)
-	{
 		echo '
 						<option value="', $status['id'], '"', $context['issue_search']['status'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
-	}
 
 	echo '
 					</select>
@@ -42,10 +40,8 @@ function template_issue_list()
 						<option value="0"', empty($context['issue_search']['type']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
 
 	foreach ($context['possible_types'] as $type)
-	{
 		echo '
 						<option value="', $type['id'], '"', $context['issue_search']['type'] == $type['id'] ? ' selected="selected"' : '', '>', $type['name'], '</option>';
-	}
 
 	echo '
 					</select>
@@ -60,7 +56,8 @@ function template_issue_list()
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
 			'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=reportIssue',
-			'lang' => true
+			'lang' => true,
+			'test' => 'can_report_issues',
 		),
 	);
 

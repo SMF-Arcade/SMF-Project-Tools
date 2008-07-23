@@ -138,6 +138,7 @@ function IssueList()
 		$where[] = '((i.id_version IN({array_int:versions}) AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
+	$context['can_report_issues'] = projectAllowedTo('issue_report');
 
 	// How many issues?
 	$request = $smcFunc['db_query']('', '
