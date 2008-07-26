@@ -83,10 +83,15 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 	{
 		handled = true;
 
-		if (evt.target.optionValue != selectedValue)
+		target = evt.target;
+
+		if (target.tagName == 'SPAN')
+			target = target.parentNode;
+
+		if (target.optionValue != selectedValue)
 		{
-			selectedValue = evt.target.optionValue;
-			selectedItem = evt.target.optionItem
+			selectedValue = target.optionValue;
+			selectedItem = target.optionItem
 
 			dropdownBtn.className = "button_work";
 			xmlRequestHandle = callback(fieldName, name, evt.target.optionValue, sessionID);
