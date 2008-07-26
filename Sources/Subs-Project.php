@@ -645,8 +645,8 @@ function DiffParser($text)
 			$file['actions'][] = array(
 				$act,
 				$line,
-				$act != 'a' ? $lineNum : '+',
-				$act != 'd' ? $lineNumNew : '-',
+				$act != 'a' ? $lineNum : '',
+				$act != 'd' ? $lineNumNew : '',
 			);
 		}
 	}

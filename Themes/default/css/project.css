@@ -403,6 +403,7 @@ table.issuetable td.lastissue
 	margin: 0;
 	float: left;
 	font-family: monospace;
+	width: 40px;
 }
 .patch dd
 {
