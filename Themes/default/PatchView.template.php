@@ -48,6 +48,7 @@ function template_main()
 			echo '
 			<dl class="clearfix">
 				<dt>', $action[2], '</dt>
+				<dt>', $action[3], '</dt>
 				<dd class="windowbg2" style="', $style, '">', $action[1], '</dd>
 			</dl>';
 		}

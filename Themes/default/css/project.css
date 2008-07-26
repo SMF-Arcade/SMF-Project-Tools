@@ -406,7 +406,7 @@ table.issuetable td.lastissue
 }
 .patch dd
 {
-	margin: 0 0 0 40px;
+	margin: 0 0 0 80px;
 	padding: 0 0.2em;
 	border-left: 1px solid #A0A0A0;
 	font-family: monospace;
