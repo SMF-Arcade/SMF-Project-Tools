@@ -49,8 +49,8 @@ function loadProjectToolsPermissions($project = 0)
 	$user_info['query_see_version'] = $see_version;
 	$user_info['query_see_issue'] = $see_issue;
 }
-
 function loadProjectPermissions($project)
+
 {
 	global $context, $smcFunc, $modSettings, $user_info, $txt, $settings;
 
@@ -285,6 +285,9 @@ function loadVersions($project)
 		}
 		else
 		{
+			if (!isset($versions[$row['id_parent']]))
+				continue;
+
 			$versions[$row['id_parent']]['sub_versions'][$row['id_version']] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
