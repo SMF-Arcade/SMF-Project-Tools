@@ -743,7 +743,7 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 
 		if (!empty($columnRename))
 		{
-			$table = $smcFunc['db_table_structure']($table_name);
+			$table = $smcFunc['db_table_structure']($table_name, array('no_prefix' => true));
 
 			foreach ($table['columns'] as $column)
 			{
