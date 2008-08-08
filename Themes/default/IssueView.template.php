@@ -228,7 +228,6 @@ function template_issue_view()
 
 		echo '
 						</ul>
-						<hr width="100%" size="1" class="hrcolor" />
 						<div id="com_', $comment['id'], '" class="post">
 							', $comment['body'], '
 						</div>
@@ -242,6 +241,7 @@ function template_issue_view()
 			echo '
 						<hr width="100%" size="1" class="hrcolor" />
 						<div style="overflow: auto; width: 100%;">';
+
 			foreach ($context['attachments'] as $attachment)
 			{
 				if ($attachment['is_image'])
