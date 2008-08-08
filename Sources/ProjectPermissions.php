@@ -92,10 +92,12 @@ function ManageProjectPermissionsMain()
 				'header' => array(
 					'value' => $txt['header_used_by'],
 				),
+				'data' => array(
 					'function' => create_function('$list_item', '
 						global $txt, $scripturl;
 						return (empty($list_item[\'projects\']) ? $txt[\'not_in_use\'] : sprintf($txt[\'used_by_projects\'], $list_item[\'projects\']));
 					'),
+				),
 				'sort' => array(
 					'default' => 'num_project DESC',
 					'reverse' => 'num_project',
