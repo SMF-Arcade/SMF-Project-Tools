@@ -121,7 +121,7 @@ function list_getProfiles($start, $items_per_page, $sort)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$projects[] = array(
+		$profiles[] = array(
 			'id' => $row['id_project'],
 			'link' => '<a href="' . $scripturl . '?action=admin;area=projectpermissions;sa=edit;project=' . $row['id_project'] . '">' . $row['profile_name'] . '</a>',
 			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;project=' . $row['id_project'],
@@ -130,6 +130,10 @@ function list_getProfiles($start, $items_per_page, $sort)
 		);
 	}
 	$smcFunc['db_free_result']($request);
+
+	// DEBUG
+	print_r($profiles);
+	die();
 
 	return $profiles;
 }
