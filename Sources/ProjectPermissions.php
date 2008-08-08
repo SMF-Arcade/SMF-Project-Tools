@@ -38,6 +38,7 @@ function ManageProjectPermissions()
 		'main' => array('ManageProjectPermissionsMain'),
 		'new' => array('NewProjectProfile'),
 		'edit' => array('EditProjectProfile'),
+		'permissions' => array('EditProfilePermissions'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -153,11 +154,13 @@ function EditProjectProfile()
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['guests'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=-1',
 			'is_post_group' => false,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=0',
 			'is_post_group' => false,
 		)
 	);
@@ -174,6 +177,7 @@ function EditProjectProfile()
 		$context['groups'][(int) $row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}

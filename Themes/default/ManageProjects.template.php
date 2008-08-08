@@ -217,7 +217,7 @@ function template_profile_edit()
 					<tr>
 						<th></th>
 						<th>', $txt['header_group_name'], '</th>
-						<th>', $txt['header_permissions'], '</th>
+						<th></th>
 					</tr>';
 
 	foreach ($context['groups'] as $group)
@@ -225,7 +225,7 @@ function template_profile_edit()
 		echo '
 					<tr>
 						<td></td>
-						<td>', $group['name'], '</td>
+						<td><a href="', $group['href'], '">', $group['name'], '</a></td>
 						<td></td>
 					</tr>';
 	}
