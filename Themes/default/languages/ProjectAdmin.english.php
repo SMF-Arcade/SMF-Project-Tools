@@ -86,6 +86,7 @@ $txt['not_in_use'] = 'Not in use';
 // Edit Profile
 $txt['title_edit_profile'] = 'Edit Project Profile: %s';
 $txt['edit_profile'] = 'Project Profile "%s"';
+$txt['header_group_name'] = 'Group';
 
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';

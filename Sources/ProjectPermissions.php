@@ -180,7 +180,7 @@ function EditProjectProfile()
 	$smcFunc['db_free_result']($request);
 
 	// Template
-	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['profile_name']);
+	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['name']);
 	$context['sub_template'] = 'profile_edit';
 }
 
