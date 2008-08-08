@@ -77,6 +77,12 @@ $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues 
 // Manage Project Permissions
 $txt['manage_project_permissions_description'] = 'Here you can create and edit projects';
 
+// Profile List
+$txt['header_profile'] = 'Profile';
+$txt['header_used_by'] = 'Used By';
+$txt['used_by_projects'] = '%s projects';
+$txt['not_in_use'] = 'Not in use';
+
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
 ?>

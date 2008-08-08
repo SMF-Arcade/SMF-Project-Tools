@@ -78,7 +78,7 @@ function ManageProjectPermissionsMain()
 			),
 			'name' => array(
 				'header' => array(
-					'value' => $txt['header_project'],
+					'value' => $txt['header_profile'],
 				),
 				'data' => array(
 					'db' => 'link',
@@ -86,6 +86,19 @@ function ManageProjectPermissionsMain()
 				'sort' => array(
 					'default' => 'pr.profile_name',
 					'reverse' => 'pr.profile_name DESC',
+				),
+			),
+			'used' => array(
+				'header' => array(
+					'value' => $txt['header_used_by'],
+				),
+					'function' => create_function('$list_item', '
+						global $txt, $scripturl;
+						return (empty($list_item[\'projects\']) ? $txt[\'not_in_use\'] : sprintf($txt[\'used_by_projects\'], $list_item[\'projects\']));
+					'),
+				'sort' => array(
+					'default' => 'num_project DESC',
+					'reverse' => 'num_project',
 				),
 			),
 		),
@@ -122,18 +135,14 @@ function list_getProfiles($start, $items_per_page, $sort)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$profiles[] = array(
-			'id' => $row['id_project'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=projectpermissions;sa=edit;project=' . $row['id_project'] . '">' . $row['profile_name'] . '</a>',
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;project=' . $row['id_project'],
+			'id' => $row['id_profile'],
+			'link' => '<a href="' . $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'] . '">' . $row['profile_name'] . '</a>',
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'],
 			'name' => $row['profile_name'],
 			'projects' => comma_format($row['num_project']),
 		);
 	}
 	$smcFunc['db_free_result']($request);
-
-	// DEBUG
-	print_r($profiles);
-	die();
 
 	return $profiles;
 }
