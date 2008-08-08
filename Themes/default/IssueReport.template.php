@@ -16,9 +16,7 @@ function template_report_issue()
 			for (var i = document.forms.reportissue.elements.length - 1; i >= 0; i--)
 				if (document.forms.reportissue.elements[i].name.indexOf("options") == 0)
 					document.forms.reportissue.elements[i].value = document.forms.reportissue.elements[i].value.replace(/&#/g, "&#38;#");
-		}';
-
-	echo '
+		}
 	// ]]></script>';
 
 	echo '
