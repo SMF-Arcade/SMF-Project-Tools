@@ -37,6 +37,7 @@ function ManageProjectPermissions()
 	$subActions = array(
 		'main' => array('ManageProjectPermissionsMain'),
 		'new' => array('NewProjectProfile'),
+		'edit' => array('EditProjectProfile'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -68,9 +69,10 @@ function ManageProjectPermissionsMain()
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="profiles[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="profiles[]" value="%1$d" class="check" %2$s/>',
 						'params' => array(
 							'id' => false,
+							'disabled' => false,
 						),
 					),
 					'style' => 'text-align: center;',
@@ -122,6 +124,71 @@ function ManageProjectPermissionsMain()
 	$context['sub_template'] = 'profiles_list';
 }
 
+function EditProjectProfile()
+{
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_profile, profile_name
+		FROM {db_prefix}project_profiles
+		WHERE id_profile = {int:profile}',
+		array(
+			'profile' => (int) $_REQUEST['profile'],
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		fatal_lang_error('profile_not_found', false);
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$context['profile'] = array(
+		'id' => $row['id_profile'],
+		'name' => $row['profile_name'],
+	);
+
+	// Gropus
+	$context['groups'] = array(
+		-1 => array(
+			'id' => '-1',
+			'name' => $txt['guests'],
+			'is_post_group' => false,
+		),
+		0 => array(
+			'id' => '0',
+			'name' => $txt['regular_members'],
+			'is_post_group' => false,
+		)
+	);
+
+	// Load membergroups.
+	$request = $smcFunc['db_query']('', '
+		SELECT group_name, id_group, min_posts
+		FROM {db_prefix}membergroups
+		WHERE id_group > 3 OR id_group = 2
+		ORDER BY min_posts, id_group != 2, group_name');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['groups'][(int) $row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => trim($row['group_name']),
+			'is_post_group' => $row['min_posts'] != -1,
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// Template
+	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['profile_name']);
+	$context['sub_template'] = 'profile_edit';
+}
+
+function loadPTPermissions()
+{
+
+}
+
 function list_getProfiles($start, $items_per_page, $sort)
 {
 	global $smcFunc, $scripturl;
@@ -142,6 +209,7 @@ function list_getProfiles($start, $items_per_page, $sort)
 			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'],
 			'name' => $row['profile_name'],
 			'projects' => comma_format($row['num_project']),
+			'disabled' => ($row['num_project'] > 0 || $row['id_profile'] == 1) ? 'disabled="disabled" ' : '',
 		);
 	}
 	$smcFunc['db_free_result']($request);

@@ -204,4 +204,21 @@ function template_profiles_list()
 	template_show_list('profiles_list');
 }
 
+function template_profile_edit()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=edit" method="post" accept-charset="', $context['character_set'], '">
+		<div class="tborder">
+			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
+			<div class="headerpadding catbg3">aa</div>';
+
+
+	echo '
+		</div>
+		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
+	</form>';
+}
+
 ?>

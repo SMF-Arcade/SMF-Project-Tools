@@ -83,6 +83,11 @@ $txt['header_used_by'] = 'Used By';
 $txt['used_by_projects'] = '%s projects';
 $txt['not_in_use'] = 'Not in use';
 
+// Edit Profile
+$txt['title_edit_profile'] = 'Edit Project Profile: %s';
+$txt['edit_profile'] = 'Project Profile "%s"';
+
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
+$txt['profile_not_found'] = 'Profile not found';
 ?>

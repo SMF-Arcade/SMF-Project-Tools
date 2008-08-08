@@ -173,8 +173,7 @@
 
 			<add><![CDATA[
 			'project_access' => array(false, 'project', 'project'),
-			'project_admin' => array(false, 'project', 'administrate'),
-			'issue_view' => array(false, 'project', 'project'),]]></add>
+			'project_admin' => array(false, 'project', 'administrate'),]]></add>
 		</operation>
 	</file>
 

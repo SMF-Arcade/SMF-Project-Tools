@@ -215,7 +215,6 @@ function EditProject()
 	}
 	$smcFunc['db_free_result']($request);
 
-
 	require_once($sourcedir . '/Subs-Editor.php');
 
 	// Developer suggester
