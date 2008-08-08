@@ -6,6 +6,22 @@ function template_report_issue()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function saveEntities()
+		{
+			var textFields = ["title", "', $context['post_box_name'], '"];
+			for (i in textFields)
+				if (document.forms.reportissue.elements[textFields[i]])
+					document.forms.reportissue[textFields[i]].value = document.forms.reportissue[textFields[i]].value.replace(/&#/g, "&#38;#");
+			for (var i = document.forms.reportissue.elements.length - 1; i >= 0; i--)
+				if (document.forms.reportissue.elements[i].name.indexOf("options") == 0)
+					document.forms.reportissue.elements[i].value = document.forms.reportissue.elements[i].value.replace(/&#/g, "&#38;#");
+		}';
+
+	echo '
+	// ]]></script>';
+
+	echo '
 	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
