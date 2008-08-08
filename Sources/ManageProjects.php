@@ -42,7 +42,6 @@ function ManageProjects()
 		'new' => array('EditProject'),
 		'edit' => array('EditProject'),
 		'edit2' => array('EditProject2'),
-		'permissions' => array('EditPermissions'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
@@ -595,4 +594,5 @@ function EditCategory2()
 
 	redirectexit('action=admin;area=managecategories;project=' . $_POST['project']);
 }
+
 ?>

@@ -74,6 +74,9 @@ $txt['version_membergroups_desc'] = 'Select Membergroups allowed to see this ver
 $txt['delete_version'] = 'Delete Version';
 $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues assigned to it, do you still to continue?';
 
+// Manage Project Permissions
+$txt['manage_project_permissions_description'] = 'Here you can create and edit projects';
+
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
 ?>

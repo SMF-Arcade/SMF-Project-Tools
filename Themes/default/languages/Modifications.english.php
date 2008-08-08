@@ -26,7 +26,7 @@ $txt['modify_project_category'] = 'Modify Categories';
 
 $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';
-$txt['new_project_group'] = 'New Group';
+$txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
 
 $txt['project_settings'] = 'Settings';
