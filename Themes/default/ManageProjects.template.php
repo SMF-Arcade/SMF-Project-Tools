@@ -256,7 +256,7 @@ function template_profile_permissions()
 	foreach ($context['permissions'] as $id => $permission)
 	{
 		echo '
-				<div class="windowbg', $alternate ? '2' : '', ' clearfix">
+				<div class="windowbg', $alternate ? '2' : '', ' headerpadding clearfix">
 					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
 					<span class="floatright">
 						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
