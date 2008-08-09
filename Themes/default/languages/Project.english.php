@@ -94,7 +94,8 @@ $txt['evt_new_issue'] = 'Issue reported by %s';
 $txt['evt_update_issue'] = 'Issue updated by %s';
 $txt['evt_delete_issue'] = 'Issue deleted by %s';
 $txt['evt_new_comment'] = 'New comment added by %s';
-$txt['evt_new_attachment'] = 'New attachment adeed by %s';
+$txt['evt_new_attachment'] = 'New attachment added by %s';
+$txt['evt_edit_comment'] = 'Comment modified by %s';
 
 // Roadmap
 $txt['open_issues'] = '%d open issues';
