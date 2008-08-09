@@ -76,12 +76,16 @@ if ($count == 0)
 			'permission' => 'string',
 		),
 		array(
+			// Guest
 			array(1, -1, 'issue_view'),
+			// Regular members
 			array(1, 0, 'issue_view'),
 			array(1, 0, 'issue_report'),
 			array(1, 0, 'issue_comment'),
 			array(1, 0, 'issue_update_own'),
 			array(1, 0, 'issue_attach'),
+			array(1, 0, 'edit_comment_own'),
+			// Global Moderators
 			array(1, 2, 'issue_view'),
 			array(1, 2, 'issue_report'),
 			array(1, 2, 'issue_comment'),
@@ -89,6 +93,8 @@ if ($count == 0)
 			array(1, 2, 'issue_update_any'),
 			array(1, 2, 'issue_attach'),
 			array(1, 2, 'issue_moderate'),
+			array(1, 2, 'edit_comment_own'),
+			array(1, 2, 'edit_comment_any'),
 			array(1, 2, 'delete_comment_own'),
 			array(1, 2, 'delete_comment_any'),
 		),

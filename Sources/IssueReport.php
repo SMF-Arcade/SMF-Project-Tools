@@ -255,6 +255,7 @@ function IssueReply()
 	if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
 	{
 		projectIsAllowedTo('edit_comment_own');
+		require_once($sourcedir . '/Subs-Post.php');
 
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
