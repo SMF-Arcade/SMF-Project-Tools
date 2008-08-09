@@ -661,7 +661,7 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	global $smcFunc, $db_prefix, $context;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT subject, id_comment_first
+		SELECT subject, id_project, id_comment_first
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -707,7 +707,7 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 			'event_data' => 'string',
 		),
 		array(
-			$id_project,
+			$row['id_project'],
 			$id_issue,
 			$posterOptions['id'],
 			$posterOptions['name'],
