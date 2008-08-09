@@ -656,6 +656,45 @@ function deleteIssue($id_issue, $posterOptions)
 	return true;
 }
 
+function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
+{
+	global $smcFunc, $db_prefix, $context;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT subject, id_comment_first
+		FROM {db_prefix}issues
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return false;
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issue_comments
+		SET
+			edit_time = {int:edit_time},
+			edit_name = {string:edit_name},
+			body = {string:body}
+		WHERE id_comment = {int:comment}',
+		array(
+			'comment' => $id_comment,
+			'edit_time' => time(),
+			'edit_name' => $posterOptions['name'],
+			'body' => $commentOptions['body'],
+		)
+	);
+
+	if (isset($commentOptions['no_log']))
+		return true;
+
+	return true;
+}
+
 function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
@@ -714,8 +753,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	// Update Issues table too
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
-		SET
-			replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}, id_comment_last = {int:comment}
+		SET replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}, id_comment_last = {int:comment}
 		WHERE id_issue = {int:issue}',
 		array(
 			'comment' => $id_comment,
@@ -725,7 +763,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 		)
 	);
 
-	// Uand projects
+	// And projects
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}projects
 		SET id_comment_mod = {int:comment}

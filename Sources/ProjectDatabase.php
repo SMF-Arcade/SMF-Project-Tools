@@ -450,10 +450,6 @@ $tables = array(
 				'type' => 'int',
 			),
 			array(
-				'name' => 'edit_time',
-				'type' => 'int',
-			),
-			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
 				'size' => 256,
@@ -467,6 +463,15 @@ $tables = array(
 				'name' => 'poster_ip',
 				'type' => 'varchar',
 				'size' => 60,
+			),
+			array(
+				'name' => 'edit_time',
+				'type' => 'int',
+			),
+			array(
+				'name' => 'edit_name',
+				'type' => 'varchar',
+				'size' => 256,
 			),
 			array(
 				'name' => 'body',
