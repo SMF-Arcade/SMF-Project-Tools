@@ -295,14 +295,17 @@
 	// Build the list of boards they WANT to see.]]></search>
 			<add><![CDATA[
 	// Project Tools
-	$context['project_tools'] = array();
-	$context['issue_tracker'] = array();
+	if (!empty($modSettings['projectEnabled']) && allowedTo('project_access'))
+	{
+		$context['project_tools'] = array();
+		$context['issue_tracker'] = array();
 
-	require_once($sourcedir . '/Subs-Project.php');
-	require_once($sourcedir . '/Subs-Issue.php');
-	loadProjectToolsPermissions();
-	loadLanguage('Project');
-	loadIssueTypes();
+		require_once($sourcedir . '/Subs-Project.php');
+		require_once($sourcedir . '/Subs-Issue.php');
+		loadProjectToolsPermissions();
+		loadLanguage('Project');
+		loadIssueTypes();
+	}
 	]]></add>
 		</operation>
 
