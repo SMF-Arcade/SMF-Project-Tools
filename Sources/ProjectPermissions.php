@@ -127,7 +127,7 @@ function ManageProjectPermissionsMain()
 
 function EditProjectProfile()
 {
-	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt;
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_profile, profile_name
@@ -168,17 +168,22 @@ function EditProjectProfile()
 	// Load membergroups.
 	$request = $smcFunc['db_query']('', '
 		SELECT group_name, id_group, min_posts
-		FROM {db_prefix}membergroups
-		WHERE id_group > 3 OR id_group = 2
-		ORDER BY min_posts, id_group != 2, group_name');
+		FROM {db_prefix}membergroups' . (empty($modSettings['permission_enable_postgroups']) ? '
+		WHERE min_posts = {int:min_posts}' : '') . '
+		ORDER BY min_posts, id_group != 2, group_name',
+		array(
+			'min_posts' => -1,
+		)
+	);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['groups'][(int) $row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=' . $row['id_group'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
+			'can_edit' => $row['id_group'] != 1 && $row['id_group'] != 3,
 		);
 	}
 	$smcFunc['db_free_result']($request);

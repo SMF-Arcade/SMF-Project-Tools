@@ -212,22 +212,23 @@ function template_profile_edit()
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=edit" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<div class="headerpadding windowbg2">
-				<table border="0" width="80%" cellspacing="0" cellpadding="4" class="bordercolor">
+			<div class="windowbg2">
+				<table border="0" width="100%" cellspacing="0" cellpadding="4" class="tborder">
 					<tr>
-						<th></th>
-						<th>', $txt['header_group_name'], '</th>
-						<th></th>
+						<th class="catbg3">', $txt['header_group_name'], '</th>
+						<th class="catbg3"></th>
 					</tr>';
 
 	foreach ($context['groups'] as $group)
 	{
-		echo '
+		if ($group['can_edit'])
+		{
+			echo '
 					<tr>
-						<td></td>
-						<td><a href="', $group['href'], '">', $group['name'], '</a></td>
-						<td></td>
+						<td class="windowbg2"><a href="', $group['href'], '">', $group['name'], '</a></td>
+						<td class="windowbg"></td>
 					</tr>';
+		}
 	}
 
 
