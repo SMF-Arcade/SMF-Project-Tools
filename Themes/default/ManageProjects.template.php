@@ -248,7 +248,7 @@ function template_profile_permissions()
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=permissions2" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<div class="catbg3 titlebg">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
+			<div class="headerpadding catbg3">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
 			<div class="windowbg2">';
 
 	$alternate = true;
@@ -268,6 +268,9 @@ function template_profile_permissions()
 	}
 
 	echo '
+				<div style="text-align: right">
+					<input type="submit" name="save" value="', $txt['permission_save'], '" />
+				</div>
 			</div>
 		</div>
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />

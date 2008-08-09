@@ -102,6 +102,7 @@ $txt['permissionname_project_issue_attach'] = 'Add Attachements to Issues';
 $txt['permissionname_project_issue_moderate'] = 'Edit Issues';
 $txt['permissionname_project_delete_comment_own'] = 'Delete their own comments';
 $txt['permissionname_project_delete_comment_any'] = 'Delete any comment';
+$txt['permission_save'] = 'Save Changes';
 
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
