@@ -248,7 +248,7 @@ function template_profile_permissions()
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=permissions2" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<div class="headerpadding titlebg">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
+			<div class="catbg3 titlebg">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
 			<div class="windowbg2">';
 
 	$alternate = true;
@@ -259,7 +259,7 @@ function template_profile_permissions()
 				<div class="windowbg', $alternate ? '2' : '', ' clearfix">
 					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
 					<span class="floatright">
-						<input type="checkbox" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
+						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
 					</span>
 				</div>';
 

@@ -154,14 +154,14 @@ function EditProjectProfile()
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['guests'],
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=-1',
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=-1',
 			'is_post_group' => false,
 			'can_edit' => true,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=0',
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=0',
 			'is_post_group' => false,
 			'can_edit' => true,
 		)
@@ -183,7 +183,7 @@ function EditProjectProfile()
 		$context['groups'][(int) $row['id_group']] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;group=' . $row['id_group'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
 			'can_edit' => $row['id_group'] != 1 && $row['id_group'] != 3,
 		);
@@ -265,7 +265,7 @@ function EditProfilePermissions()
 		$context['group'] = array(
 			'id' => $row['id_group'],
 			'name' => trim($row['group_name']),
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;group=' . $row['id_group'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
 			'can_edit' => $row['id_group'] != 1 && $row['id_group'] != 3,
 		);
