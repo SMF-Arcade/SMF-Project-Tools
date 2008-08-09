@@ -235,10 +235,7 @@ function template_issue_view()
 						</ul>
 						<div id="com_', $comment['id'], '" class="post">
 							', $comment['body'], '
-						</div>
-					</div>
-					<div class="moderatorbar">
-						<div class="smalltext floatleft">';
+						</div>';
 
 		// Show attachments
 		if ($comment['first'] && !empty($context['attachments']))
@@ -266,6 +263,16 @@ function template_issue_view()
 			echo '
 						</div>';
 		}
+
+		echo '
+					</div>
+					<div class="moderatorbar">
+						<div class="smalltext floatleft">';
+
+		// Show "« Last Edit: Time by Person »" if this post was edited.
+		if ($settings['show_modify'] && !empty($comment['modified']['name']))
+			echo '
+							&#171; <em>', $txt['last_edit'], ': ', $comment['modified']['time'], ' ', $txt['by'], ' ', $comment['modified']['name'], '</em> &#187;';
 
 		echo '
 						</div>

@@ -187,6 +187,7 @@ function IssueView()
 	$context['comment_request'] = $smcFunc['db_query']('', '
 		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 			c.poster_name, c.poster_email, c.poster_ip, c.id_member,
+			c.edit_name, c.edit_time,
 			id_comment_mod < {int:new_from} AS is_read
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_comment IN({array_int:comments})
@@ -290,6 +291,11 @@ function getComment()
 		'time' => timeformat($row['post_time']),
 		'body' => parse_bbc($row['body']),
 		'ip' => $row['poster_ip'],
+		'modified' => array(
+			'time' => timeformat($row['edit_time']),
+			'timestamp' => forum_time(true, $row['edit_time']),
+			'name' => $row['edit_name'],
+		),
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 		'can_remove' => projectAllowedTo('delete_comment_' . $type),
 		'can_edit' => projectAllowedTo('edit_comment_' . $type),

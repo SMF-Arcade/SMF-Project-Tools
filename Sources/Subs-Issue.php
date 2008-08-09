@@ -692,6 +692,34 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	if (isset($commentOptions['no_log']))
 		return true;
 
+	// Write to timeline unless it's not wanted (on new issue for example)
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_timeline',
+		array(
+			'id_project' => 'int',
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string',
+			'poster_email' => 'string',
+			'poster_ip' => 'string-60',
+			'event' => 'string',
+			'event_time' => 'int',
+			'event_data' => 'string',
+		),
+		array(
+			$id_project,
+			$id_issue,
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			'edit_comment',
+			time(),
+			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
+		),
+		array()
+	);
+
 	return true;
 }
 
