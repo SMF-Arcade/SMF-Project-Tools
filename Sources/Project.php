@@ -142,7 +142,7 @@ function Projects()
 				'issues' => array(
 					'href' => $scripturl . '?project=' . $project . ';sa=issues',
 					'title' => $txt['issues'],
-					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'update', 'delete')),
+					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
 				)
 			),
 		);
