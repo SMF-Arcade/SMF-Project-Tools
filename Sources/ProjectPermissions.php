@@ -196,7 +196,23 @@ function EditProjectProfile()
 	$context['sub_template'] = 'profile_edit';
 }
 
-function EditProfilePermissions()
+function getAllPTPermissions()
+{
+	// List of all possible permissions
+	// 'perm' => array(own/any, [guest = true])
+
+	return array(
+		'issue_view' => array(false),
+		'issue_report' => array(false),
+		'issue_comment' => array(false),
+		'issue_update' => array(true, false),
+		'issue_attach' => array(false),
+		'issue_moderate' => array(false, false),
+		'delete_comment' => array(true, false),
+	);
+}
+
+function PTloadProfile()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
@@ -274,18 +290,15 @@ function EditProfilePermissions()
 
 	if (!$context['group']['can_edit'])
 		fatal_lang_error('profile_group_not_found', false);
+}
 
-	// List of all possible permissions
-	// 'perm' => array(own/any, [guest = true])
-	$allPermissions = array(
-		'issue_view' => array(false),
-		'issue_report' => array(false),
-		'issue_comment' => array(false),
-		'issue_update' => array(true, false),
-		'issue_attach' => array(false),
-		'issue_moderate' => array(false, false),
-		'delete_comment' => array(true, false),
-	);
+function EditProfilePermissions()
+{
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	PTloadProfile();
+
+	$allPermissions = getAllPTPermissions();
 
 	$request = $smcFunc['db_query']('', '
 		SELECT permission
@@ -345,8 +358,67 @@ function EditProfilePermissions2()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	print_r($_POST);
-	die();
+	PTloadProfile();
+
+	$allPermissions = getAllPTPermissions();
+
+	$permissions = array();
+	$delete = array();
+
+	foreach ($allPermissions as $perm => $opt)
+	{
+		if (!isset($opt[1]))
+			$opt[1] = true;
+
+		list ($is_group, $can_guest) = $opt;
+
+		if (!$can_guest && $context['group']['id'] == -1)
+			continue;
+
+		if ($is_group)
+		{
+			if (!empty($_POST['permission'][$perm . '_own']))
+				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm . '_own');
+			else
+				$delete[] = $perm . '_own';
+			if (!empty($_POST['permission'][$perm . '_any']))
+				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm . '_any');
+			else
+				$delete[] = $perm . '_any';
+		}
+		else
+		{
+			if (!empty($_POST['permission'][$perm]))
+				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm);
+			else
+				$delete[] = $perm;
+		}
+	}
+
+	$smcFunc['db_query']('' , '
+		DELETE FROM {db_prefix}project_permissions
+		WHERE permission IN({array_string:permissions})
+			AND id_group = {int:group}
+			AND id_profile = {int:profile}',
+		array(
+			'permissions' => $delete,
+			'group' => $context['group']['id'],
+			'profile' => $context['profile']['id'],
+		)
+	);
+
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}project_permissions',
+		array(
+			'id_profile' => 'int',
+			'id_group' => 'int',
+			'permission' => 'string',
+		),
+		$permissions,
+		array('id_profile', 'id_group', 'permission')
+	);
+
+	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }
 
 function list_getProfiles($start, $items_per_page, $sort)
