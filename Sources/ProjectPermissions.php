@@ -307,6 +307,9 @@ function EditProfilePermissions()
 
 	foreach ($allPermissions as $permission => $opt)
 	{
+		if (!isset($opt[1]))
+			$opt[1] = true;
+
 		list ($group, $guest) = $opt;
 
 		if (!$guest && $context['group']['id'] == -1)
@@ -331,10 +334,6 @@ function EditProfilePermissions()
 			);
 		}
 	}
-
-	// DEBUG
-	var_dump($context['permissions']);
-	die();
 
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']);

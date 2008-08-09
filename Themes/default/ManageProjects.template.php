@@ -240,4 +240,37 @@ function template_profile_edit()
 	</form>';
 }
 
+function template_profile_permissions()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=permissions2" method="post" accept-charset="', $context['character_set'], '">
+		<div class="tborder">
+			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
+			<div class="headerpadding titlebg">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
+			<div class="windowbg2">';
+
+	$alternate = true;
+
+	foreach ($context['permissions'] as $id => $permission)
+	{
+		echo '
+				<div class="windowbg', $alternate ? '2' : '', ' clearfix">
+					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
+					<span class="floatright">
+						<input type="checkbox" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
+					</span>
+				</div>';
+
+		$alternate = !$alternate;
+	}
+
+	echo '
+			</div>
+		</div>
+		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
+	</form>';
+}
+
 ?>

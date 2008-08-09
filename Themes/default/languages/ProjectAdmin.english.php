@@ -90,6 +90,18 @@ $txt['header_group_name'] = 'Group';
 
 // Edit Profile Permissions
 $txt['title_edit_profile_group'] = 'Edit Permissions for Group "%2$s" in Profile "%1$s"';
+$txt['edit_profile_group'] = 'Permissions for group "%s"';
+
+// Project Permission names
+$txt['permissionname_project_issue_view'] = 'View Issues';
+$txt['permissionname_project_issue_report'] = 'Report Issues';
+$txt['permissionname_project_issue_comment'] = 'Comment Issues';
+$txt['permissionname_project_issue_update_own'] = 'Update their own Issues';
+$txt['permissionname_project_issue_update_any'] = 'Update any Issue';
+$txt['permissionname_project_issue_attach'] = 'Add Attachements to Issues';
+$txt['permissionname_project_issue_moderate'] = 'Edit Issues';
+$txt['permissionname_project_delete_comment_own'] = 'Delete their own comments';
+$txt['permissionname_project_delete_comment_any'] = 'Delete any comment';
 
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
