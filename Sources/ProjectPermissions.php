@@ -156,12 +156,14 @@ function EditProjectProfile()
 			'name' => $txt['guests'],
 			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=-1',
 			'is_post_group' => false,
+			'can_edit' => true,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['regular_members'],
 			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=0',
 			'is_post_group' => false,
+			'can_edit' => true,
 		)
 	);
 
@@ -191,6 +193,92 @@ function EditProjectProfile()
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['name']);
 	$context['sub_template'] = 'profile_edit';
+}
+
+function EditProfilePermissions()
+{
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_profile, profile_name
+		FROM {db_prefix}project_profiles
+		WHERE id_profile = {int:profile}',
+		array(
+			'profile' => (int) $_REQUEST['profile'],
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		fatal_lang_error('profile_not_found', false);
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$context['profile'] = array(
+		'id' => $row['id_profile'],
+		'name' => $row['profile_name'],
+	);
+
+	if (!isset($_REQUEST['group']))
+		fatal_lang_error('profile_group_not_found', false);
+
+	if ($_REQUEST['group'] == -1)
+	{
+		$context['group'] = array(
+			'id' => '-1',
+			'name' => $txt['guests'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=-1',
+			'is_post_group' => false,
+			'can_edit' => true,
+		);
+	}
+	elseif ($_REQUEST['group'] == 0)
+	{
+		$context['group'] = array(
+			'id' => '0',
+			'name' => $txt['regular_members'],
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=perm;group=0',
+			'is_post_group' => false,
+			'can_edit' => true,
+		);
+	}
+	else
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT group_name, id_group, min_posts
+			FROM {db_prefix}membergroups
+			WHERE id_group = {int:group}' . (empty($modSettings['permission_enable_postgroups']) ? '
+				AND min_posts = {int:min_posts}' : '') . '
+			ORDER BY min_posts, id_group != 2, group_name',
+			array(
+				'group' => (int) $_REQUEST['group'],
+				'min_posts' => -1,
+			)
+		);
+
+		if ($smcFunc['db_num_rows']($request) == 0)
+			fatal_lang_error('profile_group_not_found', false);
+
+		$row = $smcFunc['db_fetch_assoc']($request);
+
+		$context['group'] = array(
+			'id' => $row['id_group'],
+			'name' => trim($row['group_name']),
+			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;group=' . $row['id_group'],
+			'is_post_group' => $row['min_posts'] != -1,
+			'can_edit' => $row['id_group'] != 1 && $row['id_group'] != 3,
+		);
+	}
+
+	if (!$context['group']['can_edit'])
+		fatal_lang_error('profile_group_not_found', false);
+
+	// load permissions
+	
+
+	// Template
+	$context['page_title'] = sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']);
+	$context['sub_template'] = 'profile_permissions';
 }
 
 function loadPTPermissions()

@@ -88,6 +88,9 @@ $txt['title_edit_profile'] = 'Edit Project Profile: %s';
 $txt['edit_profile'] = 'Project Profile "%s"';
 $txt['header_group_name'] = 'Group';
 
+// Edit Profile Permissions
+$txt['title_edit_profile_group'] = 'Edit Permissions for Group "%2$s" in Profile "%1$s"';
+
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
 $txt['profile_not_found'] = 'Profile not found';
