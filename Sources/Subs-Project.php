@@ -519,7 +519,7 @@ function updateVersion($id_version, $versionOptions)
 	return true;
 }
 
-function createCategory($id_project, $categoryOptions)
+function createPTCategory($id_project, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
@@ -539,7 +539,7 @@ function createCategory($id_project, $categoryOptions)
 	return true;
 }
 
-function updateCategory($id_category, $categoryOptions)
+function updatePTCategory($id_category, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 

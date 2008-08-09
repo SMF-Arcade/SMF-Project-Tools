@@ -586,9 +586,9 @@ function EditCategory2()
 		$categoryOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['category_name']);
 
 		if (isset($_POST['add']))
-			createCategory($_POST['project'], $categoryOptions);
+			createPTCategory($_POST['project'], $categoryOptions);
 		else
-			updateCategory($_POST['category'], $categoryOptions);
+			updatePTCategory($_POST['category'], $categoryOptions);
 	}
 
 	redirectexit('action=admin;area=managecategories;project=' . $_POST['project']);
