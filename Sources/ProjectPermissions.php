@@ -395,28 +395,34 @@ function EditProfilePermissions2()
 		}
 	}
 
-	$smcFunc['db_query']('' , '
-		DELETE FROM {db_prefix}project_permissions
-		WHERE permission IN({array_string:permissions})
-			AND id_group = {int:group}
-			AND id_profile = {int:profile}',
-		array(
-			'permissions' => $delete,
-			'group' => $context['group']['id'],
-			'profile' => $context['profile']['id'],
-		)
-	);
+	if (!empty($delete))
+	{
+		$smcFunc['db_query']('' , '
+			DELETE FROM {db_prefix}project_permissions
+			WHERE permission IN({array_string:permissions})
+				AND id_group = {int:group}
+				AND id_profile = {int:profile}',
+			array(
+				'permissions' => $delete,
+				'group' => $context['group']['id'],
+				'profile' => $context['profile']['id'],
+			)
+		);
+	}
 
-	$smcFunc['db_insert']('replace',
-		'{db_prefix}project_permissions',
-		array(
-			'id_profile' => 'int',
-			'id_group' => 'int',
-			'permission' => 'string',
-		),
-		$permissions,
-		array('id_profile', 'id_group', 'permission')
-	);
+	if (!empty($permissions))
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}project_permissions',
+			array(
+				'id_profile' => 'int',
+				'id_group' => 'int',
+				'permission' => 'string',
+			),
+			$permissions,
+			array('id_profile', 'id_group', 'permission')
+		);
+	}
 
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }

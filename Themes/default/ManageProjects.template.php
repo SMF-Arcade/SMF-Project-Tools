@@ -213,7 +213,7 @@ function template_profile_edit()
 		<div class="tborder">
 			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
 			<div class="windowbg2">
-				<table border="0" width="100%" cellspacing="0" cellpadding="4" class="tborder">
+				<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor">
 					<tr>
 						<th class="catbg3">', $txt['header_group_name'], '</th>
 						<th class="catbg3"></th>
