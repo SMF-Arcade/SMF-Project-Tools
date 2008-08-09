@@ -172,6 +172,7 @@ function template_issue_view()
 			echo '
 		<a name="new"></a>';
 		}
+
 		if ($comment['first'])
 		{
 			echo '
@@ -292,48 +293,51 @@ function template_issue_view()
 
 			$alternate = !$alternate;
 
-		if ($comment['first'])
+		if ($comment['first'] && $context['num_comments'] > 0)
 		{
 			echo '
 			</div>
 		</div><br />
 	</form>
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply2" method="post">
-		<div class="modbuttons clearfix margintop">
-			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-			', template_button_strip($buttons, 'bottom'), '
-		</div>
-		<div class="tborder">
-			<h3 class="catbg3 headerpadding">
-				', $txt['issue_comments'], '
-			</h3>
-			<div class="bordercolor">';
+	<div class="modbuttons clearfix margintop">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+		', template_button_strip($buttons, 'bottom'), '
+	</div>
+	<div class="tborder">
+		<h3 class="catbg3 headerpadding">
+			', $txt['issue_comments'], '
+		</h3>
+		<div class="bordercolor">';
 		}
 	}
 
-	echo '
-			</div>
+	if ($context['num_comments'] > 0)
+	{
+		echo '
 		</div>
-		<div class="modbuttons clearfix marginbottom">
-			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-			', template_button_strip($buttons, 'top'), '
-		</div><br />';
+	</div>
+	<div class="modbuttons clearfix marginbottom">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+		', template_button_strip($buttons, 'top'), '
+	</div><br />';
+	}
 
 	$mod_buttons = array(
 		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=delete;sesc=' . $context['session_id']),
 	);
 
 	echo '
-		<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
+	<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	echo '
-		<div class="tborder">
-			<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-		</div><br />';
+	<div class="tborder">
+		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
+	</div><br />';
 
 	if ($context['can_comment'])
 	{
 		echo '
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply2" method="post">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
 			<div class="smallpadding windowbg" style="text-align: center">
@@ -344,12 +348,10 @@ function template_issue_view()
 					<input type="submit" name="add_comment" value="', $txt['add_comment'], '" />
 				</div>
 			</div>
-		</div><br />';
-	}
-
-	echo '
+		</div><br />
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form><br />';
+	}
 
 	if ($context['can_issue_attach'])
 	{
@@ -375,6 +377,7 @@ function template_issue_view()
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 	}
+	
 }
 
 function template_issue_reply()

@@ -179,6 +179,8 @@ function IssueView()
 	$smcFunc['db_free_result']($request);
 	$posters = array_unique($posters);
 
+	$context['num_comments'] = count($comments) - 1;
+
 	loadMemberData($posters);
 
 	// Load Comments
@@ -274,9 +276,6 @@ function getComment()
 		$memberContext[$row['id_member']]['email'] = $row['poster_email'];
 		$memberContext[$row['id_member']]['show_email'] = showEmailAddress(true, 0);
 		$memberContext[$row['id_member']]['is_guest'] = true;
-	}
-	else
-	{
 	}
 
 	censorText($row['body']);
