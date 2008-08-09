@@ -260,6 +260,7 @@ function EditProfilePermissions()
 			fatal_lang_error('profile_group_not_found', false);
 
 		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
 
 		$context['group'] = array(
 			'id' => $row['id_group'],
@@ -273,17 +274,71 @@ function EditProfilePermissions()
 	if (!$context['group']['can_edit'])
 		fatal_lang_error('profile_group_not_found', false);
 
-	// load permissions
-	
+	// List of all possible permissions
+	// 'perm' => array(own/any, [guest = true])
+	$allPermissions = array(
+		'issue_view' => array(false),
+		'issue_report' => array(false),
+		'issue_comment' => array(false),
+		'issue_update' => array(true, false),
+		'issue_attach' => array(false),
+		'issue_moderate' => array(false, false),
+		'delete_comment' => array(true, false),
+	);
+
+	$request = $smcFunc['db_query']('', '
+		SELECT permission
+		FROM {db_prefix}project_permissions
+		WHERE id_profile = {int:profile}
+			AND id_group = {int:group}',
+		array(
+			'profile' => $context['profile']['id'],
+			'group' => $context['group']['id'],
+		)
+	);
+
+	$permissions = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$permissions[] = $row['permission'];
+	$smcFunc['db_free_result']($request);
+
+	$context['permissions'] = array();
+
+	foreach ($allPermissions as $permission => $opt)
+	{
+		list ($group, $guest) = $opt;
+
+		if (!$guest && $context['group']['id'] == -1)
+			continue;
+
+		if ($group)
+		{
+			$context['permissions'][$permission . '_own'] = array(
+				'text' => $txt['permissionname_project_' . $permission . '_own'],
+				'checked' => in_array($permission . '_own', $permissions),
+			);
+			$context['permissions'][$permission . '_any'] = array(
+				'text' => $txt['permissionname_project_' . $permission . '_any'],
+				'checked' => in_array($permission . '_any', $permissions),
+			);
+		}
+		else
+		{
+			$context['permissions'][$permission] = array(
+				'text' => $txt['permissionname_project_' . $permission],
+				'checked' => in_array($permission, $permissions),
+			);
+		}
+	}
+
+	// DEBUG
+	var_dump($context['permissions']);
+	die();
 
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']);
 	$context['sub_template'] = 'profile_permissions';
-}
-
-function loadPTPermissions()
-{
-
 }
 
 function list_getProfiles($start, $items_per_page, $sort)
