@@ -259,6 +259,7 @@ function template_profile_permissions()
 				<div class="windowbg', $alternate ? '2' : '', ' headerpadding clearfix">
 					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
 					<span class="floatright">
+						<input type="hidden" name="permission[', $id,']" value="0" />
 						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
 					</span>
 				</div>';
@@ -270,6 +271,7 @@ function template_profile_permissions()
 			</div>
 		</div>
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
+		<input type="hidden" name="group" value="', $context['group']['id'], '" />
 	</form>';
 }
 

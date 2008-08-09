@@ -39,6 +39,7 @@ function ManageProjectPermissions()
 		'new' => array('NewProjectProfile'),
 		'edit' => array('EditProjectProfile'),
 		'permissions' => array('EditProfilePermissions'),
+		'permissions2' => array('EditProfilePermissions2'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -338,6 +339,14 @@ function EditProfilePermissions()
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']);
 	$context['sub_template'] = 'profile_permissions';
+}
+
+function EditProfilePermissions2()
+{
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	print_r($_POST);
+	die();
 }
 
 function list_getProfiles($start, $items_per_page, $sort)
