@@ -252,6 +252,37 @@ function IssueReply()
 	else
 		$context['comment'] = '';
 
+	if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
+	{
+		projectIsAllowedTo('edit_comment_own');
+
+		$request = $smcFunc['db_query']('', '
+			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
+				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
+			FROM {db_prefix}issue_comments AS c
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
+			WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+				AND c.id_member = {int:current_user}' : '') . '
+			ORDER BY id_comment',
+			array(
+				'current_user' => $user_info['id'],
+				'issue' => $issue,
+				'comment' => $_REQUEST['com'],
+			)
+		);
+
+		$context['destination'] = 'edit2;com=' . (int) $_REQUEST['com'];
+
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (!$row)
+			fatal_lang_error('comment_not_found', false);
+
+		if (!isset($_POST['comment']))
+			$context['comment'] = un_preparsecode($row['body']);
+	}
+
 	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 	{
 		checkSession('get');
@@ -276,8 +307,8 @@ function IssueReply()
 
 		if (!$row)
 			fatal_lang_error('comment_not_found', false);
-		else
-			$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
+
+		$context['comment'] .= '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
 	}
 
 	$editorOptions = array(
@@ -389,30 +420,37 @@ function IssueReply2()
 	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
 	$_POST['email'] = htmlspecialchars($_POST['email']);
 
-	$posterOptions = array(
-		'id' => $user_info['id'],
-		'ip' => $user_info['ip'],
-		'name' => $_POST['guestname'],
-		'email' => $_POST['email'],
-	);
-	$issueOptions = array();
+	if (empty($_REQUEST['com']))
+	{
+		$posterOptions = array(
+			'id' => $user_info['id'],
+			'ip' => $user_info['ip'],
+			'name' => $_POST['guestname'],
+			'email' => $_POST['email'],
+		);
+		$issueOptions = array();
 
-	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
-		handleUpdate($posterOptions, $issueOptions);
+		if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
+			handleUpdate($posterOptions, $issueOptions);
 
-	if (!empty($issueOptions))
-		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+		if (!empty($issueOptions))
+			$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+		else
+			$id_event = 0;
+
+		if ($id_event === true)
+			$id_event = 0;
+
+		$commentOptions = array(
+			'event' => $id_event,
+			'body' => $_POST['comment'],
+		);
+		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+	}
 	else
-		$id_event = 0;
-
-	if ($id_event === true)
-		$id_event = 0;
-
-	$commentOptions = array(
-		'event' => $id_event,
-		'body' => $_POST['comment'],
-	);
-	$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+	{
+		fatal_error('NOT IMPLEMENTED');
+	}
 
 	redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
 }

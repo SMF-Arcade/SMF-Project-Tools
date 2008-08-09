@@ -5,10 +5,9 @@ function template_issue_view()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
-	$delete_button = create_button('delete.gif', 'issue_delete', 'issue_delete');
-	$modify_button = create_button('modify.gif', 'issue_edit', 'issue_edit');
-
-	$reporter = &$context['current_issue']['reporter'];
+	//$delete_button = create_button('delete.gif', 'issue_delete', 'issue_delete');
+	//$modify_button = create_button('modify.gif', 'issue_edit', 'issue_edit');
+	//$reporter = &$context['current_issue']['reporter'];
 
 	$buttons = array(
 		'reply' => array(
@@ -163,6 +162,7 @@ function template_issue_view()
 
 
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
 
 	while ($comment = getComment())
@@ -223,9 +223,13 @@ function template_issue_view()
 			echo '
 							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
+		if ($context['can_comment'])
+			echo '
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
+
 		if ($comment['can_remove'])
 			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;comment=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 						</ul>
@@ -293,12 +297,17 @@ function template_issue_view()
 
 			$alternate = !$alternate;
 
-		if ($comment['first'] && $context['num_comments'] > 0)
+		if ($comment['first'])
 		{
 			echo '
 			</div>
 		</div><br />
-	</form>
+	</form>';
+
+			if ($context['num_comments'] > 0)
+			{
+
+				echo '
 	<div class="modbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'bottom'), '
@@ -308,6 +317,7 @@ function template_issue_view()
 			', $txt['issue_comments'], '
 		</h3>
 		<div class="bordercolor">';
+			}
 		}
 	}
 
@@ -377,7 +387,7 @@ function template_issue_view()
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 	}
-	
+
 }
 
 function template_issue_reply()

@@ -292,6 +292,7 @@ function getComment()
 		'ip' => $row['poster_ip'],
 		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 		'can_remove' => projectAllowedTo('delete_comment_' . $type),
+		'can_edit' => projectAllowedTo('edit_comment_' . $type),
 		'new' => empty($row['is_read']),
 		'first_new' => $first_new && empty($row['is_read']),
 	);

@@ -208,6 +208,8 @@ function getAllPTPermissions()
 		'issue_update' => array(true, false),
 		'issue_attach' => array(false),
 		'issue_moderate' => array(false, false),
+		// Comments
+		'edit_comment' => array(true, false),
 		'delete_comment' => array(true, false),
 	);
 }
