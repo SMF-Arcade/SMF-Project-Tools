@@ -295,7 +295,7 @@
 	// Build the list of boards they WANT to see.]]></search>
 			<add><![CDATA[
 	// Project Tools
-	if (!empty($modSettings['projectEnabled']) && allowedTo('project_access'))
+	if (!empty($modSettings['projectEnabled']))
 	{
 		$context['project_tools'] = array();
 		$context['issue_tracker'] = array();
@@ -306,6 +306,10 @@
 		loadLanguage('Project');
 		loadIssueTypes();
 	}
+	else
+	{
+		$user_info['query_see_project'] = '0=1';
+	}
 	]]></add>
 		</operation>
 
@@ -314,7 +318,7 @@
 	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription, ' . implode(', p.', $context['type_columns']) . ',
+			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', ' . implode(', p.', $context['type_columns']) : '') . ',
 			p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
 		</operation>
 
