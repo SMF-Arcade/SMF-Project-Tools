@@ -184,6 +184,7 @@ function loadProjectTools($mode = '')
 	$project_version = '0.1 Alpha';
 
 	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
+	$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
 
 	if (empty($mode))
 	{

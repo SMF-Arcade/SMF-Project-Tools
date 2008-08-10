@@ -196,6 +196,7 @@ function ReportIssue2()
 		'body' => $_POST['details'],
 		'created' => time(),
 		'updated' => time(),
+		'mark_read' => true,
 	);
 
 	createIssue($issueOptions, $posterOptions);

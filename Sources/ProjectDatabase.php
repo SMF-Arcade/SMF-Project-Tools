@@ -27,6 +27,7 @@ $project_version = '0.1 Alpha';
 
 $addSettings = array(
 	'issuesPerPage' => array(25, false),
+	'commentsPerPage' => array(20, false),
 	'projectEnabled' => array(true, false),
 	'projectAttachements' => array(true, false),
 );

@@ -233,7 +233,8 @@ function createIssue($issueOptions, &$posterOptions)
 		$id_issue,
 		array(
 			'no_log' => true,
-			'body' => $issueOptions['body']
+			'body' => $issueOptions['body'],
+			'mark_read' => !empty($issueOptions['mark_read']),
 		),
 		$posterOptions
 	);
@@ -416,38 +417,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 		);
 
 	if (!isset($issueOptions['no_log']) && !empty($event_data))
-	{
-		/*$smcFunc['db_insert']('insert',
-			'{db_prefix}project_timeline',
-			array(
-				'id_project' => 'int',
-				'id_issue' => 'int',
-				'id_member' => 'int',
-				'poster_name' => 'string',
-				'poster_email' => 'string',
-				'poster_ip' => 'string-60',
-				'event' => 'string',
-				'event_time' => 'int',
-				'event_data' => 'string',
-			),
-			array(
-				$row['id_project'],
-				$id_issue,
-				$posterOptions['id'],
-				$posterOptions['name'],
-				$posterOptions['email'],
-				$posterOptions['ip'],
-				'update_issue',
-				$issueOptions['time'],
-				serialize($event_data)
-			),
-			array()
-		);
-
-		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');*/
-
 		return createTimelineEvent($id_issue, $row['id_project'], 'update_issue', $event_data, $posterOptions, $issueOptions);
-	}
 
 	return true;
 }
@@ -656,6 +626,139 @@ function deleteIssue($id_issue, $posterOptions)
 	return true;
 }
 
+function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
+{
+	global $smcFunc, $db_prefix, $context, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT subject, id_comment_first
+		FROM {db_prefix}issues
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return false;
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}issue_comments',
+		array(
+			'id_issue' => 'int',
+			'id_event' => 'int',
+			'body' => 'string',
+			'post_time' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string-60',
+			'poster_email' => 'string-256',
+			'poster_ip' => 'string-60',
+		),
+		array(
+			$id_issue,
+			!empty($commentOptions['event']) ? $commentOptions['event'] : 0,
+			$commentOptions['body'],
+			time(),
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip']
+		),
+		array()
+	);
+
+	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
+
+	// Set this for read marks
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issue_comments
+		SET id_comment_mod = {int:comment}
+		WHERE id_comment = {int:comment}',
+		array(
+			'comment' => $id_comment,
+		)
+	);
+
+	// Mark read if user wants to
+	if (!empty($commentOptions['mark_read']) && !$user_info['is_guest'])
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_issues',
+			array(
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'id_comment' => 'int',
+			),
+			array(
+				$id_issue,
+				$user_info['id'],
+				$id_comment,
+			),
+			array('id_issue', 'id_member')
+		);
+	}
+
+	// Update Issues table too
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}, id_comment_last = {int:comment}
+		WHERE id_issue = {int:issue}',
+		array(
+			'comment' => $id_comment,
+			'issue' => $id_issue,
+			'time' => time(),
+			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
+		)
+	);
+
+	// And projects
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}projects
+		SET id_comment_mod = {int:comment}
+		WHERE id_project = {int:project}',
+		array(
+			'comment' => $id_comment,
+			'project' => $id_project,
+		)
+	);
+
+	if (isset($commentOptions['no_log']))
+		return $id_comment;
+
+	// Write to timeline unless it's not wanted (on new issue for example)
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_timeline',
+		array(
+			'id_project' => 'int',
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'poster_name' => 'string',
+			'poster_email' => 'string',
+			'poster_ip' => 'string-60',
+			'event' => 'string',
+			'event_time' => 'int',
+			'event_data' => 'string',
+		),
+		array(
+			$id_project,
+			$id_issue,
+			$posterOptions['id'],
+			$posterOptions['name'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			'new_comment',
+			time(),
+			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
+		),
+		array()
+	);
+
+	return $id_comment;
+}
+
 function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
@@ -721,119 +824,6 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	);
 
 	return true;
-}
-
-function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
-{
-	global $smcFunc, $db_prefix, $context;
-
-	$request = $smcFunc['db_query']('', '
-		SELECT subject, id_comment_first
-		FROM {db_prefix}issues
-		WHERE id_issue = {int:issue}',
-		array(
-			'issue' => $id_issue
-		)
-	);
-
-	if ($smcFunc['db_num_rows']($request) == 0)
-		return false;
-	$row = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}issue_comments',
-		array(
-			'id_issue' => 'int',
-			'id_event' => 'int',
-			'body' => 'string',
-			'post_time' => 'int',
-			'id_member' => 'int',
-			'poster_name' => 'string-60',
-			'poster_email' => 'string-256',
-			'poster_ip' => 'string-60',
-		),
-		array(
-			$id_issue,
-			!empty($commentOptions['event']) ? $commentOptions['event'] : 0,
-			$commentOptions['body'],
-			time(),
-			$posterOptions['id'],
-			$posterOptions['name'],
-			$posterOptions['email'],
-			$posterOptions['ip']
-		),
-		array()
-	);
-
-	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
-
-	// Set this for read marks
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}issue_comments
-		SET id_comment_mod = {int:comment}
-		WHERE id_comment = {int:comment}',
-		array(
-			'comment' => $id_comment,
-		)
-	);
-
-	// Update Issues table too
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}issues
-		SET replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}, id_comment_last = {int:comment}
-		WHERE id_issue = {int:issue}',
-		array(
-			'comment' => $id_comment,
-			'issue' => $id_issue,
-			'time' => time(),
-			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
-		)
-	);
-
-	// And projects
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}projects
-		SET id_comment_mod = {int:comment}
-		WHERE id_project = {int:project}',
-		array(
-			'comment' => $id_comment,
-			'project' => $id_project,
-		)
-	);
-
-	if (isset($commentOptions['no_log']))
-		return $id_comment;
-
-	// Write to timeline unless it's not wanted (on new issue for example)
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_timeline',
-		array(
-			'id_project' => 'int',
-			'id_issue' => 'int',
-			'id_member' => 'int',
-			'poster_name' => 'string',
-			'poster_email' => 'string',
-			'poster_ip' => 'string-60',
-			'event' => 'string',
-			'event_time' => 'int',
-			'event_data' => 'string',
-		),
-		array(
-			$id_project,
-			$id_issue,
-			$posterOptions['id'],
-			$posterOptions['name'],
-			$posterOptions['email'],
-			$posterOptions['ip'],
-			'new_comment',
-			time(),
-			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
-		),
-		array()
-	);
-
-	return $id_comment;
 }
 
 ?>

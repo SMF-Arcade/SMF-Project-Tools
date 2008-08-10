@@ -68,9 +68,6 @@ function IssueView()
 		$context['assign_members'] = $context['project']['developers'];
 	}
 
-	// Temp
-	$commentsPerPage = 20;
-
 	// Fix start to be a number
 	if (!is_numeric($_REQUEST['start']))
 	{
@@ -153,19 +150,19 @@ function IssueView()
 		);
 	}
 
-	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $msg, $commentsPerPage, true);
+	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $msg, $context['comments_per_page'], true);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_comment, id_member
 		FROM {db_prefix}issue_comments
 		WHERE id_issue = {int:issue}
 			AND NOT (id_comment = {int:comment_first})
-		LIMIT {int:start}, {int:perpage}',
+		LIMIT {int:start}, {int:limit}',
 		array(
 			'issue' => $issue,
 			'comment_first' => $context['current_issue']['comment_first'],
 			'start' => $_REQUEST['start'],
-			'perpage' => $commentsPerPage,
+			'limit' => $context['comments_per_page'],
 		)
 	);
 	$posters = array($context['current_issue']['id_reporter']);
