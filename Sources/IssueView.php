@@ -46,7 +46,7 @@ function IssueView()
 	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
-	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
+	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachements']);
 
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 

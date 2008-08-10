@@ -619,7 +619,12 @@ function IssueUpload()
 
 	require_once($sourcedir . '/Subs-Post.php');
 
+	// Not possible
+	if (empty($modSettings['projectAttachements']))
+		redirectexit('issue=' . $context['current_issue']['id'] . '.0');
+
 	projectIsAllowedTo('issue_attach');
+
 	$total_size = 0;
 
 	$attachIDs = array();
