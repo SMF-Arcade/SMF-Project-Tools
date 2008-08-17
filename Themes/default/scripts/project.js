@@ -94,7 +94,7 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 			selectedItem = target.optionItem
 
 			dropdownBtn.className = "button_work";
-			xmlRequestHandle = callback(fieldName, name, evt.target.optionValue, sessionID);
+			xmlRequestHandle = callback(fieldName, name, target.optionValue, sessionID);
 
 			checkReadyState(xmlRequestHandle);
 		}

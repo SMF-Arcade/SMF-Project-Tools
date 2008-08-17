@@ -8,7 +8,8 @@ August 2008
  + Permissions Editor
  + Comment Editing
  * Improvements to various templates
- 
+ ! Fixes to PTDropdown
+
 July 2008
 --------------------------------------------------------------------------------
  + Advanced Permission system done
