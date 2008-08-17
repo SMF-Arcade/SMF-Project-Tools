@@ -1,5 +1,5 @@
-
-function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
+// Project Tools Dropdown
+function PTDropdown(name, fieldName, selectedValue, currentIssue, callback, sessionID)
 {
 	var object;
 	var options = [];
@@ -13,6 +13,7 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 	var handled = true;
 	var selectedItem = null;
 
+	this.currentIssue = currentIssue;
 	this.addOption = addOption;
 	this.fieldName = fieldName;
 
@@ -94,7 +95,19 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 			selectedItem = target.optionItem
 
 			dropdownBtn.className = "button_work";
-			xmlRequestHandle = callback(fieldName, name, target.optionValue, sessionID);
+
+			//xmlRequestHandle = callback(fieldName, name, target.optionValue, currentIssue, sessionID);
+
+			xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + selectedValue + ';xml;sesc=' + sessionID,
+				function (oXMLDoc)
+				{
+					if (xmlRequestHandle.readyState != 4)
+						return true;
+
+					return true;
+				}
+			);
+
 
 			checkReadyState(xmlRequestHandle);
 		}
@@ -176,20 +189,4 @@ function PTDropdown(name, fieldName, selectedValue, callback, sessionID)
 	}
 
 	init();
-}
-
-function PTDCallback(fieldName, name, value, sessionID)
-{
-	xmlRequestHandle = null;
-
-	xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + value + ';xml;sesc=' + sessionID, function (oXMLDoc)
-		{
-			if (xmlRequestHandle.readyState != 4)
-				return true;
-
-			return true;
-		}
-	);
-
-	return xmlRequestHandle;
 }

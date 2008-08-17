@@ -90,11 +90,11 @@ function template_issue_view()
 	{
 		echo '
 	<script language="JavaScript" type="text/javascript">
-		var currentIssue = ', $context['current_issue']['id'], ';
+		var currentIssue = ;
 
-		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type']['id'], '", PTDCallback, "', $context['session_id'], '");
-		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', PTDCallback, "', $context['session_id'], '");
-		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', PTDCallback, "', $context['session_id'], '");
+		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type']['id'], '", ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		ddIssueCate.addOption(0, "', $txt['issue_none'], '");
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
@@ -122,10 +122,10 @@ function template_issue_view()
 		if (!empty($context['can_issue_moderate']))
 		{
 			echo '
-		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', PTDCallback, "', $context['session_id'], '");
-		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', PTDCallback, "', $context['session_id'], '");
-		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', PTDCallback, "', $context['session_id'], '")
-		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', PTDCallback, "', $context['session_id'], '");
+		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '")
+		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
 
 			// Status
@@ -159,7 +159,6 @@ function template_issue_view()
 	echo '
 		</script>';
 	}
-
 
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
