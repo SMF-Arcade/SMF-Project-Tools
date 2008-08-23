@@ -1,5 +1,5 @@
 // Project Tools Dropdown
-function PTDropdown(name, fieldName, selectedValue, currentIssue, callback, sessionID)
+function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 {
 	var object;
 	var options = [];
