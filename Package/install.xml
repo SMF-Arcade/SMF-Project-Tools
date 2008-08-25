@@ -123,16 +123,14 @@
 			)
 		);
 
-		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
+		list ($project) = $smcFunc['db_fetch_row']($request);
 
-		loadProjectPermission($_REQUEST['project']);
-
-		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
+		if (!($context['project'] = loadProject((int) $project)))
 			fatal_lang_error('project_not_found', false);
 
-		$project = $context['project']['id'];
+		loadProjectPermissions($project);
 
-		// Make sure this attachment is on this board.
+		// Make sure this attachment is on this issue.
 		$request = $smcFunc['db_query']('', '
 			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
