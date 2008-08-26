@@ -662,10 +662,11 @@ function DiffParser($text)
 
 function issue_link_callback($data)
 {
-	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $scripturl, $modSettings;
 
-	print_r($data);
-	die();
+	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . $scripturl . '?issue=\1.0">\1</a>', $data);
+
+	return $data[0];
 }
 
 ?>
