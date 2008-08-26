@@ -664,7 +664,7 @@ function issue_link_callback($data)
 {
 	global $smcFunc, $scripturl, $modSettings;
 
-	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . $scripturl . '?issue=\1.0">\1</a>', $data);
+	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . $scripturl . '?issue=\1.0">\1</a>', $data[0]);
 
 	return $data[0];
 }
