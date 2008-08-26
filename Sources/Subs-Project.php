@@ -660,4 +660,12 @@ function DiffParser($text)
 	return $data;
 }
 
+function issue_link_callback($data)
+{
+	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	print_r($data);
+	die();
+}
+
 ?>

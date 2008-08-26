@@ -30,16 +30,12 @@ $addSettings = array(
 	'commentsPerPage' => array(20, false),
 	'projectEnabled' => array(true, false),
 	'projectAttachements' => array(true, false),
+	'linkIssues' => array(true, false),
 );
 
 $permissions = array(
 	'project_access' => array(-1, 0, 2),
 	'project_admin' => array(),
-	// Issue Tracker
-	'issue_report' => array(0, 2),
-	'issue_view_own' => array(0, 2),
-	'issue_view_any' => array(-1, 0, 2),
-	'issue_assign_to' => array(),
 );
 
 $tables = array(

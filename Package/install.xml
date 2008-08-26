@@ -188,12 +188,35 @@
 		</operation>
 	</file>
 
-	<file name="$sourcedir/Who.php">
+	<file name="$sourcedir/Load.php">
 		<operation>
-			<search position="after"><![CDATA[		'mods' => array(]]></search>
+			<search position="after"><![CDATA[
+	// Build the list of boards they WANT to see.]]></search>
 			<add><![CDATA[
-				'SMF Project Tools &copy; 2007-2008<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
+	// Project Tools
+	if (!empty($modSettings['projectEnabled']))
+	{
+		if (empty($modSettings['issueRegex']))
+			$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
+		else
+			$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
+
+		$context['project_tools'] = array();
+		$context['issue_tracker'] = array();
+
+		require_once($sourcedir . '/Subs-Project.php');
+		require_once($sourcedir . '/Subs-Issue.php');
+		loadProjectToolsPermissions();
+		loadLanguage('Project');
+		loadIssueTypes();
+	}
+	else
+	{
+		$user_info['query_see_project'] = '0=1';
+	}
+	]]></add>
 		</operation>
+
 	</file>
 
 	<file name="$sourcedir/Subs.php">
@@ -285,32 +308,30 @@
 				'block_level' => true,
 			),]]></add>
 		</operation>
-	</file>
 
-	<file name="$sourcedir/Load.php">
 		<operation>
-			<search position="after"><![CDATA[
-	// Build the list of boards they WANT to see.]]></search>
+			<search position="after"><![CDATA[			if (!empty($modSettings['autoLinkUrls']))]]></search>
 			<add><![CDATA[
-	// Project Tools
-	if (!empty($modSettings['projectEnabled']))
-	{
-		$context['project_tools'] = array();
-		$context['issue_tracker'] = array();
+			if (!empty($modSettings['linkIssues']) && !empty($modSettings['projectEnabled']))
+			{
+				$no_autolink_area = false;
+				if (!empty($open_tags))
+				{
+					foreach ($open_tags as $open_tag)
+						if (in_array($open_tag['tag'], $no_autolink_tags))
+							$no_autolink_area = true;
+				}
 
-		require_once($sourcedir . '/Subs-Project.php');
-		require_once($sourcedir . '/Subs-Issue.php');
-		loadProjectToolsPermissions();
-		loadLanguage('Project');
-		loadIssueTypes();
-	}
-	else
-	{
-		$user_info['query_see_project'] = '0=1';
-	}
-	]]></add>
+				$lastAutoPos = isset($lastAutoPos) ? $lastAutoPos : 0;
+				if ($pos < $lastAutoPos)
+					$no_autolink_area = true;
+				$lastAutoPos = $pos;
+
+				if (!$no_autolink_area)
+					$data = preg_replace_callback('/' . $modSettings['issueRegex'][0] . '/', 'issue_link_callback', $data);
+			}
+			]]></add>
 		</operation>
-
 	</file>
 
 	<file name="$sourcedir/Subs-BoardIndex.php">
@@ -417,6 +438,14 @@
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
 ]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Who.php">
+		<operation>
+			<search position="after"><![CDATA[		'mods' => array(]]></search>
+			<add><![CDATA[
+				'SMF Project Tools &copy; 2007-2008<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
 		</operation>
 	</file>
 
