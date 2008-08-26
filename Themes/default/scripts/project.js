@@ -51,9 +51,10 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 			newOption = document.createElement('li');
 			newOption.optionValue = options[i]['id'];
 			newOption.optionItem = options[i];
-			createEventListener(dropDownItemClick);
-			newOption.addEventListener('click', dropDownItemClick, false);
 			newOption.innerHTML = '<span style="' + options[i]['style'] + '">' + options[i]['name'] + '</span>';
+
+			createEventListener(newOption);
+			newOption.addEventListener('click', dropDownItemClick, false);
 
 			dropdownMenu.appendChild(newOption);
 		}
@@ -67,7 +68,9 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 	{
 		handled = true;
 
-		if (evt.target.tagName == 'A' && checkParent(evt.target))
+		var target = (evt.target) ? evt.target : evt.srcElement;
+
+		if (target.tagName == 'A' && checkParent(target))
 			return;
 
 		if (visible)
@@ -84,7 +87,7 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 	{
 		handled = true;
 
-		target = evt.target;
+		var target = (evt.target) ? evt.target : evt.srcElement;
 
 		if (target.tagName == 'SPAN')
 			target = target.parentNode;
@@ -98,44 +101,26 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 
 			//xmlRequestHandle = callback(fieldName, name, target.optionValue, currentIssue, sessionID);
 
-			xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + selectedValue + ';xml;sesc=' + sessionID,
+			getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + selectedValue + ';xml;sesc=' + sessionID,
 				function (oXMLDoc)
 				{
-					if (xmlRequestHandle.readyState != 4)
-						return true;
+					dropdownBtn.className = "button";
 
-					return true;
+					var node = oXMLDoc.getElementsByTagName('update')[0];
+
+					if (node.nodeValue == '' || node.nodeValue == null || node.nodeValue == undefined)
+					{
+						dropdownValue.innerHTML = selectedItem['name'];
+					}
+					else
+					{
+						dropdownValue.innerHTML = oXMLDoc.getElementsByTagName('update')[0].nodeValue;
+					}
 				}
 			);
-
-
-			checkReadyState(xmlRequestHandle);
 		}
 
 		dropDownHide();
-	}
-
-	function checkReadyState(xmlRequestHandle)
-	{
-		if (xmlRequestHandle.readyState == 4)
-		{
-			dropdownBtn.className = "button";
-
-			var node = xmlRequestHandle.responseXML.getElementsByTagName('update')[0];
-
-			if (node.nodeValue == '' || node.nodeValue == null || node.nodeValue == undefined)
-			{
-				dropdownValue.innerHTML = selectedItem['name'];
-			}
-			else
-			{
-				dropdownValue.innerHTML = xmlRequestHandle.responseXML.getElementsByTagName('update')[0].nodeValue;
-			}
-		}
-		else
-		{
-			setTimeout(checkReadyState, 500, xmlRequestHandle);
-		}
 	}
 
 	function checkParent(domItem)
@@ -167,7 +152,9 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 
 		if (visible)
 		{
-			if (!checkParent(evt.target))
+			var target = (evt.target) ? evt.target : evt.srcElement;
+
+			if (!checkParent(target))
 			{
 				dropDownChange(evt);
 			}
@@ -178,6 +165,7 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 	{
 		dropdownHandle.className += " dropdown";
 		createEventListener(dropdownDL);
+		createEventListener(document);
 		dropdownDL.addEventListener('click', dropDownChange, false);
 		document.addEventListener('click', bodyClick, false);
 		dropdownBtn = document.createElement('dd');
