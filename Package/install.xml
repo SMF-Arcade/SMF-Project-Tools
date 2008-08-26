@@ -135,6 +135,7 @@
 			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}issues AS i ON (i.id_issue = a.id_issue AND {query_see_issue})
+				LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			WHERE a.id_attach = {int:attach}
 			LIMIT 1',
 			array(
