@@ -196,29 +196,38 @@ function IssueView()
 		)
 	);
 
-	$context['attachments'] = array();
+	$attachmentData = array();
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			at.id_attach, at.filename, at.fileext, at.downloads,
-			at.attachment_type, at.size, at.width, at.height, at.mime_type,
-			IFNULL(mem.real_name, t.poster_name) AS real_name, t.poster_ip
+			a.id_attach, a.id_folder, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
+			a.width, a.height
+			IFNULL(mem.real_name, t.poster_name) AS real_name, t.poster_ip' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ',
+			IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
 		FROM {db_prefix}issue_attachments AS ia
-			INNER JOIN {db_prefix}attachments AS at ON (at.id_attach = ia.id_attach)
+			INNER JOIN {db_prefix}attachments AS a ON (a.id_attach = ia.id_attach)' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
+			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ia.id_member)
 			LEFT JOIN {db_prefix}project_timeline AS t ON (t.id_event = ia.id_event)
-		WHERE ia.id_issue = {int:issue}',
+		WHERE ia.id_issue = {int:issue}
+			AND a.attachment_type = {int:attachment_type}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
+			AND a.approved = {int:is_approved}'),
 		array(
 			'issue' => $issue,
+			'attachment_type' => 0,
+			'is_approved' => 1,
 		)
 	);
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['attachments'][$row['id_attach']] = array(
-			'id' => $row['id_attach'],
+		$i = $row['id_attach'];
+
+		$attachmentData[$i] = array(
+			'id' => $i,
 			'name' => preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', htmlspecialchars($row['filename'])),
-			'href' => $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $row['id_attach'],
-			'link' => '<a href="' . $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $row['id_attach'] . '">' . htmlspecialchars($row['filename']) . '</a>',
+			'href' => $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $i,
+			'link' => '<a href="' . $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $i . '">' . htmlspecialchars($row['filename']) . '</a>',
 			'extension' => $row['fileext'],
 			'downloads' => comma_format($row['downloads']),
 			'poster' => $row['real_name'],
@@ -226,20 +235,63 @@ function IssueView()
 			'size' => round($row['size'] / 1024, 2) . ' ' . $txt['kilobyte'],
 			'byte_size' => $row['size'],
 			'is_image' => !empty($row['width']) && !empty($row['height']) && !empty($modSettings['attachmentShowImages']),
+			'is_approved' => $row['approved'],
 		);
 
-		/*if (!$context['attachments'][$row['id_attach']]['is_image'])
+		if (!$context['attachments'][$i]['is_image'])
 			continue;
 
-		$context['attachments'][$row['id_attach']] += array(
+		$attachmentData[$i] += array(
 			'real_width' => $row['width'],
 			'width' => $row['width'],
 			'real_height' => $row['height'],
 			'height' => $row['height'],
-		);*/
+		);
 
+		if (!empty($modSettings['attachmentThumbnails']) && !empty($modSettings['attachmentThumbWidth']) && !empty($modSettings['attachmentThumbHeight']) && ($row['width'] > $modSettings['attachmentThumbWidth'] || $row['height'] > $modSettings['attachmentThumbHeight']) && strlen($row['filename']) < 249)
+		{
+			// ...
+
+			$attachmentData[$i]['width'] = $row['thumb_width'];
+			$attachmentData[$i]['height'] = $row['thumb_height'];
+		}
+
+		if (!empty($row['id_thumb']))
+			$attachmentData[$i]['thumbnail'] = array(
+				'id' => $row['id_thumb'],
+				'href' => $scripturl . '?action=dlattach;issue=' . $issue . '.0;attach=' . $row['id_thumb'] . ';image',
+			);
+		$attachmentData[$i]['thumbnail']['has_thumb'] = !empty($row['id_thumb']);
+
+		// If thumbnails are disabled, check the maximum size of the image.
+		if (!$attachmentData[$i]['thumbnail']['has_thumb'] && ((!empty($modSettings['max_image_width']) && $row['width'] > $modSettings['max_image_width']) || (!empty($modSettings['max_image_height']) && $row['height'] > $modSettings['max_image_height'])))
+		{
+			if (!empty($modSettings['max_image_width']) && (empty($modSettings['max_image_height']) || $row['height'] * $modSettings['max_image_width'] / $row['width'] <= $modSettings['max_image_height']))
+			{
+				$attachmentData[$i]['width'] = $modSettings['max_image_width'];
+				$attachmentData[$i]['height'] = floor($row['height'] * $modSettings['max_image_width'] / $row['width']);
+			}
+			elseif (!empty($modSettings['max_image_width']))
+			{
+				$attachmentData[$i]['width'] = floor($row['width'] * $modSettings['max_image_height'] / $row['height']);
+				$attachmentData[$i]['height'] = $modSettings['max_image_height'];
+			}
+		}
+		elseif ($attachmentData[$i]['thumbnail']['has_thumb'])
+		{
+			// If the image is too large to show inline, make it a popup.
+			if (((!empty($modSettings['max_image_width']) && $attachmentData[$i]['real_width'] > $modSettings['max_image_width']) || (!empty($modSettings['max_image_height']) && $attachmentData[$i]['real_height'] > $modSettings['max_image_height'])))
+				$attachmentData[$i]['thumbnail']['javascript'] = 'return reqWin(\'' . $attachmentData[$i]['href'] . ';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);';
+			else
+				$attachmentData[$i]['thumbnail']['javascript'] = 'return expandThumb(' . $i . ');';
+		}
+
+		if (!$attachmentData[$i]['thumbnail']['has_thumb'])
+			$attachmentData[$i]['downloads']++;
 	}
-	$smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	$context['attachements'] = &$attachmentData;
 
 	$context['counter_start'] = $_REQUEST['start'];
 
