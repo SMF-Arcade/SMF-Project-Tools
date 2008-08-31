@@ -704,10 +704,14 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	// Update Issues table too
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
-		SET replies = replies + {int:rpl}, updated = {int:time}, id_comment_mod = {int:comment}, id_comment_last = {int:comment}
+		SET
+			replies = replies + {int:rpl}, updated = {int:time},
+			id_comment_mod = {int:comment}, id_comment_last = {int:comment},
+			id_updater = {int:current_user}
 		WHERE id_issue = {int:issue}',
 		array(
 			'comment' => $id_comment,
+			'current_user' => $user_info['id'],
 			'issue' => $id_issue,
 			'time' => time(),
 			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
