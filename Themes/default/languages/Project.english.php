@@ -155,7 +155,7 @@ $txt['add_attach'] = 'Attach';
 $txt['issue_reply'] = 'Reply';
 
 // Title
-$txt['project_list_title'] = $context['forum_name'] . ' - Projects';
+$txt['project_list_title'] = '%s - Projects';
 $txt['project_title'] = 'Projects - %s';
 $txt['project_title_issues'] = '%s - Issues';
 $txt['project_view_issue'] = '%s - Issue #%d: %s';
