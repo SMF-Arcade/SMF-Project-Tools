@@ -299,7 +299,7 @@
 		<operation>
 			<search position="after"><![CDATA[			if (!empty($modSettings['autoLinkUrls']))]]></search>
 			<add><![CDATA[
-			if (!empty($modSettings['linkIssues']) && !empty($modSettings['projectEnabled']))
+			if (!empty($modSettings['linkIssues']) && !empty($modSettings['issueRegex']) && !empty($modSettings['projectEnabled']))
 			{
 				$no_autolink_area = false;
 				if (!empty($open_tags))
