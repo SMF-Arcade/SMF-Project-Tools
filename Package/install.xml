@@ -36,6 +36,23 @@
 		return 'Projects';
 	}]]></add>
 		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[
+	// Check if the user should be disallowed access.
+	is_not_banned();]]></search>
+			<add><![CDATA[
+	// Project Tools
+	if (!empty($modSettings['projectEnabled']))
+	{
+		require_once($sourcedir . '/Subs-Project.php');
+		loadProjectToolsPermissions();
+	}
+	else
+	{
+		$user_info['query_see_project'] = '0=1';
+	}]]></add>
+		</operation>
 	</file>
 
 	<!-- Source files -->
@@ -187,37 +204,6 @@
 			),
 		),]]></add>
 		</operation>
-	</file>
-
-	<file name="$sourcedir/Load.php">
-		<operation>
-			<search position="after"><![CDATA[
-	// Build the list of boards they WANT to see.]]></search>
-			<add><![CDATA[
-	// Project Tools
-	if (!empty($modSettings['projectEnabled']))
-	{
-		if (empty($modSettings['issueRegex']))
-			$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
-		else
-			$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
-
-		$context['project_tools'] = array();
-		$context['issue_tracker'] = array();
-
-		require_once($sourcedir . '/Subs-Project.php');
-		require_once($sourcedir . '/Subs-Issue.php');
-		loadProjectToolsPermissions();
-		loadLanguage('Project');
-		loadIssueTypes();
-	}
-	else
-	{
-		$user_info['query_see_project'] = '0=1';
-	}
-	]]></add>
-		</operation>
-
 	</file>
 
 	<file name="$sourcedir/Subs.php">

@@ -27,9 +27,19 @@ if (!defined('SMF'))
 	!!!
 */
 
-function loadProjectToolsPermissions($project = 0)
+function loadProjectToolsPermissions()
 {
-	global $modSettings, $user_info;
+	global $context, $sourcedir, $modSettings, $user_info;
+
+	require_once($sourcedir . '/Subs-Issue.php');
+
+	if (empty($modSettings['issueRegex']))
+		$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
+	else
+		$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
+
+	$context['project_tools'] = array();
+	$context['issue_tracker'] = array();
 
 	// Administrators can see all projects.
 	if ($user_info['is_admin'])
@@ -48,9 +58,12 @@ function loadProjectToolsPermissions($project = 0)
 	$user_info['query_see_project'] = $see_project;
 	$user_info['query_see_version'] = $see_version;
 	$user_info['query_see_issue'] = $see_issue;
-}
-function loadProjectPermissions($project)
 
+	loadLanguage('Project');
+	loadIssueTypes();
+}
+
+function loadProjectPermissions($project)
 {
 	global $context, $smcFunc, $modSettings, $user_info, $txt, $settings;
 
