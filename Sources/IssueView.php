@@ -237,7 +237,7 @@ function IssueView()
 			'is_approved' => $row['approved'],
 		);
 
-		if (!$context['attachments'][$i]['is_image'])
+		if (!$attachmentData[$i]['is_image'])
 			continue;
 
 		$attachmentData[$i] += array(
@@ -290,7 +290,7 @@ function IssueView()
 	}
 	$smcFunc['db_free_result']($request);
 
-	$context['attachements'] = &$attachmentData;
+	$context['attachments'] = &$attachmentData;
 
 	$context['counter_start'] = $_REQUEST['start'];
 
