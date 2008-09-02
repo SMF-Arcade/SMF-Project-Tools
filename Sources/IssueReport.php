@@ -73,6 +73,7 @@ function ReportIssue()
 	require_once($sourcedir . '/Subs-Editor.php');
 
 	$editorOptions = array(
+		'form' => 'reportissue',
 		'id' => 'details',
 		'value' => $context['details'],
 		'labels' => array(
@@ -314,6 +315,7 @@ function IssueReply()
 	}
 
 	$editorOptions = array(
+		'form' => 'reportissue',
 		'id' => 'comment',
 		'value' => $context['comment'],
 		'labels' => array(
