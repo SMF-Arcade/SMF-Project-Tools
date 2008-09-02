@@ -231,8 +231,8 @@ function IssueView()
 			'downloads' => comma_format($row['downloads']),
 			'poster' => $row['real_name'],
 			'ip' => $row['poster_ip'],
-			'size' => round($row['size'] / 1024, 2) . ' ' . $txt['kilobyte'],
-			'byte_size' => $row['size'],
+			'size' => round($row['filesize'] / 1024, 2) . ' ' . $txt['kilobyte'],
+			'byte_size' => $row['filesize'],
 			'is_image' => !empty($row['width']) && !empty($row['height']) && !empty($modSettings['attachmentShowImages']),
 			'is_approved' => $row['approved'],
 		);
