@@ -20,11 +20,78 @@ function template_issue_view()
 	);
 
 	$issueDetails = getComment();
+	$alternate = false;
 
 	if ($issueDetails['first_new'])
 		echo '
 	<a name="new"></a>';
 
+	// Issue Info table
+	echo '
+	<a name="com', $context['current_issue']['comment_first'], '"></a>
+	<div id="issueinfo" class="floatright tborder">
+		<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
+		<div id="issueinfot" class="clearfix topborder windowbg smalltext">
+			<ul class="details">
+				<li>
+					<dl class="clearfix">
+						<dt>', $txt['issue_reported'], '</dt>
+						<dd>', $context['current_issue']['created'], '</dd>
+					</dl>
+				</li>
+				<li>
+					<dl class="clearfix">
+						<dt>', $txt['issue_updated'], '</dt>
+						<dd>', $context['current_issue']['updated'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_type" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_type'], '</dt>
+						<dd>', $context['current_issue']['type']['name'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_status" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_status'], '</dt>
+						<dd>', $context['current_issue']['status']['text'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_priority" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_priority'], '</dt>
+						<dd>', $txt[$context['current_issue']['priority']], '</dd>
+					</dl>
+				</li>
+				<li id="issue_version" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_version'], '</dt>
+						<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_verfix" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_version_fixed'], '</dt>
+						<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_assign" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_assigned_to'], '</dt>
+						<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_category" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_category'], '</dt>
+						<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+			</ul>
+		</div>
+	</div>';
+
+	// Issue Details
 	echo '
 	<div id="firstcomment" class="tborder">
 		<h3 class="catbg3 headerpadding">
@@ -32,7 +99,7 @@ function template_issue_view()
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>
 		<div class="bordercolor">
-			<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
+			<div class="clearfix topborder windowbg2 largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
 				<div class="floatleft poster">
 					<h4>', $issueDetails['member']['link'], '</h4>
 					<ul class="smalltext">';
@@ -141,77 +208,8 @@ function template_issue_view()
 					</div>
 				</div>
 			</div>
-			</div>
-		</div><br />
-	</form>';
-
-	//
-	echo '
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
-		<a name="com', $context['current_issue']['comment_first'], '"></a>
-		<div id="issueinfo" class="floatright tborder">
-			<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
-			<div id="issueinfot" class="clearfix topborder windowbg smalltext">
-				<ul class="details">
-					<li>
-						<dl class="clearfix">
-							<dt>', $txt['issue_reported'], '</dt>
-							<dd>', $context['current_issue']['created'], '</dd>
-						</dl>
-					</li>
-					<li>
-						<dl class="clearfix">
-							<dt>', $txt['issue_updated'], '</dt>
-							<dd>', $context['current_issue']['updated'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_type" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_type'], '</dt>
-							<dd>', $context['current_issue']['type']['name'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_status" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_status'], '</dt>
-							<dd>', $context['current_issue']['status']['text'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_priority" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_priority'], '</dt>
-							<dd>', $txt[$context['current_issue']['priority']], '</dd>
-						</dl>
-					</li>
-					<li id="issue_version" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_version'], '</dt>
-							<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_verfix" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_version_fixed'], '</dt>
-							<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_assign" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_assigned_to'], '</dt>
-							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_category" class="clearfix">
-						<dl class="clearfix">
-							<dt>', $txt['issue_category'], '</dt>
-							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
-				</ul>
-			</div>
-		</div>';
-
-	$alternate = false;
+		</div>
+	</div><br />';
 
 	// Javascript for Dropdowns
 	if (!empty($context['can_issue_update']))
@@ -282,8 +280,8 @@ function template_issue_view()
 
 		}
 
-	echo '
-		</script>';
+		echo '
+	</script>';
 	}
 
 	// Print out comments
@@ -299,94 +297,91 @@ function template_issue_view()
 			', $txt['issue_comments'], '
 		</h3>
 		<div class="bordercolor">';
-	}
 
-	while ($comment = getComment())
-	{
-		echo '
-				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
-					<div class="floatleft poster">
-						<h4>', $comment['member']['link'], '</h4>
-						<ul class="smalltext">';
-
-		// Show the member's custom title, if they have one.
-		if (isset($comment['member']['title']) && $comment['member']['title'] != '')
+		while ($comment = getComment())
+		{
 			echo '
-							<li>', $comment['member']['title'], '</li>';
+			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
+				<div class="floatleft poster">
+					<h4>', $comment['member']['link'], '</h4>
+					<ul class="smalltext">';
 
-		// Show the member's primary group (like 'Administrator') if they have one.
-		if (isset($comment['member']['group']) && $comment['member']['group'] != '')
+			// Show the member's custom title, if they have one.
+			if (isset($comment['member']['title']) && $comment['member']['title'] != '')
+				echo '
+						<li>', $comment['member']['title'], '</li>';
+
+			// Show the member's primary group (like 'Administrator') if they have one.
+			if (isset($comment['member']['group']) && $comment['member']['group'] != '')
+				echo '
+						<li>', $comment['member']['group'], '</li>';
+
 			echo '
-							<li>', $comment['member']['group'], '</li>';
-
-		echo '
-						</ul>
+					</ul>
+				</div>
+				<div class="postarea">
+					<div class="keyinfo">
+						<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
 					</div>
-					<div class="postarea">
-						<div class="keyinfo">
-							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
-						</div>
-						<ul class="smalltext postingbuttons">';
+					<ul class="smalltext postingbuttons">';
 
-		if ($context['can_comment'])
+			if ($context['can_comment'])
+				echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
+
+			if ($context['can_comment'])
+				echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
+
+			if ($comment['can_remove'])
+				echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+
 			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
-
-		if ($context['can_comment'])
-			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
-
-		if ($comment['can_remove'])
-			echo '
-							<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
-
-		echo '
-						</ul>
-						<div id="com_', $comment['id'], '" class="post">
-							', $comment['body'], '
-						</div>
+					</ul>
+					<div id="com_', $comment['id'], '" class="post">
+						', $comment['body'], '
 					</div>
-					<div class="moderatorbar">
-						<div class="smalltext floatleft">';
+				</div>
+				<div class="moderatorbar">
+					<div class="smalltext floatleft">';
 
-		// Show "« Last Edit: Time by Person »" if this post was edited.
-		if ($settings['show_modify'] && !empty($comment['modified']['name']))
-			echo '
-							&#171; <em>', $txt['last_edit'], ': ', $comment['modified']['time'], ' ', $txt['by'], ' ', $comment['modified']['name'], '</em> &#187;';
+			// Show "« Last Edit: Time by Person »" if this post was edited.
+			if ($settings['show_modify'] && !empty($comment['modified']['name']))
+				echo '
+						&#171; <em>', $txt['last_edit'], ': ', $comment['modified']['time'], ' ', $txt['by'], ' ', $comment['modified']['name'], '</em> &#187;';
 
-		echo '
-						</div>
-						<div class="smalltext floatright">';
-		echo '
-							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
-
-		// Show the IP to this user for this post - because you can moderate?
-		if (allowedTo('moderate_forum') && !empty($comment['ip']))
 			echo '
-							<a href="', $scripturl, '?action=trackip;searchip=', $comment['ip'], '">', $comment['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
-		// Or, should we show it because this is you?
-		elseif ($comment['can_see_ip'])
-			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $comment['ip'], '</a>';
-		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
-		elseif (!$context['user']['is_guest'])
-			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
-		// Otherwise, you see NOTHING!
-		else
-			echo '
-							', $txt['logged'];
-
-		echo '
-						</div>
 					</div>
-				</div>';
+					<div class="smalltext floatright">';
+			echo '
+						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+
+			// Show the IP to this user for this post - because you can moderate?
+			if (allowedTo('moderate_forum') && !empty($comment['ip']))
+				echo '
+						<a href="', $scripturl, '?action=trackip;searchip=', $comment['ip'], '">', $comment['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+			// Or, should we show it because this is you?
+			elseif ($comment['can_see_ip'])
+				echo '
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $comment['ip'], '</a>';
+			// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+			elseif (!$context['user']['is_guest'])
+				echo '
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+			// Otherwise, you see NOTHING!
+			else
+				echo '
+						', $txt['logged'];
+
+			echo '
+					</div>
+				</div>
+			</div>';
 
 			$alternate = !$alternate;
-	}
+		}
 
-	if ($context['num_comments'] > 0)
-	{
 		echo '
 		</div>
 	</div>
