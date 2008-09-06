@@ -5,9 +5,9 @@ function template_issue_view()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
-	//$delete_button = create_button('delete.gif', 'issue_delete', 'issue_delete');
-	//$modify_button = create_button('modify.gif', 'issue_edit', 'issue_edit');
-	//$reporter = &$context['current_issue']['reporter'];
+	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
 
 	$buttons = array(
 		'reply' => array(
@@ -19,6 +19,133 @@ function template_issue_view()
 		),
 	);
 
+	$issueDetails = getComment();
+
+	if ($issueDetails['first_new'])
+		echo '
+	<a name="new"></a>';
+
+	echo '
+	<div id="firstcomment" class="tborder">
+		<h3 class="catbg3 headerpadding">
+			<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
+			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+		</h3>
+		<div class="bordercolor">
+			<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
+				<div class="floatleft poster">
+					<h4>', $issueDetails['member']['link'], '</h4>
+					<ul class="smalltext">';
+
+		// Show the member's custom title, if they have one.
+		if (isset($issueDetails['member']['title']) && $issueDetails['member']['title'] != '')
+			echo '
+						<li>', $issueDetails['member']['title'], '</li>';
+
+		// Show the member's primary group (like 'Administrator') if they have one.
+		if (isset($issueDetails['member']['group']) && $issueDetails['member']['group'] != '')
+			echo '
+						<li>', $issueDetails['member']['group'], '</li>';
+
+		echo '
+					</ul>
+				</div>
+				<div class="postarea">
+					<div class="keyinfo">
+						<div class="messageicon floatleft">
+							<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
+						</div>
+						<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '.0#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>							<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
+					</div>
+					<ul class="smalltext postingbuttons">';
+
+		if ($context['can_comment'])
+			echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
+
+		if ($context['can_comment'])
+			echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
+
+		if ($issueDetails['can_remove'])
+			echo '
+						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $issueDetails['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+
+		echo '
+					</ul>
+					<div id="com_', $issueDetails['id'], '" class="post">
+						', $issueDetails['body'], '
+					</div>';
+
+		// Show attachments
+		if (!empty($context['attachments']))
+		{
+			echo '
+					<hr width="100%" size="1" class="hrcolor" />
+					<div style="overflow: auto; width: 100%;">';
+
+			foreach ($context['attachments'] as $attachment)
+			{
+				if ($attachment['is_image'])
+				{
+					if ($attachment['thumbnail']['has_thumb'])
+						echo '
+							<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+					else
+						echo '
+							<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
+				}
+				echo '
+							<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a>
+									(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+			}
+
+			echo '
+					</div>';
+		}
+
+		echo '
+				</div>
+				<div class="moderatorbar">
+					<div class="smalltext floatleft">';
+
+		// Show "« Last Edit: Time by Person »" if this post was edited.
+		if ($settings['show_modify'] && !empty($issueDetails['modified']['name']))
+			echo '
+						&#171; <em>', $txt['last_edit'], ': ', $issueDetails['modified']['time'], ' ', $txt['by'], ' ', $issueDetails['modified']['name'], '</em> &#187;';
+
+		echo '
+					</div>
+					<div class="smalltext floatright">';
+		echo '
+						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+
+		// Show the IP to this user for this post - because you can moderate?
+		if (allowedTo('moderate_forum') && !empty($issueDetails['ip']))
+			echo '
+						<a href="', $scripturl, '?action=trackip;searchip=', $issueDetails['ip'], '">', $issueDetails['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+		// Or, should we show it because this is you?
+		elseif ($issueDetails['can_see_ip'])
+			echo '
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $issueDetails['ip'], '</a>';
+		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+		elseif (!$context['user']['is_guest'])
+			echo '
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+		// Otherwise, you see NOTHING!
+		else
+			echo '
+						', $txt['logged'];
+
+		echo '
+					</div>
+				</div>
+			</div>
+			</div>
+		</div><br />
+	</form>';
+
+	//
 	echo '
 	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], ';sa=update" method="post">
 		<a name="com', $context['current_issue']['comment_first'], '"></a>
@@ -86,6 +213,7 @@ function template_issue_view()
 
 	$alternate = false;
 
+	// Javascript for Dropdowns
 	if (!empty($context['can_issue_update']))
 	{
 		echo '
@@ -158,29 +286,23 @@ function template_issue_view()
 		</script>';
 	}
 
-	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
-	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
-	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
+	// Print out comments
+	if ($context['num_comments'] > 0)
+	{
+		echo '
+	<div class="modbuttons clearfix margintop">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+		', template_button_strip($buttons, 'bottom'), '
+	</div>
+	<div class="tborder">
+		<h3 class="catbg3 headerpadding">
+			', $txt['issue_comments'], '
+		</h3>
+		<div class="bordercolor">';
+	}
 
 	while ($comment = getComment())
 	{
-		if ($comment['first_new'])
-		{
-			echo '
-		<a name="new"></a>';
-		}
-
-		if ($comment['first'])
-		{
-			echo '
-		<div id="firstcomment" class="tborder">
-			<h3 class="catbg3 headerpadding">
-				<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
-				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
-			</h3>
-			<div class="bordercolor">';
-		}
-
 		echo '
 				<div class="clearfix topborder windowbg', $alternate ? '2' : '', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
 					<div class="floatleft poster">
@@ -201,17 +323,7 @@ function template_issue_view()
 						</ul>
 					</div>
 					<div class="postarea">
-						<div class="keyinfo">';
-
-		if ($comment['first'])
-		{
-			echo '
-							<div class="messageicon floatleft">
-								<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
-							</div>
-							<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '.0#com', $comment['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>';
-		}
-		echo '
+						<div class="keyinfo">
 							<div class="smalltext">&#171; <strong>', !empty($comment['counter']) ? $txt['reply'] . ' #' . $comment['counter'] : '', ' ', $txt['on'], ':</strong> ', $comment['time'], ' &#187;</div>
 						</div>
 						<ul class="smalltext postingbuttons">';
@@ -232,36 +344,7 @@ function template_issue_view()
 						</ul>
 						<div id="com_', $comment['id'], '" class="post">
 							', $comment['body'], '
-						</div>';
-
-		// Show attachments
-		if ($comment['first'] && !empty($context['attachments']))
-		{
-			echo '
-						<hr width="100%" size="1" class="hrcolor" />
-						<div style="overflow: auto; width: 100%;">';
-
-			foreach ($context['attachments'] as $attachment)
-			{
-				if ($attachment['is_image'])
-				{
-					if ($attachment['thumbnail']['has_thumb'])
-						echo '
-								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
-					else
-						echo '
-								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
-				}
-				echo '
-								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a>
-										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
-			}
-
-			echo '
-						</div>';
-		}
-
-		echo '
+						</div>
 					</div>
 					<div class="moderatorbar">
 						<div class="smalltext floatleft">';
@@ -300,29 +383,6 @@ function template_issue_view()
 				</div>';
 
 			$alternate = !$alternate;
-
-		if ($comment['first'])
-		{
-			echo '
-			</div>
-		</div><br />
-	</form>';
-
-			if ($context['num_comments'] > 0)
-			{
-
-				echo '
-	<div class="modbuttons clearfix margintop">
-		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-		', template_button_strip($buttons, 'bottom'), '
-	</div>
-	<div class="tborder">
-		<h3 class="catbg3 headerpadding">
-			', $txt['issue_comments'], '
-		</h3>
-		<div class="bordercolor">';
-			}
-		}
 	}
 
 	if ($context['num_comments'] > 0)
