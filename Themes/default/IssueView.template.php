@@ -99,7 +99,7 @@ function template_issue_view()
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>
 		<div class="bordercolor">
-			<div class="clearfix topborder windowbg2 largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
+			<div class="clearfix topborder windowbg largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
 				<div class="floatleft poster">
 					<h4>', $issueDetails['member']['link'], '</h4>
 					<ul class="smalltext">';
