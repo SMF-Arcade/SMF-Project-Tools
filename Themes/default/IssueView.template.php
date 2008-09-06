@@ -250,7 +250,8 @@ function template_issue_view()
 		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '")
 		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
+		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");
+		ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
 
 			// Status
 			foreach ($context['issue']['status'] as $status)
