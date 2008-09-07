@@ -196,7 +196,6 @@ function template_edit_category()
 }
 
 // Permissions
-
 function template_profiles_list()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
