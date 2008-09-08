@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install for="2.0 Beta 4">
+	<install>
 		<readme parsebbc="true">readme.txt</readme>
 
 		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
@@ -72,7 +72,7 @@
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
 
-	<uninstall for="2.0 Beta 4">
+	<uninstall>
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 
