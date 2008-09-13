@@ -150,9 +150,18 @@ function template_issue_view()
 			echo '
 					<hr width="100%" size="1" class="hrcolor" />
 					<div style="overflow: auto; width: 100%;">';
-
+			//$last_approved_state = 1;
 			foreach ($context['attachments'] as $attachment)
 			{
+				/*// Show a special box for unapproved attachments...
+				if ($attachment['is_approved'] != $last_approved_state)
+				{
+					$last_approved_state = 0;
+					echo '
+						<fieldset>
+							<legend>', $txt['attach_awaiting_approve'], '&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=all;mid=', $message['id'], ';sesc=', $context['session_id'], '">', $txt['approve_all'], '</a>]</legend>';
+				}*/
+
 				if ($attachment['is_image'])
 				{
 					if ($attachment['thumbnail']['has_thumb'])
@@ -163,12 +172,22 @@ function template_issue_view()
 							<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
 				}
 				echo '
-							<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a>
-									(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+							<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
+
+				/*if (!$attachment['is_approved'])
+					echo '
+							[<a href="', $scripturl, '?action=attachapprove;sa=approve;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['approve'], '</a>]&nbsp;|&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=reject;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['delete'], '</a>] ';*/
+				echo '
+								(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
 			}
 
+			// If we had unapproved attachments clean up.
+			if ($last_approved_state == 0)
+				echo '
+							</fieldset>';
+
 			echo '
-					</div>';
+						</div>';
 		}
 
 		echo '
