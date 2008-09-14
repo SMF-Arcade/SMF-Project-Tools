@@ -109,4 +109,5 @@ $txt['permission_save'] = 'Save Changes';
 // Errors
 $txt['no_issue_types'] = 'No issue types selected';
 $txt['profile_not_found'] = 'Profile not found';
+
 ?>

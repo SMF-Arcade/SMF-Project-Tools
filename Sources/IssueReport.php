@@ -259,6 +259,9 @@ function IssueReply()
 		projectIsAllowedTo('edit_comment_own');
 		require_once($sourcedir . '/Subs-Post.php');
 
+		if (empty($_REQUEST['com']) || !is_numeric($_REQUEST['com']))
+			fatal_lang_error('comment_not_found', false);
+
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
@@ -270,7 +273,7 @@ function IssueReply()
 			array(
 				'current_user' => $user_info['id'],
 				'issue' => $issue,
-				'comment' => $_REQUEST['com'],
+				'comment' => (int) $_REQUEST['com'],
 			)
 		);
 
@@ -456,6 +459,9 @@ function IssueReply2()
 		projectIsAllowedTo('edit_comment_own');
 		require_once($sourcedir . '/Subs-Post.php');
 
+		if (empty($_REQUEST['com']) || !is_numeric($_REQUEST['com']))
+			fatal_lang_error('comment_not_found', false);
+
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
@@ -467,7 +473,7 @@ function IssueReply2()
 			array(
 				'current_user' => $user_info['id'],
 				'issue' => $issue,
-				'comment' => $_REQUEST['com'],
+				'comment' => (int) $_REQUEST['com'],
 			)
 		);
 
@@ -732,6 +738,48 @@ function IssueUpload()
 		),
 		$rows,
 		array('id_issue', 'id_attach')
+	);
+
+	redirectexit('issue=' . $context['current_issue']['id'] . '.0');
+}
+
+function IssueDeleteComment()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	if (!isset($context['current_issue']) || empty($_REQUEST['com']))
+		fatal_lang_error('issue_not_found', false);
+
+	projectIsAllowedTo('edit_comment_own');
+	require_once($sourcedir . '/Subs-Post.php');
+
+	$request = $smcFunc['db_query']('', '
+		SELECT c.id_comment
+		FROM {db_prefix}issue_comments AS c
+		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+			AND c.id_member = {int:current_user}' : '') . '
+		ORDER BY id_comment',
+		array(
+			'current_user' => $user_info['id'],
+			'issue' => $issue,
+			'comment' => (int) $_REQUEST['com'],
+		)
+	);
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+	if (!$row)
+		fatal_lang_error('comment_not_found', false);
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}issue_comments AS c
+		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+			AND c.id_member = {int:current_user}' : '') . '
+		ORDER BY id_comment',
+		array(
+			'current_user' => $user_info['id'],
+			'issue' => $issue,
+			'comment' => $row['id_comment'],
+		)
 	);
 
 	redirectexit('issue=' . $context['current_issue']['id'] . '.0');

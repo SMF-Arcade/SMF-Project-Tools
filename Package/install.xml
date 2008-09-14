@@ -249,6 +249,9 @@
 					$data = strtr($data, array(\'<br />\' => "\n"));;
 					$diff = DiffParser($data);
 
+					if (empty($diff))
+						return;
+
 					$data = \'\';
 					foreach ($diff as $file)
 					{

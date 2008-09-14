@@ -670,6 +670,9 @@ function DiffParser($text)
 	if (!empty($file))
 		$data[] = $file;
 
+	if (empty($data))
+		return false;
+
 	return $data;
 }
 

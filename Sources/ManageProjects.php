@@ -535,6 +535,9 @@ function EditCategory()
 	}
 	else
 	{
+		if (empty($_REQUEST['category']) || !is_numeric($_REQUEST['category']))
+			fatal_lang_error('category_not_found');
+			
 		$request = $smcFunc['db_query']('', '
 			SELECT id_category, id_project, category_name
 			FROM {db_prefix}issue_category
@@ -545,6 +548,9 @@ function EditCategory()
 		);
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
+
+		if (!$row)
+			fatal_lang_error('category_not_found');
 
 		$context['category'] = array(
 			'id' => $row['id_category'],
