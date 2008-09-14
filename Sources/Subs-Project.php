@@ -59,7 +59,9 @@ function loadProjectToolsPermissions()
 	$user_info['query_see_version'] = $see_version;
 	$user_info['query_see_issue'] = $see_issue;
 
-	loadLanguage('Project');
+	if (loadLanguage('Project') == false)
+		loadLanguage('Project', 'english');
+	
 	loadIssueTypes();
 }
 

@@ -202,7 +202,8 @@ function loadProjectTools($mode = '')
 		$user_info['query_see_project'] = '1 = 1';
 		$user_info['query_see_version'] = '1 = 1';
 
-		loadLanguage('ProjectAdmin');
+		if (loadLanguage('ProjectAdmin') == false)
+			loadLanguage('ProjectAdmin', 'english');
 	}
 
 	loadTemplate('Project', array('forum', 'project'));

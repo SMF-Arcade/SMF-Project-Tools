@@ -58,13 +58,24 @@ function ReportIssue()
 		'version' => isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0,
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
-	$context['details'] = '';
 
-	if (isset($_POST['title']))
-		$context['issue']['title'] = $_POST['title'];
+	if (isset($_REQUEST['title']))
 
-	if (isset($_POST['details']))
-		$context['details'] = $_POST['details'];
+
+	if (isset($_REQUEST['details']) || !empty($context['post_error']))
+	{
+		if (empty($context['post_error']))
+		{
+			// TODO CHECKS
+		}
+
+		$context['issue']['title'] = $_REQUEST['title'];
+		$context['details'] = $_REQUEST['details'];
+	}
+	else
+	{
+		$context['details'] = '';
+	}
 
 	$context['issue']['title'] = addcslashes($context['issue']['title'], '"');
 	$context['details'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $context['details']);
