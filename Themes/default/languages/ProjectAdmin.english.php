@@ -8,6 +8,7 @@ $txt['project_global'] = 'Global';
 
 // Settings
 $txt['projectSettings'] = 'Project Tools';
+$txt['projectSettings_desc'] = 'Here you can edit some settings of SMF Project Tools';
 
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';

@@ -38,7 +38,7 @@ function ProjectsAdmin()
 	loadProjectTools('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['projectSettings'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = '';
+	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['projectSettings_desc'];
 
 	$context['page_title'] = $txt['projectSettings'];
 
