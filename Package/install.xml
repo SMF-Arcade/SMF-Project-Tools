@@ -246,7 +246,7 @@
 				'content' => '$1',
 				'after' => '</div>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
-					$data = strtr($data, array(\'<br />\' => "\n"));;
+					$data = strtr($data, array(\'<br />\' => "\n"));
 					$diff = DiffParser($data);
 
 					if (empty($diff))

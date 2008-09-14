@@ -61,7 +61,7 @@ function loadProjectToolsPermissions()
 
 	if (loadLanguage('Project') == false)
 		loadLanguage('Project', 'english');
-	
+
 	loadIssueTypes();
 }
 
@@ -669,7 +669,7 @@ function DiffParser($text)
 		}
 	}
 
-	if (!empty($file))
+	if (!empty($file) && !empty($file['actions']))
 		$data[] = $file;
 
 	if (empty($data))
