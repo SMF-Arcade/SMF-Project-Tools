@@ -3,6 +3,22 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.1                                                          ?
 ================================================================================
+September 2008
+--------------------------------------------------------------------------------
+ ! Some variables were not checked [Issue #66]
+ + Added remove comment functionality [Issue #77]
+ ! Try to load English language if user language fails [Issue #72]
+ ! Message messed up with HTML [Issue #61]
+ ! Fixed CSS spelling mistakes [Issue #70]
+ ! Database error when no attachments selected [Issue #69]
+ ! When Modifying, 'save' button says reply [Issue #64]
+ ! Removed extra </a> [Issue #58]
+ ! Alt tags were wrong (install.xml) [Issue #74]
+ ! Trying to fix [Issue #60]
+ ! Removed unwanted space before version request variable [Issue #76]
+ ! Fixed spelling of Attachments [Issue #71]
+ + Ability to run installer standalone [Issue #68]
+
 August 2008
 --------------------------------------------------------------------------------
  + Permissions Editor

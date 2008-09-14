@@ -33,7 +33,7 @@ function ProjectList()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.trackers, ' . implode(', p.', $context['type_columns']) . ',
+			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['type_columns']) . ',
 			p.id_comment_mod,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
