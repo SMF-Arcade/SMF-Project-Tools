@@ -327,7 +327,7 @@
 	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', ' . implode(', p.', $context['type_columns']) : '') . ',
+			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', p.' . implode(', p.', $context['type_columns']) : '') . ',
 			p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
 		</operation>
 
