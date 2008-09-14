@@ -140,16 +140,18 @@ function template_project_view()
 		echo '
 	</div>';
 
-	//
-	$width = 100 / count($context['issue']['status']);
+	$width = floor(100 / count($context['issue']['status']));
+	$tWidth = 100 - ($width * count($context['issue']['status'])) + $width;
 
 	echo '
 	<div class="tborder clearfix">';
 
 	foreach ($context['issue']['status'] as $status)
+	{
 		echo '
-		<div class="floatleft expl issue_', $status['name'], '" style="width:', $width, '%"><span>', $status['text'], '</span></div>';
-
+		<div class="floatleft expl issue_', $status['name'], '" style="width:', $tWidth, '%"><span>', $status['text'], '</span></div>';
+		$tWidth = $width;
+	}
 	echo '
 	</div><br />';
 
