@@ -247,7 +247,7 @@ table.issuetable td.lastissue
 }
 #issueinfo .dark
 {
-	color: grey;
+	color: gray;
 	font-weight: bold;
 }
 #issueinfot ul.details
@@ -273,7 +273,7 @@ table.issuetable td.lastissue
 	margin-right: 5px;
 	padding: 1px 2.5px;
 	float: left;
-	color: grey;
+	color: gray;
 	font-weight: bold;
 }
 #issueinfot dd

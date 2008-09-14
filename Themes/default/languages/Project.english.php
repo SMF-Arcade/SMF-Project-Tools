@@ -178,6 +178,8 @@ $txt['error_no_issue_type'] = 'Issue Type not selected';
 $txt['error_invalid_type'] = 'You didn\'t select type for issue';
 $txt['error_invalid_version'] = 'Version selected doesn\'t exist';
 
+$txt['no_files_selected'] = 'No Files Selected';
+
 $txt['no_projects'] = 'There are no projects!';
 $txt['no_versions'] = 'There are no versions!';
 $txt['no_category'] = 'There are no categories!';

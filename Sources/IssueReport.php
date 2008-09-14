@@ -689,6 +689,9 @@ function IssueUpload()
 		}
 	}
 
+	if (empty($attachIDs))
+		fatal_lang_error('no_files_selected');
+
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}attachments
 		SET id_issue = {int:issue}
