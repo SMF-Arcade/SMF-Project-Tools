@@ -153,6 +153,7 @@ $txt['add_attach'] = 'Attach';
 
 // Reply To Issue
 $txt['issue_reply'] = 'Reply';
+$txt['issue_save'] = 'Save';
 
 // Title
 $txt['project_list_title'] = '%s - Projects';

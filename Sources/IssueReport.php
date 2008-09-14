@@ -265,6 +265,8 @@ function IssueReply()
 	else
 		$context['comment'] = '';
 
+	$editing = false;
+
 	if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
 	{
 		projectIsAllowedTo('edit_comment_own');
@@ -298,6 +300,8 @@ function IssueReply()
 
 		if (!isset($_POST['comment']))
 			$context['comment'] = un_preparsecode($row['body']);
+
+		$editing = true;
 	}
 
 	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
@@ -333,7 +337,7 @@ function IssueReply()
 		'id' => 'comment',
 		'value' => $context['comment'],
 		'labels' => array(
-			'post_button' => $txt['issue_reply'],
+			'post_button' => $editing ? $txt['issue_save'] : $txt['issue_reply'],
 		),
 	);
 	create_control_richedit($editorOptions);
