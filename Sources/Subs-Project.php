@@ -598,7 +598,7 @@ function DiffParser($text)
 		$trim = trim($line);
 		if (substr($trim, 0, 6) == 'Index:')
 			continue;
-		if (!empty($file) && str_repeat('=', strlen($line)) == $line)
+		if (!empty($file) && !empty($file['actions']) && str_repeat('=', strlen($line)) == $line)
 		{
 			$data[] = $file;
 			$file = array();
