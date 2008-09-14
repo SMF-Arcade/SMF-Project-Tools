@@ -473,7 +473,7 @@ $txt['project_settings'] = 'Settings';
 $txt['project_settings_main'] = 'Main';
 
 $txt['projectEnabled'] = 'Enable Project Tools';
-$txt['projectAttachements'] = 'Enable Attachements';
+$txt['projectAttachments'] = 'Enable Attachments';
 $txt['issuesPerPage'] = 'Issues Per Page';
 $txt['commentsPerPage'] = 'Comments Per Page';
 

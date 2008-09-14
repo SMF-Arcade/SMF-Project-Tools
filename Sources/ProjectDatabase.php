@@ -29,7 +29,7 @@ $addSettings = array(
 	'issuesPerPage' => array(25, false),
 	'commentsPerPage' => array(20, false),
 	'projectEnabled' => array(true, false),
-	'projectAttachements' => array(true, false),
+	'projectAttachments' => array(true, false),
 	'linkIssues' => array(true, false),
 );
 

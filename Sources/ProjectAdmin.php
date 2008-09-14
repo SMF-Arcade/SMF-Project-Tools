@@ -60,7 +60,7 @@ function ProjectsAdminSettings($return_config = false)
 
 	$config_vars = array(
 			array('check', 'projectEnabled'),
-			array('check', 'projectAttachements'),
+			array('check', 'projectAttachments'),
 		'',
 			array('int', 'issuesPerPage'),
 			array('int', 'commentsPerPage'),

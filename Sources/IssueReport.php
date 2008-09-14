@@ -644,7 +644,7 @@ function IssueUpload()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Not possible
-	if (empty($modSettings['projectAttachements']))
+	if (empty($modSettings['projectAttachments']))
 		redirectexit('issue=' . $context['current_issue']['id'] . '.0');
 
 	projectIsAllowedTo('issue_attach');
