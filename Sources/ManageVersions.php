@@ -373,7 +373,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 			$versionsTemp[] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version= ' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
+				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
 				'level' => 0,
 			);
 		}
@@ -385,7 +385,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 			$children[$row['id_parent']][] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version= ' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
+				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
 				'level' => 1,
 			);
 		}
