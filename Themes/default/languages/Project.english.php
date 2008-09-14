@@ -116,6 +116,8 @@ $txt['issue_no_issues'] = 'No issues';
 // Report issue
 $txt['report_issue'] = 'Report Issue';
 $txt['preview_report_issue'] = 'Preview issue';
+$txt['issue_no_title'] = 'No Title';
+$txt['error_while_submitting_issue'] = ' The following error or errors occurred while posting this issue:';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';
@@ -155,7 +157,7 @@ $txt['add_attach'] = 'Attach';
 $txt['issue_reply'] = 'Reply';
 $txt['issue_save'] = 'Save';
 
-// Title
+// Page Titles
 $txt['project_list_title'] = '%s - Projects';
 $txt['project_title'] = 'Projects - %s';
 $txt['project_title_issues'] = '%s - Issues';
@@ -177,6 +179,7 @@ $txt['project_too_long'] = '%s is too long';
 $txt['error_no_tile'] = 'Title is missing';
 $txt['error_no_issue_type'] = 'Issue Type not selected';
 $txt['error_invalid_type'] = 'You didn\'t select type for issue';
+$txt['error_no_details'] = 'Issue Details was left empty.';
 $txt['error_invalid_version'] = 'Version selected doesn\'t exist';
 
 $txt['no_files_selected'] = 'No Files Selected';

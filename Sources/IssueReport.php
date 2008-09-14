@@ -40,6 +40,7 @@ function ReportIssue()
 	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
 
 	projectIsAllowedTo('issue_report');
+	require_once($sourcedir . '/Subs-Post.php');
 
 	if (!isset($context['versions']))
 		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
@@ -59,26 +60,56 @@ function ReportIssue()
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
 
-	if (isset($_REQUEST['title']))
-
+	$form_title = '';
+	$form_details = '';
 
 	if (isset($_REQUEST['details']) || !empty($context['post_error']))
 	{
+		if (!isset($_REQUEST['title']))
+			$_REQUEST['title'] = '';
+		if (!isset($_REQUEST['details']))
+			$_REQUEST['details'] = '';
+
 		if (empty($context['post_error']))
 		{
 			// TODO CHECKS
+
+			$previewing = true;
+		}
+		else
+		{
+			$previewing = !empty($_POST['preview']);
+		}
+
+		$form_title = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
+		$form_details = $smcFunc['htmlspecialchars']($_REQUEST['details'], ENT_QUOTES);
+
+		if ($previewing)
+		{
+			$context['preview_details'] = $form_details;
+			preparsecode($form_details, true);
+			preparsecode($context['preview_details']);
+
+			$context['preview_details'] = parse_bbc($context['preview_details']);
+			censorText($context['preview_details']);
+
+			if ($form_title != '')
+			{
+				$context['preview_title'] = $form_title;
+				censorText($context['preview_title']);
+			}
+			else
+			{
+				$context['preview_title'] = '<i>' . $txt['issue_no_title'] . '</i>';
+			}
 		}
 
 		$context['issue']['title'] = $_REQUEST['title'];
 		$context['details'] = $_REQUEST['details'];
 	}
-	else
-	{
-		$context['details'] = '';
-	}
 
-	$context['issue']['title'] = addcslashes($context['issue']['title'], '"');
-	$context['details'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $context['details']);
+	$context['issue']['title'] = addcslashes($form_title, '"');
+	$context['details'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_details);
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -93,7 +124,7 @@ function ReportIssue()
 	);
 	create_control_richedit($editorOptions);
 
-	$context['post_box_name'] = 'details';
+	$context['post_box_name'] = $editorOptions['id'];
 	$context['destination'] = 'reportIssue2';
 
 	$context['show_version'] = !empty($context['versions']);
@@ -152,7 +183,7 @@ function ReportIssue2()
 
 		preparsecode($_POST['details']);
 		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['details'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['details'], '[html]') === false))
-			$post_errors[] = 'no_message';
+			$post_errors[] = 'no_details';
 	}
 
 	$context['possible_types'] = array();
