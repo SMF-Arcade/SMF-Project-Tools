@@ -105,6 +105,7 @@ function template_issue_list()
 							<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
 
 			echo '		</h4>
+						<p class="floatleft smalltext">', implode(' &nbsp;', $issue['tags']), '</p>
 						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
 					<td class="windowbg replies smalltext">

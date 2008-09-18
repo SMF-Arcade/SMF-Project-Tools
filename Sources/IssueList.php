@@ -173,6 +173,7 @@ function IssueList()
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
+			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
@@ -182,6 +183,7 @@ function IssueList()
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
+			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
 		WHERE {query_see_issue}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
@@ -220,6 +222,7 @@ function IssueList()
 				'name' => $row['version_name'],
 				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
 			),
+			'tags' => explode(', ', $row['tags']),
 			'type' => $row['issue_type'],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
