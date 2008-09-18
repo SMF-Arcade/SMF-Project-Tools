@@ -95,15 +95,11 @@ function IssueView()
 	// Fix start to be a number
 	if (!is_numeric($_REQUEST['start']))
 	{
-		$context['robot_no_index'] = true;
-
 		// To first new
 		if ($_REQUEST['start'] == 'new')
 		{
 			if ($user_info['is_guest'])
-			{
 				$_REQUEST['start'] = $context['current_issue']['replies'];
-			}
 			else
 			{
 				$request = $smcFunc['db_query']('', '
@@ -122,6 +118,8 @@ function IssueView()
 
 				$_REQUEST['start'] = 'com' . $new_from;
 			}
+
+			$context['robot_no_index'] = true;
 		}
 
 		if (substr($_REQUEST['start'], 0, 3) == 'com')
@@ -150,13 +148,16 @@ function IssueView()
 			}
 
 			$_REQUEST['start'] = $context['start_from'];
+			$context['robot_no_index'] = true;
+		}
+		elseif ($_REQUEST['start'] == 'log' || $_REQUEST['start'] == 'attachments')
+		{
+			$_REQUEST['view'] = $_REQUEST['start'];
+			$_REQUEST['start'] = 0;
 		}
 	}
 
-	$msg = $context['current_issue']['replies'];
-
 	$context['template_layers'][] = 'issue_view';
-
 	$context['current_view'] = 'comments';
 
 	IssueViewComments();
@@ -187,7 +188,7 @@ function IssueViewComments()
 
 	loadAttachmentData();
 
-	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $msg, $context['comments_per_page'], true);
+	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_comment, id_member
