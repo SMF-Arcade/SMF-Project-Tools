@@ -69,6 +69,7 @@ function IssueList()
 	$context['issue_search'] = array(
 		'title' => '',
 		'status' => 'open',
+		'tag' => '',
 		'type' => '',
 		'version' => 0,
 		'versions' => array()
@@ -83,6 +84,12 @@ function IssueList()
 	{
 		$context['issue_search']['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
 		$baseurl .= ';title=' . $_REQUEST['title'];
+	}
+
+	if (!empty($_REQUEST['tag']))
+	{
+		$context['issue_search']['tag'] = $_REQUEST['tag'];
+		$baseurl .= ';tag=' . $_REQUEST['tag'];
 	}
 
 	if (!empty($_REQUEST['status']))
@@ -183,12 +190,15 @@ function IssueList()
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
+			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)' . (!empty($context['issue_search']['tag']) ? '
+			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
+				AND stag.tag = {string:search_tag})' : '') . '
 		WHERE {query_see_issue}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
 			AND ', $where) : '') . '
-		ORDER BY i.updated DESC
+		GROUP BY i.id_issue
+		ORDER BY ' . $_REQUEST['sort']. (!$ascending ? ' DESC' : '') . '
 		LIMIT {int:start},' . $context['issues_per_page'],
 		array(
 			'project' => $context['project']['id'],
@@ -199,6 +209,7 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_type' => $context['issue_search']['type'],
+			'search_tag' => $context['issue_search']['tag'],
 			'versions' => $context['issue_search']['versions'],
 		)
 	);
