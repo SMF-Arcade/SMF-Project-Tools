@@ -448,33 +448,41 @@ function template_issue_view()
 			<div class="catbg headerpadding">', $txt['issue_tags'], '</div>
 			<div class="smallpadding windowbg">';
 
-	if (!empty($context['current_tags']))
+	if (!empty($context['current_tags']) || $context['can_add_tags'])
 	{
 		echo '
-				<ul>';
+				<ul class="clearfix tags">';
 
-		foreach ($context['current_tags'] as $tag)
+		if (!empty($context['current_tags']))
 		{
-			echo '
+			foreach ($context['current_tags'] as $tag)
+			{
+				echo '
 					<li>', $tag['tag'];
 
-			if ($context['can_remove_tags'])
-				echo '
+				if ($context['can_remove_tags'])
+					echo '
 						<a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags;remove;tag=', $tag['id'], ';sesc=', $context['session_id'], '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
-				echo '
+					echo '
 					</li>';
 			}
+		}
+
+		if ($context['can_add_tags'])
+			echo '
+					<li class="tag_editor">
+						<input type="text" name="tag" value="" />
+						<input type="submit" name="add_tag" value="', $txt['add_tag'], '" />
+					</li>';
 
 		echo '
-			</ul>';
+				</ul>';
 	}
+	else
+	{
 
-	if ($context['can_add_tags'])
-		echo '
-				<div style="text-align: right">
-					<input type="text" name="tag" value="" /> <input type="submit" name="add_tag" value="', $txt['add_tag'], '" />
-				</div>';
+	}
 
 	echo '
 			</div>

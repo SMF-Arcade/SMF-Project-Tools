@@ -344,6 +344,21 @@ table.issuetable td.lastissue
 	height: 100px;
 }
 
+/* Tagging */
+ul.tags
+{
+
+}
+ul.tags li
+{
+	padding: 5px;
+	float: left;
+}
+ul.tags li.tag_editor
+{
+	float: right;
+}
+
 /* ************************************* */
 /* styles from IssueReport.template      */
 /* ************************************* */
