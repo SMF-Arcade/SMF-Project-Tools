@@ -86,12 +86,6 @@ function IssueList()
 		$baseurl .= ';title=' . $_REQUEST['title'];
 	}
 
-	if (!empty($_REQUEST['tag']))
-	{
-		$context['issue_search']['tag'] = $_REQUEST['tag'];
-		$baseurl .= ';tag=' . $_REQUEST['tag'];
-	}
-
 	if (!empty($_REQUEST['status']))
 	{
 		$context['issue_search']['status'] = $_REQUEST['status'];
@@ -123,6 +117,14 @@ function IssueList()
 
 			$baseurl .= ';version=' . $_REQUEST['version'];
 		}
+	}
+
+	$tags_url = $baseurl;
+
+	if (!empty($_REQUEST['tag']))
+	{
+		$context['issue_search']['tag'] = $_REQUEST['tag'];
+		$baseurl .= ';tag=' . $_REQUEST['tag'];
 	}
 
 	// Build where clause
@@ -218,6 +220,9 @@ function IssueList()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
+		$row['tags'] = explode(', ', $row['tags']);
+		array_walk($row['tags'], 'link_tags', $tags_url);
+
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
@@ -233,7 +238,7 @@ function IssueList()
 				'name' => $row['version_name'],
 				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
 			),
-			'tags' => explode(', ', $row['tags']),
+			'tags' => $row['tags'],
 			'type' => $row['issue_type'],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
@@ -261,6 +266,13 @@ function IssueList()
 	$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
 
 	loadTemplate('IssueList');
+}
+
+function link_tags(&$tag, $key, $baseurl)
+{
+	global $scripturl;
+
+	$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
 }
 
 ?>

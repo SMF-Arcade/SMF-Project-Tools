@@ -167,6 +167,12 @@ function Projects()
 				'url' => $scripturl . '?project=' . $project . ';sa=roadmap',
 			);
 
+		if (isset($context['current_issue']))
+			$context['linktree'][] = array(
+				'name' => $context['current_issue']['name'],
+				'url' => $scripturl . '?issue=' . $context['current_issue']['id'],
+			);
+
 		loadTemplate('ProjectView');
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project_view';
