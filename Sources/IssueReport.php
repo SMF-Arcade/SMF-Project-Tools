@@ -381,7 +381,7 @@ function IssueReply()
 	$context['sub_template'] = 'issue_reply';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 
-	loadTemplate('IssueView');
+	loadTemplate('IssueReport');
 }
 
 function IssueReply2()

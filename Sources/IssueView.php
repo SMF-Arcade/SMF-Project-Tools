@@ -155,6 +155,17 @@ function IssueView()
 
 	$msg = $context['current_issue']['replies'];
 
+	$context['template_layers'][] = 'issue_view';
+
+	$context['current_view'] = 'comments';
+
+	IssueViewComments();
+}
+
+function IssueViewComments()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
 	// Mark this issue as read
 	if (!$user_info['is_guest'])
 	{
@@ -173,6 +184,8 @@ function IssueView()
 			array('id_issue', 'id_member')
 		);
 	}
+
+	loadAttachmentData();
 
 	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $msg, $context['comments_per_page'], true);
 
@@ -219,6 +232,19 @@ function IssueView()
 			'new_from' => $context['current_issue']['new_from']
 		)
 	);
+
+	$context['counter_start'] = $_REQUEST['start'];
+
+	// Template
+	$context['sub_template'] = 'issue_comments';
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+
+	loadTemplate('IssueView');
+}
+
+function loadAttachmentData()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
 	$attachmentData = array();
 
@@ -315,14 +341,6 @@ function IssueView()
 	$smcFunc['db_free_result']($request);
 
 	$context['attachments'] = &$attachmentData;
-
-	$context['counter_start'] = $_REQUEST['start'];
-
-	// Template
-	$context['sub_template'] = 'issue_view';
-	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
-
-	loadTemplate('IssueView');
 }
 
 function getComment()

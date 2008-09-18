@@ -1,7 +1,7 @@
 <?php
 // Version: 0.1 Alpha; IssueView
 
-function template_issue_view()
+function template_issue_view_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
@@ -303,11 +303,17 @@ function template_issue_view()
 		echo '
 	</script>';
 	}
+}
+
+function template_issue_comments()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	// Print out comments
 	if ($context['num_comments'] > 0)
-	{
-		echo '
+		return;
+
+	echo '
 	<div class="modbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'bottom'), '
@@ -318,25 +324,25 @@ function template_issue_view()
 		</h3>
 		<div class="bordercolor">';
 
-		while ($comment = getComment())
-		{
-			echo '
+	while ($comment = getComment())
+	{
+		echo '
 			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
 				<div class="floatleft poster">
 					<h4>', $comment['member']['link'], '</h4>
 					<ul class="smalltext">';
 
-			// Show the member's custom title, if they have one.
-			if (isset($comment['member']['title']) && $comment['member']['title'] != '')
-				echo '
+		// Show the member's custom title, if they have one.
+		if (isset($comment['member']['title']) && $comment['member']['title'] != '')
+			echo '
 						<li>', $comment['member']['title'], '</li>';
 
 			// Show the member's primary group (like 'Administrator') if they have one.
-			if (isset($comment['member']['group']) && $comment['member']['group'] != '')
-				echo '
+		if (isset($comment['member']['group']) && $comment['member']['group'] != '')
+			echo '
 						<li>', $comment['member']['group'], '</li>';
 
-			echo '
+		echo '
 					</ul>
 				</div>
 				<div class="postarea">
@@ -345,19 +351,19 @@ function template_issue_view()
 					</div>
 					<ul class="smalltext postingbuttons">';
 
-			if ($context['can_comment'])
-				echo '
+		if ($context['can_comment'])
+			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
-			if ($context['can_comment'])
-				echo '
+		if ($context['can_comment'])
+			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
 
-			if ($comment['can_remove'])
-				echo '
+		if ($comment['can_remove'])
+			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
-			echo '
+		echo '
 					</ul>
 					<div id="com_', $comment['id'], '" class="post">
 						', $comment['body'], '
@@ -366,50 +372,54 @@ function template_issue_view()
 				<div class="moderatorbar">
 					<div class="smalltext floatleft">';
 
-			// Show "« Last Edit: Time by Person »" if this post was edited.
-			if ($settings['show_modify'] && !empty($comment['modified']['name']))
-				echo '
+		// Show "« Last Edit: Time by Person »" if this post was edited.
+		if ($settings['show_modify'] && !empty($comment['modified']['name']))
+			echo '
 						&#171; <em>', $txt['last_edit'], ': ', $comment['modified']['time'], ' ', $txt['by'], ' ', $comment['modified']['name'], '</em> &#187;';
 
-			echo '
+		echo '
 					</div>
 					<div class="smalltext floatright">';
-			echo '
+		echo '
 						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
-			// Show the IP to this user for this post - because you can moderate?
-			if (allowedTo('moderate_forum') && !empty($comment['ip']))
-				echo '
+		// Show the IP to this user for this post - because you can moderate?
+		if (allowedTo('moderate_forum') && !empty($comment['ip']))
+			echo '
 						<a href="', $scripturl, '?action=trackip;searchip=', $comment['ip'], '">', $comment['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
-			// Or, should we show it because this is you?
-			elseif ($comment['can_see_ip'])
-				echo '
+		// Or, should we show it because this is you?
+		elseif ($comment['can_see_ip'])
+			echo '
 						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $comment['ip'], '</a>';
-			// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
-			elseif (!$context['user']['is_guest'])
-				echo '
+		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+		elseif (!$context['user']['is_guest'])
+			echo '
 						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
-			// Otherwise, you see NOTHING!
-			else
-				echo '
+		// Otherwise, you see NOTHING!
+		else
+			echo '
 						', $txt['logged'];
 
-			echo '
+		echo '
 					</div>
 				</div>
 			</div>';
 
-			$alternate = !$alternate;
-		}
+		$alternate = !$alternate;
+	}
 
-		echo '
+	echo '
 		</div>
 	</div>
 	<div class="modbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'top'), '
 	</div><br />';
-	}
+}
+
+function template_issue_view_below()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	$mod_buttons = array(
 		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=delete;sesc=' . $context['session_id']),
@@ -515,186 +525,6 @@ function template_issue_view()
 	</form>';
 	}
 
-}
-
-function template_issue_reply()
-{
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function saveEntities()
-		{
-			var textFields = ["title", "', $context['post_box_name'], '"];
-			for (i in textFields)
-				if (document.forms.reportissue.elements[textFields[i]])
-					document.forms.reportissue[textFields[i]].value = document.forms.reportissue[textFields[i]].value.replace(/&#/g, "&#38;#");
-			for (var i = document.forms.reportissue.elements.length - 1; i >= 0; i--)
-				if (document.forms.reportissue.elements[i].name.indexOf("options") == 0)
-					document.forms.reportissue.elements[i].value = document.forms.reportissue.elements[i].value.replace(/&#/g, "&#38;#");
-		}
-	// ]]></script>';
-
-	echo '
-	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
-		<div class="tborder" id="reportform">
-			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
-			<div class="windowbg">
-				<dl>
-					<dd>
-						', template_control_richedit($context['post_box_name'], 'bbc'), '
-					</dd>
-					<dd>
-						', template_control_richedit($context['post_box_name'], 'message'), '
-					</dd>
-					<dd class="full center">
-						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
-						', template_control_richedit($context['post_box_name'], 'buttons'), '
-					</dd>
-					<dd class="clear"></dd>
-				</dl>
-			</div>
-		</div>';
-
-	if (!empty($context['can_issue_update']))
-	{
-		echo '
-		<div class="tborder">
-			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
-			<div class="smallpadding windowbg">
-				<table width="100%">';
-
-		// Version
-		echo '
-					<tr>
-						<td width="30%">', $txt['issue_version'], '</td>
-						<td>
-							<select name="version">
-								<option></option>';
-
-
-		foreach ($context['versions'] as $v)
-		{
-			echo '
-								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
-								<option value="', $subv['id'], '"', $context['current_issue']['version']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
-		}
-
-		echo '
-							</select>
-						</td>
-					</tr>';
-
-		// Type
-		echo '
-					<tr>
-						<td>', $txt['issue_type'], '</td>
-						<td>
-							<select name="type">';
-
-		foreach ($context['possible_types'] as $id => $type)
-			echo '
-								<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '>', $type['name'], '</option>';
-
-		echo '
-							</select>
-						</td>
-					</tr>';
-
-		// Category
-		echo '
-					<tr>
-						<td>', $txt['issue_category'], '</td>
-						<td>
-							<select name="category">
-								<option></option>';
-
-		foreach ($context['project']['category'] as $c)
-			echo '
-								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
-		echo '
-							</select>
-						</td>
-					</tr>';
-
-		if ($context['can_issue_moderate'])
-		{
-			// Change Status
-			echo '
-					<tr>
-						<td>', $txt['issue_status'], '</td>
-						<td>
-							<select name="status">';
-
-
-			foreach ($context['issue']['status'] as $status)
-
-				echo '
-								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-
-			// Target Version
-			echo '
-					<tr>
-						<td>', $txt['issue_version_fixed'], '</td>
-						<td>
-							<select name="version_fixed">
-								<option></option>';
-
-
-			foreach ($context['versions'] as $v)
-			{
-				echo '
-								<option value="', $v['id'], '" style="font-weight: bold"', $context['current_issue']['version_fixed']['id'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
-
-				foreach ($v['sub_versions'] as $subv)
-					echo '
-								<option value="', $subv['id'], '"', $context['current_issue']['version_fixed']['id'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
-			}
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-
-			// Assign
-			echo '
-					<tr>
-						<td>', $txt['issue_assigned_to'], '</td>
-						<td>
-							<select name="assign">
-								<option></option>';
-
-			foreach ($context['assign_members'] as $mem)
-				echo '
-								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
-
-			echo '
-							</select>
-						</td>
-					</tr>';
-		}
-
-
-		echo '
-				</table>
-			</div>
-		</div>';
-
-	}
-
-	echo '
-		<input type="hidden" name="issue" value="', $context['current_issue']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-	</form>';
 }
 
 ?>
