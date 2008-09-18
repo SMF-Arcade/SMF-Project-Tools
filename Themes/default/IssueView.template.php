@@ -460,7 +460,7 @@ function template_issue_view()
 
 			if ($context['can_remove_tags'])
 				echo '
-						<a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags;remove;tag=', $tag['id'], ';sesc=', $context['session_id'], '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" />';
+						<a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags;remove;tag=', $tag['id'], ';sesc=', $context['session_id'], '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
 				echo '
 					</li>';

@@ -390,7 +390,7 @@ function getComment()
 
 function IssueTag()
 {
-	global $context, $user_info;
+	global $context, $user_info, $smcFunc;
 
 	checkSession('request');
 
@@ -415,7 +415,7 @@ function IssueTag()
 			redirectexit('issue=' . $context['current_issue']['id']);
 
 		$smcFunc['db_insert']('replace',
-			'{db_prefix}issues_tags',
+			'{db_prefix}issue_tags',
 			array(
 				'id_issue' => 'int',
 				'tag' => 'string-30',
@@ -430,7 +430,7 @@ function IssueTag()
 		$_REQUEST['tag'] = urldecode($_REQUEST['tag']);
 
 		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}issues_tags
+			DELETE FROM {db_prefix}issue_tags
 			WHERE id_issue = {int:issue}
 				AND tag = {string:tag}',
 			array(
@@ -445,7 +445,7 @@ function IssueTag()
 
 function IssueDelete()
 {
-	global $context, $user_info;
+	global $context, $user_info, $smcFunc;
 
 	checkSession('get');
 
