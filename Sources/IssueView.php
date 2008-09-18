@@ -56,6 +56,7 @@ function IssueView()
 		$context['current_tags'][] = array(
 			'id' => urlencode($row['tag']),
 			'tag' => $row['tag'],
+			'link' => '<a href="' . $scripturl .'?project=' . $context['project']['id'] . ';sa=issues;tag=' . urlencode($row['tag']) . '">' . $row['tag'] . '</a>',
 		);
 	}
 

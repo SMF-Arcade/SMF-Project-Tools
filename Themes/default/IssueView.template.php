@@ -458,7 +458,7 @@ function template_issue_view()
 			foreach ($context['current_tags'] as $tag)
 			{
 				echo '
-					<li>', $tag['tag'];
+					<li>', $tag['link'];
 
 				if ($context['can_remove_tags'])
 					echo '
