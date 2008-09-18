@@ -142,6 +142,11 @@ $txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
 $txt['comment_issue'] = 'Comment Issue';
 $txt['add_comment'] = 'Add Comment';
 
+// Tags
+$txt['issue_tags'] = 'Tags';
+$txt['remove_tag'] = 'Remove Tag';
+$txt['add_tag'] = 'Add Tag';
+
 // Update
 $txt['update_issue'] = 'Update Issue';
 $txt['update_issue_save'] = 'Save';

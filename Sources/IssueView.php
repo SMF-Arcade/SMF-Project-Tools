@@ -37,16 +37,39 @@ function IssueView()
 
 	projectIsAllowedTo('issue_view');
 
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+
+	$context['current_tags'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT tag
+		FROM {db_prefix}issue_tags
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $issue,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['current_tags'][] = array(
+			'id' => urlencode($row['tag']),
+			'tag' => $row['tag'],
+		);
+	}
+
+	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+
+	// Tags
+	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
+	$context['can_remove_tags'] = projectAllowedTo('issue_moderate');
 
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 
@@ -363,6 +386,61 @@ function getComment()
 	$counter++;
 
 	return $comment;
+}
+
+function IssueTag()
+{
+	global $context, $user_info;
+
+	checkSession('request');
+
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found', false);
+
+	if (isset($_REQUEST['tag']) && !isset($_REQUEST['remove']))
+	{
+		projectIsAllowedTo('issue_moderate');
+
+		$tags = array();
+
+		foreach (explode(',', $_REQUEST['tag']) as $tag)
+		{
+			$tag = trim($tag);
+
+			if (!empty($tag))
+				$tags[] = array($context['current_issue']['id'], $smcFunc['htmlspecialchars']($tag, ENT_QUOTES));
+		}
+
+		if (empty($tags))
+			redirectexit('issue=' . $context['current_issue']['id']);
+
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}issues_tags',
+			array(
+				'id_issue' => 'int',
+				'tag' => 'string-30',
+			),
+			$tags,
+			array('id_issue', 'tag')
+		);
+	}
+	elseif (isset($_REQUEST['tag']))
+	{
+		projectIsAllowedTo('issue_moderate');
+		$_REQUEST['tag'] = urldecode($_REQUEST['tag']);
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issues_tags
+			WHERE id_issue = {int:issue}
+				AND tag = {string:tag}',
+			array(
+				'issue' => $context['current_issue']['id'],
+				'tag' => $_REQUEST['tag'],
+			)
+		);
+	}
+
+	redirectexit('issue=' . $context['current_issue']['id']);
 }
 
 function IssueDelete()

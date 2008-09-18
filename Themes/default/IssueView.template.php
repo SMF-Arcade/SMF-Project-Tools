@@ -442,6 +442,46 @@ function template_issue_view()
 	</form><br />';
 	}
 
+	echo '
+	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags" method="post">
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['issue_tags'], '</div>
+			<div class="smallpadding windowbg">';
+
+	if (!empty($context['current_tags']))
+	{
+		echo '
+				<ul>';
+
+		foreach ($context['current_tags'] as $tag)
+		{
+			echo '
+					<li>', $tag['tag'];
+
+			if ($context['can_remove_tags'])
+				echo '
+						<a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags;remove;tag=', $tag['id'], ';sesc=', $context['session_id'], '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" />';
+
+				echo '
+					</li>';
+			}
+
+		echo '
+			</ul>';
+	}
+
+	if ($context['can_add_tags'])
+		echo '
+				<div style="text-align: right">
+					<input type="text" name="tag" value="" /> <input type="submit" name="add_tag" value="', $txt['add_tag'], '" />
+				</div>';
+
+	echo '
+			</div>
+		</div><br />
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form><br />';
+
 	if ($context['can_issue_attach'])
 	{
 		echo '

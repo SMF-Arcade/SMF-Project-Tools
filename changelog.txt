@@ -18,6 +18,7 @@ September 2008
  ! Removed unwanted space before version request variable [Issue #76]
  ! Fixed spelling of Attachments [Issue #71]
  + Ability to run installer standalone [Issue #68]
+ + Issue Tagging
 
 August 2008
 --------------------------------------------------------------------------------
