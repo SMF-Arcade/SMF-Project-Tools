@@ -155,6 +155,10 @@ function IssueView()
 			$_REQUEST['view'] = $_REQUEST['start'];
 			$_REQUEST['start'] = 0;
 		}
+		else
+		{
+			$context['robot_no_index'] = true;
+		}
 	}
 
 	// Template
@@ -163,9 +167,17 @@ function IssueView()
 
 	$context['current_view'] = 'comments';
 
+	if (isset($_REQUEST['view']) && $_REQUEST['view'] == 'log')
+		$context['current_view'] = 'log';
+
 	prepareComments($context['current_view'] == 'comments');
 
-	IssueViewComments();
+	if ($context['current_view'] == 'comments')
+		IssueViewComments();
+	elseif ($context['current_view'] == 'log')
+		IssueViewLog();
+	elseif ($context['current_view'] == 'attachments')
+		IssueViewAttachments();
 }
 
 function IssueViewComments()
@@ -197,6 +209,45 @@ function IssueViewComments()
 
 	// Template
 	$context['sub_template'] = 'issue_comments';
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+}
+
+function IssueViewLog()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			ev.id_event, ev.id_member, ev.poster_name, ev.poster_email,
+			ev.poster_ip, ev.event, ev.event_time, ev.event_data,
+			mem.id_member, IFNULL(mem.real_name, ev.poster_name) AS poster_name,
+		FROM {db_prefix}project_timeline AS ev
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ev.id_member)
+		WHERE id_issue = {int:issue}
+		ORDER BY id_event DESC',
+		array(
+			'issue' => $issue,
+		)
+	);
+
+	$context['issue_log'] = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['issue_log'][] = array(
+			'event' => $row['event'],
+			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $txt['issue_guest'],
+			'time' => timeformat($row['event_time']),
+			'data' => $data,
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+		print_r($context['issue_log']);
+
+
+	// Template
+	$context['sub_template'] = 'issue_log';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 }
 
