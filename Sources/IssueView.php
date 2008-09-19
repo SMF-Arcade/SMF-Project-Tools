@@ -220,7 +220,7 @@ function IssueViewLog()
 		SELECT
 			ev.id_event, ev.id_member, ev.poster_name, ev.poster_email,
 			ev.poster_ip, ev.event, ev.event_time, ev.event_data,
-			mem.id_member, IFNULL(mem.real_name, ev.poster_name) AS poster_name,
+			mem.id_member, IFNULL(mem.real_name, ev.poster_name) AS poster_name
 		FROM {db_prefix}project_timeline AS ev
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ev.id_member)
 		WHERE id_issue = {int:issue}
