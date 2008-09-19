@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 function IssueView()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
@@ -38,7 +38,6 @@ function IssueView()
 	projectIsAllowedTo('issue_view');
 
 	$issue = $context['current_issue']['id'];
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['current_tags'] = array();
 
@@ -160,12 +159,14 @@ function IssueView()
 	$context['template_layers'][] = 'issue_view';
 	$context['current_view'] = 'comments';
 
+	prepareComments($context['current_view'] == 'comments');
+
 	IssueViewComments();
 }
 
 function IssueViewComments()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
 
 	// Mark this issue as read
 	if (!$user_info['is_guest'])
@@ -178,7 +179,7 @@ function IssueViewComments()
 				'id_comment' => 'int',
 			),
 			array(
-				$context['current_issue']['id'],
+				$issue,
 				$user_info['id'],
 				$context['current_issue']['comment_mod']
 			),
@@ -186,37 +187,52 @@ function IssueViewComments()
 		);
 	}
 
-	loadAttachmentData();
-
 	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
 
-	$request = $smcFunc['db_query']('', '
-		SELECT id_comment, id_member
-		FROM {db_prefix}issue_comments
-		WHERE id_issue = {int:issue}
-			AND NOT (id_comment = {int:comment_first})
-		LIMIT {int:start}, {int:limit}',
-		array(
-			'issue' => $issue,
-			'comment_first' => $context['current_issue']['comment_first'],
-			'start' => $_REQUEST['start'],
-			'limit' => $context['comments_per_page'],
-		)
-	);
+	loadAttachmentData();
+
+	// Template
+	$context['sub_template'] = 'issue_comments';
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+
+	loadTemplate('IssueView');
+}
+
+function prepareComments($all = true)
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
+
 	$posters = array($context['current_issue']['id_reporter']);
 	$comments = array($context['current_issue']['comment_first']);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if (!empty($row['id_member']))
-			$posters[] = $row['id_member'];
-		$comments[] = $row['id_comment'];
-	}
-	$smcFunc['db_free_result']($request);
-	$posters = array_unique($posters);
 
-	$context['num_comments'] = count($comments) - 1;
+	if ($all)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_comment, id_member
+			FROM {db_prefix}issue_comments
+			WHERE id_issue = {int:issue}
+				AND NOT (id_comment = {int:comment_first})
+			LIMIT {int:start}, {int:limit}',
+			array(
+				'issue' => $issue,
+				'comment_first' => $context['current_issue']['comment_first'],
+				'start' => $_REQUEST['start'],
+				'limit' => $context['comments_per_page'],
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if (!empty($row['id_member']))
+				$posters[] = $row['id_member'];
+			$comments[] = $row['id_comment'];
+		}
+		$smcFunc['db_free_result']($request);
+		$posters = array_unique($posters);
+	}
 
 	loadMemberData($posters);
+	$context['num_comments'] = count($comments) - 1;
 
 	// Load Comments
 	$context['comment_request'] = $smcFunc['db_query']('', '
@@ -235,12 +251,6 @@ function IssueViewComments()
 	);
 
 	$context['counter_start'] = $_REQUEST['start'];
-
-	// Template
-	$context['sub_template'] = 'issue_comments';
-	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
-
-	loadTemplate('IssueView');
 }
 
 function loadAttachmentData()
