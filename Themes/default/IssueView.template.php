@@ -313,6 +313,8 @@ function template_issue_comments()
 	if ($context['num_comments'] == 0)
 		return;
 
+	$alternate = true;
+
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
 	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
@@ -326,7 +328,7 @@ function template_issue_comments()
 			'lang' => true
 		),
 	);
-	
+
 	echo '
 	<div class="modbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
