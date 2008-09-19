@@ -38,6 +38,7 @@ function IssueView()
 	projectIsAllowedTo('issue_view');
 
 	$issue = $context['current_issue']['id'];
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['current_tags'] = array();
 
@@ -156,7 +157,10 @@ function IssueView()
 		}
 	}
 
+	// Template
+	loadTemplate('IssueView');
 	$context['template_layers'][] = 'issue_view';
+
 	$context['current_view'] = 'comments';
 
 	prepareComments($context['current_view'] == 'comments');
@@ -194,8 +198,6 @@ function IssueViewComments()
 	// Template
 	$context['sub_template'] = 'issue_comments';
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
-
-	loadTemplate('IssueView');
 }
 
 function prepareComments($all = true)
@@ -255,7 +257,7 @@ function prepareComments($all = true)
 
 function loadAttachmentData()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
 
 	$attachmentData = array();
 

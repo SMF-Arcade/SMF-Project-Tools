@@ -310,9 +310,23 @@ function template_issue_comments()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	// Print out comments
-	if ($context['num_comments'] > 0)
+	if ($context['num_comments'] == 0)
 		return;
 
+	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
+
+	$buttons = array(
+		'reply' => array(
+			'text' => 'reply',
+			'test' => 'can_comment',
+			'image' => 'reply_issue.gif',
+			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
+			'lang' => true
+		),
+	);
+	
 	echo '
 	<div class="modbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
