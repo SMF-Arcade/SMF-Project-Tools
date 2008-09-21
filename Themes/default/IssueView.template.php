@@ -437,7 +437,43 @@ function template_issue_log()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
-	print_r($context['issue_log']);
+	echo '
+	<div class="tborder">
+		<h3 class="catbg3 headerpadding">
+			', $txt['issue_changelog'], '
+		</h3>
+		<div class="windowbg2">
+			<ul>';
+
+	foreach ($context['issue_log'] as $item)
+	{
+		echo '
+				<li>
+					<dl>
+						<dt>
+							', $item['time'], '
+						</dt>
+						<dd>
+							', sprintf($txt['evt_' . $event['event']], $event['member_link']);
+
+		if ($event['event'] == 'update_issue')
+		{
+			echo '
+							<div class="smalltext">
+								', print_r($context['issue_log']['changes']), '
+							</div>';
+		}
+
+		echo '
+						</dd>
+					</dl>
+				</li>';
+	}
+
+	echo '
+			</ul>
+		</div>
+	</div>';
 }
 
 function template_issue_view_below()

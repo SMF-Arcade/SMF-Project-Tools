@@ -90,6 +90,8 @@ $txt['project_closed_issues'] = 'Closed Issues';
 $txt['project_timeline'] = 'Timeline';
 $txt['project_today'] = 'Today';
 $txt['project_yesterday'] = 'Yesterday';
+
+// Events
 $txt['evt_new_issue'] = 'Issue reported by %s';
 $txt['evt_update_issue'] = 'Issue updated by %s';
 $txt['evt_delete_issue'] = 'Issue deleted by %s';
