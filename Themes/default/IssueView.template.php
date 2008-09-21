@@ -433,6 +433,13 @@ function template_issue_comments()
 	</div><br />';
 }
 
+function template_issue_log()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+
+	print_r($context['issue_log']);
+}
+
 function template_issue_view_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;

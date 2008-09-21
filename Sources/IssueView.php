@@ -234,6 +234,8 @@ function IssueViewLog()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
+		$data = unserialize($row['event_data']);
+
 		$context['issue_log'][] = array(
 			'event' => $row['event'],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $txt['issue_guest'],
@@ -242,9 +244,6 @@ function IssueViewLog()
 		);
 	}
 	$smcFunc['db_free_result']($request);
-
-		print_r($context['issue_log']);
-
 
 	// Template
 	$context['sub_template'] = 'issue_log';
