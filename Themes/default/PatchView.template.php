@@ -22,10 +22,10 @@ function template_main()
 				$action[1] = '&nbsp;';
 			else
 				$action[1] = htmlspecialchars($action[1]);
-			
-			if (trim($action[2]) == '')
+
+			if (isset($action[2]) && trim($action[2]) == '')
 				$action[2] = '&nbsp;';
-			if (trim($action[3]) == '')
+			if (isset($action[2]) && trim($action[3]) == '')
 				$action[3] = '&nbsp;';
 
 			if (empty($action[0]))
