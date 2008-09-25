@@ -1,4 +1,5 @@
 <?php
+
 // Build info
 $build_info = array(
 	'branch' => 'trunk',
