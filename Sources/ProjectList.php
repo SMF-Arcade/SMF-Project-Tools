@@ -37,7 +37,8 @@ function ProjectList()
 			p.id_comment_mod,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:member} AND log.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:member}
+				AND log.id_project = p.id_project)') . '
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
 		WHERE {query_see_project}

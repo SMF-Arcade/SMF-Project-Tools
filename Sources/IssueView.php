@@ -158,6 +158,7 @@ function IssueView()
 		else
 		{
 			$context['robot_no_index'] = true;
+			$_REQUEST['start'] = 0;
 		}
 	}
 
