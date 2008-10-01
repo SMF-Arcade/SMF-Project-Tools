@@ -240,7 +240,7 @@ function IssueViewLog()
 
 		if (isset($data['changes']))
 		{
-			foreach ($data['changes'] as $key => $change)
+			foreach ($data['changes'] as $key => $field)
 			{
 				list ($field, $old_value, $new_value) = $field;
 
