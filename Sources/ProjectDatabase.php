@@ -405,6 +405,11 @@ $tables = array(
 				'type' => 'int',
 				'null' => false,
 			),
+			array(
+				'name' => 'private_issue',
+				'type' => 'int',
+				'null' => false,
+			),
 		),
 		'indexes' => array(
 			array(

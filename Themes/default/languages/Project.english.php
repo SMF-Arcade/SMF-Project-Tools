@@ -9,6 +9,11 @@ $txt['linktree_roadmap'] = 'Issues';
 $txt['linktree_issues'] = 'Issues';
 $txt['linktree_report_issue'] = 'Report Issue';
 
+// View Status
+$txt['issue_view_status'] = 'View Status';
+$txt['issue_view_status_public'] = 'Public';
+$txt['issue_view_status_private'] = 'Private';
+
 // Types
 $txt['issue_type'] = 'Type';
 $txt['project_bug'] = 'Bug';
@@ -51,7 +56,6 @@ $txt['issue'] = 'Issue';
 $txt['issue_guest'] = 'Guest';
 $txt['issue_report'] = 'Report Issue';
 $txt['issue_title'] = 'Title';
-$txt['issue_status'] = 'Status';
 $txt['issue_updated'] = 'Updated';
 $txt['issue_created'] = 'Reported';
 $txt['issue_version'] = 'Version';
@@ -120,6 +124,7 @@ $txt['report_issue'] = 'Report Issue';
 $txt['preview_report_issue'] = 'Preview issue';
 $txt['issue_no_title'] = 'No Title';
 $txt['error_while_submitting_issue'] = ' The following error or errors occurred while posting this issue:';
+$txt['private_issue'] = 'Private Issue';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';

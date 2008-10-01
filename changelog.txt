@@ -7,6 +7,7 @@ October 2008
 --------------------------------------------------------------------------------
  * Moved Profile related templates to new file
  + Issue Changelog
+ + Private Issues
 
 September 2008
 --------------------------------------------------------------------------------

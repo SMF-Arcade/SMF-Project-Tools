@@ -108,7 +108,7 @@ function loadIssue($id_issue)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_comment_first, i.id_comment_last, i.id_comment_mod, i.id_reporter, i.replies,
+			i.id_comment_first, i.id_comment_last, i.id_comment_mod, i.id_reporter, i.replies, i.private_issue,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name,
@@ -121,7 +121,7 @@ function loadIssue($id_issue)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE i.id_issue = {int:issue}
-			AND {query_see_issue}
+			AND {query_see_issue_project}
 			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
@@ -172,6 +172,7 @@ function loadIssue($id_issue)
 		'comment_last' => $row['id_comment_last'],
 		'comment_mod' => $row['id_comment_mod'],
 		'replies' => $row['replies'],
+		'private' => !empty($row['private_issue']),
 	);
 
 	return true;
@@ -260,7 +261,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			id_project, subject, id_version, status, id_category,
-			priority, issue_type, id_assigned, id_version_fixed
+			priority, issue_type, id_assigned, id_version_fixed, private_isssue
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -280,6 +281,15 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	);
 
 	$issueUpdates = array();
+
+	if (isset($issueOptions['private']) && $issueOptions['private'] != $row['private_isssue'])
+	{
+		$issueUpdates[] = 'private_isssue = {int:private}';
+
+		$event_data['changes'][] = array(
+			'view_status', $row['private_isssue'], $issueOptions['private']
+		);
+	}
 
 	if (!empty($issueOptions['subject']) && $issueOptions['subject'] != $row['subject'])
 	{

@@ -51,7 +51,10 @@ function template_report_issue()
 					<dd>
 						<input type="text" name="title" value="', $context['issue']['title'], '" tabindex="', $context['tabindex']++, '" size="80" maxlength="80" />
 					</dd>
-
+					<dt>', $txt['private_issue'], '</dt>
+					<dd>
+						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
+					</dd>
 					<dt>', $txt['issue_type'], ':</dt>
 					<dd>';
 

@@ -261,7 +261,7 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-		WHERE {query_see_issue}
+		WHERE {query_see_issue_project}
 			AND ('. $where . ')
 			AND i.id_project = {int:project}
 		ORDER BY ' . $order . '

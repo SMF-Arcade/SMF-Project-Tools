@@ -55,6 +55,7 @@ function ReportIssue()
 
 	$context['issue'] = array(
 		'title' => '',
+		'private' => !empty($_REQUEST['private']),
 		'type' => isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]) ? $_REQUEST['type'] : '',
 		'version' => isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0,
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
@@ -239,6 +240,7 @@ function ReportIssue2()
 		'body' => $_POST['details'],
 		'created' => time(),
 		'updated' => time(),
+		'private' => !empty($_REQUEST['private']),
 		'mark_read' => true,
 	);
 
@@ -329,6 +331,12 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	{
 		$_REQUEST['title'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
 		$issueOptions['title'] = $_REQUEST['title'];
+	}
+
+	// Private
+	if (isset($_REQUEST['priority']) && $context['current_issue']['private'] != !empty($_REQUEST['private']))
+	{
+		$issueOptions['private'] = !empty($_REQUEST['private']) ? 1 : 0;
 	}
 
 	// Priority

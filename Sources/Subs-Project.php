@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function loadProjectToolsPermissions()
 {
-	global $context, $sourcedir, $modSettings, $user_info;
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
 
 	require_once($sourcedir . '/Subs-Issue.php');
 
@@ -42,27 +42,55 @@ function loadProjectToolsPermissions()
 	$context['issue_tracker'] = array();
 
 	// Administrators can see all projects.
-	if ($user_info['is_admin'])
+	if ($user_info['is_admin'] || allowedTo('project_admin'))
 	{
 		$see_project = '1 = 1';
-		$see_issue = '1 = 1';
 		$see_version = '1 = 1';
+		$see_issue = '1 = 1';
+		$see_issue_p = '1 = 1';
 	}
 	else
 	{
+		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_member = ' . $user_info['id'] . ')';
 		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
-		$see_issue = $see_version;
+		$see_issue = '(' . $see_version . ' AND ((i.private_issue = 0 OR ' . $my_issue . ') OR p.id_profile IN(' . implode(', ', getPrivateProfiles()) . ')))';
+		$see_issue_p = '(' . $see_version . ' AND ((i.private_issue = 0 OR ' . $my_issue . ')';
 	}
 
 	$user_info['query_see_project'] = $see_project;
 	$user_info['query_see_version'] = $see_version;
 	$user_info['query_see_issue'] = $see_issue;
+	$user_info['query_see_issue_project'] = $see_issue_p;
 
 	if (loadLanguage('Project') == false)
 		loadLanguage('Project', 'english');
 
 	loadIssueTypes();
+}
+
+// TODO: Cache this
+function getPrivateProfiles()
+{
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_profile
+		FROM {db_prefix}
+		WHERE id_group IN({array_int:groups})
+			AND permission = {string:permission}',
+		array(
+			'permission' => 'view_issue_private',
+			'groups' => $user_info['groups'],
+		)
+	);
+
+	$profiles = array();
+
+	while ($profile = $smcFunc['db_fetch_assoc']($request))
+		$profiles[] = $profile['id_profile'];
+
+	return $profiles;
 }
 
 function loadTimeline($project = 0)
@@ -138,7 +166,7 @@ function loadProject()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
+			p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
 			p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ',
 			dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
@@ -172,6 +200,7 @@ function loadProject()
 		'developers' => array(),
 		'is_developer' => !empty($row['is_dev']),
 		'comment_mod' => $row['id_comment_mod'],
+		'profile' => $row['id_profile'],
 	);
 
 	$trackers = explode(',', $row['trackers']);
@@ -227,27 +256,12 @@ function loadProject()
 	if ($permissions && !$user_info['is_admin'] && !$context['project']['is_developer'])
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_profile
-			FROM {db_prefix}projects
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $project,
-			)
-		);
-
-		list ($profile) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		if (!$profile)
-			return;
-
-		$request = $smcFunc['db_query']('', '
 			SELECT permission
 			FROM {db_prefix}project_permissions
 			WHERE id_group IN({array_int:groups})
 				AND id_profile = {int:profile}',
 			array(
-				'profile' => $profile,
+				'profile' => $context['project']['profile'],
 				'groups' => $user_info['groups'],
 			)
 		);
@@ -255,7 +269,8 @@ function loadProject()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_permissions'][$row['permission']] = true;
 
-		if (empty($context['project_permissions']['view_issue_private']))
+		if (!empty($context['project_permissions']['view_issue_private']))
+			$user_info['query_see_issue_project'] = $user_info['query_see_version'];
 
 		$smcFunc['db_free_result']($request);
 	}

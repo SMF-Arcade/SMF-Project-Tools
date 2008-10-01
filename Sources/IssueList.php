@@ -155,7 +155,7 @@ function IssueList()
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-		WHERE {query_see_issue}
+		WHERE {query_see_issue_project}
 			AND i.id_project = {int:project} ' . (!empty($where) ? '
 			AND ' . implode('
 			AND ', $where) : '') . '',
@@ -195,7 +195,7 @@ function IssueList()
 			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)' . (!empty($context['issue_search']['tag']) ? '
 			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
 				AND stag.tag = {string:search_tag})' : '') . '
-		WHERE {query_see_issue}
+		WHERE {query_see_issue_project}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
 			AND ', $where) : '') . '

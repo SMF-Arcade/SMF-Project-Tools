@@ -45,6 +45,12 @@ function template_issue_view_above()
 						<dd>', $context['current_issue']['updated'], '</dd>
 					</dl>
 				</li>
+				<li id="issue_view_status" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_view_status'], '</dt>
+						<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
+					</dl>
+				</li>
 				<li id="issue_type" class="clearfix">
 					<dl class="clearfix">
 						<dt>', $txt['issue_type'], '</dt>
@@ -238,6 +244,9 @@ function template_issue_view_above()
 		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type']['id'], '", ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueViewS = new PTDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		ddIssueViewS.addOption(0, "', $txt['issue_view_status_public'], '");
+		ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");
 		ddIssueCate.addOption(0, "', $txt['issue_none'], '");
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
