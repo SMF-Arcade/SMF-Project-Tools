@@ -6,6 +6,7 @@ SMF Project Tools 0.1                                                          ?
 October 2008
 --------------------------------------------------------------------------------
  * Moved Profile related templates to new file
+ + Issue Changelog
 
 September 2008
 --------------------------------------------------------------------------------

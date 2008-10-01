@@ -236,13 +236,53 @@ function IssueViewLog()
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$data = unserialize($row['event_data']);
+		$changes = array();
+
+		if (isset($data['changes']))
+		{
+			foreach ($data['changes'] as $key => $change)
+			{
+				list ($field, $old_value, $new_value) = $field;
+
+				// Change values to something meaningful
+				if ($field == 'status')
+				{
+					$old_value = $context['issue']['status'][$old_value]['text'];
+					$new_value = $context['issue']['status'][$new_value]['text'];
+				}
+				elseif ($field == 'type')
+				{
+					$old_value = $context['project_tools']['issue_types'][$old_value]['name'];
+					$new_value = $context['project_tools']['issue_types'][$new_value]['name'];
+				}
+				elseif ($field == 'version' || $field == 'target_version')
+				{
+					// Check if version is subversion
+					if (!empty($context['versions_id'][$old_value]))
+						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+					else
+						$old_value = $context['versions'][$old_value]['name'];
+
+					if (!empty($context['versions_id'][$new_value]))
+						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+					else
+						$new_value = $context['versions'][$new_value]['name'];
+				}
+
+				$changes[] = array(
+					'field' => $field,
+					'old_value' => $old_value,
+					'new_value' => $new_value,
+				);
+			}
+		}
 
 		$context['issue_log'][] = array(
 			'event' => $row['event'],
 			'event_text' => $txt[$row['event']],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $txt['issue_guest'],
 			'time' => timeformat($row['event_time']),
-			'data' => $data,
+			'changes' => $changes,
 		);
 	}
 	$smcFunc['db_free_result']($request);

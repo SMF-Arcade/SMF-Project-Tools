@@ -311,8 +311,9 @@ function template_issue_view_above()
 				<option value="', $context['current_issue']['id'], '.0"', $context['current_view'] == 'comments' ? ' selected="selected"' : '', '>', $txt['issue_view_comments'], '</option>
 				<option value="', $context['current_issue']['id'], '.log"', $context['current_view'] == 'log' ? ' selected="selected"' : '', '>', $txt['issue_view_changes'], '</option>
 			</select>
+			<input type="submit" value="', $txt['go'], '" />
 		</form>
-	</div>';
+	</div><br />';
 }
 
 function template_issue_comments()
@@ -452,31 +453,34 @@ function template_issue_log()
 		<h3 class="catbg3 headerpadding">
 			', $txt['issue_changelog'], '
 		</h3>
-		<div class="windowbg2">
-			<ul>';
+		<div class="windowbg2 clearfix">
+			<ul class="changes">';
 
-	foreach ($context['issue_log'] as $item)
+	foreach ($context['issue_log'] as $event)
 	{
 		echo '
 				<li>
-					<dl>
-						<dt>
-							', $item['time'], '
-						</dt>
-						<dd>
-							', sprintf($txt['evt_' . $event['event']], $event['member_link']);
+					', $event['time'], ' - ', sprintf($txt['evt_' . $event['event']], $event['member_link']);
+
 
 		if ($event['event'] == 'update_issue')
 		{
 			echo '
-							<div class="smalltext">
-								', print_r($context['issue_log']['changes']), '
-							</div>';
+					<ul class="smalltext">';
+
+			foreach ($event['changes'] as $change)
+			{
+				echo '
+						<li>
+							', sprintf($txt['change_' . $change['field']], $change['old_value'], $change['new_value']), '
+						</li>';
+			}
+
+			echo '
+					</ul>';
 		}
 
 		echo '
-						</dd>
-					</dl>
 				</li>';
 	}
 

@@ -359,6 +359,16 @@ ul.tags li.tag_editor
 	float: right;
 }
 
+/* Changes */
+ul.changes, ul.changes li
+{
+	list-style: none;
+}
+ul.changes li
+{
+	clear: both;
+}
+
 /* ************************************* */
 /* styles from IssueReport.template      */
 /* ************************************* */

@@ -139,6 +139,14 @@ $txt['remove_comment'] = 'Remove';
 $txt['remove_comment_alt'] = 'Remove Comment';
 $txt['remove_comment_sure'] = 'Are you sure you want to remove this comment';
 
+// Changes
+$txt['issue_changelog'] = 'Changes';
+$txt['change_type'] = 'Type changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_assign'] = 'Issue Assigned to <em>%2$s</em> from <em>%1$s</em>';
+$txt['change_version'] = 'Version changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_target_version'] = 'Fixed Version changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_status'] = 'Status changed from <em>%1$s</em> to <em>%2$s</em>';
+
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
