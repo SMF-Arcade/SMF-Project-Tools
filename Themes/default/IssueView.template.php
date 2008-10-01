@@ -503,7 +503,8 @@ function template_issue_view_below()
 
 		echo '
 				<div style="text-align: right">
-					<input type="submit" name="add_comment" value="', $txt['add_comment'], '" />
+					<input type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
+					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />
 				</div>
 			</div>
 		</div><br />

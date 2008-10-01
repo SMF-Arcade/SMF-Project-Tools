@@ -162,6 +162,7 @@ $txt['add_attach'] = 'Attach';
 
 // Reply To Issue
 $txt['issue_reply'] = 'Reply';
+$txt['preview'] = 'Preview';
 $txt['issue_save'] = 'Save';
 
 // Page Titles

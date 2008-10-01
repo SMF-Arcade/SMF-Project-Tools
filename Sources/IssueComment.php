@@ -240,6 +240,7 @@ function IssueReply2()
 		return IssueReply();
 
 	require_once($sourcedir . '/Subs-Post.php');
+	require_once($sourcedir . '/IssueReport.php');
 
 	checkSubmitOnce('check');
 
