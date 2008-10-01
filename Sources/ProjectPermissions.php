@@ -139,7 +139,7 @@ function NewProjectProfile()
 
 	// Template
 	$context['page_title'] = $txt['title_new_profile'];
-	$context['sub_template'] = 'profile_edit';
+	$context['sub_template'] = 'profile_new';
 }
 
 function EditProjectProfile()

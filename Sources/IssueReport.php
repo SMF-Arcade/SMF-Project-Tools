@@ -324,6 +324,13 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 		}
 	}
 
+	// Title
+	if (!empty($_REQUEST['title']) && trim($_REQUEST['title']) != '')
+	{
+		$_REQUEST['title'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
+		$issueOptions['title'] = $_REQUEST['title'];
+	}
+
 	// Priority
 	if (isset($_REQUEST['priority']) && $context['current_issue']['priority_num'] != (int) $_REQUEST['priority'])
 	{

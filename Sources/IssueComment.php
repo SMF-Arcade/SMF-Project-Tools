@@ -63,6 +63,7 @@ function IssueReply()
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
+	require_once($sourcedir . '/Subs-Post.php');
 
 	$editing = false;
 
