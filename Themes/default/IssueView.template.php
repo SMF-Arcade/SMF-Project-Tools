@@ -303,6 +303,16 @@ function template_issue_view_above()
 		echo '
 	</script>';
 	}
+
+	echo '
+	<div style="text-align: right">
+		<form action="', $scripturl, '" method="get">
+			<select name="issue">
+				<option value="', $context['current_issue']['id'], '.0"', $context['current_view'] == 'comments' ? ' selected="selected"' : '', '>', $txt['issue_view_comments'], '</option>
+				<option value="', $context['current_issue']['id'], '.log"', $context['current_view'] == 'log' ? ' selected="selected"' : '', '>', $txt['issue_view_changes'], '</option>
+			</select>
+		</form>
+	</div>';
 }
 
 function template_issue_comments()

@@ -129,9 +129,12 @@ $txt['issue_details'] = 'Issue Details';
 $txt['issue_reported'] = 'Reported';
 $txt['issue_updated'] = 'Last Updated';
 
+// Views
+$txt['issue_view_comments'] = 'Comments';
+$txt['issue_view_changes'] = 'Changes';
+
 // Comments
 $txt['issue_comments'] = 'Comments';
-
 $txt['remove_comment'] = 'Remove';
 $txt['remove_comment_alt'] = 'Remove Comment';
 $txt['remove_comment_sure'] = 'Are you sure you want to remove this comment';
