@@ -334,10 +334,8 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	}
 
 	// Private
-	if (isset($_REQUEST['priority']) && $context['current_issue']['private'] != !empty($_REQUEST['private']))
-	{
-		$issueOptions['private'] = !empty($_REQUEST['private']) ? 1 : 0;
-	}
+	if (isset($_REQUEST['private']) && $context['current_issue']['private'] != !empty($_REQUEST['private']))
+		$issueOptions['private'] = !empty($_REQUEST['private']);
 
 	// Priority
 	if (isset($_REQUEST['priority']) && $context['current_issue']['priority_num'] != (int) $_REQUEST['priority'])

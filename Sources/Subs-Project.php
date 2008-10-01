@@ -51,11 +51,19 @@ function loadProjectToolsPermissions()
 	}
 	else
 	{
+		// This is for private issues
+
 		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_member = ' . $user_info['id'] . ')';
+		$see_private_profiles = getPrivateProfiles();
+		if (!empty($see_private_profiles))
+			$see_private = '(i.private_issue = 0 OR (' . $my_issue . ' OR p.id_profile IN(' . implode(', ', $see_private_profiles) . ')))';
+		else
+			$see_private = '(i.private_issue = 0 OR ' . $my_issue . ')';
+
 		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
-		$see_issue = '(' . $see_version . ' AND ((i.private_issue = 0 OR ' . $my_issue . ') OR p.id_profile IN(' . implode(', ', getPrivateProfiles()) . ')))';
-		$see_issue_p = '(' . $see_version . ' AND ((i.private_issue = 0 OR ' . $my_issue . ')';
+		$see_issue = '(' . $see_version . ' AND ' . $see_private . ')';
+		$see_issue_p = '(' . $see_version . ' AND (i.private_issue = 0 OR ' . $my_issue . '))';
 	}
 
 	$user_info['query_see_project'] = $see_project;
@@ -76,7 +84,7 @@ function getPrivateProfiles()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_profile
-		FROM {db_prefix}
+		FROM {db_prefix}project_permissions
 		WHERE id_group IN({array_int:groups})
 			AND permission = {string:permission}',
 		array(
@@ -223,7 +231,7 @@ function loadProject()
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
 		WHERE id_project = {int:project}',
 		array(
-			'project' => $id_project,
+			'project' => $project,
 		)
 	);
 
@@ -242,7 +250,7 @@ function loadProject()
 		FROM {db_prefix}issue_category AS cat
 		WHERE id_project = {int:project}',
 		array(
-			'project' => $id_project,
+			'project' => $project,
 		)
 	);
 
@@ -253,7 +261,7 @@ function loadProject()
 		);
 	$smcFunc['db_free_result']($request);
 
-	if ($permissions && !$user_info['is_admin'] && !$context['project']['is_developer'])
+	if (!$user_info['is_admin'] && !$context['project']['is_developer'])
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT permission

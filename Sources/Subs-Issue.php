@@ -261,7 +261,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			id_project, subject, id_version, status, id_category,
-			priority, issue_type, id_assigned, id_version_fixed, private_isssue
+			priority, issue_type, id_assigned, id_version_fixed, private_issue
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -282,12 +282,13 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 
 	$issueUpdates = array();
 
-	if (isset($issueOptions['private']) && $issueOptions['private'] != $row['private_isssue'])
+	if (isset($issueOptions['private']) && $issueOptions['private'] != $row['private_issue'])
 	{
-		$issueUpdates[] = 'private_isssue = {int:private}';
+		$issueUpdates[] = 'private_issue = {int:private}';
+		$issueOptions['private'] = !empty($issueOptions['private']) ? 1 : 0;
 
 		$event_data['changes'][] = array(
-			'view_status', $row['private_isssue'], $issueOptions['private']
+			'view_status', $row['private_issue'], $issueOptions['private']
 		);
 	}
 
