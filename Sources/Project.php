@@ -49,13 +49,13 @@ function Projects()
 		'upload' => array('IssueReport.php', 'IssueUpload', true),
 		'delete' => array('IssueView.php', 'IssueDelete', true),
 		// Reply
-		'reply' => array('IssueReport.php', 'IssueReply', true),
-		'reply2' => array('IssueReport.php', 'IssueReply2', true),
+		'reply' => array('IssueComment.php', 'IssueReply', true),
+		'reply2' => array('IssueComment.php', 'IssueReply2', true),
 		// Edit
-		'edit' => array('IssueReport.php', 'IssueReply', true),
-		'edit2' => array('IssueReport.php', 'IssueReply2', true),
+		'edit' => array('IssueComment.php', 'IssueReply', true),
+		'edit2' => array('IssueComment.php', 'IssueReply2', true),
 		// Remove comment
-		'delete' => array('IssueReport.php', 'IssueDeleteComment', true),
+		'delete' => array('IssueComment.php', 'IssueDeleteComment', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),

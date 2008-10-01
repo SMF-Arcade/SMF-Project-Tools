@@ -29,6 +29,7 @@
 		<database>installDatabase.php</database>
 
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
@@ -78,6 +79,7 @@
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 
 		<!-- Remove these files from Sources -->
+		<remove-file name="$sourcedir/IssueComment.php" />
 		<remove-file name="$sourcedir/IssueList.php" />
 		<remove-file name="$sourcedir/IssueView.php" />
 		<remove-file name="$sourcedir/IssueReport.php" />

@@ -150,6 +150,20 @@ function template_issue_reply()
 	// ]]></script>';
 
 	echo '
+	<div id="preview_section"', isset($context['preview_comment']) ? '' : ' style="display: none;"', '>
+		<table border="0" width="100%" cellspacing="1" cellpadding="3" class="bordercolor" align="center" style="table-layout: fixed;">
+			<tr class="titlebg">
+				<td id="preview_subject">', empty($context['preview_title']) ? '' : $context['preview_title'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td class="post" width="100%" id="preview_body">
+					', empty($context['preview_comment']) ? str_repeat('<br />', 5) : $context['preview_comment'], '
+				</td>
+			</tr>
+		</table><br />
+	</div>';
+
+	echo '
 	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
