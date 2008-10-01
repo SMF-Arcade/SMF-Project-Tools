@@ -91,11 +91,9 @@ function Projects()
 	// Load Project if needed
 	if (!empty($_REQUEST['project']))
 	{
-		if (!($context['project'] = loadProject((int) $_REQUEST['project'])))
-			fatal_lang_error('project_not_found', false);
-		loadProjectPermissions((int) $_REQUEST['project']);
+		$project = (int) $_REQUEST['project'];
 
-		$project = $context['project']['id'];
+		loadProject();
 
 		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 
@@ -174,6 +172,7 @@ function Projects()
 			);
 
 		loadTemplate('ProjectView');
+
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project_view';
 	}
@@ -206,6 +205,8 @@ function loadProjectTools($mode = '')
 	}
 	elseif ($mode == 'admin')
 	{
+		require_once($sourcedir . '/Subs-ProjectAdmin.php');
+		
 		$user_info['query_see_project'] = '1 = 1';
 		$user_info['query_see_version'] = '1 = 1';
 

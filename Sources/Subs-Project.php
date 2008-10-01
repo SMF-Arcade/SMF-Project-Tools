@@ -65,47 +65,6 @@ function loadProjectToolsPermissions()
 	loadIssueTypes();
 }
 
-function loadProjectPermissions($project)
-{
-	global $context, $smcFunc, $modSettings, $user_info, $txt, $settings;
-
-	if ($user_info['is_admin'])
-		return;
-
-	$context['project_permissions'] = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT id_profile
-		FROM {db_prefix}projects
-		WHERE id_project = {int:project}',
-		array(
-			'project' => $project,
-		)
-	);
-
-	list ($profile) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	if (!$profile)
-		return;
-
-	$request = $smcFunc['db_query']('', '
-		SELECT permission
-		FROM {db_prefix}project_permissions
-		WHERE id_group IN({array_int:groups})
-			AND id_profile = {int:profile}',
-		array(
-			'profile' => $profile,
-			'groups' => $user_info['groups'],
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['project_permissions'][$row['permission']] = true;
-
-	$smcFunc['db_free_result']($request);
-}
-
 function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -173,9 +132,9 @@ function loadTimeline($project = 0)
 	$smcFunc['db_free_result']($request);
 }
 
-function loadProject($id_project)
+function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info;
+	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info, $project;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -189,18 +148,18 @@ function loadProject($id_project)
 			AND p.id_project = {int:project}
 		LIMIT 1',
 		array(
-			'project' => $id_project,
-			'member' => $user_info['id'],
+			'project' => $project,
+			'current_member' => $user_info['id'],
 		)
 	);
 
 	if ($smcFunc['db_num_rows']($request) == 0)
-		return false;
+		fatal_lang_error('project_not_found', false);
 
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
-	$project = array(
+	$context['project'] = array(
 		'id' => $row['id_project'],
 		'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
 		'href' => $scripturl . '?project=' . $row['id_project'],
@@ -219,7 +178,7 @@ function loadProject($id_project)
 
 	foreach ($trackers as $key)
 	{
-		$project['trackers'][$key] = array(
+		$context['project']['trackers'][$key] = array(
 			'info' => &$context['project_tools']['issue_types'][$key],
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
@@ -241,7 +200,7 @@ function loadProject($id_project)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$project['developers'][$row['id_member']] = array(
+		$context['project']['developers'][$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
 		);
@@ -259,13 +218,47 @@ function loadProject($id_project)
 	);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$project['category'][$row['id_category']] = array(
+		$context['project']['category'][$row['id_category']] = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name']
 		);
 	$smcFunc['db_free_result']($request);
 
-	return $project;
+	if ($permissions && !$user_info['is_admin'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_profile
+			FROM {db_prefix}projects
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $project,
+			)
+		);
+
+		list ($profile) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (!$profile)
+			return;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT permission
+			FROM {db_prefix}project_permissions
+			WHERE id_group IN({array_int:groups})
+				AND id_profile = {int:profile}',
+			array(
+				'profile' => $profile,
+				'groups' => $user_info['groups'],
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_permissions'][$row['permission']] = true;
+
+		//if (empty($context['project_permissions']['view_issue_private']) && !)
+
+		$smcFunc['db_free_result']($request);
+	}
 }
 
 function loadVersions($project)

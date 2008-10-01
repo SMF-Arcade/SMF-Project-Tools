@@ -42,6 +42,7 @@
 		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
 
 		<!-- These files goest to Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
@@ -92,6 +93,7 @@
 		<remove-file name="$sourcedir/ProjectView.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />
 		<remove-file name="$sourcedir/Subs-Project.php" />
+		<remove-file name="$sourcedir/Subs-ProjectAdmin.php" />
 
 		<!-- Templates -->
 		<remove-file name="$themedir/IssueList.template.php" />

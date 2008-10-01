@@ -212,24 +212,6 @@ function EditProjectProfile()
 	$context['sub_template'] = 'profile_edit';
 }
 
-function getAllPTPermissions()
-{
-	// List of all possible permissions
-	// 'perm' => array(own/any, [guest = true])
-
-	return array(
-		'issue_view' => array(false),
-		'issue_report' => array(false),
-		'issue_comment' => array(false),
-		'issue_update' => array(true, false),
-		'issue_attach' => array(false),
-		'issue_moderate' => array(false, false),
-		// Comments
-		'edit_comment' => array(true, false),
-		'delete_comment' => array(true, false),
-	);
-}
-
 function PTloadProfile()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -443,34 +425,6 @@ function EditProfilePermissions2()
 	}
 
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
-}
-
-function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
-{
-	global $smcFunc, $scripturl;
-
-	$profiles = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT pr.id_profile, pr.profile_name, COUNT(*) AS num_project
-		FROM {db_prefix}project_profiles AS pr
-			LEFT JOIN {db_prefix}projects AS p ON (p.id_profile = pr.id_profile)
-		GROUP BY pr.id_profile');
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$profiles[] = array(
-			'id' => $row['id_profile'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'] . '">' . $row['profile_name'] . '</a>',
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'],
-			'name' => $row['profile_name'],
-			'projects' => comma_format($row['num_project']),
-			'disabled' => ($row['num_project'] > 0 || $row['id_profile'] == 1) ? 'disabled="disabled" ' : '',
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	return $profiles;
 }
 
 ?>

@@ -112,36 +112,12 @@ function ManageProjectsList()
 	$context['sub_template'] = 'projects_list';
 }
 
-function list_getProjects($start, $items_per_page, $sort)
-{
-	global $smcFunc, $scripturl;
-
-	$projects = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT p.id_project, p.name
-		FROM {db_prefix}projects AS p');
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$projects[] = array(
-			'id' => $row['id_project'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
-			'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
-			'name' => $row['name'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	return $projects;
-}
-
 function EditProject()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
-	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProject($_REQUEST['project']))
+	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProjectAdmin($_REQUEST['project']))
 		$_REQUEST['sa'] = 'new';
 
 	if ($_REQUEST['sa'] == 'new')
@@ -251,7 +227,7 @@ function EditProject2()
 
 	$_POST['project'] = (int) $_POST['project'];
 
-	if (!empty($_POST['project']) && !loadProject($_POST['project']))
+	if (!empty($_POST['project']) && !loadProjectAdmin($_POST['project']))
 		fatal_lang_error('project_not_found', false);
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
@@ -491,35 +467,6 @@ function ManageCategoriesList()
 	$context['sub_template'] = 'categories_list';
 }
 
-function list_getCategories($start, $items_per_page, $sort, $project)
-{
-	global $smcFunc, $scripturl;
-
-	$request = $smcFunc['db_query']('', '
-		SELECT cat.id_category, cat.category_name
-		FROM {db_prefix}issue_category AS cat
-		WHERE cat.id_project = {int:project}
-		ORDER BY cat.category_name',
-		array(
-			'project' => $project
-		)
-	);
-
-	$categories = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$categories[] = array(
-			'id' => $row['id_category'],
-			'name' => $row['category_name'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=managecategories;sa=edit;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	return $categories;
-}
-
 function EditCategory()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -537,7 +484,7 @@ function EditCategory()
 	{
 		if (empty($_REQUEST['category']) || !is_numeric($_REQUEST['category']))
 			fatal_lang_error('category_not_found');
-			
+
 		$request = $smcFunc['db_query']('', '
 			SELECT id_category, id_project, category_name
 			FROM {db_prefix}issue_category
