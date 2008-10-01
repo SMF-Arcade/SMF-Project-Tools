@@ -84,6 +84,12 @@ $txt['header_used_by'] = 'Used By';
 $txt['used_by_projects'] = '%s projects';
 $txt['not_in_use'] = 'Not in use';
 
+// New Profile
+$txt['title_new_profile'] = 'New Project Profile';
+$txt['new_profile'] = 'New Profile';
+$txt['profile_name'] = 'Name';
+$txt['profile_create'] = 'Create';
+
 // Edit Profile
 $txt['title_edit_profile'] = 'Edit Project Profile: %s';
 $txt['edit_profile'] = 'Project Profile "%s"';

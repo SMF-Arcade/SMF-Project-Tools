@@ -37,6 +37,7 @@ function ManageProjectPermissions()
 	$subActions = array(
 		'main' => array('ManageProjectPermissionsMain'),
 		'new' => array('NewProjectProfile'),
+		'new2' => array('NewProjectProfile2'),
 		'edit' => array('EditProjectProfile'),
 		'permissions' => array('EditProfilePermissions'),
 		'permissions2' => array('EditProfilePermissions2'),
@@ -47,7 +48,7 @@ function ManageProjectPermissions()
 	if (isset($subActions[$_REQUEST['sa']][1]))
 		$context[$context['admin_menu_name']]['current_subsection'] = $subActions[$_REQUEST['sa']][1];
 
-	loadTemplate('ManageProjects');
+	loadTemplate('ProjectPermissions');
 
 	// Call action
 	$subActions[$_REQUEST['sa']][0]();
@@ -124,6 +125,21 @@ function ManageProjectPermissionsMain()
 
 	// Template
 	$context['sub_template'] = 'profiles_list';
+}
+
+function NewProjectProfile()
+{
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+
+	$context['profiles'] = list_getProfiles();
+
+	$context['profile'] = array(
+		'name' => '',
+	);
+
+	// Template
+	$context['page_title'] = $txt['title_new_profile'];
+	$context['sub_template'] = 'profile_edit';
 }
 
 function EditProjectProfile()
@@ -429,7 +445,7 @@ function EditProfilePermissions2()
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }
 
-function list_getProfiles($start, $items_per_page, $sort)
+function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 {
 	global $smcFunc, $scripturl;
 

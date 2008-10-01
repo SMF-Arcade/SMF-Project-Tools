@@ -50,6 +50,7 @@
 		<require-file name="Themes/default/ManageVersions.template.php" destination="$themedir" />
 		<require-file name="Themes/default/PatchView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 
 		<!-- CSS -->
@@ -98,6 +99,7 @@
 		<remove-file name="$themedir/ManageVersions.template.php" />
 		<remove-file name="$themedir/PatchView.template.php" />
 		<remove-file name="$themedir/Project.template.php" />
+		<remove-file name="$themedir/ProjectPermissions.template.php" />
 		<remove-file name="$themedir/ProjectView.template.php" />
 
 		<!-- CSS -->
