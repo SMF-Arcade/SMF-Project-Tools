@@ -143,7 +143,7 @@ function loadProject()
 			dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:member})
+				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
 		LIMIT 1',
@@ -224,7 +224,7 @@ function loadProject()
 		);
 	$smcFunc['db_free_result']($request);
 
-	if ($permissions && !$user_info['is_admin'])
+	if ($permissions && !$user_info['is_admin'] && !$context['project']['is_developer'])
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT id_profile
@@ -255,7 +255,7 @@ function loadProject()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_permissions'][$row['permission']] = true;
 
-		//if (empty($context['project_permissions']['view_issue_private']) && !)
+		if (empty($context['project_permissions']['view_issue_private']))
 
 		$smcFunc['db_free_result']($request);
 	}
@@ -321,6 +321,10 @@ function projectAllowedTo($permission)
 
 	// Admins can do anything
 	if (allowedTo('project_admin'))
+		return true;
+
+	// Project Developers can do anything too
+	if ($context['project']['is_developer'])
 		return true;
 
 	if (isset($context['project_permissions'][$permission]) && $context['project_permissions'][$permission])

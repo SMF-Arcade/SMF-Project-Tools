@@ -324,7 +324,7 @@
 		</operation>
 	</file>
 
-	<file name="$sourcedir/Subs-BoardIndex.php">
+	<!--<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="before"><![CDATA[b.description,]]></search>
 			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', p.' . implode(', p.', $context['type_columns']) : '') . ',
@@ -371,7 +371,7 @@
 					}
 				}]]></add>
 		</operation>
-	</file>
+	</file>-->
 
 	<file name="$themedir/BoardIndex.template.php">
 		<operation>
