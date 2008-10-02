@@ -433,6 +433,40 @@
 		</operation>
 	</file>
 
+	<file name="$sourcedir/Subs-Db-sqlite.php">
+		<operation>
+			<search position="after"><![CDATA[
+	if (!isset($matches[2]))]]></search>
+			<add><![CDATA[
+	if ($matches[1] === 'query_see_project')
+		return $user_info['query_see_project'];
+	elseif ($matches[1] === 'query_see_version')
+		return $user_info['query_see_version'];
+	elseif ($matches[1] === 'query_see_issue')
+		return $user_info['query_see_issue'];
+	elseif ($matches[1] === 'query_see_issue_project')
+		return $user_info['query_see_issue_project'];
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Db-postgresql.php">
+		<operation>
+			<search position="after"><![CDATA[
+	if (!isset($matches[2]))]]></search>
+			<add><![CDATA[
+	if ($matches[1] === 'query_see_project')
+		return $user_info['query_see_project'];
+	elseif ($matches[1] === 'query_see_version')
+		return $user_info['query_see_version'];
+	elseif ($matches[1] === 'query_see_issue')
+		return $user_info['query_see_issue'];
+	elseif ($matches[1] === 'query_see_issue_project')
+		return $user_info['query_see_issue_project'];
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/Who.php">
 		<operation>
 			<search position="after"><![CDATA[		'mods' => array(]]></search>
