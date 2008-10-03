@@ -156,13 +156,71 @@ function loadTimeline($project = 0)
 				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
 		}
 
+		$extra = '';
+
+		if (isset($data['changes']))
+		{
+			$changes = array();
+
+			foreach ($data['changes'] as $key => $field)
+			{
+				list ($field, $old_value, $new_value) = $field;
+
+				// Change values to something meaningful
+				if ($field == 'status')
+				{
+					$old_value = $context['issue']['status'][$old_value]['text'];
+					$new_value = $context['issue']['status'][$new_value]['text'];
+				}
+				elseif ($field == 'type')
+				{
+					$old_value = $context['project_tools']['issue_types'][$old_value]['name'];
+					$new_value = $context['project_tools']['issue_types'][$new_value]['name'];
+				}
+				elseif ($field == 'view_status')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_view_status_public'];
+					else
+						$old_value = $txt['issue_view_status_private'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_view_status_public'];
+					else
+						$new_value = $txt['issue_view_status_private'];
+				}
+				elseif ($field == 'version' || $field == 'target_version')
+				{
+					// Check if version is subversion
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$old_value]))
+						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+					else
+						$old_value = $context['versions'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$new_value]))
+						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+					else
+						$new_value = $context['versions'][$new_value]['name'];
+				}
+
+				$changes[] = sprintf($txt['change_timeline_' . $field], $old_value, $new_value);
+			}
+
+			if (!empty($changes))
+				$extra = implode(', ', $changes);
+		}
+
 		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
 			'project_link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
 			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
-			'data' => $data,
+			'extra' => $extra,
 		);
 	}
 	$smcFunc['db_free_result']($request);

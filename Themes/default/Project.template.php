@@ -90,7 +90,7 @@ function template_project_list()
 			echo '
 						<li>
 							', $event['time'], ' - ', $event['link'], '<br />
-							<span class="smalltext">', $event['project_link'], ' - ', sprintf($txt['evt_' . $event['event']], $event['member_link']), '</span>
+							<span class="smalltext">', $event['project_link'], ' - ', sprintf($txt['evt_' . $event['event']], $event['member_link'], $event['extra']), '</span>
 						</li>';
 
 		echo '

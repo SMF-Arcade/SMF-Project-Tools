@@ -255,6 +255,18 @@ function IssueViewLog()
 					$old_value = $context['project_tools']['issue_types'][$old_value]['name'];
 					$new_value = $context['project_tools']['issue_types'][$new_value]['name'];
 				}
+				elseif ($field == 'view_status')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_view_status_public'];
+					else
+						$old_value = $txt['issue_view_status_private'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_view_status_public'];
+					else
+						$new_value = $txt['issue_view_status_private'];
+				}
 				elseif ($field == 'version' || $field == 'target_version')
 				{
 					// Check if version is subversion
