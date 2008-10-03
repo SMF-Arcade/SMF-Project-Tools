@@ -189,10 +189,11 @@ function loadTimeline($project = 0)
 					else
 						$new_value = $txt['issue_view_status_private'];
 				}
-				elseif (($field == 'version' || $field == 'target_version') && !empty($project))
+				elseif ($field == 'version' || $field == 'target_version')
 				{
+					// TODO: Make this work?
 					// Check if version is subversion
-					if (empty($old_value))
+					/*if (empty($old_value))
 						$old_value = $txt['issue_none'];
 					elseif (!empty($context['versions_id'][$old_value]))
 						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
@@ -204,7 +205,7 @@ function loadTimeline($project = 0)
 					elseif (!empty($context['versions_id'][$new_value]))
 						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
 					else
-						$new_value = $context['versions'][$new_value]['name'];
+						$new_value = $context['versions'][$new_value]['name'];*/
 				}
 
 				$changes[] = sprintf($txt['change_timeline_' . $field], $old_value, $new_value);
