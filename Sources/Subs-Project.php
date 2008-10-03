@@ -189,7 +189,7 @@ function loadTimeline($project = 0)
 					else
 						$new_value = $txt['issue_view_status_private'];
 				}
-				elseif ($field == 'version' || $field == 'target_version' && !empty($project))
+				elseif (($field == 'version' || $field == 'target_version') && !empty($project))
 				{
 					// Check if version is subversion
 					if (empty($old_value))

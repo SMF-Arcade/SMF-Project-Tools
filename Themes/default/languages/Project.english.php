@@ -157,7 +157,7 @@ $txt['change_view_status'] = 'View Status changed from <em>%1$s</em> to <em>%2$s
 $txt['change_timeline_type'] = 'Type';
 $txt['change_timeline_assign'] = 'Assigned';
 $txt['change_timeline_version'] = 'Version';
-$txt['change_timeline_version'] = 'Fixed Version';
+$txt['change_timeline_target_version'] = 'Fixed Version';
 $txt['change_timeline_status'] = 'Status';
 $txt['change_timeline_view_status'] = 'View Status';
 
