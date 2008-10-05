@@ -42,9 +42,6 @@ function ReportIssue()
 	projectIsAllowedTo('issue_report');
 	require_once($sourcedir . '/Subs-Post.php');
 
-	if (!isset($context['versions']))
-		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $id => $type)

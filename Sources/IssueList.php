@@ -102,12 +102,10 @@ function IssueList()
 	{
 		$_REQUEST['version'] = (int) trim($_REQUEST['version']);
 
-		list ($ver, $ver_parent) = loadVersions($project);
-
-		if (isset($ver[$_REQUEST['version']]))
+		if (isset($context['versions'][$_REQUEST['version']]))
 		{
 			$context['issue_search']['version'] = $_REQUEST['version'];
-			$context['issue_search']['versions'] = array_merge(array($_REQUEST['version']), array_keys($ver[$_REQUEST['version']]['sub_versions']));
+			$context['issue_search']['versions'] = array_merge(array($_REQUEST['version']), array_keys($context['versions'][$_REQUEST['version']]['sub_versions']));
 
 			$baseurl .= ';version=' . $_REQUEST['version'];
 		}

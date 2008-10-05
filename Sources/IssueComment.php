@@ -27,9 +27,6 @@ function IssueReply()
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
 
-	if (!isset($context['versions']))
-		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
@@ -194,9 +191,6 @@ function IssueReply2()
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
-
-	if (!isset($context['versions']))
-		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
