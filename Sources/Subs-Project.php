@@ -279,7 +279,7 @@ function loadProject()
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key,
+			'link' => $scripturl . '?project='. $context['project']['id'] . ';sa=issues;type=' . $key,
 		);
 	}
 
