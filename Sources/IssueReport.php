@@ -151,9 +151,6 @@ function ReportIssue2()
 
 	projectIsAllowedTo('issue_report');
 
-	if (!isset($context['versions']))
-		list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	if (!empty($_REQUEST['details_mode']) && isset($_REQUEST['details']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
@@ -257,8 +254,6 @@ function IssueUpdate()
 		fatal_lang_error('issue_not_found', false);
 
 	is_not_guest();
-
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
 
 	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';

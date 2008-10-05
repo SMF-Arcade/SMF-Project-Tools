@@ -60,8 +60,6 @@ function IssueView()
 		);
 	}
 
-	list ($context['versions'], $context['versions_id']) = loadVersions($context['project']);
-
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
