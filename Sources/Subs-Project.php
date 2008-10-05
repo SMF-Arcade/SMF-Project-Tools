@@ -53,7 +53,7 @@ function loadProjectToolsPermissions()
 	{
 		// This is for private issues
 
-		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_member = ' . $user_info['id'] . ')';
+		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
 		$see_private_profiles = getPrivateProfiles();
 		if (!empty($see_private_profiles))
 			$see_private = '(i.private_issue = 0 OR (' . $my_issue . ' OR p.id_profile IN(' . implode(', ', $see_private_profiles) . ')))';
