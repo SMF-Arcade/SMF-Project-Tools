@@ -97,7 +97,8 @@ $txt['project_yesterday'] = 'Yesterday';
 
 // Events
 $txt['evt_new_issue'] = 'Issue reported by %s';
-$txt['evt_update_issue'] = 'Issue updated by %s (%s)';
+$txt['evt_update_issue'] = 'Issue updated by %s';
+$txt['evt_update_extra_issue'] = 'Issue updated by %s (%s)';
 $txt['evt_delete_issue'] = 'Issue deleted by %s';
 $txt['evt_new_comment'] = 'New comment added by %s';
 $txt['evt_new_attachment'] = 'New attachment added by %s';
@@ -152,6 +153,7 @@ $txt['change_version'] = 'Version changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_target_version'] = 'Fixed Version changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_status'] = 'Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_view_status'] = 'View Status changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_priority'] = 'Priority changed from <em>%1$s</em> to <em>%2$s</em>';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
@@ -160,6 +162,7 @@ $txt['change_timeline_version'] = 'Version';
 $txt['change_timeline_target_version'] = 'Fixed Version';
 $txt['change_timeline_status'] = 'Status';
 $txt['change_timeline_view_status'] = 'View Status';
+$txt['change_timeline_priority'] = 'Priority';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';

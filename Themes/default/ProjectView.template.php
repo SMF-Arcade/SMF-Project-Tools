@@ -204,7 +204,7 @@ function template_project_view()
 			echo '
 						<li>
 							', $event['time'], ' - ', $event['link'], '<br />
-							<span class="smalltext">', sprintf($txt['evt_' . $event['event']], $event['member_link'], $event['extra']), '</span>
+							<span class="smalltext">', sprintf($txt['evt_' . (!empty($event['extra']) ? 'extra_' : '') . $event['event']], $event['member_link'], $event['extra']), '</span>
 						</li>';
 
 		echo '
