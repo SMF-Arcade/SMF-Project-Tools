@@ -5,7 +5,7 @@ function template_project_admin_above()
 	global $scripturl, $txt, $context, $project_version;
 
 	echo '
-	<div>', $txt['project_status_desc'], '</div>';
+	<div>', sprintf($txt['project_status_desc'], $project_version, '???'), '</div>';
 
 }
 
