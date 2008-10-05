@@ -194,30 +194,31 @@ function loadProjectTools($mode = '')
 	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
 	$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
 
+	loadTemplate('Project', array('forum', 'project'));
+
 	if (empty($mode))
 	{
 		$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/jquery.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			var $j = jQuery.noConflict();
-		// ]]></script>';
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
+
+		if (!isset($_REQUEST['xml']))
+			$context['template_layers'][] = 'project';
 	}
 	elseif ($mode == 'admin')
 	{
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
-		
+
 		$user_info['query_see_project'] = '1 = 1';
 		$user_info['query_see_version'] = '1 = 1';
 
 		if (loadLanguage('ProjectAdmin') == false)
 			loadLanguage('ProjectAdmin', 'english');
+
+		loadTemplate('ProjectAdmin');
+
+		if (!isset($_REQUEST['xml']))
+			$context['template_layers'][] = 'project_admin';
 	}
-
-	loadTemplate('Project', array('forum', 'project'));
-
-	if (!isset($_REQUEST['xml']))
-		$context['template_layers'][] = 'project';
 }
 
 ?>

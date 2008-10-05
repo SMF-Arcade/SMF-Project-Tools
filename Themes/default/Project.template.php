@@ -117,5 +117,4 @@ function template_project_below()
 	</div>';
 }
 
-
 ?>
