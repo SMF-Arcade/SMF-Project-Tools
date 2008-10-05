@@ -314,7 +314,7 @@ function loadProject()
 			if (!isset($context['versions'][$row['id_parent']]))
 				continue;
 
-			$context['versions_id'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
+			$context['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
 				'status' => $row['status'],
