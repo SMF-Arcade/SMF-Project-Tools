@@ -13,6 +13,9 @@ $txt['projectSettings_desc'] = 'Here you can edit some settings of SMF Project T
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 
+// Status
+$txt['project_status_desc'] = 'Installed version: <span id="project_installed_version">%s</span> | Latest version: <span id="project_latest_version">%s</span>';
+
 // Project List
 $txt['header_project'] = 'Project';
 

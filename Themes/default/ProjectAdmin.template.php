@@ -4,6 +4,9 @@ function template_project_admin_above()
 {
 	global $scripturl, $txt, $context, $project_version;
 
+	echo '
+	<div>', $txt['project_status_desc'], '</div>';
+
 }
 
 function template_project_admin_below()
@@ -14,7 +17,22 @@ function template_project_admin_below()
 	echo '
 	<div id="project_bottom" class="smalltext" style="text-align: center;">
 		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2008
-	</div>';
+	</div>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function setProjectNews()
+		{
+
+		}
+
+		function setProjectVersion()
+		{
+			if (typeof(window.projectCurrentVersion) == "undefined")
+				return;
+
+			setInnerHTML(document.getElementById("project_latest_version"), window.projectCurrentVersion);
+		}
+	// ]]></script>
+	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/news.js?p=project;v=', urlencode($project_version), '" defer="defer"></script>';
 }
 
 ?>
