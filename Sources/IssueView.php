@@ -293,7 +293,7 @@ function IssueViewLog()
 
 		$context['issue_log'][] = array(
 			'event' => $row['event'],
-			'event_text' => $txt[$row['event']],
+			'event_text' => $txt['evt_' . $row['event']],
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $txt['issue_guest'],
 			'time' => timeformat($row['event_time']),
 			'changes' => $changes,
