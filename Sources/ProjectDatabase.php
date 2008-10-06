@@ -58,12 +58,10 @@ $tables = array(
 			array(
 				'name' => 'description',
 				'type' => 'text',
-				'default' => '',
 			),
 			array(
 				'name' => 'long_description',
 				'type' => 'text',
-				'default' => '',
 			),
 			array(
 				'name' => 'trackers',
@@ -552,7 +550,6 @@ $tables = array(
 				'name' => 'event_data',
 				'type' => 'text',
 				'null' => false,
-				'default' => '',
 			),
 		),
 		'indexes' => array(
