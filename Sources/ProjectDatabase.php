@@ -220,14 +220,14 @@ $tables = array(
 			array(
 				'name' => 'id_parent',
 				'type' => 'int',
-				'unsigned' => true,
 				'default' => 0,
+				'unsigned' => true,
 			),
 			array(
 				'name' => 'version_name',
 				'type' => 'varchar',
-				'size' => 255,
 				'default' => '',
+				'size' => 255,
 			),
 			array(
 				'name' => 'status',
@@ -237,19 +237,18 @@ $tables = array(
 			array(
 				'name' => 'description',
 				'type' => 'text',
-				'default' => '',
 			),
 			array(
 				'name' => 'release_date',
 				'type' => 'varchar',
-				'size' => 255,
 				'default' => '',
+				'size' => 255,
 			),
 			array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
-				'size' => 255,
 				'default' => '-1,0,2',
+				'size' => 255,
 			),
 		),
 		'indexes' => array(

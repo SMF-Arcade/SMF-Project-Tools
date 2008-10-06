@@ -105,19 +105,21 @@ function createVersion($id_project, $versionOptions)
 			'id_parent' => 'int',
 			'version_name' => 'string',
 			'description' => 'string',
+			'member_groups' => 'string',
 		),
 		array(
 			$id_project,
 			$versionOptions['parent'],
 			$versionOptions['name'],
-			$versionOptions['description']
+			$versionOptions['description'],
+			implode(',', $versionOptions['member_groups']),
 		),
 		array('id_version')
 	);
 
 	$id_version = $smcFunc['db_insert_id']('{db_prefix}project_versions', 'id_version');
 
-	unset($versionOptions['parent'], $versionOptions['name'], $versionOptions['description']);
+	unset($versionOptions['parent'], $versionOptions['name'], $versionOptions['description'], $versionOptions['member_groups']);
 
 	updateVersion($id_version, $versionOptions);
 
