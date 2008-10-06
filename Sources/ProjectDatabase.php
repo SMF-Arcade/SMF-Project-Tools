@@ -46,7 +46,6 @@ $tables = array(
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
@@ -54,63 +53,53 @@ $tables = array(
 				'name' => 'name',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 			array(
 				'name' => 'description',
 				'type' => 'text',
-				'null' => false,
 			),
 			array(
 				'name' => 'long_description',
 				'type' => 'text',
-				'null' => false,
 			),
 			array(
 				'name' => 'trackers',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 			array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
+
 			),
 			array(
 				'name' => 'open_bug',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'closed_bug',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'open_feature',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'closed_feature',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_profile',
 				'type' => 'int',
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -127,13 +116,11 @@ $tables = array(
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 		),
@@ -156,7 +143,6 @@ $tables = array(
 			array(
 				'name' => 'id_profile',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
@@ -164,7 +150,6 @@ $tables = array(
 				'name' => 'profile_name',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -181,19 +166,16 @@ $tables = array(
 			array(
 				'name' => 'id_profile',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_group',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'permission',
 				'type' => 'varchar',
 				'size' => 30,
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -215,49 +197,42 @@ $tables = array(
 			array(
 				'name' => 'id_version',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_parent',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'version_name',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 			array(
 				'name' => 'status',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'description',
 				'type' => 'text',
-				'null' => false
 			),
 			array(
 				'name' => 'release_date',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
+
 			),
 			array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -279,21 +254,18 @@ $tables = array(
 			array(
 				'name' => 'id_category',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'category_name',
 				'type' => 'varchar',
 				'size' => 30,
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -315,100 +287,81 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 			),
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'subject',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 			array(
 				'name' => 'issue_type',
 				'type' => 'varchar',
 				'size' => 255,
-				'null' => false,
 			),
 			array(
 				'name' => 'id_category',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_assigned',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_reporter',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_updater',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_version',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_comment_first',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_comment_last',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'id_version_fixed',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'status',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'created',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'updated',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'priority',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'replies',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'private_issue',
 				'type' => 'int',
-				'null' => false,
 			),
 		),
 		'indexes' => array(
@@ -446,7 +399,6 @@ $tables = array(
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
-				'null' => false,
 			),
 			array(
 				'name' => 'post_time',
@@ -499,32 +451,27 @@ $tables = array(
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
-				'null' => false,
 				'auto' => true,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_version',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
@@ -546,12 +493,11 @@ $tables = array(
 				'name' => 'event',
 				'type' => 'varchar',
 				'size' => 15,
-				'null' => false,
+
 			),
 			array(
 				'name' => 'event_time',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
@@ -579,14 +525,13 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'tag',
 				'type' => 'varchar',
 				'size' => 35,
-				'null' => false,
+
 			),
 		),
 		'indexes' => array(
@@ -603,19 +548,16 @@ $tables = array(
 			array(
 				'name' => 'id_project',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_comment',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 		),
@@ -636,19 +578,16 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_comment',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 		),
@@ -672,7 +611,6 @@ $tables = array(
 				'name' => 'id_project',
 				'type' => 'int',
 				'default' => 0,
-				'null' => false,
 				'unsigned' => true,
 			),
 		),
@@ -687,7 +625,7 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
+
 				'unsigned' => true,
 			),
 		),
@@ -705,25 +643,21 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_attach',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
-				'null' => false,
 				'unsigned' => true,
 			),
 		),

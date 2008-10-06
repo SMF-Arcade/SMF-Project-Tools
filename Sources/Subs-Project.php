@@ -427,41 +427,6 @@ function projectIsAllowedTo($permission)
 	}
 }
 
-function createProject($projectOptions)
-{
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
-
-	if (empty($projectOptions['name']) || !isset($projectOptions['description']) || !isset($projectOptions['member_groups']))
-		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}projects',
-		array(
-			'name' => 'string',
-			'description' => 'string',
-			'member_groups' => 'string',
-			'id_profile' => 'int',
-		),
-		array(
-			$projectOptions['name'],
-			$projectOptions['description'],
-			implode(',', $projectOptions['member_groups']),
-			1,
-		),
-		array()
-	);
-
-	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');
-
-	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['member_groups']);
-
-	// Anything left?
-	if (!empty($projectOptions))
-		updateProject($id_project, $projectOptions);
-
-	return $id_project;
-}
-
 function updateProject($id_project, $projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -505,68 +470,6 @@ function updateProject($id_project, $projectOptions)
 	return true;
 }
 
-function createVersion($id_project, $versionOptions)
-{
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
-
-	if (empty($versionOptions['name']))
-		trigger_error('createVersion(): required parameters missing or invalid');
-
-	if (empty($versionOptions['release_date']) || empty($versionOptions['parent']))
-		$versionOptions['release_date'] = serialize(array('day' => 0, 'month' => 0, 'year' => 0));
-
-	if (empty($versionOptions['description']))
-		$versionOptions['description'] = '';
-
-	if (empty($versionOptions['parent']))
-	{
-		$versionOptions['parent'] = 0;
-		$versionOptions['status'] = 0;
-	}
-	else
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT id_version
-			FROM {db_prefix}project_versions
-			WHERE id_project = {int:project}
-				AND id_version = {int:version}',
-			array(
-				'project' => $id_project,
-				'version' => $versionOptions['parent'],
-			)
-		);
-
-		if ($smcFunc['db_num_rows']($request) == 0)
-			trigger_error('createVersion(): invalid parent');
-		$smcFunc['db_free_result']($request);
-	}
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_versions',
-		array(
-			'id_project' => 'int',
-			'id_parent' => 'int',
-			'version_name' => 'string',
-			'description' => 'string',
-		),
-		array(
-			$id_project,
-			$versionOptions['parent'],
-			$versionOptions['name'],
-			$versionOptions['description']
-		),
-		array('id_version')
-	);
-
-	$id_version = $smcFunc['db_insert_id']('{db_prefix}project_versions', 'id_version');
-
-	unset($versionOptions['parent'], $versionOptions['name'], $versionOptions['description']);
-
-	updateVersion($id_version, $versionOptions);
-
-	return $id_version;
-}
-
 function updateVersion($id_version, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -602,26 +505,6 @@ function updateVersion($id_version, $versionOptions)
 				'version' => $id_version,
 			))
 		);
-
-	return true;
-}
-
-function createPTCategory($id_project, $categoryOptions)
-{
-	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}issue_category',
-		array(
-			'id_project' => 'int',
-			'category_name' => 'string'
-		),
-		array(
-			$id_project,
-			$categoryOptions['name']
-		),
-		array('id_category')
-	);
 
 	return true;
 }
