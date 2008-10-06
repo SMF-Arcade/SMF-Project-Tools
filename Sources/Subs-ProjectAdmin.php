@@ -44,7 +44,7 @@ function createProject($projectOptions)
 			implode(',', $projectOptions['member_groups']),
 			1,
 		),
-		array()
+		array('id_project')
 	);
 
 	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');

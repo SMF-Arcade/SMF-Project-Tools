@@ -53,53 +53,63 @@ $tables = array(
 				'name' => 'name',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => '',
 			),
 			array(
 				'name' => 'description',
 				'type' => 'text',
+				'default' => '',
 			),
 			array(
 				'name' => 'long_description',
 				'type' => 'text',
+				'default' => '',
 			),
 			array(
 				'name' => 'trackers',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => 'bug,feature',
 			),
 			array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
-
+				'default' => '-1,0,2',
 			),
 			array(
 				'name' => 'open_bug',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'closed_bug',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'open_feature',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'closed_feature',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_profile',
 				'type' => 'int',
+				'default' => 1,
 			),
 		),
 		'indexes' => array(
