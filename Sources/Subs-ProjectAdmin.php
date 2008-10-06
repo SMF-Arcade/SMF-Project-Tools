@@ -27,7 +27,7 @@ function createProject($projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 
-	if (empty($projectOptions['name']) || !isset($projectOptions['description']) || !isset($projectOptions['member_groups']))
+	if (empty($projectOptions['name']) || !isset($projectOptions['description']) || !isset($projectOptions['member_groups']) || !isset($projectOptions['trackers']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
 
 	$smcFunc['db_insert']('insert',
@@ -35,21 +35,25 @@ function createProject($projectOptions)
 		array(
 			'name' => 'string',
 			'description' => 'string',
+			'long_description' => 'string',
+			'trackers' => 'string',
 			'member_groups' => 'string',
 			'id_profile' => 'int',
 		),
 		array(
 			$projectOptions['name'],
 			$projectOptions['description'],
+			isset($projectOptions['long_description']) ? $projectOptions['long_description'] : '',
+			implode(',', $projectOptions['trackers']),
 			implode(',', $projectOptions['member_groups']),
-			1,
+			empty($projectOptions['profile']) ? 1 : $projectOptions['profile'],
 		),
 		array('id_project')
 	);
 
 	$id_project = $smcFunc['db_insert_id']('{db_prefix}projects', 'id_project');
 
-	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['member_groups']);
+	unset($projectOptions['name'], $projectOptions['description'], $projectOptions['trackers'], $projectOptions['member_groups'], $projectOptions['profile']);
 
 	// Anything left?
 	if (!empty($projectOptions))

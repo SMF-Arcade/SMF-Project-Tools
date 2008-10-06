@@ -104,11 +104,13 @@ $tables = array(
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
+				'unsigned' => true,
 				'default' => 0,
 			),
 			array(
 				'name' => 'id_profile',
 				'type' => 'int',
+				'unsigned' => true,
 				'default' => 1,
 			),
 		),
@@ -219,30 +221,35 @@ $tables = array(
 				'name' => 'id_parent',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'version_name',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => '',
 			),
 			array(
 				'name' => 'status',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'description',
 				'type' => 'text',
+				'default' => '',
 			),
 			array(
 				'name' => 'release_date',
 				'type' => 'varchar',
 				'size' => 255,
-
+				'default' => '',
 			),
 			array(
 				'name' => 'member_groups',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => '-1,0,2',
 			),
 		),
 		'indexes' => array(
@@ -307,71 +314,88 @@ $tables = array(
 				'name' => 'subject',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => '',
 			),
 			array(
 				'name' => 'issue_type',
 				'type' => 'varchar',
 				'size' => 255,
+				'default' => 'bug',
 			),
 			array(
 				'name' => 'id_category',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_assigned',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_reporter',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_updater',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_version',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_comment_first',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_comment_last',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_version_fixed',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'status',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'created',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'updated',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'priority',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'replies',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'private_issue',
 				'type' => 'int',
+				'default' => 0,
 			),
 		),
 		'indexes' => array(
@@ -401,42 +425,51 @@ $tables = array(
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_comment_mod',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'post_time',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
 				'size' => 256,
+				'default' => '',
 			),
 			array(
 				'name' => 'poster_email',
 				'type' => 'varchar',
 				'size' => 256,
+				'default' => '',
 			),
 			array(
 				'name' => 'poster_ip',
 				'type' => 'varchar',
 				'size' => 60,
+				'default' => '',
 			),
 			array(
 				'name' => 'edit_time',
 				'type' => 'int',
+				'default' => 0,
 			),
 			array(
 				'name' => 'edit_name',
 				'type' => 'varchar',
 				'size' => 256,
+				'default' => '',
 			),
 			array(
 				'name' => 'body',
@@ -478,42 +511,49 @@ $tables = array(
 				'name' => 'id_version',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
 				'size' => 256,
+				'default' => '',
 			),
 			array(
 				'name' => 'poster_email',
 				'type' => 'varchar',
 				'size' => 256,
+				'default' => '',
 			),
 			array(
 				'name' => 'poster_ip',
 				'type' => 'varchar',
 				'size' => 60,
+				'default' => '',
 			),
 			array(
 				'name' => 'event',
 				'type' => 'varchar',
 				'size' => 15,
-
+				'default' => '',
 			),
 			array(
 				'name' => 'event_time',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'event_data',
 				'type' => 'text',
-				'null' => false
+				'null' => false,
+				'default' => '',
 			),
 		),
 		'indexes' => array(
@@ -541,7 +581,6 @@ $tables = array(
 				'name' => 'tag',
 				'type' => 'varchar',
 				'size' => 35,
-
 			),
 		),
 		'indexes' => array(
@@ -635,7 +674,7 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
-
+				'default' => 0,
 				'unsigned' => true,
 			),
 		),
@@ -653,21 +692,25 @@ $tables = array(
 			array(
 				'name' => 'id_issue',
 				'type' => 'int',
+				'default' => 0,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_attach',
 				'type' => 'int',
+				'default' => 0,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_member',
 				'type' => 'int',
+				'default' => 0,
 				'unsigned' => true,
 			),
 			array(
 				'name' => 'id_event',
 				'type' => 'int',
+				'default' => 0,
 				'unsigned' => true,
 			),
 		),
