@@ -8,6 +8,7 @@ October 2008
  * Moved Profile related templates to new file
  + Issue Changelog
  + Private Issues
+ ! Developers couldn't see private issues [Issue #99]
 
 September 2008
 --------------------------------------------------------------------------------

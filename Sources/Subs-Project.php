@@ -56,9 +56,9 @@ function loadProjectToolsPermissions()
 		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
 		$see_private_profiles = getPrivateProfiles();
 		if (!empty($see_private_profiles))
-			$see_private = '(i.private_issue = 0 OR (' . $my_issue . ' OR p.id_profile IN(' . implode(', ', $see_private_profiles) . ')))';
+			$see_private = '(i.private_issue = 0 OR NOT ISNULL(dev.id_member) OR (' . $my_issue . ' OR p.id_profile IN(' . implode(', ', $see_private_profiles) . ')))';
 		else
-			$see_private = '(i.private_issue = 0 OR ' . $my_issue . ')';
+			$see_private = '(i.private_issue = 0 OR NOT ISNULL(dev.id_member) OR ' . $my_issue . ')';
 
 		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
