@@ -364,7 +364,11 @@ function loadProject()
 		);
 	$smcFunc['db_free_result']($request);
 
-	if (!$user_info['is_admin'] && !$context['project']['is_developer'])
+	if ($context['project']['is_developer'])
+	{
+		$user_info['query_see_issue_project'] = $user_info['query_see_version'];
+	}
+	elseif (!$user_info['is_admin'])
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT permission
