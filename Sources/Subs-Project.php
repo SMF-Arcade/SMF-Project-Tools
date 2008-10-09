@@ -117,13 +117,17 @@ function loadTimeline($project = 0)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = IFNULL(i.id_version, tl.id_version))
-		WHERE {query_see_project}
-			AND {query_see_issue}' . (!empty($project) ? '
-			AND tl.id_project = {int:project}' : '') . '
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})
+		WHERE {query_see_project}' . (!empty($project) ? '
+			AND {query_see_issue_project}
+			AND tl.id_project = {int:project}' : '
+			AND {query_see_issue}') . '
 		ORDER BY tl.event_time DESC
 		LIMIT 12',
 		array(
 			'project' => $project,
+			'current_member' => $user_info['id'],
 			'empty' => ''
 		)
 	);
