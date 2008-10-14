@@ -240,12 +240,18 @@ function template_project_roadmap()
 				</div>
 				<p>
 					', $version['description'], '
-				</p>';
+				</p>
+			</div>
+		</div>
+	</div>';
 
 		foreach ($version['versions'] as $subver)
 		{
 			echo '
-				<h4>', $subver['name'], '</h4>
+	<div class="tborder">
+		<div class="projectframe_section">
+			<h3 class="headerpadding catbg">', $subver['name'], '</h3>
+			<div class="headerpadding windowbg2">
 				<div class="progressbar">
 					<div style="width: ', $subver['progress'], '%"></div>
 				</div>
@@ -255,7 +261,10 @@ function template_project_roadmap()
 				</div>
 				<p>
 					', $subver['description'], '
-				</p>';
+				</p>
+			</div>
+		</div>
+	</div>';
 		}
 
 		echo '

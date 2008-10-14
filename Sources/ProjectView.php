@@ -119,7 +119,6 @@ function ProjectRoadmap()
 		FROM {db_prefix}project_versions AS ver
 		WHERE {query_see_version}
 			AND id_project = {int:project}
-			AND (id_parent = 0 OR status IN (0,1))
 		ORDER BY id_parent',
 		array(
 			'project' => $project,
@@ -166,16 +165,14 @@ function ProjectRoadmap()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_version, id_version_fixed, status, COUNT(*) AS num
 			FROM {db_prefix}issues AS ver
-			WHERE
-				(id_version IN({array_int:versions})
-					AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0))
-				OR (id_version_fixed IN({array_int:versions}))
+			WHERE (id_version IN({array_int:versions}) OR id_version_fixed IN({array_int:versions}))
 			GROUP BY id_version, id_version_fixed, status',
 			array(
 				'project' => $project,
 				'versions' => $ids,
 			)
 		);
+
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$row['id_version_real'] = $row['id_version'];
@@ -194,11 +191,6 @@ function ProjectRoadmap()
 			}
 			else
 			{
-				if ($open)
-					$context['roadmap'][$parents[$row['id_version']]]['issues']['open'] += $row['num'];
-				else
-					$context['roadmap'][$parents[$row['id_version']]]['issues']['closed'] += $row['num'];
-
 				if ($open)
 					$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['open'] += $row['num'];
 				else
