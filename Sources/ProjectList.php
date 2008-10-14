@@ -33,12 +33,14 @@ function ProjectList()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['type_columns']) . ',
-			p.id_comment_mod,
+			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['type_columns']) . ', p.id_comment_mod,
+			mem.id_member, mem.real_name,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:member}
 				AND log.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}project_developer AS pdev ON (pdev.id_project = p.id_project)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pdev.id_member)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
 		WHERE {query_see_project}
@@ -52,6 +54,16 @@ function ProjectList()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
+		if (isset($context['projects'][$row['id_project']]))
+		{
+			if (empty($row['id_member']))
+				continue;
+
+			$context['projects'][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+
+			continue;
+		}
+
 		$context['projects'][$row['id_project']] = array(
 			'id' => $row['id_project'],
 			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
@@ -61,6 +73,9 @@ function ProjectList()
 			'trackers' =>  explode(',', $row['trackers']),
 			'new' => $row['new_from'] <= $row['id_comment_mod'] && !$user_info['is_guest'],
 			'issues' => array(),
+			'developers' => array(
+				'<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
+			),
 		);
 
 		foreach ($context['projects'][$row['id_project']]['trackers'] as $key)

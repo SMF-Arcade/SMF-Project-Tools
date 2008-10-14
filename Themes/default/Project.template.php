@@ -38,7 +38,13 @@ function template_project_list()
 				</td>
 				<td class="windowbg2 info">
 					<h4><a href="', $project['href'], '">', $project['name'], '</a></h4>
-					<p class="smalltext">', $project['description'], '</p>
+					<p>', $project['description'], '</p>';
+
+				if (!empty($project['developers']))
+					echo '
+					<p class="moderators">', count($board['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $board['developers']), '</p>';
+
+				echo '
 				</td>
 				<td class="windowbg stats smalltext">';
 

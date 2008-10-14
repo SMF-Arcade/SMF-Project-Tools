@@ -71,6 +71,8 @@ $txt['issue_replies'] = 'Replies';
 $txt['project_description'] = 'Description';
 $txt['new_issues'] = 'New Issues';
 $txt['old_issues'] = 'No New Issues';
+$txt['developer'] = 'Developer';
+$txt['developers'] = 'Developers';
 $txt['total_issues'] = 'Total Issues';
 
 // Project Page Tabs

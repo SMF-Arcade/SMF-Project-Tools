@@ -142,7 +142,7 @@ function IssueList()
 		$where[] = 'i.issue_type = {string:search_type}';
 
 	if (!empty($context['issue_search']['versions']))
-		$where[] = '((i.id_version IN({array_int:versions}) AND (id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
+		$where[] = '((i.id_version IN({array_int:versions}) AND (i.id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
