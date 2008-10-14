@@ -38,11 +38,7 @@ function template_edit_version()
 			<td valign="top" align="left">
 				<textarea name="desc" rows="3" cols="35">', $context['version']['description'], '</textarea>
 			</td>
-		</tr>';
-
-	if (!empty($context['version']['parent']))
-	{
-		echo '
+		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['version_release_date'], ':</b><br />
@@ -65,10 +61,7 @@ function template_edit_version()
 					<option value="2"', $context['version']['status'] == 2 ? ' selected="selected"' : '', '>', $txt['version_current'], '</option>
 				</select>
 			</td>
-		</tr>';
-	}
-
-	echo '
+		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['version_membergroups'], ':</b><br />

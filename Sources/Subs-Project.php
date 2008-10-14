@@ -31,6 +31,9 @@ function loadProjectToolsPermissions()
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
 
+	if (isset($context['project_tools']))
+		return;
+
 	require_once($sourcedir . '/Subs-Issue.php');
 
 	if (empty($modSettings['issueRegex']))

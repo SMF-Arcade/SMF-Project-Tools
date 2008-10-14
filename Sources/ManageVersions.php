@@ -312,20 +312,18 @@ function EditVersion2()
 		$versionOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 
 		if (!empty($_POST['parent']))
-		{
 			$versionOptions['parent'] = $_POST['parent'];
 
-			$versionOptions['release_date'] = serialize(array(
-				'day' => !empty($_POST['release_date'][0]) ? $_POST['release_date'][0] : 0,
-				'month' => !empty($_POST['release_date'][1]) ? $_POST['release_date'][1] : 0,
-				'year' => !empty($_POST['release_date'][2]) ? $_POST['release_date'][2] : 0
-			));
+		$versionOptions['release_date'] = serialize(array(
+			'day' => !empty($_POST['release_date'][0]) ? $_POST['release_date'][0] : 0,
+			'month' => !empty($_POST['release_date'][1]) ? $_POST['release_date'][1] : 0,
+			'year' => !empty($_POST['release_date'][2]) ? $_POST['release_date'][2] : 0
+		));
 
-			$versionOptions['status'] = (int) $_POST['status'];
+		$versionOptions['status'] = (int) $_POST['status'];
 
-			if ($versionOptions['status'] < 0 || $versionOptions['status'] > 6)
-				$versionOptions['status'] = 0;
-		}
+		if ($versionOptions['status'] < 0 || $versionOptions['status'] > 6)
+			$versionOptions['status'] = 0;
 
 		$versionOptions['member_groups'] = $_POST['groups'];
 

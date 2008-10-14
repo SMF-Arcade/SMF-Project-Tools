@@ -42,7 +42,7 @@ function template_project_list()
 
 				if (!empty($project['developers']))
 					echo '
-					<p class="moderators">', count($board['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $board['developers']), '</p>';
+					<p class="developers"><span class="smalltext">', count($project['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $project['developers']), '</span></p>';
 
 				echo '
 				</td>
