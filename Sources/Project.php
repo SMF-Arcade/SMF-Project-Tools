@@ -40,7 +40,7 @@ function Projects()
 		// Project
 		'list' => array('ProjectList.php', 'ProjectList'),
 		'viewProject' => array('ProjectView.php', 'ProjectView', true),
-		'roadmap' => array('ProjectView.php', 'ProjectRoadmap', true),
+		'roadmap' => array('ProjectRoadmap.php', 'ProjectRoadmap', true),
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),

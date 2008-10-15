@@ -104,6 +104,7 @@ $txt['edit_profile_group'] = 'Permissions for group "%s"';
 
 // Project Permission names
 $txt['permissionname_project_issue_view'] = 'View Issues';
+$txt['permissionname_project_issue_view_private'] = 'View All Private Issues';
 $txt['permissionname_project_issue_report'] = 'Report Issues';
 $txt['permissionname_project_issue_comment'] = 'Comment Issues';
 $txt['permissionname_project_issue_update_own'] = 'Update their own Issues';

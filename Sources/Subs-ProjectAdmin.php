@@ -437,6 +437,7 @@ function getAllPTPermissions()
 
 	return array(
 		'issue_view' => array(false),
+		'issue_view_private' => array(false),
 		'issue_report' => array(false),
 		'issue_comment' => array(false),
 		'issue_update' => array(true, false),

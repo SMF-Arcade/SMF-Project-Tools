@@ -39,6 +39,7 @@
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
@@ -54,6 +55,7 @@
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 
 		<!-- CSS -->
@@ -91,6 +93,7 @@
 		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectList.php" />
 		<remove-file name="$sourcedir/ProjectPermissions.php" />
+		<remove-file name="$sourcedir/ProjectRoadmap.php" />
 		<remove-file name="$sourcedir/ProjectView.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />
 		<remove-file name="$sourcedir/Subs-Project.php" />
@@ -106,6 +109,7 @@
 		<remove-file name="$themedir/Project.template.php" />
 		<remove-file name="$themedir/ProjectAdmin.template.php" />
 		<remove-file name="$themedir/ProjectPermissions.template.php" />
+		<remove-file name="$themedir/ProjectRoadmap.template.php" />
 		<remove-file name="$themedir/ProjectView.template.php" />
 
 		<!-- CSS -->

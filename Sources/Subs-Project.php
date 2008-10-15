@@ -391,7 +391,7 @@ function loadProject()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_permissions'][$row['permission']] = true;
 
-		if (!empty($context['project_permissions']['view_issue_private']))
+		if (!empty($context['project_permissions']['issue_view_private']))
 			$user_info['query_see_issue_project'] = $user_info['query_see_version'];
 
 		$smcFunc['db_free_result']($request);
