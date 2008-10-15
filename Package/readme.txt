@@ -5,6 +5,7 @@
 [center][url=http://www.smfproject.net]Official website[/url][/center]
 
 [color=blue][b][size=12pt]Introduction[/size][/b][/color]
+...
 
 [color=blue][b][size=12pt]Features[/size][/b][/color]
 [list]
