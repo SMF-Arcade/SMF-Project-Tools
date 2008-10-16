@@ -99,10 +99,8 @@ function IssueList()
 		$baseurl .= ';type=' . $_REQUEST['type'];
 	}
 
-	if (!empty($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['category']]))
+	if (!empty($_REQUEST['category']))
 	{
-		$_REQUEST['category'] = (int) trim($_REQUEST['category']);
-
 		$context['issue_search']['category'] = $_REQUEST['category'];
 		$baseurl .= ';category=' . $_REQUEST['category'];
 	}
