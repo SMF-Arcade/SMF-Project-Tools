@@ -72,6 +72,7 @@ function IssueList()
 		'tag' => '',
 		'type' => '',
 		'version' => 0,
+		'category' => 0,
 		'versions' => array()
 	);
 
@@ -96,6 +97,14 @@ function IssueList()
 	{
 		$context['issue_search']['type'] = $_REQUEST['type'];
 		$baseurl .= ';type=' . $_REQUEST['type'];
+	}
+
+	if (!empty($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['category']]))
+	{
+		$_REQUEST['category'] = (int) trim($_REQUEST['category']);
+
+		$context['issue_search']['category'] = $_REQUEST['category'];
+		$baseurl .= ';category=' . $_REQUEST['category'];
 	}
 
 	if (!empty($_REQUEST['version']))
@@ -141,6 +150,9 @@ function IssueList()
 	if (!empty($context['issue_search']['type']))
 		$where[] = 'i.issue_type = {string:search_type}';
 
+	if (!empty($context['issue_search']['category']))
+		$where[] = 'i.id_category = {string:search_category}';
+
 	if (!empty($context['issue_search']['versions']))
 		$where[] = '((i.id_version IN({array_int:versions}) AND (i.id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
 
@@ -162,6 +174,7 @@ function IssueList()
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
+			'search_category' => $context['issue_search']['category'],
 			'search_type' => $context['issue_search']['type'],
 			'versions' => $context['issue_search']['versions'],
 		)
