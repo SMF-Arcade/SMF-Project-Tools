@@ -219,6 +219,7 @@ function IssueList()
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
+			'search_category' => $context['issue_search']['category'],
 			'search_type' => $context['issue_search']['type'],
 			'search_tag' => $context['issue_search']['tag'],
 			'versions' => $context['issue_search']['versions'],
