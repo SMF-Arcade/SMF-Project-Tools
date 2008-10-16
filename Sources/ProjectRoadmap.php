@@ -52,33 +52,16 @@ function ProjectRoadmap()
 	{
 		$ids[] = $row['id_version'];
 
-		if (!empty($row['id_parent']))
-		{
-			$parents[$row['id_version']] = $row['id_parent'];
-
-			$context['roadmap'][$row['id_parent']]['versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'description' => parse_bbc($row['description']),
-				'issues' => array(
-					'open' => 0,
-					'closed' => 0,
-				),
-			);
-		}
-		else
-		{
-			$context['roadmap'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'description' => parse_bbc($row['description']),
-				'versions' => array(),
-				'issues' => array(
-					'open' => 0,
-					'closed' => 0,
-				),
-			);
-		}
+		$context['roadmap'][$row['id_version']] = array(
+			'id' => $row['id_version'],
+			'name' => $row['version_name'],
+			'description' => parse_bbc($row['description']),
+			'versions' => array(),
+			'issues' => array(
+				'open' => 0,
+				'closed' => 0,
+			),
+		);
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -103,22 +86,10 @@ function ProjectRoadmap()
 			if (!empty($row['id_version_fixed']))
 				$row['id_version'] = $row['id_version_fixed'];
 
-			$open = !in_array($row['status'], $context['closed_status']);
-
-			if (!isset($parents[$row['id_version']]))
-			{
-				if ($open)
-					$context['roadmap'][$row['id_version']]['issues']['open'] += $row['num'];
-				else
-					$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['num'];
-			}
+			if (!in_array($row['status'], $context['closed_status']))
+				$context['roadmap'][$row['id_version']]['issues']['open'] += $row['num'];
 			else
-			{
-				if ($open)
-					$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['open'] += $row['num'];
-				else
-					$context['roadmap'][$parents[$row['id_version']]]['versions'][$row['id_version']]['issues']['closed'] += $row['num'];
-			}
+				$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['num'];
 		}
 		$smcFunc['db_free_result']($request);
 
