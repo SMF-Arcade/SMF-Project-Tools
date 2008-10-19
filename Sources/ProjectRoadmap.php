@@ -46,8 +46,7 @@ function ProjectRoadmapMain()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			ver.id_version, ver.id_parent, ver.version_name, ver.status,
-			ver.description, ver.release_date
+			ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date
 		FROM {db_prefix}project_versions AS ver
 		WHERE {query_see_version}
 			AND ver.id_project = {int:project}' . (!isset($_REQUEST['all']) ? '
@@ -63,11 +62,25 @@ function ProjectRoadmapMain()
 	{
 		$ids[] = $row['id_version'];
 
+		$row['release_date'] = unserialize($row['release_date']);
+
+		$time = array();
+
+		if (empty($row['release_date']['day']) && empty($row['release_date']['month']) && empty($row['release_date']['year']))
+			$time = array('roadmap_no_release_date', array());
+		elseif (empty($row['release_date']['day']) && empty($row['release_date']['month']))
+			$time = array('roadmap_release_date_year', array($row['release_date']['year']));
+		elseif (empty($row['release_date']['day']))
+			$time = array('roadmap_release_date_year_month', array($txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+		else
+			$time = array('roadmap_release_date_year_month_day', array($row['release_date']['day'], $txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+
 		$context['roadmap'][$row['id_version']] = array(
 			'id' => $row['id_version'],
 			'name' => $row['version_name'],
 			'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
 			'description' => parse_bbc($row['description']),
+			'release_date' => $time,
 			'versions' => array(),
 			'issues' => array(
 				'open' => 0,
@@ -128,6 +141,24 @@ function ProjectRoadmapVersion()
 {
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			ver.id_version, ver.id_parent, ver.version_name, ver.status,
+			ver.description, ver.release_date
+		FROM {db_prefix}project_versions AS ver
+		WHERE ({query_see_version})
+			AND ver.id_project = {int:project}
+			AND ver.id_version = {int:version}
+		ORDER BY ver.id_version DESC',
+		array(
+			'project' => $project,
+			'version ' => $_REQUEST['version'],
+		)
+	);
+
+	// Template
+	$context['sub_template'] = 'project_roadmap_version';
+	loadTemplate('ProjectRoadmap');
 }
 
 ?>

@@ -9,6 +9,7 @@ function template_project_roadmap()
 	{
 		echo '
 	<h3><a href="', $version['href'], '">', $version['name'], '</a></h3>
+	<div class="smalltext">', $version['release_date'], '</div>
 	<div class="headerpadding">
 		<div class="progressbar">
 			<div style="width: ', $version['progress'], '%"></div>
@@ -22,6 +23,11 @@ function template_project_roadmap()
 		</p>
 	</div>';
 	}
+}
+
+function template_project_roadmap_version()
+{
+
 }
 
 ?>

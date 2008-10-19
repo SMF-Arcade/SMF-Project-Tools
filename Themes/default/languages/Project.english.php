@@ -109,6 +109,10 @@ $txt['evt_edit_comment'] = 'Comment modified by %s';
 // Roadmap
 $txt['open_issues'] = '%d open issues';
 $txt['closed_issues'] = '%d closed issues';
+$txt['roadmap_no_release_date'] = 'no release date';
+$txt['roadmap_release_date_year'] = '%d';
+$txt['roadmap_release_date_year_month'] = '%1s$ %2d$';
+$txt['roadmap_release_date_year_month_day'] = '%1d$ %2s$ %3d$';
 
 // Issue List
 $txt['issue_search'] = 'Search Issues';
