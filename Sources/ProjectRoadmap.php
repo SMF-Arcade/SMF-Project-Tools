@@ -41,7 +41,6 @@ function ProjectRoadmapMain()
 {
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 
-	$parents = array();
 	$ids = array();
 	$context['roadmap'] = array();
 
@@ -115,19 +114,6 @@ function ProjectRoadmapMain()
 			else
 				$d['progress'] = 0;
 
-			foreach ($d['versions'] as $idx => $dx)
-			{
-				$dx['issues']['total'] = $dx['issues']['open'] + $dx['issues']['closed'];
-
-				if ($dx['issues']['total'] > 0)
-					$dx['progress'] = round($dx['issues']['closed'] / $dx['issues']['total'] * 100, 2);
-				else
-					$dx['progress'] = 0;
-
-				// Back to array
-				$d['versions'][$idx] = $dx;
-			}
-
 			// Back to array
 			$context['roadmap'][$id] = $d;
 		}
@@ -136,6 +122,12 @@ function ProjectRoadmapMain()
 	// Template
 	$context['sub_template'] = 'project_roadmap';
 	loadTemplate('ProjectRoadmap');
+}
+
+function ProjectRoadmapVersion()
+{
+	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+
 }
 
 ?>
