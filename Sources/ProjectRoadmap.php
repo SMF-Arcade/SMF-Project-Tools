@@ -31,6 +31,16 @@ function ProjectRoadmap()
 {
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 
+	if (!isset($_REQUEST['version']))
+		ProjectRoadmapMain();
+	else
+		ProjectRoadmapVersion();
+}
+
+function ProjectRoadmapMain()
+{
+	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+
 	$parents = array();
 	$ids = array();
 	$context['roadmap'] = array();
@@ -57,6 +67,7 @@ function ProjectRoadmap()
 		$context['roadmap'][$row['id_version']] = array(
 			'id' => $row['id_version'],
 			'name' => $row['version_name'],
+			'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
 			'description' => parse_bbc($row['description']),
 			'versions' => array(),
 			'issues' => array(

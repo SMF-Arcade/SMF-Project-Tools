@@ -5,7 +5,7 @@ global $context;
 
 // Linktree
 $txt['linktree_projects'] = 'Projects';
-$txt['linktree_roadmap'] = 'Issues';
+$txt['linktree_roadmap'] = 'Roadmap';
 $txt['linktree_issues'] = 'Issues';
 $txt['linktree_report_issue'] = 'Report Issue';
 
