@@ -231,6 +231,8 @@ function IssueViewLog()
 
 	$context['issue_log'] = array();
 
+	$members = array();
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$data = unserialize($row['event_data']);
@@ -282,6 +284,12 @@ function IssueViewLog()
 					else
 						$new_value = $context['versions'][$new_value]['name'];
 				}
+				elseif ($field == 'assign')
+				{
+					if (!empty($old_value))
+						$members[$old_value][] = array(count($context['issue_log']), count($changes), 'old_value');
+					if (!empty($new_value))
+						$members[$new_value][] = array(count($context['issue_log']), count($changes), 'new_value');				}
 
 				$changes[] = array(
 					'field' => $field,
@@ -300,6 +308,28 @@ function IssueViewLog()
 		);
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Get Names for members
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, real_name
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:members})',
+		array(
+			'members' => array_keys($members),
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		foreach ($members[$row['id_member']] as $log_index)
+		{
+			list ($log_index, $change_index, $type) = $log_index;
+
+			$context['issue_log'][$log_index]['changes'][$change_index][$type] = $row['real_name'];
+		}
+	}
+	$smcFunc['db_free_result']($request);
+	unset($members);
 
 	// Template
 	$context['sub_template'] = 'issue_log';
