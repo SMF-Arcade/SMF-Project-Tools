@@ -288,8 +288,14 @@ function IssueViewLog()
 				{
 					if (!empty($old_value))
 						$members[$old_value][] = array(count($context['issue_log']), count($changes), 'old_value');
+					else
+						$old_value = $txt['issue_none'];
+
 					if (!empty($new_value))
-						$members[$new_value][] = array(count($context['issue_log']), count($changes), 'new_value');				}
+						$members[$new_value][] = array(count($context['issue_log']), count($changes), 'new_value');
+					else
+						$new_value = $txt['issue_none'];
+				}
 
 				$changes[] = array(
 					'field' => $field,
