@@ -80,7 +80,7 @@ function ProjectRoadmapMain()
 			'name' => $row['version_name'],
 			'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
 			'description' => parse_bbc($row['description']),
-			'release_date' => $time,
+			'release_date' => vsprintf($txt[$time[0]], $time[1]),
 			'versions' => array(),
 			'issues' => array(
 				'open' => 0,
@@ -148,13 +148,17 @@ function ProjectRoadmapVersion()
 		FROM {db_prefix}project_versions AS ver
 		WHERE ({query_see_version})
 			AND ver.id_project = {int:project}
-			AND ver.id_version = {int:version}
-		ORDER BY ver.id_version DESC',
+			AND ver.id_version = {int:version}',
 		array(
 			'project' => $project,
-			'version ' => $_REQUEST['version'],
+			'version' => $_REQUEST['version'],
 		)
 	);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	if (!$row)
+		fatal_lang_error('version_not_found', false);
 
 	// Template
 	$context['sub_template'] = 'project_roadmap_version';
