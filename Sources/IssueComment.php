@@ -64,6 +64,9 @@ function IssueReply()
 
 	$editing = false;
 
+	$form_comment = '';
+
+	// Editing
 	if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
 	{
 		projectIsAllowedTo('edit_comment_own');
@@ -95,13 +98,11 @@ function IssueReply()
 		if (!$row)
 			fatal_lang_error('comment_not_found', false);
 
-		if (!isset($_REQUEST['comment']))
-			$_REQUEST['comment'] = un_preparsecode($row['body']);
+		$form_comment = un_preparsecode($row['body']);
 
 		$editing = true;
 	}
-
-	if (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
+	elseif (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 	{
 		checkSession('get');
 
@@ -126,10 +127,25 @@ function IssueReply()
 		if (!$row)
 			fatal_lang_error('comment_not_found', false);
 
-		$_REQUEST['comment'] = '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . un_preparsecode($row['body']) . "\n[/quote]";
-	}
+		$form_comment = $row['body'];
+		censorText($form_comment);
 
-	$form_comment = '';
+		// fix html tags
+		if (strpos($form_comment, '[html]') !== false)
+		{
+			$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $form_comment, -1, PREG_SPLIT_DELIM_CAPTURE);
+			for ($i = 0, $n = count($parts); $i < $n; $i++)
+			{
+				// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
+				if ($i % 4 == 0)
+					$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . preg_replace(\'~<br\s?/?>~i\', \'&lt;br /&gt;<br />\', \'$1\') . \'[/html]\'', $parts[$i]);
+			}
+			$form_comment = implode('', $parts);
+		}
+
+		$form_comment = preg_replace('~<br(?: /)?' . '>~i', "\n", $form_comment);
+		$form_comment = '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . rtrim($form_comment) . "\n[/quote]";
+	}
 
 	if (isset($_REQUEST['comment']) || !empty($context['post_error']))
 	{

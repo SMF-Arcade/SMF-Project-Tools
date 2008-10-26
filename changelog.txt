@@ -9,6 +9,8 @@ October 2008
  + Issue Changelog
  + Private Issues
  ! Developers couldn't see private issues [Issue #99]
+ ! Preview was shown when quoting
+ ! Quoting broke html-entities
 
 September 2008
 --------------------------------------------------------------------------------
