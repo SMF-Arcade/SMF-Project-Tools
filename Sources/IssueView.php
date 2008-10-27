@@ -316,26 +316,29 @@ function IssueViewLog()
 	$smcFunc['db_free_result']($request);
 
 	// Get Names for members
-	$request = $smcFunc['db_query']('', '
-		SELECT id_member, real_name
-		FROM {db_prefix}members
-		WHERE id_member IN ({array_int:members})',
-		array(
-			'members' => array_keys($members),
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	if (!empty($members))
 	{
-		foreach ($members[$row['id_member']] as $log_index)
-		{
-			list ($log_index, $change_index, $type) = $log_index;
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, real_name
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:members})',
+			array(
+				'members' => array_keys($members),
+			)
+		);
 
-			$context['issue_log'][$log_index]['changes'][$change_index][$type] = $row['real_name'];
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			foreach ($members[$row['id_member']] as $log_index)
+			{
+				list ($log_index, $change_index, $type) = $log_index;
+
+				$context['issue_log'][$log_index]['changes'][$change_index][$type] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+			}
 		}
+		$smcFunc['db_free_result']($request);
+		unset($members);
 	}
-	$smcFunc['db_free_result']($request);
-	unset($members);
 
 	// Template
 	$context['sub_template'] = 'issue_log';
