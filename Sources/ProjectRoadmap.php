@@ -160,6 +160,36 @@ function ProjectRoadmapVersion()
 	if (!$row)
 		fatal_lang_error('version_not_found', false);
 
+		$row['release_date'] = unserialize($row['release_date']);
+
+	// Make release date string
+	$time = array();
+
+	if (empty($row['release_date']['day']) && empty($row['release_date']['month']) && empty($row['release_date']['year']))
+		$time = array('roadmap_no_release_date', array());
+	elseif (empty($row['release_date']['day']) && empty($row['release_date']['month']))
+		$time = array('roadmap_release_date_year', array($row['release_date']['year']));
+	elseif (empty($row['release_date']['day']))
+		$time = array('roadmap_release_date_year_month', array($txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+	else
+		$time = array('roadmap_release_date_year_month_day', array($row['release_date']['day'], $txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+
+	$context['version'] = array(
+		'id' => $row['id_version'],
+		'name' => $row['version_name'],
+		'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
+		'description' => parse_bbc($row['description']),
+		'release_date' => vsprintf($txt[$time[0]], $time[1]),
+		'versions' => array(),
+		'issues' => array(
+			'open' => 0,
+			'closed' => 0,
+		),
+	);
+
+	// Load Issues
+	$context['issues'] = getIssueList(10, 'i.updated DESC');
+
 	// Template
 	$context['sub_template'] = 'project_roadmap_version';
 	loadTemplate('ProjectRoadmap');
