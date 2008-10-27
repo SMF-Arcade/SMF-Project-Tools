@@ -19,7 +19,7 @@ function template_project_roadmap()
 			<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;status=closed;version=', $version['id'], '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
 		</div>
 		<p>
-			', $version['description'], '
+
 		</p>
 	</div>';
 	}
@@ -27,7 +27,17 @@ function template_project_roadmap()
 
 function template_project_roadmap_version()
 {
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	echo '
+	<h2>', $context['version']['name'], '</h2>
+	<div class="smalltext">', $context['version']['release_date'], '</div>
+	<p>
+		', $context['version']['description'], '
+	</p>
+	<div class="progressbar">
+		<div style="width: ', $context['version']['progress'], '%"></div>
+	</div>';
 }
 
 ?>
