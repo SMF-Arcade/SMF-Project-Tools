@@ -94,7 +94,7 @@ function template_project_roadmap_version()
 
 			echo '
 				<tr class="catbg">
-					<td align="right" class="headerpadding">
+					<td align="right" class="headerpadding" colspan="2">
 						<a href="', $context['issues_href'], '">', $txt['issues_view_all'], '</a>
 					</td>
 				</tr>';
