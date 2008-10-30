@@ -6,7 +6,7 @@
 
 [color=red][b][size=12pt]Warning![/size][/b][/color]
 This is an early release of SMF Project Tools.
-Some of features are not yet complete and there maybe bugs that may cause data loss.
+There maybe bugs that may cause data loss.
 You should report all bugs to our Issue Tracker, feature request are also welcome.
 
 [color=blue][b][size=12pt]Introduction[/size][/b][/color]
