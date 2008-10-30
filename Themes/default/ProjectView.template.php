@@ -125,7 +125,7 @@ function template_project_view()
 
 			echo '
 					<tr class="catbg">
-						<td align="right" class="headerpadding">
+						<td colspan="2" align="right" class="headerpadding">
 							<a href="', $issueList['href'], '">', $txt['issues_view_all'], '</a>
 						</td>
 					</tr>';

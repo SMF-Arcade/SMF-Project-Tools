@@ -20,10 +20,7 @@ if (!function_exists('build_replaces_project01'))
 	{
 		global $build_info;
 
-		if ($rev === 0)
-			return;
-
-		if ($filename == 'Sources/Project.php' || $filename == 'Sources/ProjectDatabase.php')
+		if ($rev && ($filename == 'Sources/Project.php' || $filename == 'Sources/ProjectDatabase.php'))
 			$content = str_replace('$project_version = \'0.1 Alpha\';', '$project_version = \'0.1 Alpha rev' . $rev . '\';', $content);
 		elseif (in_array($filename, array('readme.txt', 'install.xml',  'package-info.xml')))
 		{
