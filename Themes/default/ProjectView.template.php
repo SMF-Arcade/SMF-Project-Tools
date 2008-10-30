@@ -122,6 +122,13 @@ function template_project_view()
 						</td>
 					</tr>';
 			}
+
+			echo '
+					<tr class="catbg">
+						<td align="right" class="headerpadding">
+							<a href="', $issueList['href'], '">', $txt['issues_view_all'], '</a>
+						</td>
+					</tr>';
 		}
 
 		echo '

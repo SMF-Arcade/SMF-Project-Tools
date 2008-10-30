@@ -84,6 +84,7 @@ $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
 $txt['assigned_to_me'] = 'Assigned To Me';
 $txt['new_issues'] = 'New Issues';
+$txt['issues_view_all'] = 'View Complete List';
 
 // Project Info
 $txt['project_info'] = 'Information';

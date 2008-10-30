@@ -42,7 +42,7 @@ function template_project_roadmap_version()
 	echo '
 	<div class="issuecolumn">
 		<div class="issuelistframe tborder">
-			<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
+			<h3 class="catbg headerpadding">', $txt['recent_issues'], '</h3>
 			<table cellspacing="1" class="bordercolor issuetable">
 				<tr>';
 
@@ -73,7 +73,8 @@ function template_project_roadmap_version()
 					<td class="windowbg2 info issue_', $issue['status']['name'], '">
 						<h4>
 							', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
-					// Is this topic new? (assuming they are logged in!)
+
+			// Is this topic new? (assuming they are logged in!)
 			if ($issue['new'] && $context['user']['is_logged'])
 				echo '
 							<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
@@ -90,6 +91,13 @@ function template_project_roadmap_version()
 					</td>
 				</tr>';
 		}
+
+			echo '
+				<tr class="catbg">
+					<td align="right" class="headerpadding">
+						<a href="', $context['issues_href'], '">', $txt['issues_view_all'], '</a>
+					</td>
+				</tr>';
 	}
 
 	echo '

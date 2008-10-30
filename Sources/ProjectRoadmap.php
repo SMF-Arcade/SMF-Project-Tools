@@ -189,6 +189,7 @@ function ProjectRoadmapVersion()
 
 	// Load Issues
 	$context['issues'] = getIssueList(10, 'i.updated DESC');
+	$context['issues_href'] = $scripturl . '?project=' . $project . ';sa=issues;version=' . $context['version']['id'];
 
 	// Template
 	$context['sub_template'] = 'project_roadmap_version';

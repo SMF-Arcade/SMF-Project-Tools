@@ -11,6 +11,8 @@ October 2008
  ! Developers couldn't see private issues [Issue #99]
  ! Preview was shown when quoting
  ! Quoting broke html-entities
+ + Ability to limit issues by reporter, assignee
+ + Show link to full issues list on mini-lists
 
 September 2008
 --------------------------------------------------------------------------------
