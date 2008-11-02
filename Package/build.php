@@ -2,7 +2,7 @@
 
 // Build info
 $build_info = array(
-	'branch' => 'trunk',
+	'branch' => '0.1',
 	'version' => '0.1',
 	'version_str' => '0.1',
 	'build_replaces' => 'build_replaces_project01',
