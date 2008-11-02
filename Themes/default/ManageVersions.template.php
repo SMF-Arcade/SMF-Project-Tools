@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1; ManageVersions
+// Version: 0.2; ManageVersions
 
 function template_versions_list()
 {

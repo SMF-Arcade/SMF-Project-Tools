@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1; IssueList
+// Version: 0.2; IssueList
 
 function template_issue_list()
 {

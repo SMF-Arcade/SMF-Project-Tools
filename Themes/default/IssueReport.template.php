@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1; IssueReport
+// Version: 0.2; IssueReport
 
 function template_report_issue()
 {

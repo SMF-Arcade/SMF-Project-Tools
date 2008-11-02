@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1; ProjectPermissions
+// Version: 0.2; ProjectPermissions
 
 function template_profiles_list()
 {

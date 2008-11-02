@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.1                               *
+* Software Version:           SMF Project Tools 0.2                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2008 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -23,7 +23,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-$project_version = '0.1';
+$project_version = '0.2';
 
 $addSettings = array(
 	'issuesPerPage' => array(25, false),

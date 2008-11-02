@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Issue: Issue tracker for SMF                                                *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.1                               *
+* Software Version:           SMF Project Tools 0.2                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007 by:          Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
