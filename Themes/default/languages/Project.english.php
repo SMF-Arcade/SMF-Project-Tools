@@ -206,6 +206,7 @@ $txt['project_title'] = 'Projects - %s';
 $txt['project_title_issues'] = '%s - Issues';
 $txt['project_view_issue'] = '%s - Issue #%d: %s';
 $txt['project_report_issue'] = '%s - Report Issue';
+$txt['project_roadmap'] = '%s - Roadmap';
 
 // Errors
 $txt['project_not_found'] = 'Project not found';
