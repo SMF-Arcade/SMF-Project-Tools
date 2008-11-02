@@ -35,6 +35,7 @@
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageVersions.php" destination="$sourcedir" />
+		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />

@@ -204,6 +204,11 @@ function loadProjectTools($mode = '')
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project';
 	}
+	elseif ($mode == 'profile')
+	{
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
+	}
 	elseif ($mode == 'admin')
 	{
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
