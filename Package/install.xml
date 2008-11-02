@@ -341,98 +341,6 @@ else
 		</operation>
 	</file>
 
-	<!--<file name="$sourcedir/Subs-BoardIndex.php">
-		<operation>
-			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', p.' . implode(', p.', $context['type_columns']) : '') . ',
-			p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
-		</operation>
-
-		<operation>
-			<search position="replace"><![CDATA[WHERE {query_see_board}]]></search>
-			<add><![CDATA[WHERE ((ISNULL(p.id_project) AND {query_see_board}) OR (NOT ISNULL(p.id_project) AND {query_see_project}))]]></add>
-		</operation>
-
-		<operation>
-			<search position="before"><![CDATA[			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)]]></search>
-			<add><![CDATA[
-			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:current_member})' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_projects AS plog ON (plog.id_member = {int:current_member} AND plog.id_project = p.id_project)') . ']]></add>
-		</operation>
-
-		<operation>
-			<search position="after"><![CDATA[			}
-			if (!empty($row_board['id_moderator']))]]></search>
-			<add><![CDATA[				if (!empty($row_board['id_project']))
-				{
-					$this_category[$row_board['id_board']]['id'] = $row_board['id_project'];
-					$this_category[$row_board['id_board']]['new'] = $row_board['project_new_from'] <= $row_board['id_comment_mod'] && !$user_info['is_guest'];
-					$this_category[$row_board['id_board']]['name'] = $row_board['project_name'];
-					$this_category[$row_board['id_board']]['description'] = $row_board['pdescription'];
-					$this_category[$row_board['id_board']]['href'] = $scripturl . '?project=' . $row_board['id_project'];
-					$this_category[$row_board['id_board']]['link'] = '<a href="' . $scripturl . '?project=' . $row_board['id_project'] . '">' . $row_board['project_name'] . '</a>';
-					$this_category[$row_board['id_board']]['is_project'] = true;
-					$this_category[$row_board['id_board']]['issues'] = array();
-
-					foreach (explode(',', $row_board['trackers']) as $key)
-					{
-						$this_category[$row_board['id_board']]['issues'][$key] = array(
-							'info' => &$context['project_tools']['issue_types'][$key],
-							'open' => $row_board['open_' . $key],
-							'closed' => $row_board['closed_' . $key],
-							'total' => $row_board['open_' . $key] + $row_board['closed_' . $key],
-							'link' => $scripturl . '?project='. $row_board['id_project'] . ';sa=issues;type=' . $key
-						);
-					}
-				}]]></add>
-		</operation>
-	</file>-->
-
-	<file name="$themedir/BoardIndex.template.php">
-		<operation>
-			<search position="before"><![CDATA[			foreach ($category['boards'] as $board)
-			{]]></search>
-			<add><![CDATA[
-				if (!empty($board['is_project']))
-				{
-					echo '
-			<tr>
-				<td class="windowbg icon">
-					<a href="', $board['href'], '">';
-
-					if ($board['new'])
-						echo '
-						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
-					else
-						echo '
-						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
-
-					echo '
-					</a>
-				</td>
-				<td class="windowbg2 info">
-					<h4><a href="', $board['href'], '">', $board['name'], '</a></h4>
-					<p class="smalltext">', $board['description'], '</p>
-				</td>
-				<td class="windowbg stats smalltext">';
-
-					foreach ($board['issues'] as $type)
-						echo '
-					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
-
-					echo '
-				</td>
-				<td class="windowbg2 lastissue">
-				</td>
-			</tr>';
-
-					continue;
-				}]]></add>
-		</operation>
-	</file>
-
 	<file name="$sourcedir/Subs-Db-mysql.php">
 		<operation>
 			<search position="after"><![CDATA[
@@ -494,6 +402,63 @@ else
 
 	<!-- Languages -->
 	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[// SMF Project tools
+$txt['project_tools'] = 'Project Tools';
+$txt['issue_tracker'] = 'Issue Tracker';
+$txt['issues'] = 'Issues';
+$txt['project'] = 'Project';
+$txt['projects'] = 'Projects';
+$txt['core_settings_item_pj'] = 'Project Tools';
+$txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
+$txt['patch_highlight'] = 'Viewing Highlight of Patch: %s';
+
+// SMF Project tools admin
+$txt['manage_projects'] = 'Projects';
+$txt['modify_projects'] = 'Modify Projects';
+$txt['new_project'] = 'New Project';
+
+$txt['manage_versions'] = 'Versions';
+$txt['modify_versions'] = 'Modify Versions';
+
+$txt['manage_project_category'] = 'Categories';
+$txt['modify_project_category'] = 'Modify Categories';
+
+$txt['manage_project_permissions'] = 'Permissions';
+$txt['modify_project_profiles'] = 'Modify Profiles';
+$txt['new_project_profile'] = 'New Profile';
+$txt['project_permissions'] = 'Permissions';
+
+$txt['project_settings'] = 'Settings';
+$txt['project_settings_main'] = 'Main';
+
+$txt['projectEnabled'] = 'Enable Project Tools';
+$txt['projectAttachments'] = 'Enable Attachments';
+$txt['issuesPerPage'] = 'Issues Per Page';
+$txt['commentsPerPage'] = 'Comments Per Page';
+
+// Permission Names
+$txt['permissiongroup_project'] = 'Project Tools';
+$txt['permissionname_project_access'] = 'Access Project Tools';
+$txt['permissionname_project_admin'] = 'Administrate Project Tools';
+
+// Simple permission gropus
+$txt['permissiongroup_simple_project'] = 'Use Project Tools';
+
+// Errors
+$txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
+$txt['cannot_project_view'] = 'You are not allowed to view this project.';
+$txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
+$txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+$txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
+$txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
+
+$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';]]></add>
+		</operation>
+	</file>
+
+	<file name="$languagedir/Modifications.english-utf8.php" error="skip">
 		<operation>
 			<search position="end" />
 			<add><![CDATA[// SMF Project tools
