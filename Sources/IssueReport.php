@@ -303,7 +303,6 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 {
 	global $context, $user_info, $smcFunc, $sourcedir;
 
-	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	// Assigning
@@ -453,35 +452,11 @@ function IssueUpload()
 		'name' => $user_info['name'],
 		'ip' => $user_info['name'],
 	);
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_timeline',
-		array(
-			'id_project' => 'int',
-			'id_issue' => 'int',
-			'id_member' => 'int',
-			'poster_name' => 'string',
-			'poster_email' => 'string',
-			'poster_ip' => 'string-60',
-			'event' => 'string',
-			'event_time' => 'int',
-			'event_data' => 'string',
-		),
-		array(
-			$context['project']['id'],
-			$context['current_issue']['id'],
-			$user_info['id'],
-			$user_info['name'],
-			$user_info['email'],
-			$user_info['ip'],
-			'new_attachment',
-			time(),
-			serialize(array('attachments' => $attachIDs))
-		),
-		array()
+	$eventOptions = array(
+		'time' => time(),
 	);
 
-	$id_event = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+	$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_attachment', serialize(array('attachments' => $attachIDs)), $posterOptions, $eventOptions);
 
 	$rows = array();
 
