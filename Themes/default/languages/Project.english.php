@@ -190,7 +190,7 @@ $txt['update_issue_save'] = 'Save';
 $txt['update_issue_comment'] = 'Save with Comment';
 
 // Attachement
-$txt['issue_attach'] = 'Add Attachements';
+$txt['issue_attach'] = 'Add Attachments';
 $txt['allowed_types'] = 'Allowed Filetypes';
 $txt['max_size'] = 'Maximum attachment size allowed';
 $txt['add_attach'] = 'Attach';

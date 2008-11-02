@@ -374,7 +374,6 @@ function IssueDeleteComment()
 		ORDER BY id_comment',
 		array(
 			'current_user' => $user_info['id'],
-			'issue' => $issue,
 			'comment' => (int) $_REQUEST['com'],
 		)
 	);
@@ -390,7 +389,6 @@ function IssueDeleteComment()
 		ORDER BY id_comment',
 		array(
 			'current_user' => $user_info['id'],
-			'issue' => $issue,
 			'comment' => $row['id_comment'],
 		)
 	);
