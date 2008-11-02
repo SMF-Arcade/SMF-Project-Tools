@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1 Alpha; ProjectAdmin
+// Version: 0.1; ProjectAdmin
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 

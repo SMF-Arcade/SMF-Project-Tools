@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1 Alpha; Project
+// Version: 0.1; Project
 
 global $context;
 

@@ -105,7 +105,8 @@ function template_project_view()
 						<td class="windowbg2 info issue_', $issue['status']['name'], '">
 							<h4>
 								', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
-						// Is this topic new? (assuming they are logged in!)
+
+				// Is this topic new? (assuming they are logged in!)
 				if ($issue['new'] && $context['user']['is_logged'])
 					echo '
 								<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
@@ -125,7 +126,7 @@ function template_project_view()
 
 			echo '
 					<tr class="catbg">
-						<td colspan="2" align="right" class="headerpadding">
+						<td colspan="4" align="right" class="headerpadding">
 							<a href="', $issueList['href'], '">', $txt['issues_view_all'], '</a>
 						</td>
 					</tr>';

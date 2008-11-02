@@ -1,5 +1,5 @@
 <?php
-// Version: 0.1 Alpha; ManageProjects
+// Version: 0.1; ManageProjects
 
 function template_projects_list()
 {
@@ -179,7 +179,7 @@ function template_edit_category()
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
-				
+
 	if (isset($context['category']['is_new']))
 		echo '
 				<input type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" />';
