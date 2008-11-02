@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install>
+	<install for="2.0 RC1">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
@@ -63,7 +63,6 @@
 
 		<!-- Scripts -->
 		<require-file name="Themes/default/scripts/project.js" destination="$themedir/scripts" />
-		<require-file name="Themes/default/scripts/jquery.js" destination="$themedir/scripts" />
 
 		<!-- Images -->
 		<require-file name="Themes/default/images/bug.png" destination="$imagesdir" />
@@ -117,7 +116,6 @@
 
 		<!-- Scripts -->
 		<remove-file name="$themedir/scripts/project.js" />
-		<remove-file name="$themedir/scripts/jquery.js" />
 
 		<!-- Images -->
 		<remove-file name="$imagesdir/bug.png" />
