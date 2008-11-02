@@ -55,6 +55,23 @@
 		</operation>
 	</file>
 
+	<file name="$sourcedir/SSI.php">
+		<operation>
+			<search position="after"><![CDATA[// Load the stuff like the menu bar, etc.]]></search>
+			<add><![CDATA[// Project Tools
+if (!empty($modSettings['projectEnabled']))
+{
+	require_once($sourcedir . '/Subs-Project.php');
+	loadProjectToolsPermissions();
+}
+else
+{
+	$user_info['query_see_project'] = '0=1';
+}
+]]></add>
+		</operation>
+	</file>
+
 	<!-- Source files -->
 	<file name="$sourcedir/Admin.php">
 		<operation>
