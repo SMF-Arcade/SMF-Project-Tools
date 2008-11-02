@@ -55,7 +55,7 @@
 		</operation>
 	</file>
 
-	<file name="$sourcedir/SSI.php">
+	<file name="$boarddir/SSI.php">
 		<operation>
 			<search position="after"><![CDATA[// Load the stuff like the menu bar, etc.]]></search>
 			<add><![CDATA[// Project Tools
