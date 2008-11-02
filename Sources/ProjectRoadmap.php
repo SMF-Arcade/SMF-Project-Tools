@@ -134,7 +134,7 @@ function ProjectRoadmapMain()
 
 	// Template
 	$context['page_title'] = $txt['project_roadmap'];
-	$context['sub_template'] = 'project_roadmap';
+	$context['sub_template'] = 'project_roadmap_title';
 	loadTemplate('ProjectRoadmap');
 }
 
