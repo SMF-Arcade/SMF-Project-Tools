@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install>
+	<install for="2.0 Beta 4">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
