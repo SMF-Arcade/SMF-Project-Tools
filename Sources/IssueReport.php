@@ -75,9 +75,7 @@ function ReportIssue()
 			$previewing = true;
 		}
 		else
-		{
 			$previewing = !empty($_POST['preview']);
-		}
 
 		$form_title = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
 		$form_details = $smcFunc['htmlspecialchars']($_REQUEST['details'], ENT_QUOTES);

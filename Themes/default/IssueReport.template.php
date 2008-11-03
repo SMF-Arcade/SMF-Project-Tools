@@ -172,6 +172,14 @@ function template_issue_reply()
 			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
 			<div class="windowbg">
 				<dl>
+					<dd ', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
+						<div style="padding: 0px; font-weight: bold;', empty($context['post_error']['messages']) ? ' display: none;' : '', '" id="error_serious">
+							', $txt['error_while_submitting_issue'], '
+						</div>
+						<div style="color: red; margin: 1ex 0 2ex 3ex;" id="error_list">
+							', empty($context['post_error']['messages']) ? '' : implode('<br />', $context['post_error']['messages']), '
+						</div>
+					</dd>
 					<dd>
 						', template_control_richedit($context['post_box_name'], 'bbc'), '
 					</dd>

@@ -161,9 +161,7 @@ function IssueReply()
 			$previewing = true;
 		}
 		else
-		{
 			$previewing = !empty($_POST['preview']);
-		}
 
 		$form_comment = $smcFunc['htmlspecialchars']($_REQUEST['comment'], ENT_QUOTES);
 

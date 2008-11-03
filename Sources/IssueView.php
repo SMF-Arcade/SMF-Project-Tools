@@ -351,7 +351,7 @@ function prepareComments($all = true)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
 
-	$posters = array($context['current_issue']['id_reporter']);
+	$posters = array($context['current_issue']['id_reporter'] => $context['current_issue']['id_reporter']);
 	$comments = array($context['current_issue']['comment_first']);
 
 	if ($all)
@@ -373,7 +373,7 @@ function prepareComments($all = true)
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (!empty($row['id_member']))
-				$posters[] = $row['id_member'];
+				$posters[$row['id_member']] = $row['id_member'];
 			$comments[] = $row['id_comment'];
 		}
 		$smcFunc['db_free_result']($request);

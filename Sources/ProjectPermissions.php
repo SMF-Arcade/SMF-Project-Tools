@@ -386,13 +386,10 @@ function EditProfilePermissions2()
 			else
 				$delete[] = $perm . '_any';
 		}
+		elseif (!empty($_POST['permission'][$perm]))
+			$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm);
 		else
-		{
-			if (!empty($_POST['permission'][$perm]))
-				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm);
-			else
-				$delete[] = $perm;
-		}
+			$delete[] = $perm;
 	}
 
 	if (!empty($delete))
