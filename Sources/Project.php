@@ -105,11 +105,8 @@ function Projects()
 			if (!isset($_REQUEST['sa']))
 				$_REQUEST['sa'] = 'viewIssue';
 		}
-		else
-		{
-			if (!isset($_REQUEST['sa']))
-				$_REQUEST['sa'] = 'viewProject';
-		}
+		elseif (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'viewProject';
 	}
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
