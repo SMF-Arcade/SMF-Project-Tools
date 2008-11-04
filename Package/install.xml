@@ -348,7 +348,7 @@ else
 			<add><![CDATA[				'project' => array(
 					'label' => $txt['project_profile'],
 					'file' => 'Profile-Project.php',
-					'function' => 'ProjectProfile',
+					'function' => 'projectProfile',
 					'subsections' => array(
 					),
 					'permission' => array(
