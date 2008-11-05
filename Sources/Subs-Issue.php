@@ -100,7 +100,7 @@ function loadIssueTypes()
 
 function loadIssue($id_issue)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $memberContext;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $project, $txt, $memberContext;
 
 	if (!isset($context['project']['id']))
 		trigger_error('', E_USER_ERROR);
@@ -127,7 +127,7 @@ function loadIssue($id_issue)
 		array(
 			'member' => $user_info['id'],
 			'issue' => $id_issue,
-			'project' => $context['project']['id'],
+			'project' => $project,
 		)
 	);
 

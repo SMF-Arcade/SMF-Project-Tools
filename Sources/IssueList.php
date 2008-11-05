@@ -119,7 +119,7 @@ function IssueList()
 	if (!empty($_REQUEST['assignee']))
 	{
 		$context['issue_search']['assignee'] = $_REQUEST['assignee'];
-		$baseurl['assignee'] .= $_REQUEST['assignee'];
+		$baseurl['assignee'] = $_REQUEST['assignee'];
 	}
 
 	if (!empty($_REQUEST['version']))
@@ -184,7 +184,9 @@ function IssueList()
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
+			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
+				AND stag.tag = {string:search_tag})' : '') . '
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 		WHERE {query_see_issue_project}
 			AND i.id_project = {int:project} ' . (!empty($where) ? '
@@ -196,8 +198,10 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_category' => $context['issue_search']['category'],
+			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
 			'search_type' => $context['issue_search']['type'],
+			'search_tag' => $context['issue_search']['tag'],
 			'versions' => $context['issue_search']['versions'],
 		)
 	);
@@ -218,16 +222,16 @@ function IssueList()
 			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
+			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
+				AND stag.tag = {string:search_tag})' : '') . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)' . (!empty($context['issue_search']['tag']) ? '
-			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
-				AND stag.tag = {string:search_tag})' : '') . '
+			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
 		WHERE {query_see_issue_project}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
@@ -244,6 +248,7 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_category' => $context['issue_search']['category'],
+			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
 			'search_type' => $context['issue_search']['type'],
 			'search_tag' => $context['issue_search']['tag'],
