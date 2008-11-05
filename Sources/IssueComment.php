@@ -355,7 +355,7 @@ function IssueReply2()
 		$id_comment = $_REQUEST['com'];
 	}
 
-	redirectexit('issue=' . $issue . '.com' . $id_comment . '#com' . $id_comment);
+	redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_comment)) . '#com' . $id_comment);
 }
 
 function IssueDeleteComment()
@@ -395,7 +395,7 @@ function IssueDeleteComment()
 		)
 	);
 
-	redirectexit('issue=' . $context['current_issue']['id'] . '.0');
+	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
 
 ?>

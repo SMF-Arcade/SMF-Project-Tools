@@ -591,7 +591,7 @@ function IssueTag()
 		}
 
 		if (empty($tags))
-			redirectexit('issue=' . $context['current_issue']['id']);
+			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}issue_tags',
@@ -619,7 +619,7 @@ function IssueTag()
 		);
 	}
 
-	redirectexit('issue=' . $context['current_issue']['id']);
+	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
 
 function IssueDelete()
@@ -641,7 +641,7 @@ function IssueDelete()
 	);
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
-	redirectexit('project=' . $context['project']['id'] . ';sa=issues');
+	redirectexit(array('project' => $context['project']['id'], 'sa' => 'issues'));
 }
 
 ?>

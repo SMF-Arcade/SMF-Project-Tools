@@ -238,7 +238,7 @@ function ReportIssue2()
 
 	createIssue($issueOptions, $posterOptions);
 
-	redirectexit('project=' . $project . ';sa=issues');
+	redirectexit(project_get_url(array('project' => $project, 'sa' => 'issues')));
 }
 
 function IssueUpdate()
@@ -384,7 +384,7 @@ function IssueUpload()
 
 	// Not possible
 	if (empty($modSettings['projectAttachments']))
-		redirectexit('issue=' . $context['current_issue']['id'] . '.0');
+		redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
 	projectIsAllowedTo('issue_attach');
 
@@ -473,7 +473,7 @@ function IssueUpload()
 		array('id_issue', 'id_attach')
 	);
 
-	redirectexit('issue=' . $context['current_issue']['id'] . '.0');
+	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
 
 ?>
