@@ -34,6 +34,25 @@ function projectProfile($memID)
 
 	require_once($sourcedir . '/Project.php');
 	loadProjectTools('profile');
+
+	$subActions = array(
+		'main' => array('projectProfileMain'),
+	);
+
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
+
+	// Check permission if needed
+	if (isset($subActions[$_REQUEST['sa']][1]))
+		isAllowedTo($subActions[$_REQUEST['sa']][1]);
+
+	$subActions[$_REQUEST['sa']][0]($memID);
+}
+
+function projectProfileMain($memID)
+{
+	global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
+	global $user_info, $smcFunc, $sourcedir;
+
 }
 
 ?>
