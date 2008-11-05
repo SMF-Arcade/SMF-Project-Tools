@@ -56,6 +56,7 @@
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 
