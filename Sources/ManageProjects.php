@@ -65,6 +65,7 @@ function ManageProjectsList()
 		'get_items' => array(
 			'function' => 'list_getProjects',
 		),
+		'default_sort_col' => 'name',
 		'columns' => array(
 			'check' => array(
 				'header' => array(

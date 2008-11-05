@@ -300,7 +300,8 @@ function list_getProjects($start, $items_per_page, $sort)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_project, p.name
-		FROM {db_prefix}projects AS p');
+		FROM {db_prefix}projects AS p
+		ORDER BY ' . $sort);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
