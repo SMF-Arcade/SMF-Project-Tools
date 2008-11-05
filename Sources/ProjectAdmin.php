@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectsAdmin()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 	require_once($sourcedir . '/ManageServer.php');

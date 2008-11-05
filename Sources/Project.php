@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function Projects()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $project;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
 	$project = 0;
 
@@ -64,7 +64,7 @@ function Projects()
 	// Linktree
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_projects'],
-		'url' => $scripturl . '?action=projects'
+		'url' => project_get_url(array('action' => 'projects')),
 	);
 
 	// Load Issue if needed
@@ -128,17 +128,17 @@ function Projects()
 			'text' => parse_bbc($context['project']['description']),
 			'tabs' => array(
 				array(
-					'href' => $scripturl . '?project=' . $project,
+					'href' => project_get_url(array('project' => $project)),
 					'title' => $txt['project'],
 					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
 				),
 				'roadmap' => array(
-					'href' => $scripturl . '?project=' . $project . ';sa=roadmap',
+					'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
 					'title' => $txt['roadmap'],
 					'is_selected' => in_array($_REQUEST['sa'], array('roadmap')),
 				),
 				'issues' => array(
-					'href' => $scripturl . '?project=' . $project . ';sa=issues',
+					'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 					'title' => $txt['issues'],
 					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
 				)
@@ -148,24 +148,24 @@ function Projects()
 		// Linktree
 		$context['linktree'][] = array(
 			'name' => $context['project']['name'],
-			'url' => $scripturl . '?project=' . $project
+			'url' => project_get_url(array('project' => $project)),
 		);
 
 		if ($context['project_tabs']['tabs']['issues']['is_selected'])
 			$context['linktree'][] = array(
 				'name' => $txt['linktree_issues'],
-				'url' => $scripturl . '?project=' . $project . ';sa=issues',
+				'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 			);
 		elseif ($context['project_tabs']['tabs']['roadmap']['is_selected'])
 			$context['linktree'][] = array(
 				'name' => $txt['linktree_roadmap'],
-				'url' => $scripturl . '?project=' . $project . ';sa=roadmap',
+				'url' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
 			);
 
 		if (isset($context['current_issue']))
 			$context['linktree'][] = array(
 				'name' => $context['current_issue']['name'],
-				'url' => $scripturl . '?issue=' . $context['current_issue']['id'],
+				'url' => project_get_url(array('issue' => $context['current_issue']['id'])),
 			);
 
 		loadTemplate('ProjectView');
@@ -180,7 +180,7 @@ function Projects()
 
 function loadProjectTools($mode = '')
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $scripturl, $user_info, $txt, $project_version, $settings;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
 
 	if (!empty($project_version))
 		return;

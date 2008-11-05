@@ -3,7 +3,7 @@
 
 function template_projects_list()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	template_show_list('projects_list');
 }
@@ -150,7 +150,7 @@ function template_confirm_project_delete()
 
 function template_categories_list()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	template_show_list('categories_list');
 }

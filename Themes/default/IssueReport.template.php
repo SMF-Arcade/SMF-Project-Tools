@@ -34,7 +34,7 @@ function template_report_issue()
 	</div>';
 
 	echo '
-	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', project_get_url(array('sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
 			<div class="windowbg">
@@ -167,7 +167,7 @@ function template_issue_reply()
 	</div>';
 
 	echo '
-	<form action="', $scripturl, '?sa=', $context['destination'], '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', project_get_url(array('sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
 			<div class="windowbg">

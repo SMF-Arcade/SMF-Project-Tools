@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 function createProject($projectOptions)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	if (empty($projectOptions['name']) || !isset($projectOptions['description']) || !isset($projectOptions['member_groups']) || !isset($projectOptions['trackers']))
 		trigger_error('createProject(): required parameters missing or invalid', E_USER_ERROR);
@@ -64,7 +64,7 @@ function createProject($projectOptions)
 
 function createVersion($id_project, $versionOptions)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	if (empty($versionOptions['name']))
 		trigger_error('createVersion(): required parameters missing or invalid');
@@ -128,7 +128,7 @@ function createVersion($id_project, $versionOptions)
 
 function createPTCategory($id_project, $categoryOptions)
 {
-	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_category',
@@ -148,7 +148,7 @@ function createPTCategory($id_project, $categoryOptions)
 
 function loadProjectAdmin($id_project)
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info;
+	global $context, $smcFunc, $user_info, $txt, $user_info;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -175,8 +175,6 @@ function loadProjectAdmin($id_project)
 
 	$project = array(
 		'id' => $row['id_project'],
-		'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
-		'href' => $scripturl . '?project=' . $row['id_project'],
 		'name' => $row['name'],
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
@@ -197,7 +195,6 @@ function loadProjectAdmin($id_project)
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?project='. $project['id'] . ';sa=issues;type=' . $key,
 		);
 	}
 
@@ -243,7 +240,7 @@ function loadProjectAdmin($id_project)
 
 function loadVersions($project)
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $user_info, $txt;
 
 	// Load Versions
 	$request = $smcFunc['db_query']('', '

@@ -21,7 +21,7 @@ function template_issue_list()
 		</div>
 		<div id="search_panel" class="bordercolor"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
 			<div class="windowbg2" style="padding: 0.5em 0.7em">
-				<form action="', $scripturl, '?project=', $context['project']['id'], ';sa=issues" method="post">
+				<form action="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')), '" method="post">
 					', $txt['issue_title'], ':
 					<input type="text" name="title" value="', $context['issue_search']['title'], '" />
 					<select name="status">
@@ -55,7 +55,7 @@ function template_issue_list()
 		'post_issue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
-			'url' => $scripturl . '?project=' . $context['project']['id'] . ';sa=reportIssue',
+			'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'reportIssue')),
 			'lang' => true,
 			'test' => 'can_report_issues',
 		),
@@ -92,7 +92,7 @@ function template_issue_list()
 			echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+						<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'type' => $issue['type'])), '">
 							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
 						</a>
 					</td>

@@ -104,6 +104,73 @@ function getPrivateProfiles()
 	return $profiles;
 }
 
+// Function to generate urls
+function project_get_url($params = array())
+{
+	global $scripturl, $modSettings;
+
+	// Running in "standalone" mode WITH rewrite
+	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
+	{
+		$project = '';
+
+		if (isset($params['project']))
+		{
+			$project = $params['project'];
+			unset($params['project']);
+		}
+
+		if (count($params) === 0)
+			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
+
+		$query = '';
+
+		foreach ($params as $p => $value)
+		{
+			if ($value === null)
+				continue;
+
+			if (!empty($query))
+				$query .= ';';
+			else
+				$query .= '?';
+
+			if (!empty($value))
+				$query .= $p . '=' . $value;
+			elseif (is_int($p))
+				$query .= $value;
+		}
+
+		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
+	}
+	//Running in "standalone" mode without rewrite or standard mode
+	else
+	{
+		$return = '';
+
+		foreach ($params as $p => $value)
+		{
+			if ($value === null)
+				continue;
+
+			if (!empty($return))
+				$return .= ';';
+			else
+				$return .= '?';
+
+			if (!empty($value))
+				$return .= $p . '=' . $value;
+			elseif (is_int($p))
+				$query .= $value;
+		}
+
+		if (!empty($modSettings['projectStandalone']))
+			return $modSettings['projectStandaloneUrl'] . $return;
+		else
+			return $scripturl . $return;
+	}
+}
+
 function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -224,9 +291,9 @@ function loadTimeline($project = 0)
 
 		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
-			'project_link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+			'project_link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
-			'link' => !empty($row['subject']) ? '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
+			'link' => !empty($row['subject']) ? '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'extra' => $extra,
 		);
@@ -263,8 +330,8 @@ function loadProject()
 
 	$context['project'] = array(
 		'id' => $row['id_project'],
-		'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
-		'href' => $scripturl . '?project=' . $row['id_project'],
+		'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+		'href' => project_get_url(array('project' => $row['id_project'])),
 		'name' => $row['name'],
 		'description' => $row['description'],
 		'long_description' => $row['long_description'],
@@ -286,7 +353,7 @@ function loadProject()
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => $scripturl . '?project='. $context['project']['id'] . ';sa=issues;type=' . $key,
+			'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
 		);
 	}
 
@@ -440,7 +507,7 @@ function projectIsAllowedTo($permission)
 
 function updateProject($id_project, $projectOptions)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	require_once($sourcedir . '/Subs-Boards.php');
 
@@ -483,7 +550,7 @@ function updateProject($id_project, $projectOptions)
 
 function updateVersion($id_version, $versionOptions)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	$versionUpdates = array();
 
@@ -522,7 +589,7 @@ function updateVersion($id_version, $versionOptions)
 
 function updatePTCategory($id_category, $categoryOptions)
 {
-	global $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	$categoryUpdates = array();
 
@@ -646,9 +713,9 @@ function DiffParser($text)
 
 function issue_link_callback($data)
 {
-	global $smcFunc, $scripturl, $modSettings;
+	global $smcFunc, $modSettings;
 
-	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . $scripturl . '?issue=\1.0">\1</a>', $data[0]);
+	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . project_get_url(array('issue' => '\1.0')) . '">\1</a>', $data[0]);
 
 	return $data[0];
 }

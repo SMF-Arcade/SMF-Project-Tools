@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectRoadmap()
 {
-	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+	global $context, $project, $user_info, $smcFunc, $txt;
 
 	if (!isset($_REQUEST['version']))
 		ProjectRoadmapMain();
@@ -39,7 +39,7 @@ function ProjectRoadmap()
 
 function ProjectRoadmapMain()
 {
-	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+	global $context, $project, $user_info, $smcFunc, $txt;
 
 	$ids = array();
 	$context['roadmap'] = array();
@@ -78,7 +78,7 @@ function ProjectRoadmapMain()
 		$context['roadmap'][$row['id_version']] = array(
 			'id' => $row['id_version'],
 			'name' => $row['version_name'],
-			'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
+			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version'])),
 			'description' => parse_bbc($row['description']),
 			'release_date' => vsprintf($txt[$time[0]], $time[1]),
 			'versions' => array(),
@@ -140,7 +140,7 @@ function ProjectRoadmapMain()
 
 function ProjectRoadmapVersion()
 {
-	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
+	global $context, $project, $user_info, $smcFunc, $txt;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -178,7 +178,7 @@ function ProjectRoadmapVersion()
 	$context['version'] = array(
 		'id' => $row['id_version'],
 		'name' => $row['version_name'],
-		'href' => $scripturl . '?project=' . $project . ';sa=roadmap;version=' . $row['id_version'],
+		'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version'])),
 		'description' => parse_bbc($row['description']),
 		'release_date' => vsprintf($txt[$time[0]], $time[1]),
 		'versions' => array(),
@@ -190,7 +190,7 @@ function ProjectRoadmapVersion()
 
 	// Load Issues
 	$context['issues'] = getIssueList(10, 'i.updated DESC');
-	$context['issues_href'] = $scripturl . '?project=' . $project . ';sa=issues;version=' . $context['version']['id'];
+	$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $context['version']['id']));
 
 	// Template
 	$context['sub_template'] = 'project_roadmap_version';

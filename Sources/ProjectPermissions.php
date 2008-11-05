@@ -22,7 +22,7 @@
 
 function ManageProjectPermissions()
 {
-	global $context, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $sourcedir, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 
@@ -129,7 +129,7 @@ function ManageProjectPermissionsMain()
 
 function NewProjectProfile()
 {
-	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 
 	$context['profiles'] = list_getProfiles();
 
@@ -294,7 +294,7 @@ function PTloadProfile()
 
 function EditProfilePermissions()
 {
-	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 
 	PTloadProfile();
 
@@ -356,7 +356,7 @@ function EditProfilePermissions()
 
 function EditProfilePermissions2()
 {
-	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 
 	PTloadProfile();
 

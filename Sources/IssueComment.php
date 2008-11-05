@@ -22,7 +22,7 @@
 
 function IssueReply()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -203,7 +203,7 @@ function IssueReply()
 
 function IssueReply2()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -360,7 +360,7 @@ function IssueReply2()
 
 function IssueDeleteComment()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	if (!isset($context['current_issue']) || empty($_REQUEST['com']))
 		fatal_lang_error('issue_not_found', false);

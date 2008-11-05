@@ -14,7 +14,7 @@ function template_issue_view_above()
 			'text' => 'reply',
 			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
-			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
+			'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0' , 'sa' => 'reply')),
 			'lang' => true
 		),
 	);
@@ -128,21 +128,21 @@ function template_issue_view_above()
 						<div class="messageicon floatleft">
 							<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
 						</div>
-						<h5><a href="', $scripturl , '?issue=', $context['current_issue']['id'], '.0#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>							<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
+						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>							<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
 					</div>
 					<ul class="smalltext postingbuttons">';
 
 		if ($context['can_comment'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $issueDetails['id'], 'sesc' => $context['session_id'])), '">', $reply_button, '</a></li>';
 
 		if ($context['can_comment'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $issueDetails['id'], 'sesc' => $context['session_id'])), '">', $modify_button, '</a></li>';
 
 		if ($issueDetails['can_remove'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $issueDetails['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $issueDetails['id'], 'sesc' => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 					</ul>
@@ -156,18 +156,9 @@ function template_issue_view_above()
 			echo '
 					<hr width="100%" size="1" class="hrcolor" />
 					<div style="overflow: auto; width: 100%;">';
-			//$last_approved_state = 1;
+
 			foreach ($context['attachments'] as $attachment)
 			{
-				/*// Show a special box for unapproved attachments...
-				if ($attachment['is_approved'] != $last_approved_state)
-				{
-					$last_approved_state = 0;
-					echo '
-						<fieldset>
-							<legend>', $txt['attach_awaiting_approve'], '&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=all;mid=', $message['id'], ';sesc=', $context['session_id'], '">', $txt['approve_all'], '</a>]</legend>';
-				}*/
-
 				if ($attachment['is_image'])
 				{
 					if ($attachment['thumbnail']['has_thumb'])
@@ -180,17 +171,9 @@ function template_issue_view_above()
 				echo '
 							<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
 
-				/*if (!$attachment['is_approved'])
-					echo '
-							[<a href="', $scripturl, '?action=attachapprove;sa=approve;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['approve'], '</a>]&nbsp;|&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=reject;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['delete'], '</a>] ';*/
 				echo '
 								(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
 			}
-
-			// If we had unapproved attachments clean up.
-			if ($last_approved_state == 0)
-				echo '
-							</fieldset>';
 
 			echo '
 						</div>';
@@ -315,7 +298,7 @@ function template_issue_view_above()
 
 	echo '
 	<div style="text-align: right">
-		<form action="', $scripturl, '" method="get">
+		<form action="', project_get_url(), '" method="get">
 			<select name="issue">
 				<option value="', $context['current_issue']['id'], '.0"', $context['current_view'] == 'comments' ? ' selected="selected"' : '', '>', $txt['issue_view_comments'], '</option>
 				<option value="', $context['current_issue']['id'], '.log"', $context['current_view'] == 'log' ? ' selected="selected"' : '', '>', $txt['issue_view_changes'], '</option>
@@ -389,15 +372,15 @@ function template_issue_comments()
 
 		if ($context['can_comment'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $comment['id'], 'sesc' => $context['session_id'])), '">', $reply_button, '</a></li>';
 
 		if ($context['can_comment'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'quote' => $comment['id'], 'sesc' => $context['session_id'])), '">', $modify_button, '</a></li>';
 
 		if ($comment['can_remove'])
 			echo '
-						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=removeComment;com=', $comment['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'quote' => $comment['id'], 'sesc' => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 					</ul>
@@ -455,7 +438,7 @@ function template_issue_comments()
 
 function template_issue_log()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+	global $context, $settings, $options, $txt, $modSettings, $settings;
 
 	echo '
 	<div class="tborder">
@@ -501,10 +484,10 @@ function template_issue_log()
 
 function template_issue_view_below()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+	global $context, $settings, $options, $txt, $modSettings, $settings;
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=delete;sesc=' . $context['session_id']),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', 'sesc' => $context['session_id']))),
 	);
 
 	echo '
@@ -518,7 +501,7 @@ function template_issue_view_below()
 	if ($context['can_comment'])
 	{
 		echo '
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply2" method="post">
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'reply2')), '" method="post">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
 			<div class="smallpadding windowbg" style="text-align: center">
@@ -536,7 +519,7 @@ function template_issue_view_below()
 	}
 
 	echo '
-	<form action="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags" method="post">
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags')), '" method="post">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['issue_tags'], '</div>
 			<div class="smallpadding windowbg">';
@@ -555,7 +538,7 @@ function template_issue_view_below()
 
 				if ($context['can_remove_tags'])
 					echo '
-						<a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=tags;remove;tag=', $tag['id'], ';sesc=', $context['session_id'], '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], 'sesc' => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
 					echo '
 					</li>';
@@ -572,10 +555,6 @@ function template_issue_view_below()
 		echo '
 				</ul>';
 	}
-	else
-	{
-
-	}
 
 	echo '
 			</div>
@@ -586,7 +565,7 @@ function template_issue_view_below()
 	if ($context['can_issue_attach'])
 	{
 		echo '
-	<form action="', $scripturl , '?issue=', $context['current_issue']['id'], '.0;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
 			<div class="smallpadding windowbg">

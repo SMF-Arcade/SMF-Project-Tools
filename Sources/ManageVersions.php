@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 function ManageVersions()
 {
-	global $context, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $sourcedir, $user_info, $txt;
 
 	require_once($sourcedir . '/Project.php');
 
@@ -191,7 +191,7 @@ function ManageVersionsList()
 
 function EditVersion()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
 	$_REQUEST['version'] = isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0;
 	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
@@ -297,7 +297,7 @@ function EditVersion()
 
 function EditVersion2()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
 	checkSession();
 

@@ -3,7 +3,7 @@
 
 function template_main()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	foreach ($context['diff'] as $file)
 	{

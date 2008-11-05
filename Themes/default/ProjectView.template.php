@@ -3,7 +3,7 @@
 
 function template_project_view_above()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	if (!empty($context['project_tabs']))
 	{
@@ -48,7 +48,7 @@ function template_project_view_above()
 
 function template_project_view()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<div class="tborder">
@@ -98,7 +98,7 @@ function template_project_view()
 				echo '
 					<tr>
 						<td class="windowbg icon">
-							<a href="', $scripturl, '?project=', $context['project']['id'], ';sa=issues;type=', $issue['type'], '">
+							<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'type' => $issue['type'])), '">
 								<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
 							</a>
 						</td>
@@ -230,7 +230,7 @@ function template_project_view()
 
 function template_project_view_below()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 }
 

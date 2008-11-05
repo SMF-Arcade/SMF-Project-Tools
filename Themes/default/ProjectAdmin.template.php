@@ -2,7 +2,7 @@
 
 function template_project_admin_above()
 {
-	global $scripturl, $txt, $context, $project_version;
+	global $txt, $context, $project_version;
 
 	echo '
 	<div>', sprintf($txt['project_status_desc'], $project_version, '???'), '</div>';
@@ -11,7 +11,7 @@ function template_project_admin_above()
 
 function template_project_admin_below()
 {
-	global $scripturl, $txt, $context, $project_version;
+	global $txt, $context, $project_version;
 
 	// Print out copyright and version. Removing copyright is not allowed by license
 	echo '

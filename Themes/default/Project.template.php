@@ -3,12 +3,12 @@
 
 function template_project_above()
 {
-	global $scripturl, $txt, $context;
+	global $txt, $context;
 }
 
 function template_project_list()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<div class="projectlistframe tborder">';
@@ -114,7 +114,7 @@ function template_project_list()
 
 function template_project_below()
 {
-	global $scripturl, $txt, $context, $project_version;
+	global $txt, $context, $project_version;
 
 	// Print out copyright and version. Removing copyright is not allowed by license
 	echo '

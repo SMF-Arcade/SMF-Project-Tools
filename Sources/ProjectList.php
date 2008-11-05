@@ -66,8 +66,8 @@ function ProjectList()
 
 		$context['projects'][$row['id_project']] = array(
 			'id' => $row['id_project'],
-			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
-			'href' => $scripturl . '?project=' . $row['id_project'],
+			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+			'href' => project_get_url(array('project' => $row['id_project'])),
 			'name' => $row['name'],
 			'description' => $row['description'],
 			'trackers' =>  explode(',', $row['trackers']),
@@ -85,7 +85,7 @@ function ProjectList()
 				'open' => $row['open_' . $key],
 				'closed' => $row['closed_' . $key],
 				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => $scripturl . '?project='. $row['id_project'] . ';sa=issues;type=' . $key
+				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
 			);
 		}
 	}
@@ -94,11 +94,6 @@ function ProjectList()
 	loadTimeline();
 
 	// Template
-	$context['linktrgee'][] = array(
-		'name' => $txt['projects'],
-		'url' => $scripturl . '?action=projects'
-	);
-
 	$context['sub_template'] = 'project_list';
 	$context['page_title'] = sprintf($txt['project_list_title'], $context['forum_name']);
 }

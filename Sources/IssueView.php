@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 function IssueView()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
@@ -56,7 +56,7 @@ function IssueView()
 		$context['current_tags'][] = array(
 			'id' => urlencode($row['tag']),
 			'tag' => $row['tag'],
-			'link' => '<a href="' . $scripturl .'?project=' . $context['project']['id'] . ';sa=issues;tag=' . urlencode($row['tag']) . '">' . $row['tag'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 		);
 	}
 
@@ -183,7 +183,7 @@ function IssueView()
 
 function IssueViewComments()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
 
 	// Mark this issue as read
 	if (!$user_info['is_guest'])
@@ -204,7 +204,7 @@ function IssueViewComments()
 		);
 	}
 
-	$context['page_index'] = constructPageIndex($scripturl . '?issue=' . $issue . '.%d', $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
+	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
 
 	loadAttachmentData();
 
@@ -349,7 +349,7 @@ function IssueViewLog()
 
 function prepareComments($all = true)
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
 
 	$posters = array($context['current_issue']['id_reporter'] => $context['current_issue']['id_reporter']);
 	$comments = array($context['current_issue']['comment_first']);
@@ -505,7 +505,7 @@ function loadAttachmentData()
 
 function getComment()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt, $modSettings, $memberContext;
+	global $context, $smcFunc, $user_info, $txt, $modSettings, $memberContext;
 	static $counter = 0;
 	static $first_new = true;
 	static $first = true;

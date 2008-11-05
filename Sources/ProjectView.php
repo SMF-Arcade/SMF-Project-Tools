@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectView()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $project;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
 	if (!$user_info['is_guest'])
 	{
@@ -62,28 +62,28 @@ function ProjectView()
 	$issue_list = array(
 		'recent_issues' => array(
 			'title' => 'recent_issues',
-			'href' => $scripturl . '?project=' . $project . ';sa=issues',
+			'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 			'order' => 'i.updated DESC',
 			'where' => '1 = 1',
 			'show' => projectAllowedTo('issue_view'),
 		),
 		'my_reports' => array(
 			'title' => 'reported_by_me',
-			'href' => $scripturl . '?project=' . $project . ';sa=issues;reporter=' . $user_info['id'],
+			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'reporter' => $user_info['id'])),
 			'order' => 'i.updated DESC',
 			'where' => 'i.id_reporter = {int:member}',
 			'show' => projectAllowedTo('issue_report'),
 		),
 		'assigned' => array(
 			'title' => 'assigned_to_me',
-			'href' => $scripturl . '?project=' . $project . ';sa=issues;assignee=' . $user_info['id'],
+			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'assignee' => $user_info['id'])),
 			'order' => 'i.updated DESC',
 			'where' => 'i.id_assigned = {int:member} AND NOT (i.status IN ({array_int:closed_status}))',
 			'show' => projectAllowedTo('issue_resolve'),
 		),
 		'new_issues' => array(
 			'title' => 'new_issues',
-			'href' => $scripturl . '?project=' . $project . ';sa=issues',
+			'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 			'order' => 'i.created DESC',
 			'where' => 'i.status = 1',
 			'show' => projectAllowedTo('issue_view'),

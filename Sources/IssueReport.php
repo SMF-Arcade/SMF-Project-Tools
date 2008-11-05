@@ -37,7 +37,7 @@ if (!defined('SMF'))
 
 function ReportIssue()
 {
-	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
+	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project;
 
 	projectIsAllowedTo('issue_report');
 	require_once($sourcedir . '/Subs-Post.php');
@@ -130,7 +130,7 @@ function ReportIssue()
 
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_report_issue'],
-		'url' => $scripturl . '?project=' . $project . ';sa=reportIssue'
+		'url' => project_get_url(array('project' => $project, 'sa' => 'reportIssue')),
 	);
 
 	// Template
@@ -142,7 +142,7 @@ function ReportIssue()
 
 function ReportIssue2()
 {
-	global $smcFunc, $context, $user_info, $txt, $scripturl, $modSettings, $sourcedir, $project;
+	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project;
 
 	projectIsAllowedTo('issue_report');
 
@@ -378,7 +378,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 
 function IssueUpload()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
 	require_once($sourcedir . '/Subs-Post.php');
 

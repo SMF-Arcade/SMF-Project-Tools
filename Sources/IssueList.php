@@ -63,7 +63,10 @@ function IssueList()
 		$context['sort_direction'] = $ascending ? 'up' : 'down';
 	}
 
-	$baseurl = $scripturl . '?project=' . $context['project']['id'] . ';sa=issues';
+	$baseurl = array(
+		'project' => $context['project']['id'],
+		'sa' => 'issues'
+	);
 
 	// Build Search info
 	$context['issue_search'] = array(
@@ -86,37 +89,37 @@ function IssueList()
 	if (!empty($_REQUEST['title']))
 	{
 		$context['issue_search']['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
-		$baseurl .= ';title=' . $_REQUEST['title'];
+		$baseurl['tilte'] = $_REQUEST['title'];
 	}
 
 	if (!empty($_REQUEST['status']))
 	{
 		$context['issue_search']['status'] = $_REQUEST['status'];
-		$baseurl .= ';status=' . $_REQUEST['status'];
+		$baseurl['status'] = $_REQUEST['status'];
 	}
 
 	if (!empty($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
 	{
 		$context['issue_search']['type'] = $_REQUEST['type'];
-		$baseurl .= ';type=' . $_REQUEST['type'];
+		$baseurl['type'] = $_REQUEST['type'];
 	}
 
 	if (!empty($_REQUEST['category']))
 	{
 		$context['issue_search']['category'] = $_REQUEST['category'];
-		$baseurl .= ';category=' . $_REQUEST['category'];
+		$baseurl['category'] = $_REQUEST['category'];
 	}
 
 	if (!empty($_REQUEST['reporter']))
 	{
 		$context['issue_search']['reporter'] = $_REQUEST['reporter'];
-		$baseurl .= ';reporter=' . $_REQUEST['reporter'];
+		$baseurl['reporter'] .= $_REQUEST['reporter'];
 	}
 
 	if (!empty($_REQUEST['assignee']))
 	{
 		$context['issue_search']['assignee'] = $_REQUEST['assignee'];
-		$baseurl .= ';assignee=' . $_REQUEST['assignee'];
+		$baseurl['assignee'] .= $_REQUEST['assignee'];
 	}
 
 	if (!empty($_REQUEST['version']))
@@ -128,13 +131,13 @@ function IssueList()
 			$context['issue_search']['version'] = $_REQUEST['version'];
 			$context['issue_search']['versions'] = array_merge(array($_REQUEST['version']), array_keys($context['versions'][$_REQUEST['version']]['sub_versions']));
 
-			$baseurl .= ';version=' . $_REQUEST['version'];
+			$baseurl['version'] = $_REQUEST['version'];
 		}
 		else
 		{
 			$context['issue_search']['versions'][] = $_REQUEST['version'];
 
-			$baseurl .= ';version=' . $_REQUEST['version'];
+			$baseurl['version'] = $_REQUEST['version'];
 		}
 	}
 
@@ -143,7 +146,7 @@ function IssueList()
 	if (!empty($_REQUEST['tag']))
 	{
 		$context['issue_search']['tag'] = $_REQUEST['tag'];
-		$baseurl .= ';tag=' . $_REQUEST['tag'];
+		$baseurl['tag'] = $_REQUEST['tag'];
 	}
 
 	// Build where clause
@@ -202,7 +205,7 @@ function IssueList()
 	list ($issueCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($baseurl, $_REQUEST['start'], $issueCount, $context['issues_per_page']);
+	$context['page_index'] = constructPageIndex(project_get_url($baseurl), $_REQUEST['start'], $issueCount, $context['issues_per_page']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -258,17 +261,17 @@ function IssueList()
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>',
-			'href' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
+			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
+			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'version' => array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
+				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
 			),
 			'tags' => $row['tags'],
 			'type' => $row['issue_type'],
@@ -288,7 +291,7 @@ function IssueList()
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_comment_mod'],
-			'new_href' => $scripturl . '?issue=' . $row['id_issue'] . '.com' . $row['new_from'] . '#new',
+			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -302,9 +305,7 @@ function IssueList()
 
 function link_tags(&$tag, $key, $baseurl)
 {
-	global $scripturl;
-
-	$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
+	$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
 }
 
 ?>

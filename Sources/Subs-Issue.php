@@ -22,7 +22,7 @@
 
 function loadIssueTypes()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
 	$context['project_tools']['issue_types'] = array(
 		'bug' => array(
@@ -140,11 +140,11 @@ function loadIssue($id_issue)
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
-		'link' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
+		'link' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		),
 		'version' => array(
 			'id' => $row['id_version'],
@@ -883,17 +883,17 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 		$return[] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?issue=' . $row['id_issue'] . '.0">' . $row['subject'] . '</a>',
-			'href' => $scripturl . '?issue=' . $row['id_issue'] . '.0',
+			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
+			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'version' => array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => !empty($row['version_name']) ? '<a href="' . $scripturl . '?project=' . $row['id_project'] . ';sa=issues;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>' : ''
+				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
 			),
 			'type' => $row['issue_type'],
 			'updated' => timeformat($row['updated']),
@@ -912,7 +912,7 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_comment_mod'],
-			'new_href' => $scripturl . '?issue=' . $row['id_issue'] . '.com' . $row['new_from'] . '#new',
+			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);
