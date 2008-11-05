@@ -27,7 +27,7 @@ if (!defined('SMF'))
 	!!!
 */
 
-function Projects()
+function Projects($standalone = false)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
