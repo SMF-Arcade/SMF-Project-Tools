@@ -323,18 +323,18 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	}
 
 	// Private
-	if (isset($_REQUEST['private']) && $context['current_issue']['private'] != !empty($_REQUEST['private']))
+	if (isset($_REQUEST['private']))
 		$issueOptions['private'] = !empty($_REQUEST['private']);
 
 	// Priority
-	if (isset($_REQUEST['priority']) && $context['current_issue']['priority_num'] != (int) $_REQUEST['priority'])
+	if (isset($_REQUEST['priority']))
 	{
 		if (isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
 			$issueOptions['priority'] = (int) $_REQUEST['priority'];
 	}
 
 	// Version
-	if (isset($_REQUEST['version']) && $context['current_issue']['version']['id'] != (int) $_REQUEST['version'])
+	if (isset($_REQUEST['version']))
 	{
 		if (!isset($context['versions_id'][(int) $_REQUEST['version']]))
 			$_REQUEST['version'] = 0;
@@ -343,7 +343,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	}
 
 	// Version fixed
-	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['version_fixed']) && $context['current_issue']['version_fixed']['id'] != (int) $_REQUEST['version_fixed'])
+	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['version_fixed']))
 	{
 		if (!isset($context['versions_id'][(int) $_REQUEST['version_fixed']]))
 			$_REQUEST['version_fixed'] = 0;
@@ -352,7 +352,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	}
 
 	// Category
-	if (isset($_REQUEST['category']) && $context['current_issue']['category']['id'] != (int) $_REQUEST['category'])
+	if (isset($_REQUEST['category']))
 	{
 		if (!isset($context['project']['category'][(int) $_REQUEST['category']]))
 			$_REQUEST['category'] = 0;
@@ -361,7 +361,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	}
 
 	// Status
-	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['status']) && $context['current_issue']['status']['id'] != (int) $_REQUEST['status'])
+	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['status']))
 	{
 		if (isset($context['issue']['status'][(int) $_REQUEST['status']]))
 			$issueOptions['status'] = (int) $_REQUEST['status'];
