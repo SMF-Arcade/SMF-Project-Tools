@@ -3,7 +3,7 @@
 
 function template_report_issue()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -136,7 +136,7 @@ function template_report_issue()
 
 function template_issue_reply()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[

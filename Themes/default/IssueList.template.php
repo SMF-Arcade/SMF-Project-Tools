@@ -3,7 +3,7 @@
 
 function template_issue_list()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
