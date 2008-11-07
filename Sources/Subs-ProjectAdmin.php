@@ -384,7 +384,6 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 			);
 		}
 	}
-
 	$smcFunc['db_free_result']($request);
 
 	$versions = array();

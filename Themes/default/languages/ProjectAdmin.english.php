@@ -118,6 +118,7 @@ $txt['permissionname_project_edit_comment_any'] = 'Modify any comment';
 $txt['permission_save'] = 'Save Changes';
 
 // Errors
+$txt['admin_no_projects'] = 'No Projects Created';
 $txt['no_issue_types'] = 'No issue types selected';
 $txt['profile_not_found'] = 'Profile not found';
 
