@@ -647,6 +647,36 @@ $tables = array(
 			),
 		)
 	),
+	// Settings
+	'projects_settings' => array(
+		'name' => 'projects_settings',
+		'columns' => array(
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'variable',
+				'type' => 'varchar',
+				'size' => 30,
+			),
+			array(
+				'name' => 'value',
+				'type' => 'text',
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_member', 'variable')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_member')
+			),
+		)
+	),
 	// SMF Boards
 	'boards' => array(
 		'name' => 'boards',
