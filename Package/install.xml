@@ -131,6 +131,24 @@ else
 			),
 		),]]></add>
 		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[	$language_files = array(]]></search>
+			<add><![CDATA[
+	'ProjectAdmin', ]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[	$include_files = array(]]></search>
+			<add><![CDATA[
+	'ProjectAdmin', ]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),]]></search>
+			<add><![CDATA[
+		array('ProjectsAdminSettings', 'area=projectsettings;sa=main'),]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Display.php">
