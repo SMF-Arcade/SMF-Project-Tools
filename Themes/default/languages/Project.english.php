@@ -71,6 +71,11 @@ $txt['issue_replies'] = 'Replies';
 $txt['project_tools_profile'] = 'Project Tools';
 $txt['project_tools_profile_desc'] = '';
 
+// Profile Statistics
+$txt['project_stats'] = 'Project Statistics';
+$txt['profile_reported_issues'] = 'Issues Reported';
+$txt['profile_assigned_issues'] = 'Issues Assigned';
+
 // Project List
 $txt['project_description'] = 'Description';
 $txt['new_issues'] = 'New Issues';

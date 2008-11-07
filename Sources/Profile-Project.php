@@ -41,7 +41,7 @@ function projectProfile($memID)
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 
-	$context[$context['profile_menu_name']]['tab_data']['tilte'] = $txt['project_tools_profile'];
+	$context[$context['profile_menu_name']]['tab_data']['title'] = $txt['project_tools_profile'];
 	$context[$context['profile_menu_name']]['tab_data']['description'] = $txt['project_tools_profile_desc'];
 
 	// Check permission if needed
@@ -55,6 +55,38 @@ function projectProfileMain($memID)
 {
 	global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
 	global $user_info, $smcFunc, $sourcedir;
+
+	$context['statistics'] = array();
+
+	// Reported Issues
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}issues
+		WHERE id_reporter = {int:member}',
+		array(
+			'member' => $memID,
+		)
+	);
+
+	list ($context['statistics']['reported_issues']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	// Assigned Issues
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}issues
+		WHERE id_assigned = {int:member}',
+		array(
+			'member' => $memID,
+		)
+	);
+
+	list ($context['statistics']['assigned_issues']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	// Format
+	$context['statistics']['reported_issues'] = comma_format($context['statistics']['reported_issues']);
+	$context['statistics']['assigned_issues'] = comma_format($context['statistics']['assigned_issues']);
 
 	// Template
 	$context['sub_template'] = 'project_profile_main';

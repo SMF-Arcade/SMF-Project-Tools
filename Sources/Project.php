@@ -203,6 +203,8 @@ function loadProjectTools($mode = '')
 	}
 	elseif ($mode == 'profile')
 	{
+		loadTemplate('ProjectProfile');
+
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 	}
