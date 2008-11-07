@@ -380,6 +380,9 @@ function ManageCategoriesList()
 	}
 	$smcFunc['db_free_result']($request);
 
+	if (empty($projects))
+		fatal_lang_error('admin_no_projects', false);
+
 	// Current project
 	if (!isset($_REQUEST['project']) || !in_array((int) $_REQUEST['project'], $projects))
 		$id_project = $projects[0];
