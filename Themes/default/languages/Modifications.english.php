@@ -15,6 +15,7 @@ $txt['patch_highlight'] = 'Viewing Highlight of Patch: %s';
 
 // Profile
 $txt['project_profile'] = 'Project Tools';
+$txt['project_profile_main'] = 'Statistics';
 
 // SMF Project tools admin
 $txt['manage_projects'] = 'Projects';

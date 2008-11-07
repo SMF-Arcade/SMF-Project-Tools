@@ -67,6 +67,10 @@ $txt['issue_category'] = 'Category';
 $txt['issue_last_update'] = 'Last Update';
 $txt['issue_replies'] = 'Replies';
 
+// Profile
+$txt['project_tools_profile'] = 'Project Tools';
+$txt['project_tools_profile_desc'] = '';
+
 // Project List
 $txt['project_description'] = 'Description';
 $txt['new_issues'] = 'New Issues';

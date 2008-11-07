@@ -41,6 +41,9 @@ function projectProfile($memID)
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 
+	$context[$context['profile_menu_name']]['tab_data']['tilte'] = $txt['project_tools_profile'];
+	$context[$context['profile_menu_name']]['tab_data']['description'] = $txt['project_tools_profile_desc'];
+
 	// Check permission if needed
 	if (isset($subActions[$_REQUEST['sa']][1]))
 		isAllowedTo($subActions[$_REQUEST['sa']][1]);
@@ -53,6 +56,8 @@ function projectProfileMain($memID)
 	global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
 	global $user_info, $smcFunc, $sourcedir;
 
+	// Template
+	$context['sub_template'] = 'project_profile_main';
 }
 
 ?>
