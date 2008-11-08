@@ -472,28 +472,51 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 			);
 
 			if (isset($event_data2['changes']) && isset($event_data['changes']))
-				$new_changes = array_merge($event_data['changes'], $event_data2['changes']);
+			{
+				//$new_changes = array_merge($event_data['changes'], $event_data2['changes']);
+
+				$temp_changes = array();
+
+				foreach ($event_data['changes'] as $id => $data)
+				{
+					list ($field, $old_value, $new_value) = $data;
+
+					$temp_changes[$field] = array($old_value, $new_value);
+				}
+
+				foreach ($event_data2['changes'] as $id => $data)
+				{
+					list ($field, $old_value, $new_value) = $data;
+
+					if (!isset($temp_changes[$field]))
+						$temp_changes[$field] = array($old_value, $new_value);
+					else
+					{
+						$temp_changes[$field][1] = $new_value;
+
+						if ($temp_changes[$field][0] == $temp_changes[$field][1])
+							unset($temp_changes[$field]);
+					}
+				}
+
+				// Changed everything back to orignal?
+				if (empty($temp_changes))
+					return;
+
+				foreach ($temp_changes as $field => $data)
+					$new_changes[] = array($field, $data[0], $data[1]);
+			}
+			// This is easier :P
 			elseif (isset($event_data2['changes']))
 				$new_changes = $event_data2['changes'];
 			elseif (isset($event_data['changes']))
 				$new_changes = $event_data['changes'];
-
-			$temp = array();
-			foreach ($new_changes as $id => $d)
-			{
-				if (in_array($d[0], $temp))
-					unset($new_changes[$id]);
-				else
-					$temp[] = $d[0];
-			}
 
 			$event_data['changes'] = $new_changes;
 		}
 
 		$smcFunc['db_free_result']($request);
 	}
-
-	sort($event_data['changes']);
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',
