@@ -547,6 +547,16 @@ function EditCategory2()
 		else
 			updatePTCategory($_POST['category'], $categoryOptions);
 	}
+	elseif (isset($_POST['delete']))
+	{
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issue_category
+			WHERE id_category = {int:category}',
+			array(
+				'category' => $_POST['category']
+			)
+		);
+	}
 
 	redirectexit('action=admin;area=managecategories;project=' . $_POST['project']);
 }

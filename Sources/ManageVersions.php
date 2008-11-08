@@ -330,7 +330,6 @@ function EditVersion2()
 
 		$versionOptions['member_groups'] = $_POST['groups'];
 
-
 		if (isset($_POST['add']))
 			createVersion($_POST['project'], $versionOptions);
 		else
