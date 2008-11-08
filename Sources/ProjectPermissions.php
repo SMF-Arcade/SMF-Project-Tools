@@ -135,11 +135,68 @@ function NewProjectProfile()
 
 	$context['profile'] = array(
 		'name' => '',
+		'copy_from' => 0,
 	);
 
 	// Template
 	$context['page_title'] = $txt['title_new_profile'];
 	$context['sub_template'] = 'profile_new';
+}
+
+function NewProjectProfile2()
+{
+	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
+
+	if (empty($_REQUEST['profile_name']))
+		return NewProjectProfile();
+
+	checkSession();
+
+	$_POST['profile_name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['profile_name']);
+
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}project_profiles',
+		array(
+			'profile_name' => 'string-255',
+		),
+		array(
+			$_POST['profile_name'],
+		)
+	);
+
+	$id_profile = $smcFunc['db_insert_id']('{db_prefix}project_profiles', 'id_profile');
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_group, permission
+		FROM {db_prefix}project_permissions
+		WHERE id_profile = {int:profile}
+			AND  = {int:group}',
+		array(
+			'profile' => (int) $_POST['profile_base'],
+		)
+	);
+
+	$permissions = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$permissions[] = array($id_profile, $row['id_group'], $row['permission']);
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($permissions))
+	{
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_permissions',
+			array(
+				'id_profile' => 'int',
+				'id_group' => 'int',
+				'permission' => 'string',
+			),
+			$permissions,
+			array('id_profile', 'id_group', 'permission')
+		);
+	}
+
+	redirectexit('action=admin;area=projectpermissions');
 }
 
 function EditProjectProfile()
@@ -359,6 +416,8 @@ function EditProfilePermissions2()
 	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 
 	PTloadProfile();
+
+	checkSession();
 
 	$allPermissions = getAllPTPermissions();
 

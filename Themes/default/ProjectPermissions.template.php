@@ -23,7 +23,7 @@ function template_profile_new()
 			<div class="windowbg2 clearfix">
 				<span class="floatleft"><label for="profile_base">', $txt['profile_name'], '</label></span>
 				<span class="floatright">
-					<select id="profile_base" name="profile_name">';
+					<select id="profile_base" name="profile_base">';
 
 	foreach ($context['profiles'] as $profile)
 		echo '
@@ -37,6 +37,7 @@ function template_profile_new()
 				<input type="submit" name="save" value="', $txt['profile_create'], '" />
 			</div>
 		</div>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -71,6 +72,7 @@ function template_profile_edit()
 				</table>
 			</div>
 		</div>
+
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
 	</form>';
 }
@@ -108,6 +110,8 @@ function template_profile_permissions()
 				</div>
 			</div>
 		</div>
+
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
 		<input type="hidden" name="group" value="', $context['group']['id'], '" />
 	</form>';
