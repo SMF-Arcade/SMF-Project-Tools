@@ -380,97 +380,150 @@ else
 
 	</file>
 
-	<!--<file name="$sourcedir/Subs-BoardIndex.php">
+	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
-			<search position="before"><![CDATA[b.description,]]></search>
-			<add><![CDATA[ p.id_project, p.name AS project_name, p.trackers, p.description AS pdescription' . (!empty($context['type_columns']) ? ', p.' . implode(', p.', $context['type_columns']) : '') . ',
-			p.id_comment_mod, ' . ($user_info['is_guest'] ? '0 AS project_new_from' : '(IFNULL(plog.id_comment, -1) + 1) AS project_new_from') . ',]]></add>
-		</operation>
+			<search position="after"><![CDATA[	return $boardIndexOptions['include_categories'] ? $categories : $this_category;]]></search>
+			<add><![CDATA[	if (!empty($modSettings['projectEnabled']))
+	{
+		// TODO: Limit to projects that will be seen
 
-		<operation>
-			<search position="replace"><![CDATA[WHERE {query_see_board}]]></search>
-			<add><![CDATA[WHERE ((ISNULL(p.id_project) AND {query_see_board}) OR (NOT ISNULL(p.id_project) AND {query_see_project}))]]></add>
-		</operation>
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				p.id_project, p.name, p.description, p.id_category, p.cat_position, p.trackers, p.' . implode(', p.', $context['type_columns']) . ', p.id_comment_mod,
+				mem.id_member, mem.real_name,
+				' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+			FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
+				LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:member}
+					AND log.id_project = p.id_project)') . '
+				LEFT JOIN {db_prefix}project_developer AS pdev ON (pdev.id_project = p.id_project)
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pdev.id_member)
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:member})
+			WHERE {query_see_project}
+			ORDER BY p.name',
+			array(
+				'member' => $user_info['id'],
+			)
+		);
 
-		<operation>
-			<search position="before"><![CDATA[			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)]]></search>
-			<add><![CDATA[
-			LEFT JOIN {db_prefix}projects AS p ON (p.id_project = b.id_project)
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:current_member})' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_projects AS plog ON (plog.id_member = {int:current_member} AND plog.id_project = p.id_project)') . ']]></add>
-		</operation>
+		$context['projects'] = array();
 
-		<operation>
-			<search position="after"><![CDATA[			}
-			if (!empty($row_board['id_moderator']))]]></search>
-			<add><![CDATA[				if (!empty($row_board['id_project']))
-				{
-					$this_category[$row_board['id_board']]['id'] = $row_board['id_project'];
-					$this_category[$row_board['id_board']]['new'] = $row_board['project_new_from'] <= $row_board['id_comment_mod'] && !$user_info['is_guest'];
-					$this_category[$row_board['id_board']]['name'] = $row_board['project_name'];
-					$this_category[$row_board['id_board']]['description'] = $row_board['pdescription'];
-					$this_category[$row_board['id_board']]['href'] = $scripturl . '?project=' . $row_board['id_project'];
-					$this_category[$row_board['id_board']]['link'] = '<a href="' . $scripturl . '?project=' . $row_board['id_project'] . '">' . $row_board['project_name'] . '</a>';
-					$this_category[$row_board['id_board']]['is_project'] = true;
-					$this_category[$row_board['id_board']]['issues'] = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$key = $row['id_category'] . '_' . $row['cat_position'];
 
-					foreach (explode(',', $row_board['trackers']) as $key)
-					{
-						$this_category[$row_board['id_board']]['issues'][$key] = array(
-							'info' => &$context['project_tools']['issue_types'][$key],
-							'open' => $row_board['open_' . $key],
-							'closed' => $row_board['closed_' . $key],
-							'total' => $row_board['open_' . $key] + $row_board['closed_' . $key],
-							'link' => $scripturl . '?project='. $row_board['id_project'] . ';sa=issues;type=' . $key
-						);
-					}
-				}]]></add>
+			if (isset($context['projects'][$key][$row['id_project']]))
+			{
+				if (empty($row['id_member']))
+					continue;
+
+				$context['projects'][$key][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+
+				continue;
+			}
+
+			$context['projects'][$key][$row['id_project']] = array(
+				'id' => $row['id_project'],
+				'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+				'href' => project_get_url(array('project' => $row['id_project'])),
+				'name' => $row['name'],
+				'description' => $row['description'],
+				'trackers' =>  explode(',', $row['trackers']),
+				'new' => $row['new_from'] <= $row['id_comment_mod'] && !$user_info['is_guest'],
+				'issues' => array(),
+				'developers' => array(
+					'<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
+				),
+			);
+
+			foreach ($context['projects'][$key][$row['id_project']]['trackers'] as $key)
+			{
+				$context['projects'][$key][$row['id_project']]['issues'][$key] = array(
+					'info' => &$context['project_tools']['issue_types'][$key],
+					'open' => $row['open_' . $key],
+					'closed' => $row['closed_' . $key],
+					'total' => $row['open_' . $key] + $row['closed_' . $key],
+					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
+				);
+			}
+		}
+		$smcFunc['db_free_result']($request);
+	}
+]]></add>
 		</operation>
 	</file>
 
 	<file name="$themedir/BoardIndex.template.php">
 		<operation>
-			<search position="before"><![CDATA[			foreach ($category['boards'] as $board)
-			{]]></search>
+			<search position="before"><![CDATA[			echo '
+		<table cellspacing="1" class="bordercolor boardsframe">';]]></search>
 			<add><![CDATA[
-				if (!empty($board['is_project']))
-				{
-					echo '
-			<tr>
-				<td class="windowbg icon">
-					<a href="', $board['href'], '">';
-
-					if ($board['new'])
-						echo '
-						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
-					else
-						echo '
-						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
-
-					echo '
-					</a>
-				</td>
-				<td class="windowbg2 info">
-					<h4><a href="', $board['href'], '">', $board['name'], '</a></h4>
-					<p class="smalltext">', $board['description'], '</p>
-				</td>
-				<td class="windowbg stats smalltext">';
-
-					foreach ($board['issues'] as $type)
-						echo '
-					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
-
-					echo '
-				</td>
-				<td class="windowbg2 lastissue">
-				</td>
-			</tr>';
-
-					continue;
-				}]]></add>
+			template_boardindex_project($category['id'], 'first');]]></add>
 		</operation>
-	</file>-->
+
+		<operation>
+			<search position="after"><![CDATA[			echo '
+		</table>';
+		}
+		echo '
+	</div>';]]></search>
+			<add><![CDATA[
+			template_boardindex_project($category['id'], 'last');]]></add>
+		</operation>
+
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+function template_boardindex_project($category, $position)
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	if (empty($context['projects'][$category . '_' . $position]))
+		return;
+
+	foreach ($context['projects'][$category . '_' . $position] as $project)
+	{
+		echo '
+		<tr>
+			<td class="windowbg icon">
+				<a href="', $project['href'], '">';
+
+			if ($project['new'])
+				echo '
+					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" />';
+			else
+				echo '
+					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';
+
+			echo '
+				</a>
+			</td>
+			<td class="windowbg2 info">
+				<h4><a href="', $project['href'], '">', $project['name'], '</a></h4>
+				<p>', $project['description'], '</p>';
+
+			if (!empty($project['developers']))
+				echo '
+				<p class="developers"><span class="smalltext">', count($project['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $project['developers']), '</span></p>';
+
+			echo '
+			</td>
+			<td class="windowbg stats smalltext">';
+
+		foreach ($project['issues'] as $type)
+			echo '
+				', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
+
+		echo '
+			</td>
+			<td class="windowbg2 lastissue">
+			</td>
+		</tr>';
+	}
+}
+]]></add>
+		</operation>
+	</file>
 
 	<file name="$sourcedir/Subs-Db-mysql.php">
 		<operation>

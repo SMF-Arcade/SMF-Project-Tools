@@ -111,6 +111,18 @@ $tables = array(
 				'unsigned' => true,
 				'default' => 1,
 			),
+			array(
+				'name' => 'id_category',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			// But where is cat?
+			array(
+				'name' => 'cat_position',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '',
+			),
 		),
 		'indexes' => array(
 			array(
@@ -676,21 +688,6 @@ $tables = array(
 				'columns' => array('id_member')
 			),
 		)
-	),
-	// SMF Boards
-	'boards' => array(
-		'name' => 'boards',
-		'smf' => true,
-		'columns' => array(
-			array(
-				'name' => 'id_project',
-				'type' => 'int',
-				'default' => 0,
-				'unsigned' => true,
-			),
-		),
-		'indexes' => array(
-		),
 	),
 	// SMF Attachements table
 	'attachments' => array(
