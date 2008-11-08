@@ -161,7 +161,7 @@ function ProjectRoadmapVersion()
 	if (!$row)
 		fatal_lang_error('version_not_found', false);
 
-		$row['release_date'] = unserialize($row['release_date']);
+	$row['release_date'] = unserialize($row['release_date']);
 
 	// Make release date string
 	$time = array();
