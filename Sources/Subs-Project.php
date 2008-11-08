@@ -535,7 +535,7 @@ function updateProject($id_project, $projectOptions)
 
 	if (isset($projectOptions['category']))
 	{
-		$projectUpdates[] = 'category = {int:category}';
+		$projectUpdates[] = 'id_category = {int:category}';
 		$projectOptions['category'] = $projectOptions['category'];
 	}
 	if (isset($projectOptions['category_position']))

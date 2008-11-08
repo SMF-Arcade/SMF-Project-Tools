@@ -436,14 +436,14 @@ else
 				),
 			);
 
-			foreach ($context['projects'][$key][$row['id_project']]['trackers'] as $key)
+			foreach ($context['projects'][$key][$row['id_project']]['trackers'] as $tracker)
 			{
-				$context['projects'][$key][$row['id_project']]['issues'][$key] = array(
-					'info' => &$context['project_tools']['issue_types'][$key],
-					'open' => $row['open_' . $key],
-					'closed' => $row['closed_' . $key],
-					'total' => $row['open_' . $key] + $row['closed_' . $key],
-					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
+				$context['projects'][$key][$row['id_project']]['issues'][$$tracker] = array(
+					'info' => &$context['project_tools']['issue_types'][$tracker],
+					'open' => $row['open_' . $tracker],
+					'closed' => $row['closed_' . $tracker],
+					'total' => $row['open_' . $tracker] + $row['closed_' . $tracker],
+					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $tracker)),
 				);
 			}
 		}
