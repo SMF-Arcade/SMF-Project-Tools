@@ -48,6 +48,26 @@ function template_edit_project()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
+				<b>', $txt['project_board_index'], ':</b><br />
+				<span class="smalltext">', $txt['project_board_index_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<select name="category">
+					<option value="0">', $txt['project_board_index_dont_show'], '</option>';
+
+	foreach ($context['board_categories'] as $cat)
+		echo '
+					<option value="', $cat['id'], '"', $context['project']['category'] == $cat['id'] ? ' selected="selected"' : '', '>', $cat['name'], '</option>';
+
+	echo '
+				<select name="category_position">
+					<option value="first"', $context['project']['category_position'] == 'first' ? ' selected="selected"' : '', '>', $txt['project_board_index_before'], '</option>
+					<option value="last"', $context['project']['category_position'] == 'last' ? ' selected="selected"' : '', '>', $txt['project_board_index_after'], '</option>
+				</select>
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
 				<b>', $txt['project_developers'], ':</b><br />
 			</td>
 			<td valign="top" align="left">

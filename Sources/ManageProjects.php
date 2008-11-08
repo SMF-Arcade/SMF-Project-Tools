@@ -136,6 +136,8 @@ function EditProject()
 			'trackers' => array_keys($context['project_tools']['issue_types']),
 			'developers' => array(),
 			'public_access' => 0,
+			'category' => 0,
+			'category_position' => '',
 		);
 	}
 	else
@@ -152,6 +154,8 @@ function EditProject()
 			'trackers' => array_keys($project['trackers']),
 			'groups' => $project['groups'],
 			'developers' => $project['developers'],
+			'category' => $project['id_category'],
+			'category_position' => $project['category_position'],
 		);
 	}
 
@@ -190,7 +194,22 @@ function EditProject()
 			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
+
 	$smcFunc['db_free_result']($request);
+
+	// Load Board Categories
+	$context['board_categories'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_cat, name
+		FROM {db_prefix}categories
+		ORDER BY cat_order');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['board_categories'][] = array(
+			'id' => $row['id_cat'],
+			'name' => $row['name'],
+		);
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -238,6 +257,9 @@ function EditProject2()
 		$projectOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['project_name']);
 		$projectOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 		$projectOptions['long_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['long_desc']);
+
+		$projectOptions['category'] = (int) $_POST['category'];
+		$projectOptions['category_position'] = $_POST['category_position'];
 
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))

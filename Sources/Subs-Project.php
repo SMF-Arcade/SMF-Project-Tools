@@ -533,6 +533,17 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
 	}
 
+	if (isset($projectOptions['category']))
+	{
+		$projectUpdates[] = 'category = {int:category}';
+		$projectOptions['category'] = $projectOptions['category'];
+	}
+	if (isset($projectOptions['category_position']))
+	{
+		$projectUpdates[] = 'cat_position = {string:category_position}';
+		$projectOptions['category_position'] = $projectOptions['category_position'];
+	}
+
 	if (!empty($projectUpdates))
 		$request = $smcFunc['db_query']('', '
 			UPDATE {db_prefix}projects

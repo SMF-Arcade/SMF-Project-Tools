@@ -153,7 +153,7 @@ function loadProjectAdmin($id_project)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-			p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ',
+			p.id_category, p.cat_position, p.' . implode(', p.', $context['type_columns']) . ',
 			dev.id_member AS is_dev
 		FROM {db_prefix}projects AS p
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
@@ -183,7 +183,8 @@ function loadProjectAdmin($id_project)
 		'trackers' => array(),
 		'developers' => array(),
 		'is_developer' => !empty($row['is_dev']),
-		'comment_mod' => $row['id_comment_mod'],
+		'id_category' => $row['id_category'],
+		'category_position' => $row['cat_position'],
 	);
 
 	$trackers = explode(',', $row['trackers']);
