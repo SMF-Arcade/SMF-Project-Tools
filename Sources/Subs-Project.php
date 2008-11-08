@@ -364,7 +364,7 @@ function loadProject()
 		FROM {db_prefix}project_versions AS ver
 		WHERE id_project = {int:project}
 			AND {query_see_version}
-		ORDER BY id_parent, p.name',
+		ORDER BY id_parent, version_name',
 		array(
 			'project' => $context['project']['id'],
 		)
