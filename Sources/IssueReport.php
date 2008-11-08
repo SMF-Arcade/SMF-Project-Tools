@@ -184,6 +184,9 @@ function ReportIssue2()
 	foreach ($context['project']['trackers'] as $id => $type)
 		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
 
+	if (count($context['possible_types']) == 1)
+		list ($_POST['type']) = array_keys($context['possible_types']);
+
 	if (empty($_POST['type']) || !isset($context['possible_types'][$_POST['type']]))
 		$post_errors[] = 'no_issue_type';
 	if (!empty($_POST['version']) && !isset($context['versions_id'][$_POST['version']]))

@@ -54,20 +54,25 @@ function template_report_issue()
 					<dt>', $txt['private_issue'], '</dt>
 					<dd>
 						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
-					</dd>
+					</dd>';
+
+	if (count($context['possible_types']) == 1)
+	{
+		echo '
 					<dt>', $txt['issue_type'], ':</dt>
 					<dd>';
 
-	foreach ($context['possible_types'] as $id => $type)
-	{
-		echo '
+		foreach ($context['possible_types'] as $id => $type)
+		{
+			echo '
 						<div class="toggle">
 							<input type="radio" id="type_', $id, '" name="type" value="', $id, '" ', $type['selected'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $type['name'], '</label>
 						</div>';
-	}
+		}
 
-	echo '
+		echo '
 					</dd>';
+	}
 
 	if ($context['show_version'])
 	{
