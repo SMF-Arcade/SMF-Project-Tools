@@ -7,8 +7,11 @@ November 2008
 --------------------------------------------------------------------------------
  + Project Tools Profile
  + Support for standalone mode
+ + Ability to create Project Profiles
+ + Ability to delele categories
+ ! Fixed possible security issue
 
-SMF Project Tools 0.1                                                 xx.11.2008
+SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================
 October 2008
 --------------------------------------------------------------------------------
