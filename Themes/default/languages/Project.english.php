@@ -42,6 +42,7 @@ $txt['issue_closed'] = 'Closed';
 $txt['version_future'] = 'Future';
 $txt['version_testing'] = 'In Development';
 $txt['version_current'] = 'Current';
+$txt['version_obsolete'] = 'Obsolete';
 
 // Access Levels (Project Groups)
 $txt['access_level_developer'] = 'Developer';

@@ -59,6 +59,7 @@ function template_edit_version()
 					<option value="0"', $context['version']['status'] == 0 ? ' selected="selected"' : '', '>', $txt['version_future'], '</option>
 					<option value="1"', $context['version']['status'] == 1 ? ' selected="selected"' : '', '>', $txt['version_testing'], '</option>
 					<option value="2"', $context['version']['status'] == 2 ? ' selected="selected"' : '', '>', $txt['version_current'], '</option>
+					<option value="3"', $context['version']['status'] == 3 ? ' selected="selected"' : '', '>', $txt['version_obsolete'], '</option>
 				</select>
 			</td>
 		</tr>
