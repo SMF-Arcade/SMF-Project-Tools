@@ -2,7 +2,7 @@
 [center][color=red][size=16pt][b]SMF Project Tools {version}[/b][/size][/color]
 [/center]
 [hr]
-[center][url=http://www.smfproject.net]Official website[/url] | [url=http://www.smfarcade.info/forum/index.php?project=5]Issue Tracker[/url][/center]
+[center][url=http://www.smfproject.net]Official website[/url] | [url=http://www.simplemachines.org/community/index.php?topic=273062.0]Support Topic[/url] | [url=http://www.smfarcade.info/forum/index.php?project=5]Issue Tracker[/url][/center]
 
 [color=red][b][size=12pt]Warning![/size][/b][/color]
 This is an early release of SMF Project Tools.
