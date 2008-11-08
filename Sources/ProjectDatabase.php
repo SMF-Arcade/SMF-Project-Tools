@@ -454,13 +454,13 @@ $tables = array(
 			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
-				'size' => 256,
+				'size' => 255,
 				'default' => '',
 			),
 			array(
 				'name' => 'poster_email',
 				'type' => 'varchar',
-				'size' => 256,
+				'size' => 255,
 				'default' => '',
 			),
 			array(
@@ -477,7 +477,7 @@ $tables = array(
 			array(
 				'name' => 'edit_name',
 				'type' => 'varchar',
-				'size' => 256,
+				'size' => 255,
 				'default' => '',
 			),
 			array(
@@ -531,13 +531,13 @@ $tables = array(
 			array(
 				'name' => 'poster_name',
 				'type' => 'varchar',
-				'size' => 256,
+				'size' => 255,
 				'default' => '',
 			),
 			array(
 				'name' => 'poster_email',
 				'type' => 'varchar',
-				'size' => 256,
+				'size' => 255,
 				'default' => '',
 			),
 			array(
@@ -561,7 +561,6 @@ $tables = array(
 			array(
 				'name' => 'event_data',
 				'type' => 'text',
-				'null' => false,
 			),
 		),
 		'indexes' => array(
