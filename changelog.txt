@@ -6,6 +6,7 @@ SMF Project Tools 0.1.1                                               xx.11.2008
 November 2008
 --------------------------------------------------------------------------------
  ! Merged error with attachments fix from trunk [Issue #126]
+ ! Undefined index errors caused by Changelog in some cases
 
 SMF Project Tools 0.1.1                                                9.11.2008
 ================================================================================
