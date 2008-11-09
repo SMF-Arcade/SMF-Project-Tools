@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.1.1                              *
+* Software Version:           SMF Project Tools 0.1.1                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2008 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -169,8 +169,7 @@ function NewProjectProfile2()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_group, permission
 		FROM {db_prefix}project_permissions
-		WHERE id_profile = {int:profile}
-			AND  = {int:group}',
+		WHERE id_profile = {int:profile}',
 		array(
 			'profile' => (int) $_POST['profile_base'],
 		)

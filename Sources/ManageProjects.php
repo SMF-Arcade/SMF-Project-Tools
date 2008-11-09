@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.1                               *
+* Software Version:           SMF Project Tools 0.1.1                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2008 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -536,7 +536,7 @@ function EditCategory2()
 
 	$_POST['category'] = (int) $_POST['category'];
 
-	if (isset($_POST['category']) || isset($_POST['add']))
+	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
 		$categoryOptions = array();
 
