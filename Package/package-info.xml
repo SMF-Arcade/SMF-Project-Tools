@@ -85,7 +85,9 @@
 
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageVersions.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
 
 		<!-- These files goes to Theme directory -->
