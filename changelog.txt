@@ -10,6 +10,8 @@ November 2008
  + Ability to create Project Profiles
  + Ability to delele categories
  ! Fixed possible security issue
+ ! Fixed error with attachments [Issue #126]
+ ! Undefined index errors caused by Changelog in some cases
 
 SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================

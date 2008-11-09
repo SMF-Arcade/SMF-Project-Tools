@@ -18,13 +18,14 @@ function template_project_admin_main()
 			', $txt['project_news_unable_to_connect'], '
 		</div>
 	</div>
-	<div class="tborder floatright" style="width: 30.5%;">
+	<div class="tborder floatright" style="width: 30%;">
 		<h3 class="catbg headerpadding">', $txt['project_version_info'], '</h3>
 		<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
 			', $txt['project_installed_version'], ': <span id="project_installed_version">', $project_version, '</span><br />
 			', $txt['project_latest_version'], ': <span id="project_latest_version">???</span>
 		</div>
 	</div>
+	<div style="clear: both"></div>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function setProjectNews()
 		{
