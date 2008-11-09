@@ -87,7 +87,7 @@ else
 					'function' => 'ProjectsAdmin',
 					'permission' => array('project_admin'),
 					'subsections' => array(
-						'main' => array(txt['project_general_main']]),
+						'main' => array($txt['project_general_main']),
 						'settings' => array($txt['project_general_settings']),
 					),
 				),
