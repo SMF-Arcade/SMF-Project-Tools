@@ -161,9 +161,9 @@ function ProjectRoadmapVersion()
 	if (!$row)
 		fatal_lang_error('version_not_found', false);
 
+	// Make release date string
 	$row['release_date'] = unserialize($row['release_date']);
 
-	// Make release date string
 	$time = array();
 
 	if (empty($row['release_date']['day']) && empty($row['release_date']['month']) && empty($row['release_date']['year']))
@@ -182,11 +182,39 @@ function ProjectRoadmapVersion()
 		'description' => parse_bbc($row['description']),
 		'release_date' => vsprintf($txt[$time[0]], $time[1]),
 		'versions' => array(),
+		'progress' => 0,
 		'issues' => array(
 			'open' => 0,
 			'closed' => 0,
+			'total' => 0,
 		),
 	);
+
+	// Load issue counts
+	$request = $smcFunc['db_query']('', '
+		SELECT id_version, id_version_fixed, status, COUNT(*) AS num
+		FROM {db_prefix}issues AS ver
+		WHERE (id_version IN({array_int:versions}) OR id_version_fixed IN({array_int:versions}))
+		GROUP BY id_version, id_version_fixed, status',
+		array(
+			'project' => $project,
+			'versions' => array($row['id_version']),
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (!in_array($row['status'], $context['closed_status']))
+			$context['version']['issues']['open'] += $row['num'];
+		else
+			$context['version']['issues']['closed'] += $row['num'];
+
+		$context['version']['issues']['total'] += $row['num'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($context['version']['issues']['total']))
+		$context['version']['progress'] = round($context['version']['issues']['closed'] / $context['version']['issues']['total'] * 100, 2);
 
 	// Load Issues
 	$context['issues'] = getIssueList(10, 'i.updated DESC');
