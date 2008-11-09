@@ -67,6 +67,7 @@ $txt['issue_none'] = '(none)';
 $txt['issue_category'] = 'Category';
 $txt['issue_last_update'] = 'Last Update';
 $txt['issue_replies'] = 'Replies';
+$txt['project_description'] = 'Description';
 
 // Profile
 $txt['project_tools_profile'] = 'Project Tools';
@@ -78,7 +79,6 @@ $txt['profile_reported_issues'] = 'Issues Reported';
 $txt['profile_assigned_issues'] = 'Issues Assigned';
 
 // Project List
-$txt['project_description'] = 'Description';
 $txt['new_issues'] = 'New Issues';
 $txt['old_issues'] = 'No New Issues';
 $txt['developer'] = 'Developer';
@@ -93,12 +93,10 @@ $txt['roadmap'] = 'Roadmap';
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
 $txt['assigned_to_me'] = 'Assigned To Me';
-$txt['new_issues'] = 'New Issues';
 $txt['issues_view_all'] = 'View Complete List';
 
 // Project Info
 $txt['project_info'] = 'Information';
-$txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Statistics';
 $txt['project_open_issues'] = 'Open Issues';
 $txt['project_closed_issues'] = 'Closed Issues';
@@ -150,7 +148,6 @@ $txt['issue_edit'] = 'Edit';
 // Issue Details
 $txt['issue_details'] = 'Issue Details';
 $txt['issue_reported'] = 'Reported';
-$txt['issue_updated'] = 'Last Updated';
 
 // Views
 $txt['issue_view_comments'] = 'Comments';
