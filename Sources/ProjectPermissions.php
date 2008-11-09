@@ -161,7 +161,8 @@ function NewProjectProfile2()
 		),
 		array(
 			$_POST['profile_name'],
-		)
+		),
+		array()
 	);
 
 	$id_profile = $smcFunc['db_insert_id']('{db_prefix}project_profiles', 'id_profile');

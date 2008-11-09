@@ -43,14 +43,6 @@ $txt['version_future'] = 'Future';
 $txt['version_testing'] = 'In Development';
 $txt['version_current'] = 'Current';
 
-// Access Levels (Project Groups)
-$txt['access_level_developer'] = 'Developer';
-$txt['access_level_member'] = 'Team Member';
-$txt['access_level_beta'] = 'Beta Tester';
-$txt['access_level_report'] = 'Reporter';
-$txt['access_level_viewer'] = 'Viewer';
-$txt['access_level_none'] = 'No Access';
-
 // General
 $txt['issue'] = 'Issue';
 $txt['issue_guest'] = 'Guest';
@@ -83,12 +75,10 @@ $txt['roadmap'] = 'Roadmap';
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
 $txt['assigned_to_me'] = 'Assigned To Me';
-$txt['new_issues'] = 'New Issues';
 $txt['issues_view_all'] = 'View Complete List';
 
 // Project Info
 $txt['project_info'] = 'Information';
-$txt['project_description'] = 'Description';
 $txt['project_statistics'] = 'Statistics';
 $txt['project_open_issues'] = 'Open Issues';
 $txt['project_closed_issues'] = 'Closed Issues';
@@ -112,8 +102,8 @@ $txt['open_issues'] = '%d open issues';
 $txt['closed_issues'] = '%d closed issues';
 $txt['roadmap_no_release_date'] = 'no release date';
 $txt['roadmap_release_date_year'] = '%d';
-$txt['roadmap_release_date_year_month'] = '%1s$ %2d$';
-$txt['roadmap_release_date_year_month_day'] = '%1d$ %2s$ %3d$';
+$txt['roadmap_release_date_year_month'] = '%1$s %2$d';
+$txt['roadmap_release_date_year_month_day'] = '%1$d %2$s %3$d';
 
 // Issue List
 $txt['issue_search'] = 'Search Issues';
@@ -140,7 +130,6 @@ $txt['issue_edit'] = 'Edit';
 // Issue Details
 $txt['issue_details'] = 'Issue Details';
 $txt['issue_reported'] = 'Reported';
-$txt['issue_updated'] = 'Last Updated';
 
 // Views
 $txt['issue_view_comments'] = 'Comments';
