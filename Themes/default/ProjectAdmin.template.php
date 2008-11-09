@@ -7,7 +7,6 @@ function template_project_admin_above()
 
 	echo '
 	<div>', sprintf($txt['project_status_desc'], $project_version, '???'), '</div>';
-
 }
 
 function template_project_admin_below()

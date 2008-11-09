@@ -1,6 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
+SMF Project Tools 0.1.1                                               xx.11.2008
+================================================================================
+November 2008
+--------------------------------------------------------------------------------
+ ! Merged error with attachments fix from trunk [Issue #126]
+
 SMF Project Tools 0.1.1                                                9.11.2008
 ================================================================================
 November 2008
