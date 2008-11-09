@@ -9,17 +9,22 @@ function template_project_admin_above()
 
 function template_project_admin_main()
 {
-	global $context, $settings, $options, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings, $project_version;
 
 	echo '
-	<div class="tborder floatleft" style="width: 75%;">
-		<h3 class="catbg headerpadding"></h3>
-		<div id="project_news" style="style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
+	<div class="tborder floatleft" style="width: 69%;">
+		<h3 class="catbg headerpadding">', $txt['project_latest_news'], '</h3>
+		<div id="project_news" style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
 			', $txt['project_news_unable_to_connect'], '
 		</div>
 	</div>
-
-	<div>', sprintf($txt['project_status_desc'], $project_version, '???'), '</div>
+	<div class="tborder floatright" style="width: 30.5%;">
+		<h3 class="catbg headerpadding">', $txt['project_version_info'], '</h3>
+		<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
+			', $txt['project_installed_version'], ': <span id="project_installed_version">', $project_version, '</span><br />
+			', $txt['project_latest_version'], ': <span id="project_latest_version">???</span>
+		</div>
+	</div>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function setProjectNews()
 		{

@@ -4,7 +4,11 @@
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
 // General
+$txt['project_latest_news'] = 'Latest News';
 $txt['project_news_unable_to_connect'] = 'Unable to connect to <a href="http://www.smfarcade.info">SMFArcade.info</a> for latest news...';
+$txt['project_version_info'] = 'Version Information';
+$txt['project_installed_version'] = 'Installed version';
+$txt['project_latest_version'] = 'Latest version';
 
 // Settings
 $txt['projectSettings'] = 'Project Tools';
@@ -12,9 +16,6 @@ $txt['projectSettings_desc'] = 'Here you can edit some settings of SMF Project T
 
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
-
-// Status
-$txt['project_status_desc'] = 'Installed version: <span id="project_installed_version">%s</span> | Latest version: <span id="project_latest_version">%s</span>';
 
 // Project List
 $txt['header_project'] = 'Project';
