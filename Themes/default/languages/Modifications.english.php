@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-// SMF Project tools
+// SMF Project tools start
 $txt['project_tools'] = 'Project Tools';
 $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
@@ -55,5 +55,6 @@ $txt['cannot_project_issue_report'] = 'You are not allowed to report issues of t
 $txt['cannot_project_edit_comment_own'] = 'You are not allowed to edit comments.';
 
 $txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
+// SMF Project tools end
 
 ?>
