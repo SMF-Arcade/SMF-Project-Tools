@@ -451,7 +451,8 @@ function IssueUpload()
 	$posterOptions = array(
 		'id' => $user_info['id'],
 		'name' => $user_info['name'],
-		'ip' => $user_info['name'],
+		'email' => $user_info['email'],
+		'ip' => $user_info['ip'],
 	);
 	$eventOptions = array(
 		'time' => time(),
