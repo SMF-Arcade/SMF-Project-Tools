@@ -169,8 +169,7 @@ function NewProjectProfile2()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_group, permission
 		FROM {db_prefix}project_permissions
-		WHERE id_profile = {int:profile}
-			AND  = {int:group}',
+		WHERE id_profile = {int:profile}',
 		array(
 			'profile' => (int) $_POST['profile_base'],
 		)
