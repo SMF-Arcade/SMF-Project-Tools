@@ -4,7 +4,7 @@
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
 // General
-$txt['project_global'] = 'Global';
+$txt['project_news_unable_to_connect'] = 'Unable to connect to <a href="http://www.smfarcade.info">SMFArcade.info</a> for latest news...';
 
 // Settings
 $txt['projectSettings'] = 'Project Tools';

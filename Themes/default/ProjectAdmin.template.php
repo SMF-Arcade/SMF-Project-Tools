@@ -12,11 +12,31 @@ function template_project_admin_main()
 	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
+	<div class="tborder floatleft" style="width: 75%;">
+		<h3 class="catbg headerpadding"></h3>
+		<div id="project_news" style="style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
+			', $txt['project_news_unable_to_connect'], '
+		</div>
+	</div>
+
 	<div>', sprintf($txt['project_status_desc'], $project_version, '???'), '</div>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function setProjectNews()
 		{
+			if (typeof(window.projectNews) == "undefined" || typeof(window.projectNews.length) == "undefined")
+					return;
 
+				var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
+
+				for (var i = 0; i < window.projectNews.length; i++)
+				{
+					str += "\n	<div style=\"padding-bottom: 2px;\"><a href=\"" + window.projectNews[i].url + "\">" + window.projectNews[i].subject + "</a> on " + window.projectNews[i].time + "</div>";
+					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
+					str += "\n		" + window.projectNews[i].message;
+					str += "\n	</div>";
+				}
+
+				setInnerHTML(document.getElementById("project_news"), str + "</div>");
 		}
 
 		function setProjectVersion()
