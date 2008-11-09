@@ -44,14 +44,6 @@ $txt['version_testing'] = 'In Development';
 $txt['version_current'] = 'Current';
 $txt['version_obsolete'] = 'Obsolete';
 
-// Access Levels (Project Groups)
-$txt['access_level_developer'] = 'Developer';
-$txt['access_level_member'] = 'Team Member';
-$txt['access_level_beta'] = 'Beta Tester';
-$txt['access_level_report'] = 'Reporter';
-$txt['access_level_viewer'] = 'Viewer';
-$txt['access_level_none'] = 'No Access';
-
 // General
 $txt['issue'] = 'Issue';
 $txt['issue_guest'] = 'Guest';
