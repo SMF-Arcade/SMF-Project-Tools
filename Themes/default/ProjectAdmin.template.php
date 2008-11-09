@@ -1,4 +1,5 @@
 <?php
+// Version: 0.2; ProjectRoadmap
 
 function template_project_admin_above()
 {
@@ -32,7 +33,7 @@ function template_project_admin_below()
 			setInnerHTML(document.getElementById("project_latest_version"), window.projectCurrentVersion);
 		}
 	// ]]></script>
-	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/news.js?p=project;v=', urlencode($project_version), '" defer="defer"></script>';
+	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/project/news.js?v=', urlencode($project_version), '" defer="defer"></script>';
 }
 
 ?>
