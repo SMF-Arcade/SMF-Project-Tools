@@ -56,7 +56,7 @@ function template_report_issue()
 						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
 					</dd>';
 
-	if (count($context['possible_types']) == 1)
+	if (count($context['possible_types']) > 1)
 	{
 		echo '
 					<dt>', $txt['issue_type'], ':</dt>
