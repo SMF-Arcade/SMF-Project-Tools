@@ -19,7 +19,7 @@ function template_project_roadmap()
 			<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'status' => 'closed', 'version' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
 		</div>
 		<p>
-			', $context['version']['description'], '
+			', $version['description'], '
 		</p>
 	</div>';
 	}
