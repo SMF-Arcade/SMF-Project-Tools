@@ -92,6 +92,7 @@
 		<remove-file name="$sourcedir/ManageVersions.php" />
 		<remove-file name="$sourcedir/Project.php" />
 		<remove-file name="$sourcedir/ProjectAdmin.php" />
+		<remove-file name="$sourcedir/ProjectDatabase.php" />
 		<remove-file name="$sourcedir/ProjectList.php" />
 		<remove-file name="$sourcedir/ProjectPermissions.php" />
 		<remove-file name="$sourcedir/ProjectRoadmap.php" />
