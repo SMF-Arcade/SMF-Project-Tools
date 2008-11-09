@@ -136,7 +136,7 @@ function template_issue_view_above()
 			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
-		if ($context['can_comment'])
+		if ($issueDetails['can_edit'])
 			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
 
@@ -391,7 +391,7 @@ function template_issue_comments()
 			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=reply;quote=', $comment['id'], ';sesc=', $context['session_id'], '">', $reply_button, '</a></li>';
 
-		if ($context['can_comment'])
+		if ($comment['can_edit'])
 			echo '
 						<li><a href="', $scripturl, '?issue=', $context['current_issue']['id'], '.0;sa=edit;com=', $comment['id'], ';sesc=', $context['session_id'], '">', $modify_button, '</a></li>';
 
