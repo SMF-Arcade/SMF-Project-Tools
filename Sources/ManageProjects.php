@@ -558,7 +558,7 @@ function EditCategory2()
 
 	$_POST['category'] = (int) $_POST['category'];
 
-	if (isset($_POST['category']) || isset($_POST['add']))
+	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
 		$categoryOptions = array();
 
