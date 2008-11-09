@@ -81,6 +81,16 @@ else
 			'title' => $txt['project_tools'],
 			'permission' => array('project_admin'),
 			'areas' => array(
+				'projectsadmin' => array(
+					'label' => $txt['project_general'],
+					'file' => 'ProjectAdmin.php',
+					'function' => 'ProjectsAdmin',
+					'permission' => array('project_admin'),
+					'subsections' => array(
+						'main' => array(txt['project_general_main']]),
+						'settings' => array($txt['project_general_settings']),
+					),
+				),
 				'manageprojects' => array(
 					'label' => $txt['manage_projects'],
 					'file' => 'ManageProjects.php',
@@ -117,15 +127,6 @@ else
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'main' => array($txt['modify_project_category']),
-					),
-				),
-				'projectsettings' => array(
-					'label' => $txt['project_settings'],
-					'file' => 'ProjectAdmin.php',
-					'function' => 'ProjectsAdmin',
-					'permission' => array('project_admin'),
-					'subsections' => array(
-						'main' => array($txt['project_settings_main']),
 					),
 				),
 			),
@@ -603,6 +604,10 @@ $txt['project_profile'] = 'Project Tools';
 $txt['project_profile_main'] = 'Statistics';
 
 // SMF Project tools admin
+$txt['project_general'] = 'General';
+$txt['project_general_main'] = 'Information';
+$txt['project_general_settings'] = 'Settings';
+
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
@@ -617,9 +622,6 @@ $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';
 $txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
-
-$txt['project_settings'] = 'Settings';
-$txt['project_settings_main'] = 'Main';
 
 $txt['projectEnabled'] = 'Enable Project Tools';
 $txt['projectAttachments'] = 'Enable Attachments';

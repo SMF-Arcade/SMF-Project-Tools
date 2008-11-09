@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-// SMF Project tools
+// SMF Project tools start
 $txt['project_tools'] = 'Project Tools';
 $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
@@ -18,6 +18,10 @@ $txt['project_profile'] = 'Project Tools';
 $txt['project_profile_main'] = 'Statistics';
 
 // SMF Project tools admin
+$txt['project_general'] = 'General';
+$txt['project_general_main'] = 'Information';
+$txt['project_general_settings'] = 'Settings';
+
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
@@ -32,9 +36,6 @@ $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';
 $txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
-
-$txt['project_settings'] = 'Settings';
-$txt['project_settings_main'] = 'Main';
 
 $txt['projectEnabled'] = 'Enable Project Tools';
 $txt['projectAttachments'] = 'Enable Attachments';
@@ -64,5 +65,6 @@ $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
 $txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 $txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
 $txt['cannot_project_edit_comment_own'] = 'You are not allowed to edit comments.';
+// SMF Project tools end
 
 ?>

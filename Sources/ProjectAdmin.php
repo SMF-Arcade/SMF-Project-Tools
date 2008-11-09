@@ -43,7 +43,8 @@ function ProjectsAdmin()
 	$context['page_title'] = $txt['projectSettings'];
 
 	$subActions = array(
-		'main' => array('ProjectsAdminSettings'),
+		'main' => array('ProjectsAdminMain'),
+		'settings' => array('ProjectsAdminSettings'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -52,6 +53,13 @@ function ProjectsAdmin()
 		isAllowedTo($subActions[$_REQUEST['sa']][1]);
 
 	$subActions[$_REQUEST['sa']][0]();
+}
+
+function ProjectsAdminMain()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+
+	$context['sub_template'] = 'project_admin_main';
 }
 
 function ProjectsAdminSettings($return_config = false)
@@ -77,10 +85,10 @@ function ProjectsAdminSettings($return_config = false)
 
 		writeLog();
 
-		redirectexit('action=admin;area=projectsettings');
+		redirectexit('action=admin;area=projectsadmin;sa=settings');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=projectsettings;save';
+	$context['post_url'] = $scripturl . '?action=admin;area=projectsadmin;sa=settings;save';
 	$context['settings_title'] = $txt['project_settings'];
 	$context['sub_template'] = 'show_settings';
 
