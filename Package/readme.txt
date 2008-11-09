@@ -7,10 +7,14 @@
 [color=red][b][size=12pt]Warning![/size][/b][/color]
 This is an early release of SMF Project Tools.
 There maybe bugs that may cause data loss.
-You should report all bugs to our Issue Tracker, feature request are also welcome.
+You should report all bugs to our Issue Tracker, feature requests are also welcome.
 
 [color=blue][b][size=12pt]Introduction[/size][/b][/color]
-SMF Project Tools is an issue tracker for SMF.
+SMF Project Tools is an issue tracker modification for SMF. It adds new section
+
+[color=blue][b][size=12pt]Features[/size][/b][/color]
+[list]
+[/list]
 
 [color=blue][b][size=12pt]Notes[/size][/b][/color]
 This software uses icons [url=http://www.famfamfam.com/lab/icons/silk/]FamFamFam Silk[/url] icons licensed under Creative Commons Attribution 2.5 License.
