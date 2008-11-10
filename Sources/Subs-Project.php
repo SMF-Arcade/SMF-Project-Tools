@@ -147,10 +147,10 @@ function loadProjectToolsPage($mode = '')
 	foreach ($context['issue_types'] as $id => $type)
 	{
 		if (isset($txt['issue_type_' . $type['id']]))
-			$status['name'] = $txt['issue_type_' . $type['id']];
+			$type['name'] = $txt['issue_type_' . $type['id']];
 
 		if (isset($txt['issue_type_plural_' . $type['id']]))
-			$status['plural'] = $txt['issue_type_plural_' . $type['id']];
+			$type['plural'] = $txt['issue_type_plural_' . $type['id']];
 
 		$context['issue_types'][$id] = $type;
 	}
