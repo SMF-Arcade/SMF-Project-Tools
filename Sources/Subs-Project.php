@@ -146,13 +146,13 @@ function loadProjectToolsPage($mode = '')
 	// Load Issue Type texts
 	foreach ($context['issue_types'] as $id => $type)
 	{
-		if (isset($txt['issue_type_' . $status['name']]))
-			$status['name'] = $txt['issue_type_' . $status['name']];
+		if (isset($txt['issue_type_' . $type['name']]))
+			$status['name'] = $txt['issue_type_' . $type['name']];
 
-		if (isset($txt['issue_type_plural_' . $status['name']]))
-			$status['plural'] = $txt['issue_type_plural_' . $status['name']];
+		if (isset($txt['issue_type_plural_' . $type['name']]))
+			$status['plural'] = $txt['issue_type_plural_' . $type['name']];
 
-		$context['issue_types'][$id] = $status;
+		$context['issue_types'][$id] = $type;
 	}
 
 	// Load status texts

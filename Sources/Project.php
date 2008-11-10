@@ -135,7 +135,7 @@ function Projects($standalone = false)
 		if (isset($context['current_issue']))
 			$context['linktree'][] = array(
 				'name' => $context['current_issue']['name'],
-				'url' => project_get_url(array('issue' => $context['current_issue']['id'])),
+				'url' => $context['current_issue']['href'],
 			);
 
 		loadTemplate('ProjectView');

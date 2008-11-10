@@ -62,7 +62,7 @@ function loadIssue()
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
-		'link' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
+		'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
