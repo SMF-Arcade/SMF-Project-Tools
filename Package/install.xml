@@ -177,7 +177,7 @@ else
 	// This is just a regular attachment...
 	else]]></search>
 			<add><![CDATA[
-	elseif (isset($_REQUEST['issue']))
+	elseif (isset($issue))
 	{
 		global $project;
 		require_once($sourcedir . '/Project.php');
