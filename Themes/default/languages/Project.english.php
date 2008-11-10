@@ -160,6 +160,7 @@ $txt['change_target_version'] = 'Fixed Version changed from <em>%1$s</em> to <em
 $txt['change_status'] = 'Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_view_status'] = 'View Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_priority'] = 'Priority changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_category'] = 'Category changed from <em>%1$s</em> to <em>%2$s</em>';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
