@@ -22,7 +22,7 @@
 
 function loadIssue()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project, $txt, $memberContext;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project;
 
 	if (!isset($context['project']) || !isset($issue))
 		return;

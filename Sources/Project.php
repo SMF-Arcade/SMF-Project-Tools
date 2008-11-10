@@ -65,14 +65,9 @@ function Projects($standalone = false)
 		'url' => project_get_url(array('action' => 'projects')),
 	);
 
-	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
-		list ($issue, $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
-
 	// Load Issue if needed
 	if (isset($issue))
 	{
-		loadIssue();
-
 		if (!isset($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'viewIssue';
 	}

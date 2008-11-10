@@ -35,6 +35,9 @@
 
 		// Load Project (if needed)
 		loadProject();
+
+		// Load Issue (if needed)
+		loadIssue();
 	}
 	else
 	{

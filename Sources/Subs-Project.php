@@ -29,13 +29,22 @@ if (!defined('SMF'))
 
 function loadProjectTools()
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue;
 
 	if (!empty($project_version))
 		return;
 
 	// Which version this is?
 	$project_version = '0.2';
+
+	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
+	{
+		list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
+		$issue = (int) $_REQUEST['issue'];
+	}
+	elseif (isset($_REQUEST['issue']))
+		$issue = (int) $_REQUEST['issue'];
+
 
 	if (empty($modSettings['issueRegex']))
 		$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
@@ -439,20 +448,20 @@ function loadTimeline($project = 0)
 // Loads current project
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info, $project;
+	global $context, $smcFunc, $scripturl, $user_info, $user_info, $project, $issue;
 
 	// Project as parameter?
 	if (!empty($_REQUEST['project']))
 		$project = (int) $_REQUEST['project'];
 	// Do we have issue?
-	elseif (!empty($_REQUEST['issue']))
+	elseif (!isset($issue))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT id_project
 			FROM {db_prefix}issues
 			WHERE id_issue = {int:issue}',
 			array(
-				'issue' => (int) $_REQUEST['issue']
+				'issue' => (int) $issue
 			)
 		);
 
