@@ -184,6 +184,12 @@ function loadProjectToolsPage($mode = '')
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project';
 	}
+	// In SMF (SSI, etc)
+	elseif ($mode == 'smf')
+	{
+
+	}
+	// Profile
 	elseif ($mode == 'profile')
 	{
 		loadTemplate('ProjectProfile', array('project'));
@@ -455,6 +461,8 @@ function loadProject()
 
 		if (empty($_REQUEST['project']))
 			fatal_lang_error('issue_not_found', false);
+
+		$project = (int) $_REQUEST['project'];
 	}
 	// Not needed
 	else

@@ -19,7 +19,7 @@ $txt['issue_type'] = 'Type';
 $txt['issue_type_bug'] = 'Bug';
 $txt['issue_type_plural_bug'] = 'Bugs';
 $txt['issue_type_feature'] = 'Feature';
-$txt['issue_type_plural_features'] = 'Features';
+$txt['issue_type_plural_feature'] = 'Features';
 
 // Priority
 $txt['issue_priority'] = 'Priority';
