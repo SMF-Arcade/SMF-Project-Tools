@@ -16,12 +16,10 @@ $txt['issue_view_status_private'] = 'Private';
 
 // Types
 $txt['issue_type'] = 'Type';
-$txt['project_bug'] = 'Bug';
-$txt['project_bugs'] = 'Bugs';
-$txt['project_bug_help'] = 'Bugs should be reported here';
-$txt['project_feature'] = 'Feature';
-$txt['project_features'] = 'Features';
-$txt['project_feature_help'] = 'If you wan\'t to have some feature that isn\'t currently included, you may request it here';
+$txt['issue_type_bug'] = 'Bug';
+$txt['issue_type_plural_bug'] = 'Bugs';
+$txt['issue_type_feature'] = 'Feature';
+$txt['issue_type_plural_features'] = 'Features';
 
 // Priority
 $txt['issue_priority'] = 'Priority';
@@ -31,12 +29,12 @@ $txt['issue_priority_high'] = 'High';
 
 // Statuses
 $txt['issue_status'] = 'Status';
-$txt['issue_new'] = 'New';
-$txt['issue_feedback'] = 'Feedback';
-$txt['issue_confirmed'] = 'Confirmed';
-$txt['issue_assigned'] = 'Assigned';
-$txt['issue_resolved'] = 'Resolved';
-$txt['issue_closed'] = 'Closed';
+$txt['issue_status_new'] = 'New';
+$txt['issue_status_feedback'] = 'Feedback';
+$txt['issue_status_confirmed'] = 'Confirmed';
+$txt['issue_status_assigned'] = 'Assigned';
+$txt['issue_status_resolved'] = 'Resolved';
+$txt['issue_status_closed'] = 'Closed';
 
 // Version statuses
 $txt['version_future'] = 'Future';

@@ -274,7 +274,7 @@ function template_issue_reply()
 							<select name="status">';
 
 
-			foreach ($context['issue']['status'] as $status)
+			foreach ($context['issue_status'] as $status)
 
 				echo '
 								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';

@@ -77,7 +77,7 @@ function IssueView()
 		$context['possible_types'] = array();
 
 		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+			$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
 			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
@@ -249,13 +249,13 @@ function IssueViewLog()
 				// Change values to something meaningful
 				if ($field == 'status')
 				{
-					$old_value = $context['issue']['status'][$old_value]['text'];
-					$new_value = $context['issue']['status'][$new_value]['text'];
+					$old_value = $context['issue_status'][$old_value]['text'];
+					$new_value = $context['issue_status'][$new_value]['text'];
 				}
 				elseif ($field == 'type')
 				{
-					$old_value = $context['project_tools']['issue_types'][$old_value]['name'];
-					$new_value = $context['project_tools']['issue_types'][$new_value]['name'];
+					$old_value = $context['issue_types'][$old_value]['name'];
+					$new_value = $context['issue_types'][$new_value]['name'];
 				}
 				elseif ($field == 'view_status')
 				{

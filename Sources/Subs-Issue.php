@@ -20,84 +20,6 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-function loadIssueTypes()
-{
-	global $context, $smcFunc, $sourcedir, $user_info, $txt;
-
-	$context['project_tools']['issue_types'] = array(
-		'bug' => array(
-			'id' => 'bug',
-			'name' => $txt['project_bug'],
-			'plural' => $txt['project_bugs'],
-			'help' => $txt['project_bug_help'],
-			'image' => 'bug.png',
-		),
-		'feature' => array(
-			'id' => 'feature',
-			'name' => $txt['project_feature'],
-			'plural' => $txt['project_features'],
-			'help' => $txt['project_feature_help'],
-			'image' => 'feature.png',
-		),
-	);
-
-	// Make list of columns that need to be selected
-	$context['type_columns'] = array();
-	foreach ($context['project_tools']['issue_types'] as $id => $info)
-	{
-		$context['type_columns'][] = "open_$id";
-		$context['type_columns'][] = "closed_$id";
-	}
-
-	// Status, types, priorities
-	$context['issue']['status'] = array(
-		1 => array(
-			'id' => 1,
-			'name' => 'new',
-			'text' => $txt['issue_new'],
-			'type' => 'open',
-		),
-		2 => array(
-			'id' => 2,
-			'name' => 'feedback',
-			'text' => $txt['issue_feedback'],
-			'type' => 'open',
-		),
-		3 => array(
-			'id' => 3,
-			'name' => 'confirmed',
-			'text' => $txt['issue_confirmed'],
-			'type' => 'open',
-		),
-		4 => array(
-			'id' => 4,
-			'name' => 'assigned',
-			'text' => $txt['issue_assigned'],
-			'type' => 'open',
-		),
-		5 => array(
-			'id' => 5,
-			'name' => 'resolved',
-			'text' => $txt['issue_resolved'],
-			'type' => 'closed',
-		),
-		6 => array(
-			'id' => 6,
-			'name' => 'closed',
-			'text' => $txt['issue_closed'],
-			'type' => 'closed',
-		),
-	);
-
-	$context['closed_status'] = array(5, 6);
-
-	$context['issue']['priority'] = array(
-		1 => 'issue_priority_low',
-		'issue_priority_normal',
-		'issue_priority_high'
-	);
-}
-
 function loadIssue()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project, $txt, $memberContext;
@@ -161,8 +83,8 @@ function loadIssue()
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 		),
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
-		'type' => $context['project_tools']['issue_types'][$row['issue_type']],
-		'status' => $context['issue']['status'][$row['status']],
+		'type' => $context['issue_types'][$row['issue_type']],
+		'status' => $context['issue_status'][$row['status']],
 		'priority_num' => $row['priority'],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),
@@ -253,7 +175,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 {
 	global $smcFunc, $context;
 
-	if (!isset($context['issue']['status']))
+	if (!isset($context['issue_status']))
 		trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
 
 	$request = $smcFunc['db_query']('', '
@@ -368,12 +290,12 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 	}
 
 	if (!empty($row['status']))
-		$oldStatus = $context['issue']['status'][$row['status']]['type'];
+		$oldStatus = $context['issue_status'][$row['status']]['type'];
 	else
 		$oldStatus = '';
 
 	if (!empty($issueOptions['status']))
-		$newStatus = $context['issue']['status'][$issueOptions['status']]['type'];
+		$newStatus = $context['issue_status'][$issueOptions['status']]['type'];
 	else
 		$newStatus = $oldStatus;
 
@@ -550,7 +472,7 @@ function deleteIssue($id_issue, $posterOptions)
 {
 	global $smcFunc, $db_prefix, $context;
 
-	if (!isset($context['issue']['status']))
+	if (!isset($context['issue_status']))
 		trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
 
 	$request = $smcFunc['db_query']('', '
@@ -575,7 +497,7 @@ function deleteIssue($id_issue, $posterOptions)
 	);
 
 	if (!empty($row['status']))
-		$status = $context['issue']['status'][$row['status']]['type'];
+		$status = $context['issue_status'][$row['status']]['type'];
 	else
 		$status = '';
 
@@ -919,7 +841,7 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			'type' => $row['issue_type'],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
-			'status' => &$context['issue']['status'][$row['status']],
+			'status' => &$context['issue_status'][$row['status']],
 			'reporter' => array(
 				'id' => $row['id_reporter'],
 				'name' => empty($row['reporter']) ? $txt['issue_guest'] : $row['reporter'],

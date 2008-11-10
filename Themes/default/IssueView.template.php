@@ -265,7 +265,7 @@ function template_issue_view_above()
 		ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
 
 			// Status
-			foreach ($context['issue']['status'] as $status)
+			foreach ($context['issue_status'] as $status)
 				echo '
 		ddIssueStat.addOption(', $status['id'], ', "', $status['text'], '");';
 

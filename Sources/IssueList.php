@@ -84,7 +84,7 @@ function IssueList()
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 	if (!empty($_REQUEST['title']))
 	{
@@ -282,7 +282,7 @@ function IssueList()
 			'type' => $row['issue_type'],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
-			'status' => &$context['issue']['status'][$row['status']],
+			'status' => &$context['issue_status'][$row['status']],
 			'reporter' => array(
 				'id' => $row['id_reporter'],
 				'name' => $row['reporter_name'],

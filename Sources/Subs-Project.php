@@ -42,9 +42,6 @@ function loadProjectTools()
 	else
 		$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
 
-	$context['project_tools'] = array();
-	$context['issue_tracker'] = array();
-
 	// Administrators can see all projects.
 	if ($user_info['is_admin'] || allowedTo('project_admin'))
 	{
@@ -75,15 +72,97 @@ function loadProjectTools()
 	$user_info['query_see_issue'] = $see_issue;
 	$user_info['query_see_issue_project'] = $see_issue_p;
 
-	if (loadLanguage('Project') == false)
-		loadLanguage('Project', 'english');
+	// Issue Types
+	$context['issue_types'] = array(
+		'bug' => array(
+			'id' => 'bug',
+			'image' => 'bug.png',
+		),
+		'feature' => array(
+			'id' => 'feature',
+			'image' => 'feature.png',
+		),
+	);
 
-	loadIssueTypes();
+	// Make list of columns that need to be selected
+	$context['type_columns'] = array();
+	foreach ($context['issue_types'] as $id => $info)
+	{
+		$context['type_columns'][] = "open_$id";
+		$context['type_columns'][] = "closed_$id";
+	}
+
+	// Status, types, priorities
+	$context['issue_status'] = array(
+		1 => array(
+			'id' => 1,
+			'name' => 'new',
+			'type' => 'open',
+		),
+		2 => array(
+			'id' => 2,
+			'name' => 'feedback',
+			'type' => 'open',
+		),
+		3 => array(
+			'id' => 3,
+			'name' => 'confirmed',
+			'type' => 'open',
+		),
+		4 => array(
+			'id' => 4,
+			'name' => 'assigned',
+			'type' => 'open',
+		),
+		5 => array(
+			'id' => 5,
+			'name' => 'resolved',
+			'type' => 'closed',
+		),
+		6 => array(
+			'id' => 6,
+			'name' => 'closed',
+			'type' => 'closed',
+		),
+	);
+
+	$context['closed_status'] = array(5, 6);
+
+	// Priorities
+	$context['issue']['priority'] = array(
+		1 => 'issue_priority_low',
+		'issue_priority_normal',
+		'issue_priority_high'
+	);
 }
 
 function loadProjectToolsPage($mode = '')
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $settings;
+
+	if (loadLanguage('Project') == false)
+		loadLanguage('Project', 'english');
+
+	// Load Issue Type texts
+	foreach ($context['issue_types'] as $id => $type)
+	{
+		if (isset($txt['issue_type_' . $status['name']]))
+			$status['name'] = $txt['issue_type_' . $status['name']];
+
+		if (isset($txt['issue_type_plural_' . $status['name']]))
+			$status['plural'] = $txt['issue_type_plural_' . $status['name']];
+
+		$context['issue_types'][$id] = $status;
+	}
+
+	// Load status texts
+	foreach ($context['issue_status'] as $id => $status)
+	{
+		if (isset($txt['issue_status_' . $status['name']]))
+			$status['text'] = $txt['issue_status_' . $status['name']];
+
+		$context['issue_status'][$id] = $status;
+	}
 
 	if ($mode == '')
 	{
@@ -94,6 +173,13 @@ function loadProjectToolsPage($mode = '')
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
+
+		// Make Procject Descriptions BBC if needed to
+		if (isset($context['project']))
+		{
+			$context['project']['description'] = parse_bbc($context['project']['description']);
+			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
+		}
 
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project';
@@ -286,13 +372,13 @@ function loadTimeline($project = 0)
 				// Change values to something meaningful
 				if ($field == 'status')
 				{
-					$old_value = $context['issue']['status'][$old_value]['text'];
-					$new_value = $context['issue']['status'][$new_value]['text'];
+					$old_value = $context['issue_status'][$old_value]['text'];
+					$new_value = $context['issue_status'][$new_value]['text'];
 				}
 				elseif ($field == 'type')
 				{
-					$old_value = $context['project_tools']['issue_types'][$old_value]['name'];
-					$new_value = $context['project_tools']['issue_types'][$new_value]['name'];
+					$old_value = $context['issue_types'][$old_value]['name'];
+					$new_value = $context['issue_types'][$new_value]['name'];
 				}
 				elseif ($field == 'view_status')
 				{
@@ -402,8 +488,8 @@ function loadProject()
 		'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 		'href' => project_get_url(array('project' => $row['id_project'])),
 		'name' => $row['name'],
-		'description' => parse_bbc($row['description']),
-		'long_description' => parse_bbc($row['long_description']),
+		'description' => $row['description'],
+		'long_description' => $row['long_description'],
 		'category' => array(),
 		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
@@ -418,7 +504,7 @@ function loadProject()
 	foreach ($trackers as $key)
 	{
 		$context['project']['trackers'][$key] = array(
-			'info' => &$context['project_tools']['issue_types'][$key],
+			'info' => &$context['issue_types'][$key],
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],

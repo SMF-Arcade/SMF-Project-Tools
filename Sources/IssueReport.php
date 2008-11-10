@@ -46,7 +46,7 @@ function ReportIssue()
 
 	foreach ($context['project']['trackers'] as $id => $type)
 	{
-		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$id] = &$context['issue_types'][$id];
 		$context['possible_types'][$id]['selected'] = isset($_REQUEST['type']) && $_REQUEST['type'] == $id;
 	}
 
@@ -182,7 +182,7 @@ function ReportIssue2()
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 	if (count($context['possible_types']) == 1)
 		list ($_POST['type']) = array_keys($context['possible_types']);
@@ -366,14 +366,14 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	// Status
 	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['status']))
 	{
-		if (isset($context['issue']['status'][(int) $_REQUEST['status']]))
+		if (isset($context['issue_status'][(int) $_REQUEST['status']]))
 			$issueOptions['status'] = (int) $_REQUEST['status'];
 	}
 
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+		$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 	if (isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
 		$issueOptions['type'] = $_REQUEST['type'];

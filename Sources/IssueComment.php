@@ -43,7 +43,7 @@ function IssueReply()
 		$context['possible_types'] = array();
 
 		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+			$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
 			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
@@ -224,7 +224,7 @@ function IssueReply2()
 		$context['possible_types'] = array();
 
 		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['project_tools']['issue_types'][$id];
+			$context['possible_types'][$id] = &$context['issue_types'][$id];
 
 		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
 			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;

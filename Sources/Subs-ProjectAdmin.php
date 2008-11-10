@@ -192,7 +192,7 @@ function loadProjectAdmin($id_project)
 	foreach ($trackers as $key)
 	{
 		$project['trackers'][$key] = array(
-			'info' => &$context['project_tools']['issue_types'][$key],
+			'info' => &$context['issue_types'][$key],
 			'open' => $row['open_' . $key],
 			'closed' => $row['closed_' . $key],
 			'total' => $row['open_' . $key] + $row['closed_' . $key],

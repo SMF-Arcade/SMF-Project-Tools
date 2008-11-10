@@ -455,7 +455,7 @@ else
 			foreach ($context['projects'][$key][$row['id_project']]['trackers'] as $tracker)
 			{
 				$context['projects'][$key][$row['id_project']]['issues'][$tracker] = array(
-					'info' => &$context['project_tools']['issue_types'][$tracker],
+					'info' => &$context['issue_types'][$tracker],
 					'open' => $row['open_' . $tracker],
 					'closed' => $row['closed_' . $tracker],
 					'total' => $row['open_' . $tracker] + $row['closed_' . $tracker],

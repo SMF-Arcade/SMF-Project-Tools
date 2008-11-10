@@ -114,7 +114,7 @@ function template_edit_project()
 			</td>
 			<td valign="top" align="left">';
 
-	foreach ($context['project_tools']['issue_types'] as $key => $type)
+	foreach ($context['issue_types'] as $key => $type)
 		echo '
 				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
 

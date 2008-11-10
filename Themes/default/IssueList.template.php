@@ -30,7 +30,7 @@ function template_issue_list()
 						<option value="closed"', $context['issue_search']['status'] == 'closed' ? ' selected="selected"' : '', '>', $txt['issue_search_closed_issues'], '</option>
 						<option value="" disabled="disabled">--------</option>';
 
-	foreach ($context['issue']['status'] as $status)
+	foreach ($context['issue_status'] as $status)
 		echo '
 						<option value="', $status['id'], '"', $context['issue_search']['status'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
