@@ -35,7 +35,7 @@ function ProjectsAdmin()
 	require_once($sourcedir . '/ManageServer.php');
 
 	isAllowedTo('project_admin');
-	loadProjectTools('admin');
+	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['projectSettings'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['projectSettings_desc'];

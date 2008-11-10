@@ -30,7 +30,7 @@ function ManageVersions()
 	require_once($sourcedir . '/Project.php');
 
 	isAllowedTo('project_admin');
-	loadProjectTools('admin');
+	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_versions'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_versions_description'];

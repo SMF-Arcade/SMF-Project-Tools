@@ -23,6 +23,28 @@
 	<!-- Board directory -->
 	<file name="$boarddir/index.php">
 		<operation>
+			<search position="after"><![CDATA[	// Load the current theme.  (note that ?theme=1 will also work, may be used for guest theming.)]]></search>
+			<add><![CDATA[
+	// Project Tools
+	if (!empty($modSettings['projectEnabled']))
+	{
+		require_once($sourcedir . '/Subs-Project.php');
+		require_once($sourcedir . '/Subs-Issue.php');
+
+		loadProjectTools();
+
+		// Load Project (if needed)
+		loadProject();
+	}
+	else
+	{
+		$user_info['query_see_project'] = '0=1';
+	}
+
+]]></add>
+		</operation>
+
+		<operation>
 			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
 			<add><![CDATA[
 		'projects' => array('Project.php', 'Projects'),]]></add>
@@ -42,16 +64,7 @@
 	// Check if the user should be disallowed access.
 	is_not_banned();]]></search>
 			<add><![CDATA[
-	// Project Tools
-	if (!empty($modSettings['projectEnabled']))
-	{
-		require_once($sourcedir . '/Subs-Project.php');
-		loadProjectToolsPermissions();
-	}
-	else
-	{
-		$user_info['query_see_project'] = '0=1';
-	}]]></add>
+	]]></add>
 		</operation>
 	</file>
 

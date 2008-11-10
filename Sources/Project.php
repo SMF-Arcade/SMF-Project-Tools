@@ -31,10 +31,8 @@ function Projects($standalone = false)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 
-	$project = 0;
-
 	isAllowedTo('project_access');
-	loadProjectTools();
+	loadProjectToolsPage();
 
 	$subActions = array(
 		// Project
@@ -69,9 +67,6 @@ function Projects($standalone = false)
 
 	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 		list ($issue, $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
-
-	// Load Project
-	loadProject();
 
 	// Load Issue if needed
 	if (isset($issue))
@@ -151,53 +146,6 @@ function Projects($standalone = false)
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
 	$subActions[$_REQUEST['sa']][1]();
-}
-
-function loadProjectTools($mode = '')
-{
-	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
-
-	if (!empty($project_version))
-		return;
-
-	// Which version this is?
-	$project_version = '0.2';
-
-	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
-	$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
-
-	loadTemplate('Project', array('forum', 'project'));
-
-	if (empty($mode))
-	{
-		$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
-
-		if (!isset($_REQUEST['xml']))
-			$context['template_layers'][] = 'project';
-	}
-	elseif ($mode == 'profile')
-	{
-		loadTemplate('ProjectProfile');
-
-		$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
-	}
-	elseif ($mode == 'admin')
-	{
-		require_once($sourcedir . '/Subs-ProjectAdmin.php');
-
-		$user_info['query_see_project'] = '1 = 1';
-		$user_info['query_see_version'] = '1 = 1';
-
-		if (loadLanguage('ProjectAdmin') == false)
-			loadLanguage('ProjectAdmin', 'english');
-
-		loadTemplate('ProjectAdmin');
-
-		if (!isset($_REQUEST['xml']))
-			$context['template_layers'][] = 'project_admin';
-	}
 }
 
 ?>

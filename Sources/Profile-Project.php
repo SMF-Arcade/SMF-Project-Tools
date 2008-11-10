@@ -33,7 +33,7 @@ function projectProfile($memID)
 	global $user_info, $smcFunc, $sourcedir;
 
 	require_once($sourcedir . '/Project.php');
-	loadProjectTools('profile');
+	loadProjectToolsPage('profile');
 
 	$subActions = array(
 		'main' => array('projectProfileMain'),

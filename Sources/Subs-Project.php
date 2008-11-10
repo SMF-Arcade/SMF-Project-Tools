@@ -27,14 +27,15 @@ if (!defined('SMF'))
 	!!!
 */
 
-function loadProjectToolsPermissions()
+function loadProjectTools()
 {
-	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
 
-	if (isset($context['project_tools']))
+	if (!empty($project_version))
 		return;
 
-	require_once($sourcedir . '/Subs-Issue.php');
+	// Which version this is?
+	$project_version = '0.2';
 
 	if (empty($modSettings['issueRegex']))
 		$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
@@ -78,6 +79,47 @@ function loadProjectToolsPermissions()
 		loadLanguage('Project', 'english');
 
 	loadIssueTypes();
+}
+
+function loadProjectToolsPage($mode = '')
+{
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings;
+
+	if ($mode == '')
+	{
+		$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
+		$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
+
+		loadTemplate('Project', array('forum', 'project'));
+
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
+
+		if (!isset($_REQUEST['xml']))
+			$context['template_layers'][] = 'project';
+	}
+	elseif ($mode == 'profile')
+	{
+		loadTemplate('ProjectProfile', array('project'));
+
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
+	}
+	elseif ($mode == 'admin')
+	{
+		require_once($sourcedir . '/Subs-ProjectAdmin.php');
+
+		$user_info['query_see_project'] = '1 = 1';
+		$user_info['query_see_version'] = '1 = 1';
+
+		if (loadLanguage('ProjectAdmin') == false)
+			loadLanguage('ProjectAdmin', 'english');
+
+		loadTemplate('ProjectAdmin',  array('project'));
+
+		if (!isset($_REQUEST['xml']))
+			$context['template_layers'][] = 'project_admin';
+	}
 }
 
 // TODO: Cache this
@@ -171,6 +213,7 @@ function project_get_url($params = array())
 	}
 }
 
+// Load Timeline
 function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -301,6 +344,7 @@ function loadTimeline($project = 0)
 	$smcFunc['db_free_result']($request);
 }
 
+// Loads current project
 function loadProject()
 {
 	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info, $project;
@@ -490,6 +534,7 @@ function loadProject()
 	}
 }
 
+// Can I do that?
 function projectAllowedTo($permission)
 {
 	global $context, $project;

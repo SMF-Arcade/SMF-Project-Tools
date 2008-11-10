@@ -30,7 +30,7 @@ function ManageProjects()
 	require_once($sourcedir . '/Project.php');
 
 	isAllowedTo('project_admin');
-	loadProjectTools('admin');
+	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_projects'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_projects_description'];
@@ -350,7 +350,7 @@ function ManageCategories()
 	require_once($sourcedir . '/Project.php');
 
 	isAllowedTo('project_admin');
-	loadProjectTools('admin');
+	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_category'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_project_category_description'];
