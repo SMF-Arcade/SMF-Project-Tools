@@ -169,6 +169,7 @@ $txt['change_timeline_target_version'] = 'Fixed Version';
 $txt['change_timeline_status'] = 'Status';
 $txt['change_timeline_view_status'] = 'View Status';
 $txt['change_timeline_priority'] = 'Priority';
+$txt['change_timeline_category'] = 'Category';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';

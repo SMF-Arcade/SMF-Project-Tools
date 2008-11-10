@@ -420,7 +420,15 @@ function template_issue_comments()
 						', $txt['logged'];
 
 		echo '
-					</div>
+					</div>';
+
+		// Show the member's signature?
+		if (!empty($comment['member']['signature']) && empty($options['show_no_signatures']))
+			echo '
+						<hr width="100%" size="1" style="clear: right;" class="margintop hrcolor" />
+						<div class="signature">', $comment['member']['signature'], '</div>';
+
+		echo '
 				</div>
 			</div>';
 
