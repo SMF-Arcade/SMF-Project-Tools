@@ -75,7 +75,9 @@
 if (!empty($modSettings['projectEnabled']))
 {
 	require_once($sourcedir . '/Subs-Project.php');
-	loadProjectToolsPermissions();
+	require_once($sourcedir . '/Subs-Issue.php');
+
+	loadProjectTools();
 }
 else
 {
