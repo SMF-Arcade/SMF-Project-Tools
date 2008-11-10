@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function Projects($standalone = false)
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 
 	$project = 0;
 
@@ -67,47 +67,22 @@ function Projects($standalone = false)
 		'url' => project_get_url(array('action' => 'projects')),
 	);
 
+	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
+		list ($issue, $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
+
+	// Load Project
+	loadProject();
+
 	// Load Issue if needed
-	if (!empty($_REQUEST['issue']) && !isset($_REQUEST['project']))
+	if (isset($issue))
 	{
-		if (strpos($_REQUEST['issue'], '.') !== false)
-			list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
+		loadIssue();
 
-		$request = $smcFunc['db_query']('', '
-			SELECT id_project
-			FROM {db_prefix}issues
-			WHERE id_issue = {int:issue}',
-			array(
-				'issue' => (int) $_REQUEST['issue']
-			)
-		);
-
-		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
-
-		if (!$_REQUEST['project'])
-			fatal_lang_error('issue_not_found', false);
+		if (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'viewIssue';
 	}
-
-	// Load Project if needed
-	if (!empty($_REQUEST['project']))
-	{
-		$project = (int) $_REQUEST['project'];
-
-		loadProject();
-
-		$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
-
-		if (isset($_REQUEST['issue']))
-		{
-			if (!loadIssue((int) $_REQUEST['issue']))
-				fatal_lang_error('issue_not_found', false);
-
-			if (!isset($_REQUEST['sa']))
-				$_REQUEST['sa'] = 'viewIssue';
-		}
-		elseif (!isset($_REQUEST['sa']))
-			$_REQUEST['sa'] = 'viewProject';
-	}
+	elseif (!isset($_REQUEST['sa']) && !empty($project))
+		$_REQUEST['sa'] = 'viewProject';
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 

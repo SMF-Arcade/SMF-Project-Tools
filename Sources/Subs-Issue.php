@@ -98,12 +98,12 @@ function loadIssueTypes()
 	);
 }
 
-function loadIssue($id_issue)
+function loadIssue()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $project, $txt, $memberContext;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project, $txt, $memberContext;
 
-	if (!isset($context['project']['id']))
-		trigger_error('', E_USER_ERROR);
+	if (!isset($context['project']) || !isset($issue))
+		return;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -126,13 +126,13 @@ function loadIssue($id_issue)
 		LIMIT 1',
 		array(
 			'member' => $user_info['id'],
-			'issue' => $id_issue,
+			'issue' => $issue,
 			'project' => $project,
 		)
 	);
 
 	if ($smcFunc['db_num_rows']($request) == 0)
-		return false;
+		fatal_lang_error('issue_not_found', false);
 
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
@@ -174,8 +174,6 @@ function loadIssue($id_issue)
 		'replies' => $row['replies'],
 		'private' => !empty($row['private_issue']),
 	);
-
-	return true;
 }
 
 function createIssue($issueOptions, &$posterOptions)

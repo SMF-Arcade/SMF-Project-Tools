@@ -305,6 +305,31 @@ function loadProject()
 {
 	global $context, $smcFunc, $scripturl, $user_info, $txt, $user_info, $project;
 
+	// Project as parameter?
+	if (!empty($_REQUEST['project']))
+		$project = (int) $_REQUEST['project'];
+	// Do we have issue?
+	elseif (!empty($_REQUEST['issue']))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_project
+			FROM {db_prefix}issues
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => (int) $_REQUEST['issue']
+			)
+		);
+
+		list ($_REQUEST['project']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		if (empty($_REQUEST['project']))
+			fatal_lang_error('issue_not_found', false);
+	}
+	// Not needed
+	else
+		return;
+
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
@@ -333,8 +358,8 @@ function loadProject()
 		'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 		'href' => project_get_url(array('project' => $row['id_project'])),
 		'name' => $row['name'],
-		'description' => $row['description'],
-		'long_description' => $row['long_description'],
+		'description' => parse_bbc($row['description']),
+		'long_description' => parse_bbc($row['long_description']),
 		'category' => array(),
 		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
