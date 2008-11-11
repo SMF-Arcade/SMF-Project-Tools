@@ -171,6 +171,9 @@ function IssueView()
 	if (isset($_REQUEST['view']) && $_REQUEST['view'] == 'log')
 		$context['current_view'] = 'log';
 
+	if ($context['current_view'] == 'comments')
+		$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
+
 	prepareComments($context['current_view'] == 'comments');
 
 	if ($context['current_view'] == 'comments')
@@ -203,8 +206,6 @@ function IssueViewComments()
 			array('id_issue', 'id_member')
 		);
 	}
-
-	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
 
 	loadAttachmentData();
 
