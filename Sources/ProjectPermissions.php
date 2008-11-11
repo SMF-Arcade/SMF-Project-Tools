@@ -27,7 +27,7 @@ function ManageProjectPermissions()
 	require_once($sourcedir . '/Project.php');
 
 	isAllowedTo('project_admin');
-	loadProjectTools('admin');
+	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_permissions'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_project_permissions_description'];

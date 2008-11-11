@@ -407,7 +407,7 @@ function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 	$profiles = array();
 
 	$request = $smcFunc['db_query']('', '
-		SELECT pr.id_profile, pr.profile_name, COUNT(*) AS num_project
+		SELECT pr.id_profile, pr.profile_name, COUNT(p.id_project) AS num_project
 		FROM {db_prefix}project_profiles AS pr
 			LEFT JOIN {db_prefix}projects AS p ON (p.id_profile = pr.id_profile)
 		GROUP BY pr.id_profile');
