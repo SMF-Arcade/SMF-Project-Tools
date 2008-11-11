@@ -10,9 +10,13 @@ $txt['project_version_info'] = 'Version Information';
 $txt['project_installed_version'] = 'Installed version';
 $txt['project_latest_version'] = 'Latest version';
 
+//
+$txt['project_tools_admin'] = 'Project Tools';
+$txt['project_tools_admin_desc'] = 'Here you can edit some settings of SMF Project Tools';
+
 // Settings
-$txt['projectSettings'] = 'Project Tools';
-$txt['projectSettings_desc'] = 'Here you can edit some settings of SMF Project Tools';
+$txt['project_settings'] = 'Settings';
+$txt['project_settings_title'] = 'Project Tools Settings';
 
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';

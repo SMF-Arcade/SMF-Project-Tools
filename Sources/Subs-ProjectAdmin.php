@@ -23,6 +23,57 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+function loadAdminProjects()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT p.id_project, p.name, p.description
+		FROM {db_prefix}projects AS p
+		ORDER BY p.name');
+
+	$context['projects'] = array();
+	$projects = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['projects'][$row['id_project']] = array(
+			'id' => $row['id_project'],
+			'href' => $scripturl . '?action=admin;area=manageprojects;sa=project;project=' . $row['id_project'],
+			'name' => $row['name'],
+			'description' => $row['description'],
+			'versions' => array(),
+			'categories' => array(),
+		);
+
+		$projects[] = $row['id_project'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	if (empty($projects))
+		fatal_lang_error('admin_no_projects', false);
+
+	// Current project
+	if (isset($_REQUEST['project']) && in_array((int) $_REQUEST['project'], $projects))
+		$id_project = (int) $_REQUEST['project'];
+	elseif (isset($_SESSION['admin_project']) && in_array((int) $_SESSION['admin_project'], $projects))
+		$id_project = $_SESSION['admin_project'];
+	else
+		$id_project = $projects;
+
+	$_SESSION['admin_project'] = $id_project;
+
+	$projectsHtml = '';
+
+	foreach ($context['projects'] as $project)
+	{
+		$projectsHtml .= '
+		<option value="' . $project['id'] . '"' . ($project['id'] == $id_project ? ' selected="selected"' : '') . '>' . $project['name']. '</option>';
+	}
+
+	return array($id_project, $projectsHtml);
+}
+
 function createProject($projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;

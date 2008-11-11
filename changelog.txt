@@ -13,6 +13,7 @@ November 2008
  ! Fixed error with attachments [Issue #126]
  ! Undefined index errors caused by Changelog in some cases
  + Moved project detection to loadProject
+ + Remember selected project on admin
 
 SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================

@@ -59,45 +59,7 @@ function ManageVersionsList()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT p.id_project, p.name, p.description
-		FROM {db_prefix}projects AS p
-		ORDER BY p.name');
-
-	$context['projects'] = array();
-	$projects = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['projects'][$row['id_project']] = array(
-			'id' => $row['id_project'],
-			'href' => $scripturl . '?action=admin;area=manageprojects;sa=project;project=' . $row['id_project'],
-			'name' => $row['name'],
-			'description' => $row['description'],
-			'versions' => array(),
-			'categories' => array(),
-		);
-
-		$projects[] = $row['id_project'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	if (empty($projects))
-		fatal_lang_error('admin_no_projects', false);
-
-	// Current project
-	if (!isset($_REQUEST['project']) || !in_array((int) $_REQUEST['project'], $projects))
-		$id_project = $projects[0];
-	else
-		$id_project = (int) $_REQUEST['project'];
-
-	$projectsHtml = '';
-
-	foreach ($context['projects'] as $project)
-	{
-		$projectsHtml .= '
-		<option value="' . $project['id'] . '"' . ($project['id'] == $id_project ? ' selected="selected"' : '') . '>' . $project['name']. '</option>';
-	}
+	list ($id_project, $projectsHtml) = loadAdminProjects();
 
 	$listOptions = array(
 		'id' => 'versions_list',

@@ -37,10 +37,10 @@ function ProjectsAdmin()
 	isAllowedTo('project_admin');
 	loadProjectToolsPage('admin');
 
-	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['projectSettings'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['projectSettings_desc'];
+	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['project_tools_admin'];
+	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['project_tools_admin_desc'];
 
-	$context['page_title'] = $txt['projectSettings'];
+	$context['page_title'] = $txt['project_tools_admin'];
 
 	$subActions = array(
 		'main' => array('ProjectsAdminMain'),
@@ -89,6 +89,7 @@ function ProjectsAdminSettings($return_config = false)
 	}
 
 	$context['post_url'] = $scripturl . '?action=admin;area=projectsadmin;sa=settings;save';
+	$context['page_title'] = $txt['project_settings_title'];
 	$context['settings_title'] = $txt['project_settings'];
 	$context['sub_template'] = 'show_settings';
 
