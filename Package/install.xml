@@ -42,10 +42,10 @@
 
 			// Load Issue (if needed)
 			loadIssue();
-		}
 
-		if (!empty($project) || !empty($issue))
-			$_REQUEST['action'] = 'projects';
+			if (!empty($project) || !empty($issue))
+				$_REQUEST['action'] = 'projects';
+		}
 	}
 	else
 	{
