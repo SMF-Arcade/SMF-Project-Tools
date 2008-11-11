@@ -54,12 +54,12 @@ function loadAdminProjects()
 		fatal_lang_error('admin_no_projects', false);
 
 	// Current project
-	if (isset($_REQUEST['project']) && in_array((int) $_REQUEST['project'], $projects))
+	if (isset($_REQUEST['project']) && in_array($_REQUEST['project'], $projects))
 		$id_project = (int) $_REQUEST['project'];
-	elseif (isset($_SESSION['admin_project']) && in_array((int) $_SESSION['admin_project'], $projects))
+	elseif (isset($_SESSION['admin_project']) && in_array($_SESSION['admin_project'], $projects))
 		$id_project = $_SESSION['admin_project'];
 	else
-		$id_project = $projects;
+		$id_project = $projects[0];
 
 	$_SESSION['admin_project'] = $id_project;
 
