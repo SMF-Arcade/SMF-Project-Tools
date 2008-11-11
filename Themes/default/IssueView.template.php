@@ -509,7 +509,7 @@ function template_issue_view_below()
 	if ($context['can_comment'])
 	{
 		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'reply2')), '" method="post">
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply2')), '" method="post">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
 			<div class="smallpadding windowbg" style="text-align: center">

@@ -442,20 +442,27 @@ function getPrivateProfiles()
 }
 
 // Function to generate urls
-function project_get_url($params = array())
+function project_get_url($params = array(), $project = null)
 {
 	global $scripturl, $modSettings;
 
 	// Running in "standalone" mode WITH rewrite
 	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
 	{
-		$project = '';
+		// Main Page? Too easy
+		if (empty($params))
+			return $modSettings['projectStandaloneUrl'] . '/';
 
 		if (isset($params['project']))
 		{
 			$project = $params['project'];
 			unset($params['project']);
 		}
+		elseif (!empty($GLOBALS['project']))
+			$project = $GLOBALS['project'];
+		elseif ($project == null)
+			die(print_r(debug_backtrace(), true));
+
 
 		if (count($params) === 0)
 			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
@@ -472,10 +479,10 @@ function project_get_url($params = array())
 			else
 				$query .= '?';
 
-			if (!empty($value))
-				$query .= $p . '=' . $value;
-			elseif (is_int($p))
+			if (is_int($p))
 				$query .= $value;
+			else
+				$query .= $p . '=' . $value;
 		}
 
 		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
@@ -484,6 +491,9 @@ function project_get_url($params = array())
 	else
 	{
 		$return = '';
+
+		if (empty($params) && empty($modSettings['projectStandaloneUrl']))
+			$params['action'] = 'projects';
 
 		foreach ($params as $p => $value)
 		{
@@ -495,10 +505,10 @@ function project_get_url($params = array())
 			else
 				$return .= '?';
 
-			if (!empty($value))
+			if (is_int($p))
+				$return .= $value;
+			else
 				$return .= $p . '=' . $value;
-			elseif (is_int($p))
-				$query .= $value;
 		}
 
 		if (!empty($modSettings['projectStandalone']))
@@ -631,7 +641,7 @@ function loadTimeline($project = 0)
 			'event' => $row['event'],
 			'project_link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
-			'link' => !empty($row['subject']) ? '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
+			'link' => !empty($row['subject']) ? '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'extra' => $extra,
 		);

@@ -62,7 +62,7 @@ function Projects($standalone = false)
 	// Linktree
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_projects'],
-		'url' => project_get_url(array('action' => 'projects')),
+		'url' => project_get_url(),
 	);
 
 	// Load Issue if needed
