@@ -110,7 +110,9 @@ else
 					'function' => 'ManageProjects',
 					'permission' => array('project_admin'),
 					'subsections' => array(
-						'main' => array($txt['modify_projects']),
+						'list' => array($txt['modify_projects']),
+						'versions' => array($txt['manage_versions']),
+						'categories' => array($txt['manage_project_category']),
 						'new' => array($txt['new_project']),
 					),
 				),
@@ -122,24 +124,6 @@ else
 					'subsections' => array(
 						'main' => array($txt['modify_project_profiles']),
 						'new' => array($txt['new_project_profile']),
-					),
-				),
-				'manageversions' => array(
-					'label' => $txt['manage_versions'],
-					'file' => 'ManageVersions.php',
-					'function' => 'ManageVersions',
-					'permission' => array('project_admin'),
-					'subsections' => array(
-						'main' => array($txt['modify_versions']),
-					),
-				),
-				'managecategories' => array(
-					'label' => $txt['manage_project_category'],
-					'file' => 'ManageProjects.php',
-					'function' => 'ManageCategories',
-					'permission' => array('project_admin'),
-					'subsections' => array(
-						'main' => array($txt['modify_project_category']),
 					),
 				),
 			),

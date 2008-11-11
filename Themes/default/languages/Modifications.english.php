@@ -25,12 +25,8 @@ $txt['project_general_settings'] = 'Settings';
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
-
 $txt['manage_versions'] = 'Versions';
-$txt['modify_versions'] = 'Modify Versions';
-
 $txt['manage_project_category'] = 'Categories';
-$txt['modify_project_category'] = 'Modify Categories';
 
 $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';

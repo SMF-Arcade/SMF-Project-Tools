@@ -13,7 +13,7 @@ function template_edit_version()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageversions;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=admin;area=manageprojects;section=versions;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="project" value="', $context['version']['project'], '" />
 	<input type="hidden" name="version" value="', $context['version']['id'], '" />
 	<input type="hidden" name="parent" value="', $context['version']['parent'], '" />

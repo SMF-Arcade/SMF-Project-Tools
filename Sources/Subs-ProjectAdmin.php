@@ -387,7 +387,7 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 		$categories[] = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=managecategories;sa=edit;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=categories;sa=edit;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -419,7 +419,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 			$versionsTemp[] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
+				'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
 				'level' => 0,
 			);
 		}
@@ -431,7 +431,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 			$children[$row['id_parent']][] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageversions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
+				'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
 				'level' => 1,
 			);
 		}

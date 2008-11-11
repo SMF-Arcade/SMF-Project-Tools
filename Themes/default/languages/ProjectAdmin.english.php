@@ -67,9 +67,6 @@ $txt['category_name'] = 'Category name';
 $txt['delete_category'] = 'Delete Category';
 $txt['cdelete_warning'] = 'Are you sure?';
 
-// Manage Versions
-$txt['manage_versions_description'] = 'Here you can create and edit versions groups and versions';
-
 // Version List
 $txt['header_version'] = 'Version';
 $txt['new_version_group'] = 'New Version Group';

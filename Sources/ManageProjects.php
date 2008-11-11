@@ -37,19 +37,67 @@ function ManageProjects()
 
 	$context['page_title'] = $txt['manage_projects'];
 
-	$subActions = array(
-		'list' => array('ManageProjectsList'),
-		'new' => array('EditProject'),
-		'edit' => array('EditProject'),
-		'edit2' => array('EditProject2'),
+	$sections = array(
+		// Projects
+		'project' => array(
+			'id' => 'project',
+			'template' => 'ManageProjects',
+			'subActions' => array(
+				'list' => array('ManageProjectsList', 'list'),
+				'new' => array('EditProject', 'new'),
+				'edit' => array('EditProject', 'list'),
+				'edit2' => array('EditProject2', 'list'),
+			),
+		),
+		// Versions
+		'versions' => array(
+			'id' => 'versions',
+			'file' => 'ManageVersions.php',
+			'template' => 'ManageVersions',
+			'subActions' => array(
+				'list' => array('ManageVersionsList'),
+				'new' => array('EditVersion'),
+				'edit' => array('EditVersion'),
+				'edit2' => array('EditVersion2'),
+			),
+		),
+		// Categories
+		'categories' => array(
+			'id' => 'categories',
+			'template' => 'ManageProjects',
+			'subActions' => array(
+				'list' =>  array('ManageCategoriesList'),
+				'new' => array('EditCategory'),
+				'edit' => array('EditCategory'),
+				'edit2' => array('EditCategory2'),
+			),
+		),
 	);
+
+	$section = 'project';
+
+	if (isset($_REQUEST['sa']) && isset($sections[$_REQUEST['sa']]))
+		$section = $_REQUEST['sa'];
+	elseif (isset($_REQUEST['section']) && isset($sections[$_REQUEST['section']]))
+		$section = $_REQUEST['section'];
+
+	$section = $sections[$section];
+	$subActions = $section['subActions'];
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
 	if (isset($subActions[$_REQUEST['sa']][1]))
 		$context[$context['admin_menu_name']]['current_subsection'] = $subActions[$_REQUEST['sa']][1];
+	else
+		$context[$context['admin_menu_name']]['current_subsection'] = $section['id'];
 
-	loadTemplate('ManageProjects');
+	// Load file if needed
+	if (!empty($section['file']))
+		require_once($sourcedir . '/' . $section['file']);
+
+	// Load template if needed
+	if (!empty($section['template']))
+		loadTemplate($section['template']);
 
 	// Call action
 	$subActions[$_REQUEST['sa']][0]();
@@ -383,7 +431,7 @@ function ManageCategoriesList()
 
 	$listOptions = array(
 		'id' => 'categories_list',
-		'base_href' => $scripturl . '?action=admin;area=managecategories',
+		'base_href' => $scripturl . '?action=admin;area=manageprojects;section=categories',
 		'get_items' => array(
 			'function' => 'list_getCategories',
 			'params' => array(
@@ -420,7 +468,7 @@ function ManageCategoriesList()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=managecategories',
+			'href' => $scripturl . '?action=admin;area=manageprojects;section=categories',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
@@ -439,7 +487,7 @@ function ManageCategoriesList()
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '
-					<a href="' . $scripturl . '?action=admin;area=managecategories;sa=new;project=' . $id_project . '">
+					<a href="' . $scripturl . '?action=admin;area=manageprojects;section=categories;sa=new;project=' . $id_project . '">
 						' . $txt['new_category'] . '
 					</a>',
 				'class' => 'catbg',
@@ -542,7 +590,7 @@ function EditCategory2()
 		);
 	}
 
-	redirectexit('action=admin;area=managecategories');
+	redirectexit('action=admin;area=manageprojects;section=categories');
 }
 
 ?>

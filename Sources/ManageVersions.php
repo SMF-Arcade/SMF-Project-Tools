@@ -23,38 +23,6 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function ManageVersions()
-{
-	global $context, $sourcedir, $user_info, $txt;
-
-	require_once($sourcedir . '/Project.php');
-
-	isAllowedTo('project_admin');
-	loadProjectToolsPage('admin');
-
-	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_versions'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_versions_description'];
-
-	$context['page_title'] = $txt['manage_versions'];
-
-	$subActions = array(
-		'list' => array('ManageVersionsList'),
-		'new' => array('EditVersion'),
-		'edit' => array('EditVersion'),
-		'edit2' => array('EditVersion2'),
-	);
-
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
-
-	if (isset($subActions[$_REQUEST['sa']][1]))
-		$context[$context['admin_menu_name']]['current_subsection'] = $subActions[$_REQUEST['sa']][1];
-
-	loadTemplate('ManageVersions');
-
-	// Call action
-	$subActions[$_REQUEST['sa']][0]();
-}
-
 function ManageVersionsList()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -63,7 +31,7 @@ function ManageVersionsList()
 
 	$listOptions = array(
 		'id' => 'versions_list',
-		'base_href' => $scripturl . '?action=admin;area=manageversions',
+		'base_href' => $scripturl . '?action=admin;area=manageprojects;section=versions',
 		'get_items' => array(
 			'function' => 'list_getVersions',
 			'params' => array(
@@ -108,7 +76,7 @@ function ManageVersionsList()
 				'data' => array(
 					'function' => create_function('$list_item', '
 						global $txt, $scripturl;
-						return (empty($list_item[\'level\']) ? \'<a href="\' .  $scripturl . \'?action=admin;area=manageversions;sa=new;project=' . $id_project . ';parent=\' . $list_item[\'id\'] . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
+						return (empty($list_item[\'level\']) ? \'<a href="\' .  $scripturl . \'?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . ';parent=\' . $list_item[\'id\'] . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 					'),
 					'style' => 'text-align: right;',
 				),
@@ -119,7 +87,7 @@ function ManageVersionsList()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=manageversions',
+			'href' => $scripturl . '?action=admin;area=manageprojects;section=versions',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
@@ -138,7 +106,7 @@ function ManageVersionsList()
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '
-					<a href="' . $scripturl . '?action=admin;area=manageversions;sa=new;project=' . $id_project . '">
+					<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . '">
 						' . $txt['new_version_group'] . '
 					</a>',
 				'class' => 'catbg',
@@ -308,7 +276,7 @@ function EditVersion2()
 		);
 	}
 
-	redirectexit('action=admin;area=manageversions');
+	redirectexit('action=admin;area=manageprojects;section=versions');
 }
 
 ?>
