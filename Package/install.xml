@@ -34,11 +34,15 @@
 
 		loadProjectTools();
 
-		// Load Project (if needed)
-		loadProject();
+		// Load Project & Issue only on projects page
+		if (empty($_REQUEST['action']) || $_REQUEST['action'] == 'projects')
+		{
+			// Load Project (if needed)
+			loadProject();
 
-		// Load Issue (if needed)
-		loadIssue();
+			// Load Issue (if needed)
+			loadIssue();
+		}
 
 		if (!empty($project) || !empty($issue))
 			$_REQUEST['action'] = 'projects';
