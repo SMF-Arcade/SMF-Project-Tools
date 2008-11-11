@@ -55,7 +55,7 @@ function Projects()
 		'edit' => array('IssueComment.php', 'IssueReply', true),
 		'edit2' => array('IssueComment.php', 'IssueReply2', true),
 		// Remove comment
-		'delete' => array('IssueComment.php', 'IssueDeleteComment', true),
+		'removeComment' => array('IssueComment.php', 'IssueDeleteComment', true),
 		// Report Issue
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
