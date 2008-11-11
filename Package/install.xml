@@ -289,12 +289,12 @@ else
 			),]]></add>
 		</operation>
 
-		<!--<operation>
+		<operation>
 			<search position="before"><![CDATA[	if (isset($context['menu_buttons'][$context['current_action']]))
 		$current_action = $context['current_action'];]]></search>
-			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']))
+			<add><![CDATA[	elseif (empty($_REQUEST['action']) && isset($_REQUEST['project']) && isset($context['menu_buttons']['projects']))
 		$current_action = 'projects';]]></add>
-		</operation>-->
+		</operation>
 
 		<operation>
 			<search position="after"><![CDATA[|action=profile;u=\d+)'),]]></search>
