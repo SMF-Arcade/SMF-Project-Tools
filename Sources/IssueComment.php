@@ -383,6 +383,7 @@ function IssueDeleteComment()
 	$row = $smcFunc['db_fetch_assoc']($request);
 	if (!$row)
 		fatal_lang_error('comment_not_found', false);
+	$smcFunc['db_free_result']($request);
 
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}issue_comments AS c
