@@ -357,6 +357,11 @@ $tables = array(
 				'default' => 0,
 			),
 			array(
+				'name' => 'id_version_fixed',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
 				'name' => 'id_comment_first',
 				'type' => 'int',
 				'default' => 0,
@@ -368,11 +373,6 @@ $tables = array(
 			),
 			array(
 				'name' => 'id_comment_mod',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'id_version_fixed',
 				'type' => 'int',
 				'default' => 0,
 			),

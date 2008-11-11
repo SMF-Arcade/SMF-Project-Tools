@@ -47,7 +47,7 @@ function loadProjectTools()
 	else
 		$issue = 0;
 
-
+	// Issue Regex
 	if (empty($modSettings['issueRegex']))
 		$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
 	else

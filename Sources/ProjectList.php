@@ -44,6 +44,7 @@ function ProjectList()
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:member})
 		WHERE {query_see_project}
+			AND {query_see_issue}
 		ORDER BY p.name',
 		array(
 			'member' => $user_info['id'],
