@@ -308,7 +308,7 @@ function EditVersion2()
 		);
 	}
 
-	redirectexit('action=admin;area=manageversions;project=' . $_POST['project']);
+	redirectexit('action=admin;area=manageversions');
 }
 
 ?>

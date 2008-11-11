@@ -39,7 +39,7 @@ function loadAdminProjects()
 	{
 		$context['projects'][$row['id_project']] = array(
 			'id' => $row['id_project'],
-			'href' => $scripturl . '?action=admin;area=manageprojects;sa=project;project=' . $row['id_project'],
+			'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
 			'name' => $row['name'],
 			'description' => $row['description'],
 			'versions' => array(),

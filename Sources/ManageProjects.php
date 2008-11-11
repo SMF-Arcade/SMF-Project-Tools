@@ -542,7 +542,7 @@ function EditCategory2()
 		);
 	}
 
-	redirectexit('action=admin;area=managecategories;project=' . $_POST['project']);
+	redirectexit('action=admin;area=managecategories');
 }
 
 ?>
