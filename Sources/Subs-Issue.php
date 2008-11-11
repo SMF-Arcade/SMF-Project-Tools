@@ -24,7 +24,7 @@ function loadIssue()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project;
 
-	if (!isset($context['project']) || !isset($issue))
+	if (empty($project) || empty($issue))
 		return;
 
 	$request = $smcFunc['db_query']('', '
@@ -83,8 +83,8 @@ function loadIssue()
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 		),
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
-		'type' => $context['issue_types'][$row['issue_type']],
-		'status' => $context['issue_status'][$row['status']],
+		'type' => &$context['issue_types'][$row['issue_type']],
+		'status' => &$context['issue_status'][$row['status']],
 		'priority_num' => $row['priority'],
 		'priority' => $context['issue']['priority'][$row['priority']],
 		'created' => timeformat($row['created']),

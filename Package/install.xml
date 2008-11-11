@@ -26,6 +26,7 @@
 			<search position="after"><![CDATA[	// Load the current theme.  (note that ?theme=1 will also work, may be used for guest theming.)]]></search>
 			<add><![CDATA[
 	// Project Tools
+	global $project, $issue;
 	if (!empty($modSettings['projectEnabled']))
 	{
 		require_once($sourcedir . '/Subs-Project.php');
@@ -38,6 +39,9 @@
 
 		// Load Issue (if needed)
 		loadIssue();
+
+		if (!empty($project) || !empty($issue))
+			$_REQUEST['action'] = 'projects';
 	}
 	else
 	{
@@ -55,7 +59,7 @@
 
 		<operation>
 			<search position="after"><![CDATA[	elseif (empty($_REQUEST['action']))]]></search>
-			<add><![CDATA[	elseif (empty($_REQUEST['action']) && (isset($_REQUEST['project']) || isset($_REQUEST['issue'])))
+			<add><![CDATA[	elseif (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
 	{
 		require_once($sourcedir . '/Project.php');
 		return 'Projects';
@@ -177,7 +181,7 @@ else
 	// This is just a regular attachment...
 	else]]></search>
 			<add><![CDATA[
-	elseif (isset($issue))
+	elseif (!empty($issue))
 	{
 		global $project;
 		require_once($sourcedir . '/Project.php');

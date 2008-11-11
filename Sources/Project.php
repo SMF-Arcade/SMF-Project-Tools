@@ -66,7 +66,7 @@ function Projects($standalone = false)
 	);
 
 	// Load Issue if needed
-	if (!isset($_REQUEST['sa']) && isset($issue))
+	if (!isset($_REQUEST['sa']) && !empty($issue))
 		$_REQUEST['sa'] = 'viewIssue';
 	elseif (!isset($_REQUEST['sa']) && !empty($project))
 		$_REQUEST['sa'] = 'viewProject';
