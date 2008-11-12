@@ -77,6 +77,7 @@ function template_issue_list()
 					<th class="catbg3 headerpadding">', $txt['issue_replies'], '</th>
 					<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
 					<th class="catbg3 headerpadding">', $txt['issue_version'], '</th>
+					<th class="catbg3 headerpadding">', $txt['issue_version_fixed'], '</th>
 					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
@@ -116,6 +117,9 @@ function template_issue_list()
 					</td>
 					<td class="windowbg version smalltext">
 						', $issue['version']['link'], '
+					</td>
+					<td class="windowbg version smalltext">
+						', $issue['version_fixed']['link'], '
 					</td>
 					<td class="windowbg2 lastissue smalltext">
 						', $issue['updater']['link'], '<br />

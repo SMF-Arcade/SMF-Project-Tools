@@ -206,6 +206,7 @@ function IssueList()
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
+			i.id_version_fixed, IFNULL(ver2.version_name, {string:empty}) AS version_fixed_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
@@ -265,6 +266,11 @@ function IssueList()
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
 				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
+			),
+			'version_fixed' => array(
+				'id' => $row['id_version_fixed'],
+				'name' => $row['version_fixed_name'],
+				'link' => !empty($row['version_fixed_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $row['id_version_fixed'])) . '">' . $row['version_fixed_name'] . '</a>' : ''
 			),
 			'tags' => $row['tags'],
 			'type' => $row['issue_type'],
