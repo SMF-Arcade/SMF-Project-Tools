@@ -41,7 +41,7 @@ function ProjectRoadmapMain()
 {
 	global $context, $project, $user_info, $smcFunc, $txt;
 
-	$ids = array();
+	$ids = array(0);
 	$context['roadmap'] = array();
 
 	$request = $smcFunc['db_query']('', '
@@ -81,7 +81,6 @@ function ProjectRoadmapMain()
 			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version'])),
 			'description' => parse_bbc($row['description']),
 			'release_date' => vsprintf($txt[$time[0]], $time[1]),
-			'versions' => array(),
 			'issues' => array(
 				'open' => 0,
 				'closed' => 0,
@@ -90,47 +89,56 @@ function ProjectRoadmapMain()
 	}
 	$smcFunc['db_free_result']($request);
 
-	if (!empty($ids))
+	// N/A version
+	$context['roadmap'][0] = array(
+		'id' => 0,
+		'name' => $txt['version_na'],
+		'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => 0)),
+		'description' => $txt['version_na_desc'],
+		'release_date' => $txt['roadmap_no_release_date'],
+			'issues' => array(
+				'open' => 0,
+				'closed' => 0,
+		),
+	);
+
+	// Load issue counts
+	$request = $smcFunc['db_query']('', '
+		SELECT id_version_fixed, status, COUNT(*) AS num
+		FROM {db_prefix}issues AS ver
+		WHERE id_version_fixed IN({array_int:versions})
+		GROUP BY id_version_fixed, status',
+		array(
+			'project' => $project,
+			'versions' => $ids,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		// Load issue counts
-		$request = $smcFunc['db_query']('', '
-			SELECT id_version, id_version_fixed, status, COUNT(*) AS num
-			FROM {db_prefix}issues AS ver
-			WHERE (id_version IN({array_int:versions}) OR id_version_fixed IN({array_int:versions}))
-			GROUP BY id_version, id_version_fixed, status',
-			array(
-				'project' => $project,
-				'versions' => $ids,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$row['id_version_real'] = $row['id_version'];
-
-			if (!empty($row['id_version_fixed']))
-				$row['id_version'] = $row['id_version_fixed'];
-
-			if (!in_array($row['status'], $context['closed_status']))
-				$context['roadmap'][$row['id_version']]['issues']['open'] += $row['num'];
-			else
-				$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['num'];
-		}
-		$smcFunc['db_free_result']($request);
-
-		foreach ($context['roadmap'] as $id => $d)
-		{
-			$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
-
-			if ($d['issues']['total'] > 0)
-				$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
-			else
-				$d['progress'] = 0;
-
-			// Back to array
-			$context['roadmap'][$id] = $d;
-		}
+		if (!in_array($row['status'], $context['closed_status']))
+			$context['roadmap'][$row['id_version_fixed']]['issues']['open'] += $row['num'];
+		else
+			$context['roadmap'][$row['id_version_fixed']]['issues']['closed'] += $row['num'];
 	}
+	$smcFunc['db_free_result']($request);
+
+	foreach ($context['roadmap'] as $id => $d)
+	{
+		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
+
+		if ($d['issues']['total'] > 0)
+			$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
+		else
+			$d['progress'] = 0;
+
+		// Back to array
+		$context['roadmap'][$id] = $d;
+	}
+
+	// Hide "not set" version if it has no issues
+	if ($context['roadmap'][0]['issues']['total'] == 0)
+		unset($context['roadmap'][0]);
 
 	// Template
 	$context['page_title'] = sprintf($txt['project_roadmap_title'], $context['project']['name']);
@@ -194,7 +202,7 @@ function ProjectRoadmapVersion()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_version, id_version_fixed, status, COUNT(*) AS num
 		FROM {db_prefix}issues AS ver
-		WHERE (id_version IN({array_int:versions}) OR id_version_fixed IN({array_int:versions}))
+		WHERE id_version_fixed IN({array_int:versions})
 		GROUP BY id_version, id_version_fixed, status',
 		array(
 			'project' => $project,
@@ -217,7 +225,7 @@ function ProjectRoadmapVersion()
 		$context['version']['progress'] = round($context['version']['issues']['closed'] / $context['version']['issues']['total'] * 100, 2);
 
 	// Load Issues
-	$context['issues'] = getIssueList(10, 'i.updated DESC');
+	$context['issues'] = getIssueList(10, 'i.updated DESC', 'id_version IN({array_in:versions})', array('versions' => array($row['id_version'])));
 	$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $context['version']['id']));
 
 	// Template

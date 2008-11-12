@@ -784,7 +784,7 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	return true;
 }
 
-function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
+function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1', $queryArray)
 {
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 
@@ -809,14 +809,14 @@ function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1')
 			AND i.id_project = {int:project}
 		ORDER BY ' . $order . '
 		LIMIT {int:start}, {int:num_issues}',
-		array(
+		array_merge(array(
 			'project' => $project,
 			'empty' => '',
 			'start' => 0,
 			'num_issues' => $num_issues,
 			'member' => $user_info['id'],
 			'closed_status' => $context['closed_status'],
-		)
+		), $queryArray)
 	);
 
 	$return = array();

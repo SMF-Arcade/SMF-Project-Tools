@@ -113,6 +113,9 @@ $txt['roadmap_release_date_year'] = '%d';
 $txt['roadmap_release_date_year_month'] = '%1$s %2$d';
 $txt['roadmap_release_date_year_month_day'] = '%1$d %2$s %3$d';
 
+$txt['version_na'] = 'not set';
+$txt['version_na_desc'] = 'Includes issues where target/fixed version is not set';
+
 // Issue List
 $txt['issue_search'] = 'Search Issues';
 $txt['issue_search_button'] = 'Search';
