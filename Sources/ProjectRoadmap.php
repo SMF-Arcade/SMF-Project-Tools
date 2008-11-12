@@ -107,7 +107,7 @@ function ProjectRoadmapMain()
 		SELECT id_version_fixed, status, COUNT(*) AS num
 		FROM {db_prefix}issues AS ver
 		WHERE id_version_fixed IN({array_int:versions})
-		GROUP BY id_version_fixed, status',
+		GROUP BY status, id_version, id_version_fixed',
 		array(
 			'project' => $project,
 			'versions' => $ids,

@@ -784,7 +784,7 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	return true;
 }
 
-function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1', $queryArray)
+function getIssueList($num_issues, $order = 'i.updated DESC', $where = '1 = 1', $queryArray = array())
 {
 	global $context, $project, $user_info, $smcFunc, $scripturl, $txt;
 

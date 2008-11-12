@@ -74,11 +74,10 @@ function IssueList()
 		'status' => 'open',
 		'tag' => '',
 		'type' => '',
-		'version' => 0,
-		'category' => 0,
-		'reporter' => 0,
-		'assignee' => 0,
-		'versions' => array()
+		'version' => null,
+		'category' => null,
+		'reporter' => null,
+		'assignee' => null,
 	);
 
 	$context['possible_types'] = array();
@@ -104,41 +103,30 @@ function IssueList()
 		$baseurl['type'] = $_REQUEST['type'];
 	}
 
-	if (!empty($_REQUEST['category']))
+	if (isset($_REQUEST['category']))
 	{
 		$context['issue_search']['category'] = $_REQUEST['category'];
 		$baseurl['category'] = $_REQUEST['category'];
 	}
 
-	if (!empty($_REQUEST['reporter']))
+	if (isset($_REQUEST['reporter']))
 	{
 		$context['issue_search']['reporter'] = $_REQUEST['reporter'];
 		$baseurl['reporter'] .= $_REQUEST['reporter'];
 	}
 
-	if (!empty($_REQUEST['assignee']))
+	if (isset($_REQUEST['assignee']))
 	{
 		$context['issue_search']['assignee'] = $_REQUEST['assignee'];
 		$baseurl['assignee'] = $_REQUEST['assignee'];
 	}
 
-	if (!empty($_REQUEST['version']))
+	if (isset($_REQUEST['version']))
 	{
 		$_REQUEST['version'] = (int) trim($_REQUEST['version']);
 
-		if (isset($context['versions'][$_REQUEST['version']]))
-		{
-			$context['issue_search']['version'] = $_REQUEST['version'];
-			$context['issue_search']['versions'] = array_merge(array($_REQUEST['version']), array_keys($context['versions'][$_REQUEST['version']]['sub_versions']));
-
-			$baseurl['version'] = $_REQUEST['version'];
-		}
-		else
-		{
-			$context['issue_search']['versions'][] = $_REQUEST['version'];
-
-			$baseurl['version'] = $_REQUEST['version'];
-		}
+		$context['issue_search']['version'] = $_REQUEST['version'];
+		$baseurl['version'] = $_REQUEST['version'];
 	}
 
 	$tags_url = $baseurl;
@@ -165,17 +153,17 @@ function IssueList()
 	if (!empty($context['issue_search']['type']))
 		$where[] = 'i.issue_type = {string:search_type}';
 
-	if (!empty($context['issue_search']['category']))
+	if (isset($context['issue_search']['category']))
 		$where[] = 'i.id_category = {int:search_category}';
 
-	if (!empty($context['issue_search']['reporter']))
+	if (isset($context['issue_search']['reporter']))
 		$where[] = 'i.id_reporter = {int:search_reporter}';
 
-	if (!empty($context['issue_search']['assignee']))
+	if (isset($context['issue_search']['assignee']))
 		$where[] = 'i.id_assigned = {int:search_assignee}';
 
-	if (!empty($context['issue_search']['versions']))
-		$where[] = '((i.id_version IN({array_int:versions}) AND (i.id_version_fixed IN({array_int:versions}) OR id_version_fixed = 0)) OR (id_version_fixed IN({array_int:versions})))';
+	if (isset($context['issue_search']['version']))
+		$where[] = '(i.id_version = {int:search_version} OR i.id_version_fixed = {int:search_version})';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
@@ -197,12 +185,12 @@ function IssueList()
 			'closed_status' => $context['closed_status'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
+			'search_version' => $context['issue_search']['version'],
 			'search_category' => $context['issue_search']['category'],
 			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
 			'search_type' => $context['issue_search']['type'],
 			'search_tag' => $context['issue_search']['tag'],
-			'versions' => $context['issue_search']['versions'],
 		)
 	);
 
@@ -245,6 +233,7 @@ function IssueList()
 			'start' => $_REQUEST['start'],
 			'member' => $user_info['id'],
 			'closed_status' => $context['closed_status'],
+			'search_version' => $context['issue_search']['version'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_category' => $context['issue_search']['category'],
@@ -252,7 +241,6 @@ function IssueList()
 			'search_reporter' => $context['issue_search']['reporter'],
 			'search_type' => $context['issue_search']['type'],
 			'search_tag' => $context['issue_search']['tag'],
-			'versions' => $context['issue_search']['versions'],
 		)
 	);
 
