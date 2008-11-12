@@ -75,6 +75,7 @@ function IssueList()
 		'tag' => '',
 		'type' => '',
 		'version' => null,
+		'version_fixe4d' => null,
 		'category' => null,
 		'reporter' => null,
 		'assignee' => null,
@@ -129,6 +130,14 @@ function IssueList()
 		$baseurl['version'] = $_REQUEST['version'];
 	}
 
+	if (isset($_REQUEST['version_fixed']))
+	{
+		$_REQUEST['version'] = (int) trim($_REQUEST['version_fixed']);
+
+		$context['issue_search']['version_fixed'] = $_REQUEST['version_fixed'];
+		$baseurl['version_fixed'] = $_REQUEST['version_fixed'];
+	}
+
 	$tags_url = $baseurl;
 
 	if (!empty($_REQUEST['tag']))
@@ -163,7 +172,10 @@ function IssueList()
 		$where[] = 'i.id_assigned = {int:search_assignee}';
 
 	if (isset($context['issue_search']['version']))
-		$where[] = '(i.id_version = {int:search_version} OR i.id_version_fixed = {int:search_version})';
+		$where[] = '(i.id_version = {int:search_version})';
+
+	if (isset($context['issue_search']['version_fixed']))
+		$where[] = '(i.id_version_fixed = {int:search_version_f})';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
@@ -186,6 +198,7 @@ function IssueList()
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_version' => $context['issue_search']['version'],
+			'search_version_f' => $context['issue_search']['version_fixed'],
 			'search_category' => $context['issue_search']['category'],
 			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
@@ -219,6 +232,7 @@ function IssueList()
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
+			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
 		WHERE {query_see_issue_project}
@@ -235,6 +249,7 @@ function IssueList()
 			'member' => $user_info['id'],
 			'closed_status' => $context['closed_status'],
 			'search_version' => $context['issue_search']['version'],
+			'search_version_f' => $context['issue_search']['version_fixed'],
 			'search_status' => $context['issue_search']['status'],
 			'search_title' => '%' . $context['issue_search']['title'] . '%',
 			'search_category' => $context['issue_search']['category'],

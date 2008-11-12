@@ -104,10 +104,10 @@ function ProjectRoadmapMain()
 
 	// Load issue counts
 	$request = $smcFunc['db_query']('', '
-		SELECT id_version_fixed, status, COUNT(*) AS num
-		FROM {db_prefix}issues AS ver
-		WHERE id_version_fixed IN({array_int:versions})
-		GROUP BY status, id_version, id_version_fixed',
+		SELECT i.id_version_fixed, i.status, COUNT(i.id_version_fixed) AS num
+		FROM {db_prefix}issues AS i
+		WHERE i.id_version_fixed IN({array_int:versions})
+		GROUP BY i.id_version_fixed, i.status',
 		array(
 			'project' => $project,
 			'versions' => $ids,
@@ -226,7 +226,7 @@ function ProjectRoadmapVersion()
 
 	// Load Issues
 	$context['issues'] = getIssueList(10, 'i.updated DESC', 'id_version IN({array_in:versions})', array('versions' => array($row['id_version'])));
-	$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $context['version']['id']));
+	$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $context['version']['id']));
 
 	// Template
 	$context['sub_template'] = 'project_roadmap_version';
