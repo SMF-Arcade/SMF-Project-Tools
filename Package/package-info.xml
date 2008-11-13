@@ -73,6 +73,7 @@
 		<!-- Langauges -->
 		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
 		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectEmail.english.php" destination="$languagedir" />
 
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
@@ -125,5 +126,6 @@
 		<!-- Languages -->
 		<remove-file name="$languagedir/Project.english.php" />
 		<remove-file name="$languagedir/ProjectAdmin.english.php" />
+		<remove-file name="$languagedir/ProjectEmail.english.php" />
 	</uninstall>
 </package-info>

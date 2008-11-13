@@ -420,7 +420,7 @@ function loadProjectToolsPage($mode = '')
 // TODO: Cache this
 function getPrivateProfiles()
 {
-	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
+	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_profile
@@ -439,6 +439,70 @@ function getPrivateProfiles()
 		$profiles[] = $profile['id_profile'];
 
 	return $profiles;
+}
+
+// Send Notification
+function sendProjectNotification($issue, $type)
+{
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
+			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group,
+			p.member_groups' . (!empty($issue['version']) ? ', ver.member_groups AS member_groups_version' : '') . '
+		FROM {db_prefix}log_notify_projects AS ln
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = ln.id_project)
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
+			INNER JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)' : '') . '
+		WHERE ln.id_project = {int:project}' . (!empty($issue['version']) ? '
+			AND ver.id_version = {int:version}' : '') . '
+			AND mem.is_activated = {int:is_activated}
+			AND mem.id_member != {int:poster}
+		ORDER BY mem.lngfile',
+		array(
+			'is_activated' => 1,
+			'project' => $issue['project'],
+			'version' => $issue['version'],
+			'poster' => $issue['id_member'],
+		)
+	);
+
+	while ($rowmember = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($rowmember['id_group'] != 1)
+		{
+			$p_allowed = explode(',', $rowmember['member_groups']);
+
+			if (!empty($rowmember['member_groups']))
+				$v_allowed = explode(',', $rowmember['member_groups_version']);
+
+			$rowmember['additional_groups'] = explode(',', $rowmember['additional_groups']);
+			$rowmember['additional_groups'][] = $rowmember['id_group'];
+			$rowmember['additional_groups'][] = $rowmember['id_post_group'];
+
+			// can see project?
+			if (count(array_intersect($p_allowed, $rowmember['additional_groups'])) == 0)
+				continue;
+			// what about version?
+			if (isset($v_allowed) && count(array_intersect($v_allowed, $rowmember['additional_groups'])) == 0)
+				continue;
+		}
+
+		loadLanguage('ProjectEmail', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
+
+		$replacements = array(
+			'ISSUENAME' => $issue['subject'],
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
+			'DETAILS' => $topicData[$key]['body'],
+			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'notify')),
+		);
+
+		$emailtype = 'notification_project_' . $type;
+
+		$emaildata = loadEmailTemplate($emailtype, $replacements, '', false);
+		sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+	}
 }
 
 // Function to generate urls

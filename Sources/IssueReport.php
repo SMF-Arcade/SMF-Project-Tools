@@ -241,6 +241,9 @@ function ReportIssue2()
 
 	createIssue($issueOptions, $posterOptions);
 
+	// Send notifications
+	sendProjectNotification($issueOptions, 'new_issue');
+
 	redirectexit(project_get_url(array('project' => $project, 'sa' => 'issues')));
 }
 

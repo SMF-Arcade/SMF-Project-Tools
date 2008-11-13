@@ -597,6 +597,45 @@ $tables = array(
 			),
 		)
 	),
+	'log_projects' => array(
+		'name' => 'log_projects',
+		'columns' => array(
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'sent',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_project', 'id_member')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+		)
+	),
 	// Log tables for read marks
 	'log_projects' => array(
 		'name' => 'log_projects',

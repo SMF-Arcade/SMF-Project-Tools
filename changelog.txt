@@ -17,6 +17,7 @@ November 2008
  + Merged Version & Categories to Projects area on admin
  ! Roadmap now includes target/fixed version
  + Added special "not set" version
+ + Started on notifications
 
 SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================
