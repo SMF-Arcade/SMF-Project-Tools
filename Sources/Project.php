@@ -39,6 +39,7 @@ function Projects($standalone = false)
 		'list' => array('ProjectList.php', 'ProjectList'),
 		'viewProject' => array('ProjectView.php', 'ProjectView', true),
 		'roadmap' => array('ProjectRoadmap.php', 'ProjectRoadmap', true),
+		'subscribe' => array('ProjectView.php', 'ProjectSubscribe', true),
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
 		'viewIssue' => array('IssueView.php', 'IssueView', true),

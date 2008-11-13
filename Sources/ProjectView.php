@@ -109,4 +109,111 @@ function ProjectView()
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
 }
 
+function ProjectSubscribe()
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
+
+	if (!empty($issue))
+		return ProjectSubscribeIssue();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_project
+		FROM {db_prefix}log_notify_projects
+		WHERE id_project = {int:project}
+			AND id_member = {int:current_member}',
+		array(
+			'project' => $project,
+			'current_member' => $user_info['id'],
+		)
+	);
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+
+	if (!$row)
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_notify_projects',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'sent' => 'int',
+			),
+			array(
+				$project,
+				0,
+				$user_info['id'],
+				0,
+			),
+			array('id_project', 'id_issue', 'id_member')
+		);
+	else
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify_projects
+			WHERE id_project = {int:project}
+				AND id_member = {int:current_member}',
+			array(
+				'project' => $project,
+				'current_member' => $user_info['id'],
+			)
+		);
+
+	$smcFunc['db_free_result']($request);
+
+	redirectexit(project_get_url(array('project' => $project)));
+}
+
+function ProjectSubscribeIssue()
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_project
+		FROM {db_prefix}log_notify_projects
+		WHERE id_project = {int:project}
+			AND id_issue = {int:issue}
+			AND id_member = {int:current_member}',
+		array(
+			'project' => $project,
+			'issue' => $issue,
+			'current_member' => $user_info['id'],
+		)
+	);
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+
+	if (!$row)
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_notify_projects',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'sent' => 'int',
+			),
+			array(
+				$project,
+				$issue,
+				$user_info['id'],
+				0,
+			),
+			array('id_project', 'id_issue', 'id_member')
+		);
+	else
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify_projects
+			WHERE id_project = {int:project}
+				AND id_issue = {int:issue}
+				AND id_member = {int:current_member}',
+			array(
+				'project' => $project,
+				'issue' => $issue,
+				'current_member' => $user_info['id'],
+			)
+		);
+
+	$smcFunc['db_free_result']($request);
+
+	redirectexit(project_get_url(array('project' => $project)));
+}
+
 ?>

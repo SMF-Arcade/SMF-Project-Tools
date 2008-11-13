@@ -628,7 +628,7 @@ $tables = array(
 		'indexes' => array(
 			array(
 				'type' => 'primary',
-				'columns' => array('id_project', 'id_member')
+				'columns' => array('id_project', 'id_issue', 'id_member')
 			),
 			array(
 				'type' => 'index',
