@@ -213,7 +213,7 @@ function ProjectSubscribeIssue()
 
 	$smcFunc['db_free_result']($request);
 
-	redirectexit(project_get_url(array('project' => $project)));
+	redirectexit(project_get_url(array('issue' => $issue . '.0')));
 }
 
 ?>
