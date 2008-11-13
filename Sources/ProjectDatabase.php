@@ -597,8 +597,8 @@ $tables = array(
 			),
 		)
 	),
-	'log_projects' => array(
-		'name' => 'log_projects',
+	'log_notify_projects' => array(
+		'name' => 'log_notify_projects',
 		'columns' => array(
 			array(
 				'name' => 'id_project',
