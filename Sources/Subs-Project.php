@@ -442,7 +442,7 @@ function getPrivateProfiles()
 }
 
 // Send Notification
-function sendProjectNotification($issue, $type)
+function sendProjectNotification($issue, $type, $exclude = 0)
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info;
 
@@ -464,7 +464,7 @@ function sendProjectNotification($issue, $type)
 			'is_activated' => 1,
 			'project' => $issue['project'],
 			'version' => $issue['version'],
-			'poster' => $issue['id_member'],
+			'poster' => $exclude,
 		)
 	);
 
