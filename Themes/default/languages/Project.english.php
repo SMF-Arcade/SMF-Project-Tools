@@ -79,6 +79,9 @@ $txt['total_issues'] = 'Total Issues';
 $txt['issues'] = 'Issues';
 $txt['roadmap'] = 'Roadmap';
 
+$txt['project_subscribe'] = 'Subscribe';
+$txt['project_unsubscribe'] = 'Unsubscribe';
+
 // Project Page - Issue lists
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';
@@ -216,6 +219,8 @@ $txt['version_not_found'] = 'Version not found';
 $txt['issue_not_found'] = 'Issue not found';
 $txt['comment_not_found'] = 'Comment not found';
 $txt['category_not_found'] = 'Category not found';
+
+$txt['cannot_project_subscribe'] = 'You aren\'t allowed to subscribe to notifications';
 
 $txt['project_fix_errors'] = 'Please fix following errors';
 $txt['project_is_missing'] = 'Required field %s is empty';

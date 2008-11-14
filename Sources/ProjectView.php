@@ -31,6 +31,8 @@ function ProjectView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
+	$context['can_subscribe'] = !$user_info['is_guest'];
+
 	if (!$user_info['is_guest'])
 	{
 		// We can't know they read it if we allow prefetches.
@@ -55,6 +57,38 @@ function ProjectView()
 			),
 			array('id_project', 'id_member')
 		);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT sent
+			FROM {db_prefix}log_notify_projects
+			WHERE id_project = {int:project}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'project' => $project,
+				'current_member' => $user_info['id'],
+			)
+		);
+		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+		if ($context['is_subscribed'])
+		{
+			list ($sent) = $smcFunc['db_fetch_row']($request);
+			if (!empty($sent))
+			{
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}log_notify_projects
+					SET sent = {int:is_sent}
+					WHERE id_project = {int:project}
+						AND id_member = {int:current_member}',
+					array(
+						'project' => $project,
+						'current_member' => $user_info['id'],
+						'is_sent' => 0,
+					)
+				);
+			}
+		}
+		$smcFunc['db_free_result']($request);
 	}
 
 	$issues_num = 5;
@@ -113,6 +147,11 @@ function ProjectSubscribe()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 
+	checkSession('get');
+
+	if ($user_info['is_guest'])
+		fatal_lang_error('cannot_project_subscribe');
+
 	if (!empty($issue))
 		return ProjectSubscribeIssue();
 
@@ -169,8 +208,7 @@ function ProjectSubscribeIssue()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_project
 		FROM {db_prefix}log_notify_projects
-		WHERE id_project = {int:project}
-			AND id_issue = {int:issue}
+		WHERE id_issue = {int:issue}
 			AND id_member = {int:current_member}',
 		array(
 			'project' => $project,
@@ -191,7 +229,7 @@ function ProjectSubscribeIssue()
 				'sent' => 'int',
 			),
 			array(
-				$project,
+				0,
 				$issue,
 				$user_info['id'],
 				0,
@@ -201,11 +239,9 @@ function ProjectSubscribeIssue()
 	else
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify_projects
-			WHERE id_project = {int:project}
-				AND id_issue = {int:issue}
+			WHERE id_issue = {int:issue}
 				AND id_member = {int:current_member}',
 			array(
-				'project' => $project,
 				'issue' => $issue,
 				'current_member' => $user_info['id'],
 			)
