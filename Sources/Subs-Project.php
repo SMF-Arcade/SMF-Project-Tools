@@ -494,7 +494,7 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 		$replacements = array(
 			'ISSUENAME' => $issue['subject'],
 			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
-			'DETAILS' => $topicData[$key]['body'],
+			'DETAILS' => $issue['body'],
 			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe')),
 		);
 

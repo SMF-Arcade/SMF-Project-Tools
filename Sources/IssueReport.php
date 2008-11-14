@@ -239,7 +239,7 @@ function ReportIssue2()
 		'mark_read' => true,
 	);
 
-	createIssue($issueOptions, $posterOptions);
+	$issueOptions['id'] = createIssue($issueOptions, $posterOptions);
 
 	// Send notifications
 	sendProjectNotification($issueOptions, 'new_issue', $user_info['id']);

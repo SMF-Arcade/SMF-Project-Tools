@@ -75,7 +75,7 @@ function IssueList()
 		'tag' => '',
 		'type' => '',
 		'version' => null,
-		'version_fixe4d' => null,
+		'version_fixed' => null,
 		'category' => null,
 		'reporter' => null,
 		'assignee' => null,
