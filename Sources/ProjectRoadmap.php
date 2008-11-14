@@ -51,7 +51,7 @@ function ProjectRoadmapMain()
 		WHERE {query_see_version}
 			AND ver.id_project = {int:project}' . (!isset($_REQUEST['all']) ? '
 			AND ver.status IN ({array_int:status})' : '' ) . '
-		ORDER BY ver.id_version DESC',
+		ORDER BY ver.version_name DESC',
 		array(
 			'project' => $project,
 			'status' => array(0, 1),
