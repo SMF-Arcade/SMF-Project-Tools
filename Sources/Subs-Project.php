@@ -420,7 +420,7 @@ function loadProjectToolsPage($mode = '')
 // TODO: Cache this
 function getPrivateProfiles()
 {
-	global $smcFunc;
+	global $smcFunc, $user_info;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_profile
