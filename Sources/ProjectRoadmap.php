@@ -225,7 +225,7 @@ function ProjectRoadmapVersion()
 		$context['version']['progress'] = round($context['version']['issues']['closed'] / $context['version']['issues']['total'] * 100, 2);
 
 	// Load Issues
-	$context['issues'] = getIssueList(10, 'i.updated DESC', 'i.id_version IN({array_int:versions})', array('versions' => array((int) $row['id_version'])));
+	$context['issues'] = getIssueList(10, 'i.updated DESC', 'i.id_version IN({array_int:versions})', array('versions' => array((int) $context['version']['id'])));
 	$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $context['version']['id']));
 
 	// Template
