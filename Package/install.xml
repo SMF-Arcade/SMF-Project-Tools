@@ -35,7 +35,7 @@
 		loadProjectTools();
 
 		// Load Project & Issue only on projects page
-		if (empty($_REQUEST['action']) || $_REQUEST['action'] == 'projects')
+		if (empty($_REQUEST['action']) || $_REQUEST['action'] == 'projects' || $_REQUEST['action'] == 'dlattach')
 		{
 			// Load Project (if needed)
 			loadProject();
@@ -43,7 +43,7 @@
 			// Load Issue (if needed)
 			loadIssue();
 
-			if (!empty($project) || !empty($issue))
+			if (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
 			{
 				$_REQUEST['action'] = 'projects';
 				$_GET['action'] = 'projects';
