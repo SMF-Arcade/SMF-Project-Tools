@@ -180,13 +180,18 @@ function template_project_view()
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">
 					<table width="100%">';
+/*
+ 			foreach ($project['issues'] as $key => $type)
+				echo '
+					', $type['open'], ' / ', $type['total'], ' ', $context['issue_types'][$key]['plural'], '<br />';
+*/
 
 	// TODO: Move calculations to ProjectView.php
-	foreach ($context['project']['trackers'] as $type)
+	foreach ($context['project']['trackers'] as $key => $type)
 		echo '
 						<tr>
 							<td width="10%">
-								<a href="', $type['link'], '" style="color: gray">', $type['info']['plural'], '</a><br />
+								<a href="', $type['link'], '" style="color: gray">', $context['issue_types'][$key]['plural'], '</a><br />
 							</td>
 							<td>
 								<div class="progressbar"><div class="done" style="width: ', round(($type['closed'] / max(1, $type['total'])) * 100, 2), '%"></div></div>

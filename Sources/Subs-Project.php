@@ -150,7 +150,7 @@ function loadProjectTools()
 // Loads current project
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $user_info, $project, $issue;
+	global $context, $smcFunc, $scripturl, $user_info, $user_info, $project, $issue, $modSettings;
 
 	// Project as parameter?
 	if (!empty($_REQUEST['project']))
@@ -179,138 +179,142 @@ function loadProject()
 	else
 		return;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-			p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ',
-			dev.id_member AS is_dev
-		FROM {db_prefix}projects AS p
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:current_member})
-		WHERE {query_see_project}
-			AND p.id_project = {int:project}
-		LIMIT 1',
-		array(
-			'project' => $project,
-			'current_member' => $user_info['id'],
-		)
-	);
+	if (($context['project'] = cache_get_data('project-' . $project, 120)) === null)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
+				p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . '
+			FROM {db_prefix}projects AS p
+			WHERE p.id_project = {int:project}
+			LIMIT 1',
+			array(
+				'project' => $project,
+				'current_member' => $user_info['id'],
+			)
+		);
 
-	if ($smcFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
+			fatal_lang_error('project_not_found', false);
+
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+
+		$context['project'] = array(
+			'id' => $row['id_project'],
+			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+			'href' => project_get_url(array('project' => $row['id_project'])),
+			'name' => $row['name'],
+			'description' => $row['description'],
+			'long_description' => $row['long_description'],
+			'category' => array(),
+			'groups' => explode(',', $row['member_groups']),
+			'trackers' => array(),
+			'developers' => array(),
+			'is_developer' => false,
+			'comment_mod' => $row['id_comment_mod'],
+			'profile' => $row['id_profile'],
+		);
+
+		$trackers = explode(',', $row['trackers']);
+
+		foreach ($trackers as $key)
+		{
+			$context['project']['trackers'][$key] = array(
+				'id' => $key,
+				'open' => $row['open_' . $key],
+				'closed' => $row['closed_' . $key],
+				'total' => $row['open_' . $key] + $row['closed_' . $key],
+				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
+			);
+		}
+
+		// Load Versions
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				id_version, id_parent, version_name, release_date, status
+			FROM {db_prefix}project_versions AS ver
+			WHERE id_project = {int:project}
+				AND {query_see_version}
+			ORDER BY id_parent, version_name',
+			array(
+				'project' => $context['project']['id'],
+			)
+		);
+
+		$context['versions'] = array();
+		$context['versions_id'] = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if ($row['id_parent'] == 0)
+			{
+				$context['versions'][$row['id_version']] = array(
+					'id' => $row['id_version'],
+					'name' => $row['version_name'],
+					'sub_versions' => array(),
+				);
+			}
+			else
+			{
+				if (!isset($context['versions'][$row['id_parent']]))
+					continue;
+
+				$context['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
+					'id' => $row['id_version'],
+					'name' => $row['version_name'],
+					'status' => $row['status'],
+					'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
+					'released' => $row['status'] >= 4,
+				);
+			}
+
+			$context['versions_id'][$row['id_version']] = $row['id_parent'];
+		}
+		$smcFunc['db_free_result']($request);
+
+		// Developers
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name
+			FROM {db_prefix}project_developer AS dev
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $project,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project']['developers'][$row['id_member']] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+			);
+		$smcFunc['db_free_result']($request);
+
+		// Category
+		$request = $smcFunc['db_query']('', '
+			SELECT id_category, category_name
+			FROM {db_prefix}issue_category AS cat
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $project,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project']['category'][$row['id_category']] = array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name']
+			);
+		$smcFunc['db_free_result']($request);
+
+		cache_put_data('project-' . $project, $context['project'], 120);
+	}
+
+	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
+
+	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
 		fatal_lang_error('project_not_found', false);
-
-	$row = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
-
-	$context['project'] = array(
-		'id' => $row['id_project'],
-		'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
-		'href' => project_get_url(array('project' => $row['id_project'])),
-		'name' => $row['name'],
-		'description' => $row['description'],
-		'long_description' => $row['long_description'],
-		'category' => array(),
-		'groups' => explode(',', $row['member_groups']),
-		'trackers' => array(),
-		'developers' => array(),
-		'is_developer' => !empty($row['is_dev']),
-		'comment_mod' => $row['id_comment_mod'],
-		'profile' => $row['id_profile'],
-	);
-
-	$trackers = explode(',', $row['trackers']);
-
-	foreach ($trackers as $key)
-	{
-		$context['project']['trackers'][$key] = array(
-			'info' => &$context['issue_types'][$key],
-			'open' => $row['open_' . $key],
-			'closed' => $row['closed_' . $key],
-			'total' => $row['open_' . $key] + $row['closed_' . $key],
-			'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
-		);
-	}
-
-	// Load Versions
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			id_version, id_parent, version_name, release_date, status
-		FROM {db_prefix}project_versions AS ver
-		WHERE id_project = {int:project}
-			AND {query_see_version}
-		ORDER BY id_parent, version_name',
-		array(
-			'project' => $context['project']['id'],
-		)
-	);
-
-	$context['versions'] = array();
-	$context['versions_id'] = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($row['id_parent'] == 0)
-		{
-			$context['versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'sub_versions' => array(),
-			);
-		}
-		else
-		{
-			if (!isset($context['versions'][$row['id_parent']]))
-				continue;
-
-			$context['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'status' => $row['status'],
-				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
-				'released' => $row['status'] >= 4,
-			);
-		}
-
-		$context['versions_id'][$row['id_version']] = $row['id_parent'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	// Developers
-	$request = $smcFunc['db_query']('', '
-		SELECT mem.id_member, mem.real_name
-		FROM {db_prefix}project_developer AS dev
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
-		WHERE id_project = {int:project}',
-		array(
-			'project' => $project,
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['project']['developers'][$row['id_member']] = array(
-			'id' => $row['id_member'],
-			'name' => $row['real_name'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	// Category
-	$request = $smcFunc['db_query']('', '
-		SELECT id_category, category_name
-		FROM {db_prefix}issue_category AS cat
-		WHERE id_project = {int:project}',
-		array(
-			'project' => $project,
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['project']['category'][$row['id_category']] = array(
-			'id' => $row['id_category'],
-			'name' => $row['category_name']
-		);
-	$smcFunc['db_free_result']($request);
 
 	if ($context['project']['is_developer'])
 	{
@@ -337,6 +341,9 @@ function loadProject()
 
 		$smcFunc['db_free_result']($request);
 	}
+
+	foreach ($context['project']['trackers'] as $key => $dummy)
+		$context['project']['trackers'][$key]['info'] = &$context['issue_types'][$key];
 }
 
 function loadProjectToolsPage($mode = '')

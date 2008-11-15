@@ -81,7 +81,6 @@ function ProjectList()
 		foreach ($context['projects'][$row['id_project']]['trackers'] as $key)
 		{
 			$context['projects'][$row['id_project']]['issues'][$key] = array(
-				'info' => &$context['issue_types'][$key],
 				'open' => $row['open_' . $key],
 				'closed' => $row['closed_' . $key],
 				'total' => $row['open_' . $key] + $row['closed_' . $key],

@@ -244,6 +244,8 @@ function ReportIssue2()
 	// Send notifications
 	sendProjectNotification($issueOptions, 'new_issue', $user_info['id']);
 
+	cache_put_data('project-' . $project, null, 120);
+
 	redirectexit(project_get_url(array('project' => $project, 'sa' => 'issues')));
 }
 

@@ -48,9 +48,9 @@ function template_project_list()
 				</td>
 				<td class="windowbg stats smalltext">';
 
-			foreach ($project['issues'] as $type)
+			foreach ($project['issues'] as $key => $type)
 				echo '
-					', $type['open'], ' / ', $type['total'], ' ', $type['info']['plural'], '<br />';
+					', $type['open'], ' / ', $type['total'], ' ', $context['issue_types'][$key]['plural'], '<br />';
 
 			echo '
 				</td>
