@@ -360,6 +360,8 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 {
 	global $smcFunc, $context;
 
+	$id_event = 0;
+
 	if ($posterOptions['id'] != 0 && ($event_name == 'update_issue' || $event_name == 'new_comment'))
 	{
 		$request = $smcFunc['db_query']('', '
@@ -481,7 +483,22 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	if ($event_name == 'update_issue')
 		sendIssueNotification($issue, array(), $event_data, $event_name, $posterOptions['id']);
 
-	return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+	$id_event_new = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+
+	if (empty($id_event))
+		return $id_event_new;
+	
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}project_timeline
+		SET id_event = {int:new_event}
+		WHERE id_event = {int:event}',
+		array(
+			'new_event' => $id_event_new,
+			'event' => $id_event,
+		)
+	);
+
+	return $id_event_new;
 }
 
 function deleteIssue($id_issue, $posterOptions)
