@@ -87,24 +87,7 @@ $txt['emails']['notification_project_update_issue'] = array(
 You can see issue at
 {ISSUELINK}
 
-Unsubscribe to new changes from this issue by using this link:
-{UNSUBSCRIBELINK}
-
-{REGARDS}'
-);
-
-$txt['emails']['notification_project_update_issue_body'] = array(
-		/*
-			@additional_params: notification_project_update_issue
-			@description:
-		*/
-		'subject' => 'Issue has been updated: {ISSUENAME}',
-		'body' => 'Issue \'{ISSUENAME}\' has been updated.
-
-You can see issue at
-{ISSUELINK}
-
-{BODY}
+{UPDATES}
 
 Unsubscribe to new changes from this issue by using this link:
 {UNSUBSCRIBELINK}
