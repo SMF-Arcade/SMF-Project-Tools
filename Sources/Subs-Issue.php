@@ -487,9 +487,9 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 	if (empty($id_event))
 		return $id_event_new;
-	
+
 	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}project_timeline
+		UPDATE {db_prefix}issue_comments
 		SET id_event = {int:new_event}
 		WHERE id_event = {int:event}',
 		array(
