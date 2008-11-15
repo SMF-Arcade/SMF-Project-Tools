@@ -315,11 +315,11 @@ function IssueReply2()
 		);
 		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
 
-		$issue = array(
+		$issueN = array(
 			'id' => $issue,
 		);
 
-		sendIssueNotification($issue, $commentOptions, 'new_comment', $user_info['id']);
+		sendIssueNotification($issueN, $commentOptions, 'new_comment', $user_info['id']);
 	}
 	else
 	{

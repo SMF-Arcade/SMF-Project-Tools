@@ -597,7 +597,6 @@ function sendIssueNotification($issue, $comment, $type, $exclude = 0)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
 		WHERE ln.id_issue = {int:issue}
-			AND ver.id_version = {int:version}
 			AND mem.is_activated = {int:is_activated}
 			AND mem.id_member != {int:poster}
 		ORDER BY mem.lngfile',
