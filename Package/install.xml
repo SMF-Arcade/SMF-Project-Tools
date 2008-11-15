@@ -404,7 +404,7 @@ else
 	<file name="$languagedir/Modifications.english.php">
 		<operation>
 			<search position="end" />
-			<add><![CDATA[// SMF Project tools
+			<add><![CDATA[// SMF Project tools start
 $txt['project_tools'] = 'Project Tools';
 $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
@@ -454,14 +454,15 @@ $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
 $txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 $txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
 
-$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';]]></add>
+$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
+// SMF Project tools end]]></add>
 		</operation>
 	</file>
 
 	<file name="$languagedir/Modifications.english-utf8.php" error="skip">
 		<operation>
 			<search position="end" />
-			<add><![CDATA[// SMF Project tools
+			<add><![CDATA[// SMF Project tools start
 $txt['project_tools'] = 'Project Tools';
 $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
@@ -511,7 +512,8 @@ $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
 $txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 $txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
 
-$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';]]></add>
+$txt['cannot_issue_access'] = 'You don\'t have permission to view our Issue Tracker';
+// SMF Project tools end]]></add>
 		</operation>
 	</file>
 
