@@ -249,14 +249,13 @@ function ReportIssue2()
 
 function IssueUpdate()
 {
-	global $context, $user_info, $smcFunc, $sourcedir;
+	global $context, $user_info, $smcFunc, $issue, $sourcedir;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
 
 	is_not_guest();
 
-	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	checkSession('get');

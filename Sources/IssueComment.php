@@ -22,12 +22,11 @@
 
 function IssueReply()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
 
-	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
@@ -203,12 +202,11 @@ function IssueReply()
 
 function IssueReply2()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
 
-	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['show_update'] = false;
@@ -316,6 +314,12 @@ function IssueReply2()
 			'body' => $_POST['comment'],
 		);
 		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+
+		$issue = array(
+			'id' => $issue,
+		);
+
+		sendIssueNotification($issue, $commentOptions, 'new_comment', $user_info['id']);
 	}
 	else
 	{

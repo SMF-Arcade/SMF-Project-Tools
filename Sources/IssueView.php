@@ -37,7 +37,6 @@ function IssueView()
 
 	projectIsAllowedTo('issue_view');
 
-	$issue = $context['current_issue']['id'];
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
 	$context['current_tags'] = array();

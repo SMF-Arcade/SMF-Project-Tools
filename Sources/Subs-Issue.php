@@ -465,6 +465,13 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 		array()
 	);
 
+	$issue = array(
+		'id' => $id_issue,
+	);
+
+	if ($event_name == 'update_issue')
+		sendIssueNotification($issue, $event_data, $event_name);
+
 	return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
 }
 
