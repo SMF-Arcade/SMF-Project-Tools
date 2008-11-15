@@ -51,7 +51,7 @@ function template_project_view()
 	global $context, $settings, $options, $txt, $modSettings;
 
 	$project_buttons = array(
-		'subscribe' => array('test' => 'can_subscribe', 'text' => !$context['is_subscribed'] ? 'project_subscribe' : 'project_unsubscribe', 'image' => !$context['is_subscribed'] ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'subscribe', 'sesc' => $context['session_id']))),
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'subscribe', 'sesc' => $context['session_id']))),
 	);
 
 	echo '

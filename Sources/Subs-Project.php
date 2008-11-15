@@ -593,11 +593,11 @@ function sendIssueNotification($issue, $comment, $type, $exclude = 0)
 		FROM {db_prefix}log_notify_projects AS ln
 			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
-			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
 		WHERE ln.id_issue = {int:issue}
-			AND ver.id_version = {int:version}' : '') . '
+			AND ver.id_version = {int:version}
 			AND mem.is_activated = {int:is_activated}
 			AND mem.id_member != {int:poster}
 		ORDER BY mem.lngfile',
