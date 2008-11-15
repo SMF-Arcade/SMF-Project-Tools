@@ -522,7 +522,7 @@ function sendIssueNotification($issue, $comment, $type, $exclude = 0)
 
 	if ($type == 'new_comment')
 		$comment['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($comment['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
-	elseif ($event_name == 'update_issue')
+	elseif ($type == 'update_issue')
 	{
 		$event_data = $comment;
 		$comment = array();
