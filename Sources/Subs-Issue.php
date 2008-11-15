@@ -33,9 +33,8 @@ function loadIssue()
 			i.id_comment_first, i.id_comment_last, i.id_comment_mod, i.id_reporter, i.replies, i.private_issue,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
-			ver.id_version, ver.version_name,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
+			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
@@ -43,13 +42,13 @@ function loadIssue()
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE i.id_issue = {int:issue}
-			AND {query_see_issue_project}
 			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
 			'member' => $user_info['id'],
 			'issue' => $issue,
 			'project' => $project,
+			'any' => '*',
 		)
 	);
 
@@ -99,7 +98,14 @@ function loadIssue()
 		'comment_mod' => $row['id_comment_mod'],
 		'replies' => $row['replies'],
 		'private' => !empty($row['private_issue']),
+		'version_groups' => explode(',', $row['ver_member_groups']),
 	);
+
+	if ($row['ver_member_groups'] != '*' && count(array_intersect($user_info['groups'], $context['current_issue']['version_groups'])) == 0 && !$user_info['is_admin'])
+		$context['project_error'] = 'issue_not_found';
+	// If this is private issue are you allowed to see it?
+	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $context['current_issue']['id_reporter'] && !projectAllowedTo('issue_view_private'))
+		$context['project_error'] = 'issue_not_found';
 }
 
 function createIssue($issueOptions, &$posterOptions)
