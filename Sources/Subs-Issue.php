@@ -360,14 +360,14 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 {
 	global $smcFunc, $context;
 
-	if ($posterOptions['id'] != 0 && $event_name == 'update_issue')
+	if ($posterOptions['id'] != 0 && ($event_name == 'update_issue' || $event_name == 'new_comment'))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT id_event, event, event_data
 			FROM {db_prefix}project_timeline
 			WHERE id_project = {int:project}
 				AND id_issue = {int:issue}
-				AND event = {string:event}
+				AND event IN({array_string:event})
 				AND id_member = {int:member}
 				AND event_time > {int:event_time}
 			ORDER BY id_event DESC',
@@ -375,7 +375,9 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				'issue' => $id_issue,
 				'project' => $id_project,
 				'member' => $posterOptions['id'],
-				'event' => 'update_issue',
+				// Update issue can be merged with new_comment and update_issue
+				// new comment can be merged with update_issue
+				'event' => $event_name == 'update_issue' ? array('new_comment', 'update_issue') : array('update_issue'),
 				'event_time' => time() - 120,
 			)
 		);
@@ -393,6 +395,10 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 					'event' => $id_event,
 				)
 			);
+
+			// 'new_comment' > 'update_issue'
+			if ($event_name2 == 'new_comment' || $event_name == 'new_comment')
+				$event_name = 'new_comment';
 
 			if (isset($event_data2['changes']) && isset($event_data['changes']))
 			{
@@ -633,6 +639,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	);
 
 	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
+	$time = time();
 
 	// Update Issues table too
 	$smcFunc['db_query']('', '
@@ -646,7 +653,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 			'comment' => $id_comment,
 			'current_user' => $user_info['id'],
 			'issue' => $id_issue,
-			'time' => time(),
+			'time' => $time,
 			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
 		)
 	);
@@ -664,40 +671,11 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 
 	$id_event = 0;
 
-	// TODO: Use createTimeline instead
 	if (!isset($commentOptions['no_log']))
 	{
 		$event_data['subject'] = $row['subject'];
 		$event_data['comment'] = $id_comment;
-
-		$smcFunc['db_insert']('insert',
-			'{db_prefix}project_timeline',
-			array(
-				'id_project' => 'int',
-				'id_issue' => 'int',
-				'id_member' => 'int',
-				'poster_name' => 'string',
-				'poster_email' => 'string',
-				'poster_ip' => 'string-60',
-				'event' => 'string',
-				'event_time' => 'int',
-				'event_data' => 'string',
-			),
-			array(
-				$id_project,
-				$id_issue,
-				$posterOptions['id'],
-				$posterOptions['name'],
-				$posterOptions['email'],
-				$posterOptions['ip'],
-				'new_comment',
-				time(),
-				serialize($event_data)
-			),
-			array()
-		);
-
-		$id_event = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+		$id_event = createTimelineEvent($id_issue, $id_project, 'new_comment', $event_data, $posterOptions, array('time' => $time));
 	}
 
 	$smcFunc['db_query']('', '
