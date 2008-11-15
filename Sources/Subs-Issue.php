@@ -171,7 +171,7 @@ function createIssue($issueOptions, &$posterOptions)
 	return $id_issue;
 }
 
-function updateIssue($id_issue, $issueOptions, $posterOptions)
+function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = false)
 {
 	global $smcFunc, $context;
 
@@ -347,6 +347,9 @@ function updateIssue($id_issue, $issueOptions, $posterOptions)
 			)
 		);
 
+	if ($return_log)
+		return $event_data;
+
 	if (!isset($issueOptions['no_log']) && !empty($event_data))
 		return createTimelineEvent($id_issue, $row['id_project'], 'update_issue', $event_data, $posterOptions, $issueOptions);
 
@@ -470,7 +473,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	);
 
 	if ($event_name == 'update_issue')
-		sendIssueNotification($issue, $event_data, $event_name);
+		sendIssueNotification($issue, array(), $event_data, $event_name);
 
 	return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
 }
@@ -587,7 +590,7 @@ function deleteIssue($id_issue, $posterOptions)
 	return true;
 }
 
-function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
+function createComment($id_project, $id_issue, $commentOptions, $posterOptions, $event_data = array())
 {
 	global $smcFunc, $db_prefix, $context, $user_info;
 
@@ -693,6 +696,9 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 	if (isset($commentOptions['no_log']))
 		return $id_comment;
 
+	$event_data['subject'] = $row['subject'];
+	$event_data['comment'] = $id_comment;
+
 	// Write to timeline unless it's not wanted (on new issue for example)
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_timeline',
@@ -716,7 +722,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions)
 			$posterOptions['ip'],
 			'new_comment',
 			time(),
-			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
+			serialize($event_data)
 		),
 		array()
 	);

@@ -294,15 +294,16 @@ function IssueReply2()
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 	);
+
 	$issueOptions = array();
 
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
 
 	if (!empty($issueOptions))
-		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+		$event_data = updateIssue($issue, $issueOptions, $posterOptions, true);
 	else
-		$id_event = 0;
+		$event_data = array();
 
 	if ($id_event === true)
 		$id_event = 0;
@@ -313,14 +314,14 @@ function IssueReply2()
 			'event' => $id_event,
 			'body' => $_POST['comment'],
 		);
-		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions);
+		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions, $event_data);
 
 		$issueN = array(
 			'id' => $issue,
 		);
 		$commentOptions['id'] = $id_comment;
 
-		sendIssueNotification($issueN, $commentOptions, 'new_comment', $user_info['id']);
+		sendIssueNotification($issueN, $commentOptions, $event_data, 'new_comment', $user_info['id']);
 	}
 	else
 	{

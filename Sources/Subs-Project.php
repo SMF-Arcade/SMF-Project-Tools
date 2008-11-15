@@ -516,73 +516,74 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 	}
 }
 
-function sendIssueNotification($issue, $comment, $type, $exclude = 0)
+function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language;
 
 	if ($type == 'new_comment')
 		$comment['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($comment['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
-	elseif ($type == 'update_issue')
+
+	if (isset($event_data['changes']))
 	{
-		$event_data = $comment;
-		$comment = array();
+		$changes = array();
 
-		if (isset($event_data['changes']))
+		foreach ($event_data['changes'] as $key => $field)
 		{
-			$changes = array();
+			list ($field, $old_value, $new_value) = $field;
 
-			foreach ($event_data['changes'] as $key => $field)
+			// Change values to something meaningful
+			if ($field == 'status')
 			{
-				list ($field, $old_value, $new_value) = $field;
+				$old_value = $context['issue_status'][$old_value]['text'];
+				$new_value = $context['issue_status'][$new_value]['text'];
+			}
+			elseif ($field == 'type')
+			{
+				$old_value = $context['issue_types'][$old_value]['name'];
+				$new_value = $context['issue_types'][$new_value]['name'];
+			}
+			elseif ($field == 'view_status')
+			{
+				if (empty($old_value))
+					$old_value = $txt['issue_view_status_public'];
+				else
+					$old_value = $txt['issue_view_status_private'];
 
-				// Change values to something meaningful
-				if ($field == 'status')
-				{
-					$old_value = $context['issue_status'][$old_value]['text'];
-					$new_value = $context['issue_status'][$new_value]['text'];
-				}
-				elseif ($field == 'type')
-				{
-					$old_value = $context['issue_types'][$old_value]['name'];
-					$new_value = $context['issue_types'][$new_value]['name'];
-				}
-				elseif ($field == 'view_status')
-				{
-					if (empty($old_value))
-						$old_value = $txt['issue_view_status_public'];
-					else
-						$old_value = $txt['issue_view_status_private'];
+				if (empty($new_value))
+					$new_value = $txt['issue_view_status_public'];
+				else
+					$new_value = $txt['issue_view_status_private'];
+			}
+			elseif ($field == 'version' || $field == 'target_version')
+			{
+				// TODO: Make this work?
+				// Check if version is subversion
+				/*if (empty($old_value))
+					$old_value = $txt['issue_none'];
+				elseif (!empty($context['versions_id'][$old_value]))
+					$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+				else
+					$old_value = $context['versions'][$old_value]['name'];
 
-					if (empty($new_value))
-						$new_value = $txt['issue_view_status_public'];
-					else
-						$new_value = $txt['issue_view_status_private'];
-				}
-				elseif ($field == 'version' || $field == 'target_version')
-				{
-					// TODO: Make this work?
-					// Check if version is subversion
-					/*if (empty($old_value))
-						$old_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$old_value]))
-						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
-					else
-						$old_value = $context['versions'][$old_value]['name'];
-
-					if (empty($new_value))
-						$new_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$new_value]))
-						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
-					else
-						$new_value = $context['versions'][$new_value]['name'];*/
-				}
-
-				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
+				if (empty($new_value))
+					$new_value = $txt['issue_none'];
+				elseif (!empty($context['versions_id'][$new_value]))
+					$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+				else
+					$new_value = $context['versions'][$new_value]['name'];*/
 			}
 
-			$comment['body'] = implode("\n", $changes);
+			$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
 		}
+
+		if (!empty($comment['body']))
+			$comment['body'] .= "\n\n" . implode("\n", $changes);
+		else
+			$comment['body'] = implode("\n", $changes);
 	}
+
+	if (empty($comment['body']))
+		$comment['body'] = '';
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -647,7 +648,7 @@ function sendIssueNotification($issue, $comment, $type, $exclude = 0)
 		if (isset($comment['id']))
 			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
 
-		if ($type == 'new_comment' && !empty($row['notify_send_body']))
+		if ($type == 'new_comment' && !empty($row['notify_send_body']) && !empty($comment['body']))
 			$type .= '_body';
 
 		$emailtype = 'notification_project_' . $type;

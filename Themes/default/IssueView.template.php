@@ -463,7 +463,7 @@ function template_issue_log()
 					', $event['time'], ' - ', sprintf($event['event_text'], $event['member_link']);
 
 
-		if ($event['event'] == 'update_issue')
+		if (!empty($event['changes']))
 		{
 			echo '
 					<ul class="smalltext">';
