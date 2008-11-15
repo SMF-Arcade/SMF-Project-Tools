@@ -318,6 +318,7 @@ function IssueReply2()
 		$issueN = array(
 			'id' => $issue,
 		);
+		$commentOptions['id'] = $id_comment;
 
 		sendIssueNotification($issueN, $commentOptions, 'new_comment', $user_info['id']);
 	}

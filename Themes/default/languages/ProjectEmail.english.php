@@ -48,8 +48,8 @@ $txt['emails']['notification_project_new_comment'] = array(
 		'subject' => 'New Comment: {ISSUENAME}',
 		'body' => 'A new comment for \'{ISSUENAME}\' has been posted.
 
-You can see it at
-{ISSUELINK}
+You can see comment at
+{COMMENTLINK}
 
 Unsubscribe to new changes from this issue by using this link:
 {UNSUBSCRIBELINK}
@@ -65,8 +65,8 @@ $txt['emails']['notification_project_new_comment_body'] = array(
 		'subject' => 'New Comment: {ISSUENAME}',
 		'body' => 'A new comment for \'{ISSUENAME}\' has been posted.
 
-You can see it at
-{ISSUELINK}
+You can see comment at
+{COMMENTLINK}
 
 {BODY}
 

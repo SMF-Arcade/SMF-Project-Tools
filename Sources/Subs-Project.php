@@ -644,6 +644,9 @@ function sendIssueNotification($issue, $comment, $type, $exclude = 0)
 			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe')),
 		);
 
+		if (isset($comment['id']))
+			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
+
 		if ($type == 'new_comment' && !empty($row['notify_send_body']))
 			$type .= '_body';
 
