@@ -658,7 +658,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
 		{
-			$replacements['body'] = $update_body;
+			$replacements['BODY'] = $update_body;
 			$type .= '_body';
 		}
 
