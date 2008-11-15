@@ -305,13 +305,9 @@ function IssueReply2()
 	else
 		$event_data = array();
 
-	if ($id_event === true)
-		$id_event = 0;
-
 	if (empty($_REQUEST['com']))
 	{
 		$commentOptions = array(
-			'event' => $id_event,
 			'body' => $_POST['comment'],
 		);
 		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions, $event_data);
