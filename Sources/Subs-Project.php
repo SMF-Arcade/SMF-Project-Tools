@@ -171,7 +171,10 @@ function loadProject()
 		$smcFunc['db_free_result']($request);
 
 		if (empty($project))
-			fatal_lang_error('issue_not_found', false);
+		{
+			$context['project_error'] = 'issue_not_found';
+			return;
+		}
 
 		$_REQUEST['project'] = $project;
 	}
@@ -314,12 +317,10 @@ function loadProject()
 	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
 
 	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
-		fatal_lang_error('project_not_found', false);
+		$context['project_error'] = 'project_not_found';
 
 	if ($context['project']['is_developer'])
-	{
 		$user_info['query_see_issue_project'] = $user_info['query_see_version'];
-	}
 	elseif (!$user_info['is_admin'])
 	{
 		$request = $smcFunc['db_query']('', '
@@ -341,9 +342,6 @@ function loadProject()
 
 		$smcFunc['db_free_result']($request);
 	}
-
-	foreach ($context['project']['trackers'] as $key => $dummy)
-		$context['project']['trackers'][$key]['info'] = &$context['issue_types'][$key];
 }
 
 function loadProjectToolsPage($mode = '')

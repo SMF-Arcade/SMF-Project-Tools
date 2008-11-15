@@ -34,6 +34,10 @@ function Projects($standalone = false)
 	isAllowedTo('project_access');
 	loadProjectToolsPage();
 
+	// Admin made mistake on manual edits? (for safety reasons!!)
+	if (isset($context['project_error']))
+		fatal_lang_error($context['project_error'], false);
+
 	$subActions = array(
 		// Project
 		'list' => array('ProjectList.php', 'ProjectList'),
