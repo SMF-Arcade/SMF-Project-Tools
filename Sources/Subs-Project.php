@@ -520,6 +520,8 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt;
 
+	require_once($sourcedir . '/Subs-Post.php');
+
 	if ($type == 'new_comment')
 		$comment['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($comment['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 
@@ -635,13 +637,13 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
 			}
 
-			$update_body = implode("\n", $changes);
+			$update_body = strip_tags(implode("\n", $changes));
 		}
 
 		$replacements = array(
 			'ISSUENAME' => $row['subject'],
 			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
-			'BODY' => $comment_body,
+			'BODY' => $comment['body'],
 			'UPDATES' => $update_body,
 			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe')),
 		);
@@ -654,7 +656,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 		if (isset($comment['id']))
 			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
 
-		if ($type == 'new_comment' && !empty($row['notify_send_body']) && !empty($update_body))
+		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
 		{
 			$replacements['body'] = $update_body;
 			$type .= '_body';
