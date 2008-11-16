@@ -49,11 +49,11 @@ doTables($tbl, $tables);
 doSettings($addSettings);
 doPermission($permissions);
 
+// Step: Install default groups
 $request = $smcFunc['db_query']('', '
 	SELECT COUNT(*)
 	FROM {db_prefix}project_profiles');
 
-// Install default groups
 list ($count) = $smcFunc['db_fetch_row']($request);
 $smcFunc['db_free_result']($request);
 if ($count == 0)
