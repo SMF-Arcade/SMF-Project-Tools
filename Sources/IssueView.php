@@ -431,9 +431,10 @@ function prepareComments($all = true)
 	$context['comment_request'] = $smcFunc['db_query']('', '
 		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 			c.poster_name, c.poster_email, c.poster_ip, c.id_member,
-			c.edit_name, c.edit_time,
+			c.edit_name, c.edit_time, tl.event_data,
 			id_comment_mod < {int:new_from} AS is_read
 		FROM {db_prefix}issue_comments AS c
+			LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_event = c.id_event)
 		WHERE id_comment IN({array_int:comments})
 		ORDER BY id_comment',
 		array(
@@ -577,6 +578,63 @@ function getComment()
 
 	$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
 
+	$changes = array();
+
+	if (!empty($row['event_data']))
+	{
+		$data = unserialize($row['event_data']);
+
+		if (isset($data['changes']))
+		{
+			foreach ($data['changes'] as $key => $field)
+			{
+				list ($field, $old_value, $new_value) = $field;
+
+				// Change values to something meaningful
+				if ($field == 'status')
+				{
+					$old_value = $context['issue_status'][$old_value]['text'];
+					$new_value = $context['issue_status'][$new_value]['text'];
+				}
+				elseif ($field == 'type')
+				{
+					$old_value = $context['issue_types'][$old_value]['name'];
+					$new_value = $context['issue_types'][$new_value]['name'];
+				}
+				elseif ($field == 'view_status')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_view_status_public'];
+					else
+						$old_value = $txt['issue_view_status_private'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_view_status_public'];
+					else
+						$new_value = $txt['issue_view_status_private'];
+				}
+				elseif ($field == 'version' || $field == 'target_version')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$old_value]))
+						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+					else
+						$old_value = $context['versions'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$new_value]))
+						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+					else
+						$new_value = $context['versions'][$new_value]['name'];
+				}
+
+				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
+			}
+		}
+	}
+
 	$comment = array(
 		'id' => $row['id_comment'],
 		'first' => $row['id_comment'] == $context['current_issue']['comment_first'],
@@ -595,6 +653,7 @@ function getComment()
 		'can_edit' => projectAllowedTo('edit_comment_' . $type),
 		'new' => empty($row['is_read']),
 		'first_new' => $first_new && empty($row['is_read']),
+		'changes' => $changes,
 	);
 
 	if ($first)

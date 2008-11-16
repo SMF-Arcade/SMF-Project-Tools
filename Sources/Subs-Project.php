@@ -231,7 +231,46 @@ function loadProject()
 				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
 			);
 		}
+	// Developers
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name
+			FROM {db_prefix}project_developer AS dev
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $project,
+			)
+		);
 
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project']['developers'][$row['id_member']] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+			);
+		$smcFunc['db_free_result']($request);
+
+		// Category
+		$request = $smcFunc['db_query']('', '
+			SELECT id_category, category_name
+			FROM {db_prefix}issue_category AS cat
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $project,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project']['category'][$row['id_category']] = array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name']
+			);
+		$smcFunc['db_free_result']($request);
+
+		cache_put_data('project-' . $project, $context['project'], 120);
+	}
+
+	if ((list ($context['versions'], $context['versions_id']) = cache_get_data('project-version-' . $project, 120)) === null)
+	{
 		// Load Versions
 		$request = $smcFunc['db_query']('', '
 			SELECT
@@ -276,42 +315,7 @@ function loadProject()
 		}
 		$smcFunc['db_free_result']($request);
 
-		// Developers
-		$request = $smcFunc['db_query']('', '
-			SELECT mem.id_member, mem.real_name
-			FROM {db_prefix}project_developer AS dev
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $project,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project']['developers'][$row['id_member']] = array(
-				'id' => $row['id_member'],
-				'name' => $row['real_name'],
-			);
-		$smcFunc['db_free_result']($request);
-
-		// Category
-		$request = $smcFunc['db_query']('', '
-			SELECT id_category, category_name
-			FROM {db_prefix}issue_category AS cat
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $project,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project']['category'][$row['id_category']] = array(
-				'id' => $row['id_category'],
-				'name' => $row['category_name']
-			);
-		$smcFunc['db_free_result']($request);
-
-		cache_put_data('project-' . $project, $context['project'], 120);
+		cache_put_data('project-version-' . $project, array($context['versions'], $context['versions_id']), 120);
 	}
 
 	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
