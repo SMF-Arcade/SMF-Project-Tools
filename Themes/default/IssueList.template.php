@@ -52,7 +52,7 @@ function template_issue_list()
 	</div>';
 
 	$buttons = array(
-		'post_issue' => array(
+		'reportIssue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
 			'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'reportIssue')),

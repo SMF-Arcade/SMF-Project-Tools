@@ -32,6 +32,7 @@ function ProjectView()
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
 	$context['can_subscribe'] = !$user_info['is_guest'];
+	$context['can_report_issues'] = projectAllowedTo('issue_report');
 
 	if (!$user_info['is_guest'])
 	{
