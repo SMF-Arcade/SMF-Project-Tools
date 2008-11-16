@@ -385,7 +385,26 @@ function template_issue_comments()
 		echo '
 					</ul>
 					<div id="com_', $comment['id'], '" class="post">
-						', $comment['body'], '
+						', $comment['body'];
+
+		if (!empty($comment['changes']))
+		{
+			echo '
+						<ul class="smalltext">';
+
+			foreach ($comment['changes'] as $change)
+			{
+				echo '
+							<li>
+							', $change, '
+							</li>';
+			}
+
+			echo '
+						</ul>';
+		}
+
+		echo '
 					</div>
 				</div>
 				<div class="moderatorbar">
