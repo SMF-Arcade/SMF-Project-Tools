@@ -456,7 +456,7 @@ function loadAttachmentData()
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			a.id_attach, a.id_folder, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
-			a.width, a.height, IFNULL(mem.real_name, t.poster_name) AS real_name, t.poster_ip' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ',
+			a.fileext, a.width, a.height, IFNULL(mem.real_name, t.poster_name) AS real_name, t.poster_ip' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ',
 			IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
 		FROM {db_prefix}issue_attachments AS ia
 			INNER JOIN {db_prefix}attachments AS a ON (a.id_attach = ia.id_attach)' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
