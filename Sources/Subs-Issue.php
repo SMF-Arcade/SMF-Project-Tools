@@ -152,12 +152,12 @@ function createIssue($issueOptions, &$posterOptions)
 			$posterOptions['ip'],
 			'new_issue',
 			$issueOptions['created'],
-			serialize(array(
-				'subject' => $issueOptions['subject']
-			)),
+			serialize(),
 		),
 		array()
 	);
+
+	$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'new_issue', array('subject' => $issueOptions['subject']), $posterOptions, array('time' => $issueOptions['created']));
 
 	$id_comment = createComment(
 		$issueOptions['project'],
@@ -167,7 +167,8 @@ function createIssue($issueOptions, &$posterOptions)
 			'body' => $issueOptions['body'],
 			'mark_read' => !empty($issueOptions['mark_read']),
 		),
-		$posterOptions
+		$posterOptions,
+		array('id_event' => $id_event)
 	);
 
 	$issueOptions['comment_first'] = $id_comment;
@@ -704,6 +705,8 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		$event_data['comment'] = $id_comment;
 		$id_event = createTimelineEvent($id_issue, $id_project, 'new_comment', $event_data, $posterOptions, array('time' => $time));
 	}
+	elseif (isset($event_data['id_event']))
+		$id_event = $event_data['id_event'];
 
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}projects
