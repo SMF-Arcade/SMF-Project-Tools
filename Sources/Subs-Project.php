@@ -198,7 +198,11 @@ function loadProject()
 		);
 
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('project_not_found', false);
+		{
+			$context['project_error'] = 'project_not_found';
+
+			return;
+		}
 
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
