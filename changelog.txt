@@ -24,6 +24,7 @@ November 2008
  ! Moved update functions to Subs-ProjectAdmin.php
  + Ability to set theme per project
  ! Ensure that cache is cleared when project is updated
+ + Added list of reported and assigned issues to profile
 
 SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================

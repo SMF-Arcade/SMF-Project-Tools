@@ -189,7 +189,7 @@ function IssueList()
 				AND stag.tag = {string:search_tag})' : '') . '
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 		WHERE {query_see_issue_project}
-			AND i.id_project = {int:project} ' . (!empty($where) ? '
+			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
 			AND ', $where) : '') . '',
 		array(

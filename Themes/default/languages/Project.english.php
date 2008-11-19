@@ -68,6 +68,10 @@ $txt['project_stats'] = 'Project Statistics';
 $txt['profile_reported_issues'] = 'Issues Reported';
 $txt['profile_assigned_issues'] = 'Issues Assigned';
 
+// Issues
+$txt['issues_reported_by'] = 'Issues Reported by %s';
+$txt['issues_assigned_to'] = 'Issues Assigned to %s';
+
 // Project List
 $txt['new_issues'] = 'New Issues';
 $txt['old_issues'] = 'No New Issues';

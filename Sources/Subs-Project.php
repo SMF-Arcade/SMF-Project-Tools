@@ -382,11 +382,11 @@ function loadProjectToolsPage($mode = '')
 		$context['issue_status'][$id] = $status;
 	}
 
+	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
+	$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
+
 	if ($mode == '')
 	{
-		$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
-		$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
-
 		loadTemplate('Project', array('forum', 'project'));
 
 		$context['html_headers'] .= '

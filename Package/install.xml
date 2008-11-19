@@ -257,6 +257,8 @@ else
 					'function' => 'projectProfile',
 					'subsections' => array(
 						'main' => array($txt['project_profile_main']),
+						'reported' => array($txt['project_profile_reported']),
+						'assigned' => array($txt['project_profile_assigned']),
 					),
 					'permission' => array(
 						'own' => 'project_profile_own',

@@ -133,7 +133,7 @@ function ProjectView()
 			$context['issue_list'][] = array(
 				'title' => $txt[$issuel['title']],
 				'href' => $issuel['href'],
-				'issues' => getIssueList($issues_num, $issuel['order'], $issuel['where']),
+				'issues' => getIssueList(0, $issues_num, $issuel['order'], $issuel['where']),
 			);
 	}
 
