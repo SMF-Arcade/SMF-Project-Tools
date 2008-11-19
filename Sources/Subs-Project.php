@@ -828,7 +828,7 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = ln.id_project)
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
 			INNER JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)' : '') . '
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = ln.id_project AND dev.id_member = mem.id_member)
 		WHERE ln.id_project = {int:project}' . (!empty($issue['version']) ? '
 			AND ver.id_version = {int:version}' : '') . '
 			AND mem.is_activated = {int:is_activated}
