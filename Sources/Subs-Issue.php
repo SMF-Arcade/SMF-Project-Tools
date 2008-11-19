@@ -134,29 +134,6 @@ function createIssue($issueOptions, &$posterOptions)
 
 	$id_issue = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
 
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_timeline',
-		array(
-			'id_project' => 'int',
-			'id_issue' => 'int',
-			'id_member' => 'int',
-			'poster_ip' => 'string-60',
-			'event' => 'string',
-			'event_time' => 'int',
-			'event_data' => 'string',
-		),
-		array(
-			$issueOptions['project'],
-			$id_issue,
-			$posterOptions['id'],
-			$posterOptions['ip'],
-			'new_issue',
-			$issueOptions['created'],
-			serialize(),
-		),
-		array()
-	);
-
 	$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'new_issue', array('subject' => $issueOptions['subject']), $posterOptions, array('time' => $issueOptions['created']));
 
 	$id_comment = createComment(
