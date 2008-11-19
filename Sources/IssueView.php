@@ -71,6 +71,9 @@ function IssueView()
 
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 
+	// Disabled Fields
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
+
 	if ($context['can_issue_update'])
 	{
 		$context['possible_types'] = array();
@@ -92,6 +95,7 @@ function IssueView()
 	}
 
 	$context['can_subscribe'] = !$user_info['is_guest'];
+	$context['can_send_pm'] = allowedTo('pm_send');
 
 	if (!$user_info['is_guest'])
 	{
@@ -209,6 +213,8 @@ function IssueView()
 
 	if ($context['current_view'] == 'comments')
 		$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
+
+	$context['start'] = $_REQUEST['start'];
 
 	prepareComments($context['current_view'] == 'comments');
 
@@ -572,6 +578,10 @@ function getComment()
 		$memberContext[$row['id_member']]['email'] = $row['poster_email'];
 		$memberContext[$row['id_member']]['show_email'] = showEmailAddress(true, 0);
 		$memberContext[$row['id_member']]['is_guest'] = true;
+	}
+	else
+	{
+		$memberContext[$row['id_member']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
 	}
 
 	censorText($row['body']);

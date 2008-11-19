@@ -237,7 +237,8 @@ function loadProject()
 				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
 			);
 		}
-	// Developers
+
+		// Developers
 		$request = $smcFunc['db_query']('', '
 			SELECT mem.id_member, mem.real_name
 			FROM {db_prefix}project_developer AS dev
