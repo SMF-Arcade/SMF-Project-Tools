@@ -114,7 +114,7 @@ function Projects($standalone = false)
 
 		// Linktree
 		$context['linktree'][] = array(
-			'name' => $context['project']['name'],
+			'name' => strip_tags($context['project']['name']),
 			'url' => project_get_url(array('project' => $project)),
 		);
 
