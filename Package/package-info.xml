@@ -78,7 +78,7 @@
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
 
-	<uninstall>
+	<uninstall for="2.0 RC1">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 
