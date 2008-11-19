@@ -203,6 +203,15 @@ function template_issue_reply()
 			<div class="smallpadding windowbg">
 				<table width="100%">';
 
+		// Title
+		echo '
+					<tr>
+						<td width="30%">', $txt['issue_title'], '</td>
+						<td>
+							<input name="title" value="', $context['current_issue']['title'], '" />
+						</td>
+					</tr>';
+
 		// Version
 		echo '
 					<tr>

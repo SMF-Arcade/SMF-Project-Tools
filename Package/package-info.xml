@@ -77,6 +77,19 @@
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
 
+	<upgrade for="2.0 Beta 4" from="0.1.2">
+		<readme parsebbc="true">readme.txt</readme>
+
+		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
+		<database>installDatabase.php</database>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/Project.php" destination="$sourcedir" />
+
+		<!-- These files goes to Theme directory -->
+		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
+	</upgrade>
+
 	<upgrade for="2.0 Beta 4" from="0.1.1">
 		<readme parsebbc="true">readme.txt</readme>
 

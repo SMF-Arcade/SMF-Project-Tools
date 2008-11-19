@@ -1,6 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
+SMF Project Tools 0.1.3                                               xx.11.2008
+================================================================================
+November 2008
+--------------------------------------------------------------------------------
+ + Added interface for changing Issue Title [Issue #47]
+
 SMF Project Tools 0.1.2                                               15.11.2008
 ================================================================================
 November 2008
