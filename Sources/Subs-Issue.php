@@ -526,7 +526,7 @@ function deleteIssue($id_issue, $posterOptions)
 		"{$status}_$row[issue_type] = {$status}_$row[issue_type] - 1"
 	);
 
-	if (!empty($projectUpdates))
+	if (!empty($projectUpdates) && !empty($status))
 		$smcFunc['db_query']('', "
 			UPDATE {$db_prefix}projects
 			SET

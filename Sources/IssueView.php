@@ -744,7 +744,7 @@ function IssueDelete()
 	);
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
-	redirectexit(array('project' => $context['project']['id'], 'sa' => 'issues'));
+	redirectexit(project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')));
 }
 
 ?>
