@@ -113,6 +113,69 @@ function createProject($projectOptions)
 	return $id_project;
 }
 
+function updateProject($id_project, $projectOptions)
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
+
+	$projectUpdates = array();
+
+	if (isset($projectOptions['name']))
+		$projectUpdates[] = 'name = {string:name}';
+	if (isset($projectOptions['description']))
+		$projectUpdates[] = 'description = {string:description}';
+
+	if (isset($projectOptions['long_description']))
+		$projectUpdates[] = 'long_description = {string:long_description}';
+
+	if (isset($projectOptions['trackers']))
+	{
+		$projectUpdates[] = 'trackers = {string:trackers}';
+		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
+	}
+
+	if (isset($projectOptions['member_groups']))
+	{
+		$projectUpdates[] = 'member_groups = {string:member_groups}';
+		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
+	}
+
+	if (isset($projectOptions['theme']))
+	{
+		$projectUpdates[] = 'project_teheme = {int:theme}';
+		$projectOptions['theme'] = $projectOptions['theme'];
+	}
+	if (isset($projectOptions['override_theme']))
+	{
+		$projectUpdates[] = 'override_theme = {int:override_theme}';
+		$projectOptions['override_theme'] = $projectOptions['override_theme'] ? 1 : 0;
+	}
+
+	if (isset($projectOptions['category']))
+	{
+		$projectUpdates[] = 'id_category = {int:category}';
+		$projectOptions['category'] = $projectOptions['category'];
+	}
+	if (isset($projectOptions['category_position']))
+	{
+		$projectUpdates[] = 'cat_position = {string:category_position}';
+		$projectOptions['category_position'] = $projectOptions['category_position'];
+	}
+
+	if (!empty($projectUpdates))
+		$request = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}projects
+			SET
+				' . implode(',
+				', $projectUpdates) . '
+			WHERE id_project = {int:project}',
+			array_merge($projectOptions, array(
+				'project' => $id_project,
+			))
+		);
+
+	return true;
+}
+
 function createVersion($id_project, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -177,6 +240,45 @@ function createVersion($id_project, $versionOptions)
 	return $id_version;
 }
 
+function updateVersion($id_version, $versionOptions)
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
+
+	$versionUpdates = array();
+
+	if (isset($versionOptions['name']))
+		$versionUpdates[] = 'version_name = {string:name}';
+
+	if (isset($versionOptions['description']))
+		$versionUpdates[] = 'description = {string:description}';
+
+	if (isset($versionOptions['release_date']))
+		$versionUpdates[] = 'release_date = {string:release_date}';
+
+	if (isset($versionOptions['member_groups']))
+	{
+		$versionUpdates[] = 'member_groups = {string:member_groups}';
+		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
+	}
+
+	if (isset($versionOptions['status']))
+		$versionUpdates[] = 'status = {int:status}';
+
+	if (!empty($versionUpdates))
+		$request = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_versions
+			SET
+				' . implode(',
+				', $versionUpdates) . '
+			WHERE id_version = {int:version}',
+			array_merge($versionOptions, array(
+				'version' => $id_version,
+			))
+		);
+
+	return true;
+}
+
 function createPTCategory($id_project, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -197,6 +299,33 @@ function createPTCategory($id_project, $categoryOptions)
 	return true;
 }
 
+function updatePTCategory($id_category, $categoryOptions)
+{
+	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
+
+	$categoryUpdates = array();
+
+	if (isset($categoryOptions['name']))
+		$categoryUpdates[] = 'category_name = {string:name}';
+
+	if (isset($categoryOptions['project']))
+		$categoryUpdates[] = 'id_project = {int:project}';
+
+	if (!empty($categoryOptions))
+		$request = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}issue_category
+			SET
+				' . implode(',
+				', $categoryUpdates) . '
+			WHERE id_category = {int:category}',
+			array_merge($categoryOptions, array(
+				'category' => $id_category,
+			))
+		);
+
+	return true;
+}
+
 function loadProjectAdmin($id_project)
 {
 	global $context, $smcFunc, $user_info, $txt, $user_info;
@@ -205,10 +334,8 @@ function loadProjectAdmin($id_project)
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
 			p.id_category, p.cat_position, p.' . implode(', p.', $context['type_columns']) . ',
-			dev.id_member AS is_dev
+			p.project_theme, p.override_theme
 		FROM {db_prefix}projects AS p
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:member})
 		WHERE {query_see_project}
 			AND p.id_project = {int:project}
 		LIMIT 1',
@@ -233,7 +360,8 @@ function loadProjectAdmin($id_project)
 		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
 		'developers' => array(),
-		'is_developer' => !empty($row['is_dev']),
+		'theme' => $row['project_theme'],
+		'override_theme' => !empty($row['override_theme']),
 		'id_category' => $row['id_category'],
 		'category_position' => $row['cat_position'],
 	);

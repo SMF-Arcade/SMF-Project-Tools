@@ -4,15 +4,13 @@
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
 // General
+$txt['project_tools_admin'] = 'Project Tools';
+$txt['project_tools_admin_desc'] = 'Here you can edit some settings of SMF Project Tools';
 $txt['project_latest_news'] = 'Latest News';
 $txt['project_news_unable_to_connect'] = 'Unable to connect to <a href="http://www.smfarcade.info">SMFArcade.info</a> for latest news...';
 $txt['project_version_info'] = 'Version Information';
 $txt['project_installed_version'] = 'Installed version';
 $txt['project_latest_version'] = 'Latest version';
-
-//
-$txt['project_tools_admin'] = 'Project Tools';
-$txt['project_tools_admin_desc'] = 'Here you can edit some settings of SMF Project Tools';
 
 // Settings
 $txt['project_settings'] = 'Settings';
@@ -27,26 +25,36 @@ $txt['header_project'] = 'Project';
 // Edit Project
 $txt['edit_project'] = 'Edit Project';
 $txt['project_name'] = 'Project Name';
+
 $txt['project_description'] = 'Short description for project';
 $txt['project_description_desc'] = 'Displayed on board index';
 $txt['project_description_long'] = 'Description';
 $txt['project_description_long_desc'] = 'Description displayed on Project Page';
+
+$txt['project_theme'] = 'Project Theme';
+$txt['project_theme_default'] = '(overall forum default)';
+$txt['project_theme_override'] = 'Override member\'s theme';
+
 $txt['project_board_index'] = 'Show Project in Board Index';
 $txt['project_board_index_desc'] = '';
 $txt['project_board_index_dont_show'] = 'Don\'t show';
 $txt['project_board_index_before'] = 'Before Boards';
 $txt['project_board_index_after'] = 'After Boards';
+
 $txt['project_membergroups'] = 'Membergroups';
 $txt['project_membergroups_desc'] = 'Select Membergroups allowed to see this project';
 $txt['regular_members'] = 'Regular Members';
 $txt['guests'] = 'Guests';
 $txt['pgroups_post_group'] = 'This is post based group.';
 $txt['check_all'] = 'Select All';
+
 $txt['project_developers'] = 'Developers';
 $txt['developer_add'] = 'Add';
 $txt['developer_remove'] = 'Remove';
+
 $txt['project_trackers'] = 'Issue Types';
 $txt['project_trackers_desc'] = 'Select issue types you want to use in this project';
+
 $txt['project_submit'] = 'Submit';
 $txt['delete_project'] = 'Delete Project';
 $txt['pdelete_warning'] = 'Deleting project will delete permanently everything related to it, do you still to continue?';

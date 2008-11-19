@@ -111,10 +111,25 @@ $tables = array(
 				'unsigned' => true,
 				'default' => 1,
 			),
+			// Project Theme
+			array(
+				'name' => 'project_theme',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'override_theme',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			// Show in board index
 			array(
 				'name' => 'id_category',
 				'type' => 'int',
 				'unsigned' => true,
+				'default' => 0,
 			),
 			// But where is cat?
 			array(

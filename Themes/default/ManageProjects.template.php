@@ -46,6 +46,25 @@ function template_edit_project()
 				<textarea name="long_desc" rows="3" cols="35">', $context['project']['long_description'], '</textarea>
 			</td>
 		</tr>
+
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['project_theme'], ':</b><br />
+			</td>
+			<td valign="top" align="left">
+				<select name="theme">
+					<option value="0">', $txt['project_theme_default'], '</option>';
+
+	foreach ($context['themes'] as $theme)
+		echo '
+					<option value="', $theme['id'], '"', $context['project']['theme'] == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
+
+	echo '
+				</select><br />
+				<input type="checkbox" id="override_theme" name="override_theme" value="1" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
+			</td>
+		</tr>
+
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_board_index'], ':</b><br />
@@ -60,6 +79,7 @@ function template_edit_project()
 					<option value="', $cat['id'], '"', $context['project']['category'] == $cat['id'] ? ' selected="selected"' : '', '>', $cat['name'], '</option>';
 
 	echo '
+				</select>
 				<select name="category_position">
 					<option value="first"', $context['project']['category_position'] == 'first' ? ' selected="selected"' : '', '>', $txt['project_board_index_before'], '</option>
 					<option value="last"', $context['project']['category_position'] == 'last' ? ' selected="selected"' : '', '>', $txt['project_board_index_after'], '</option>

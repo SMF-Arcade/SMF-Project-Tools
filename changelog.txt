@@ -21,6 +21,9 @@ November 2008
  ! Private Issues was sent as notifications even without permission
  + Added notification for new comments
  ! Send body/details if wanted
+ ! Moved update functions to Subs-ProjectAdmin.php
+ + Ability to set theme per project
+ ! Ensure that cache is cleared when project is updated
 
 SMF Project Tools 0.1                                                  8.11.2008
 ================================================================================

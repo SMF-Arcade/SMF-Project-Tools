@@ -208,6 +208,22 @@ else
 		</operation>
 	</file>
 
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="after"><![CDATA[	// The theme is the forum's default.]]></search>
+			<add><![CDATA[	elseif (!empty($context['project']['theme']))
+		$id_theme = $context['project']['theme'];
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[	// If they have specified a particular theme to use with SSI allow it to be used.]]></search>
+			<add><![CDATA[	elseif (!empty($context['project']['theme']) && !empty($context['project']['override_theme']))
+		$id_theme = $context['project']['theme'];
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/ManagePermissions.php">
 		<operation>
 			<search position="before"><![CDATA[			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),]]></search>
@@ -363,7 +379,7 @@ else
 		</operation>
 	</file>
 
-<file name="$sourcedir/Subs-BoardIndex.php">
+	<file name="$sourcedir/Subs-BoardIndex.php">
 		<operation>
 			<search position="after"><![CDATA[	return $boardIndexOptions['include_categories'] ? $categories : $this_category;]]></search>
 			<add><![CDATA[	if (!empty($modSettings['projectEnabled']))

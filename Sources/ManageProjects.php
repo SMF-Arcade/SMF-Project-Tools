@@ -182,7 +182,8 @@ function EditProject()
 			'long_description' => '',
 			'trackers' => array_keys($context['issue_types']),
 			'developers' => array(),
-			'public_access' => 0,
+			'theme' => 0,
+			'override_theme' => false,
 			'category' => 0,
 			'category_position' => '',
 		);
@@ -201,6 +202,8 @@ function EditProject()
 			'trackers' => array_keys($project['trackers']),
 			'groups' => $project['groups'],
 			'developers' => $project['developers'],
+			'theme' => $project['theme'],
+			'override_theme' => $project['override_theme'],
 			'category' => $project['id_category'],
 			'category_position' => $project['category_position'],
 		);
@@ -257,6 +260,21 @@ function EditProject()
 			'id' => $row['id_cat'],
 			'name' => $row['name'],
 		);
+	$smcFunc['db_free_result']($request);
+	
+	// Get all the themes...
+	$request = $smcFunc['db_query']('', '
+		SELECT id_theme AS id, value AS name
+		FROM {db_prefix}themes
+		WHERE variable = {string:name}',
+		array(
+			'name' => 'name',
+		)
+	);
+	$context['themes'] = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['themes'][] = $row;
+	$smcFunc['db_free_result']($request);
 
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -308,6 +326,9 @@ function EditProject2()
 		$projectOptions['category'] = (int) $_POST['category'];
 		$projectOptions['category_position'] = $_POST['category_position'];
 
+		$projectOptions['theme'] = (int) $_POST['theme'];
+		$projectOptions['override_theme'] = !empty($_POST['override_theme']);
+
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))
 			foreach ($_POST['trackers'] as $tracker)
@@ -355,6 +376,9 @@ function EditProject2()
 				array('id_project', 'id_member')
 			);
 		}
+
+		cache_put_data('project-' . $_POST['project'], null, 120);
+		cache_put_data('project-version-' . $_POST['project'], null, 120);
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))
 	{
@@ -566,6 +590,7 @@ function EditCategory2()
 	checkSession();
 
 	$_POST['category'] = (int) $_POST['category'];
+	$_POST['project'] = (int) $_POST['project'];
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
@@ -577,6 +602,9 @@ function EditCategory2()
 			createPTCategory($_POST['project'], $categoryOptions);
 		else
 			updatePTCategory($_POST['category'], $categoryOptions);
+
+		cache_put_data('project-' . $_POST['project'], null, 120);
+		cache_put_data('project-version-' . $_POST['project'], null, 120);
 	}
 	elseif (isset($_POST['delete']))
 	{
@@ -833,6 +861,9 @@ function EditVersion2()
 			createVersion($_POST['project'], $versionOptions);
 		else
 			updateVersion($_POST['version'], $versionOptions);
+
+		cache_put_data('project-' . $_POST['project'], null, 120);
+		cache_put_data('project-version-' . $_POST['project'], null, 120);
 	}
 	elseif (isset($_POST['delete']))
 	{

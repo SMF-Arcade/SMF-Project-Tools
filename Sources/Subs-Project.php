@@ -187,7 +187,7 @@ function loadProject()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-				p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . '
+				p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ', p.project_theme
 			FROM {db_prefix}projects AS p
 			WHERE p.id_project = {int:project}
 			LIMIT 1',
@@ -221,6 +221,8 @@ function loadProject()
 			'is_developer' => false,
 			'comment_mod' => $row['id_comment_mod'],
 			'profile' => $row['id_profile'],
+			'theme' => $row['project_theme'],
+			'override_theme' => !empty($row['override_theme']),
 		);
 
 		$trackers = explode(',', $row['trackers']);
@@ -452,237 +454,6 @@ function getPrivateProfiles()
 		$profiles[] = $profile['id_profile'];
 
 	return $profiles;
-}
-
-// Send Notification
-function sendProjectNotification($issue, $type, $exclude = 0)
-{
-	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language;
-
-	if ($type == 'new_issue')
-		$issue['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($issue['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
-
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
-			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group, IFNULL(dev.id_member, 0) AS is_developer,
-			p.member_groups' . (!empty($issue['version']) ? ', ver.member_groups AS member_groups_version' : '') . '
-		FROM {db_prefix}log_notify_projects AS ln
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = ln.id_project)
-			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
-			INNER JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)' : '') . '
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
-		WHERE ln.id_project = {int:project}' . (!empty($issue['version']) ? '
-			AND ver.id_version = {int:version}' : '') . '
-			AND mem.is_activated = {int:is_activated}
-			AND mem.id_member != {int:poster}
-		ORDER BY mem.lngfile',
-		array(
-			'is_activated' => 1,
-			'project' => $issue['project'],
-			'version' => $issue['version'],
-			'poster' => $exclude,
-		)
-	);
-
-	while ($rowmember = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($rowmember['id_group'] != 1 && empty($rowmember['is_developer']))
-		{
-			// Temp
-			if (!empty($issue['private']))
-				continue;
-
-			$p_allowed = explode(',', $rowmember['member_groups']);
-
-			if (!empty($issue['version']))
-				$v_allowed = explode(',', $rowmember['member_groups_version']);
-
-			$rowmember['additional_groups'] = explode(',', $rowmember['additional_groups']);
-			$rowmember['additional_groups'][] = $rowmember['id_group'];
-			$rowmember['additional_groups'][] = $rowmember['id_post_group'];
-
-			// can see project?
-			if (count(array_intersect($p_allowed, $rowmember['additional_groups'])) == 0)
-				continue;
-			// what about version?
-			if (isset($v_allowed) && count(array_intersect($v_allowed, $rowmember['additional_groups'])) == 0)
-				continue;
-		}
-
-		loadLanguage('ProjectEmail', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
-
-		$replacements = array(
-			'ISSUENAME' => $issue['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
-			'DETAILS' => $issue['body'],
-			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe')),
-		);
-
-		if ($type == 'new_issue' && !empty($rowmember['notify_send_body']))
-			$type .= '_body';
-
-		$emailtype = 'notification_project_' . $type;
-
-		$emaildata = loadEmailTemplate($emailtype, $replacements, '', false);
-		sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
-	}
-}
-
-function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
-{
-	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt;
-
-	require_once($sourcedir . '/Subs-Post.php');
-
-	if ($type == 'new_comment')
-		$comment['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($comment['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
-
-	if (empty($comment['body']))
-		$comment['body'] = '';
-
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
-			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group,
-			p.member_groups, IFNULL(ver.member_groups, {string:any}) AS member_groups_version,
-			i.private_issue, IFNULL(dev.id_member, 0) AS is_developer, i.subject
-		FROM {db_prefix}log_notify_projects AS ln
-			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
-			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)
-			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
-		WHERE ln.id_issue = {int:issue}
-			AND mem.is_activated = {int:is_activated}
-			AND mem.id_member != {int:poster}
-		ORDER BY mem.lngfile',
-		array(
-			'is_activated' => 1,
-			'issue' => $issue['id'],
-			'poster' => $exclude,
-			'any' => '*',
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($row['id_group'] != 1 && empty($row['is_developer']))
-		{
-			// Temp
-			if (!empty($row['private_issue']))
-				continue;
-
-			$p_allowed = explode(',', $row['member_groups']);
-
-			if ($row['member_groups_version'] != '*')
-				$v_allowed = explode(',', $row['member_groups_version']);
-
-			$row['additional_groups'] = explode(',', $row['additional_groups']);
-			$row['additional_groups'][] = $row['id_group'];
-			$row['additional_groups'][] = $row['id_post_group'];
-
-			// can see project?
-			if (count(array_intersect($p_allowed, $row['additional_groups'])) == 0)
-				continue;
-			// what about version?
-			if (isset($v_allowed) && count(array_intersect($v_allowed, $row['additional_groups'])) == 0)
-				continue;
-		}
-
-		$row['subject'] = un_htmlspecialchars($row['subject']);
-
-		loadLanguage('Project', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
-		loadLanguage('ProjectEmail', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
-
-		$update_body = '';
-
-		if (isset($event_data['changes']))
-		{
-			$changes = array();
-
-			foreach ($event_data['changes'] as $key => $field)
-			{
-				list ($field, $old_value, $new_value) = $field;
-
-				// Change values to something meaningful
-				if ($field == 'status')
-				{
-					$old_value = $context['issue_status'][$old_value]['text'];
-					$new_value = $context['issue_status'][$new_value]['text'];
-				}
-				elseif ($field == 'type')
-				{
-					$old_value = $context['issue_types'][$old_value]['name'];
-					$new_value = $context['issue_types'][$new_value]['name'];
-				}
-				elseif ($field == 'view_status')
-				{
-					if (empty($old_value))
-						$old_value = $txt['issue_view_status_public'];
-					else
-						$old_value = $txt['issue_view_status_private'];
-
-					if (empty($new_value))
-						$new_value = $txt['issue_view_status_public'];
-					else
-						$new_value = $txt['issue_view_status_private'];
-				}
-				elseif ($field == 'version' || $field == 'target_version')
-				{
-					// TODO: Make this work?
-					// Check if version is subversion
-					/*if (empty($old_value))
-						$old_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$old_value]))
-						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
-					else
-						$old_value = $context['versions'][$old_value]['name'];
-
-					if (empty($new_value))
-						$new_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$new_value]))
-						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
-					else
-						$new_value = $context['versions'][$new_value]['name'];*/
-				}
-
-				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
-			}
-
-			$update_body = strip_tags(implode("\n", $changes));
-		}
-
-		$replacements = array(
-			'ISSUENAME' => $row['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
-			'BODY' => $comment['body'],
-			'UPDATES' => $update_body,
-			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe')),
-		);
-
-		if (!empty($replacements['BODY']))
-			$replacements['BODY'] .= "\n\n" . $update_body;
-		else
-			$replacements['BODY'] = $update_body;
-
-		if (isset($comment['id']))
-			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
-
-		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
-		{
-			$replacements['BODY'] = $update_body;
-			$type .= '_body';
-		}
-
-		$emailtype = 'notification_project_' . $type;
-
-		$emaildata = loadEmailTemplate($emailtype, $replacements, '', false);
-		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
-	}
-
-	// Back to original language
-	loadLanguage('Project');
 }
 
 // Function to generate urls
@@ -934,126 +705,6 @@ function projectIsAllowedTo($permission)
 	}
 }
 
-function updateProject($id_project, $projectOptions)
-{
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
-
-	require_once($sourcedir . '/Subs-Boards.php');
-
-	$projectUpdates = array();
-
-	if (isset($projectOptions['name']))
-		$projectUpdates[] = 'name = {string:name}';
-	if (isset($projectOptions['description']))
-		$projectUpdates[] = 'description = {string:description}';
-
-	if (isset($projectOptions['long_description']))
-		$projectUpdates[] = 'long_description = {string:long_description}';
-
-	if (isset($projectOptions['trackers']))
-	{
-		$projectUpdates[] = 'trackers = {string:trackers}';
-		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
-	}
-
-	if (isset($projectOptions['member_groups']))
-	{
-		$projectUpdates[] = 'member_groups = {string:member_groups}';
-		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
-	}
-
-	if (isset($projectOptions['category']))
-	{
-		$projectUpdates[] = 'id_category = {int:category}';
-		$projectOptions['category'] = $projectOptions['category'];
-	}
-	if (isset($projectOptions['category_position']))
-	{
-		$projectUpdates[] = 'cat_position = {string:category_position}';
-		$projectOptions['category_position'] = $projectOptions['category_position'];
-	}
-
-	if (!empty($projectUpdates))
-		$request = $smcFunc['db_query']('', '
-			UPDATE {db_prefix}projects
-			SET
-				' . implode(',
-				', $projectUpdates) . '
-			WHERE id_project = {int:project}',
-			array_merge($projectOptions, array(
-				'project' => $id_project,
-			))
-		);
-
-	return true;
-}
-
-function updateVersion($id_version, $versionOptions)
-{
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
-
-	$versionUpdates = array();
-
-	if (isset($versionOptions['name']))
-		$versionUpdates[] = 'version_name = {string:name}';
-
-	if (isset($versionOptions['description']))
-		$versionUpdates[] = 'description = {string:description}';
-
-	if (isset($versionOptions['release_date']))
-		$versionUpdates[] = 'release_date = {string:release_date}';
-
-	if (isset($versionOptions['member_groups']))
-	{
-		$versionUpdates[] = 'member_groups = {string:member_groups}';
-		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
-	}
-
-	if (isset($versionOptions['status']))
-		$versionUpdates[] = 'status = {int:status}';
-
-	if (!empty($versionUpdates))
-		$request = $smcFunc['db_query']('', '
-			UPDATE {db_prefix}project_versions
-			SET
-				' . implode(',
-				', $versionUpdates) . '
-			WHERE id_version = {int:version}',
-			array_merge($versionOptions, array(
-				'version' => $id_version,
-			))
-		);
-
-	return true;
-}
-
-function updatePTCategory($id_category, $categoryOptions)
-{
-	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
-
-	$categoryUpdates = array();
-
-	if (isset($categoryOptions['name']))
-		$categoryUpdates[] = 'category_name = {string:name}';
-
-	if (isset($categoryOptions['project']))
-		$categoryUpdates[] = 'id_project = {int:project}';
-
-	if (!empty($categoryOptions))
-		$request = $smcFunc['db_query']('', '
-			UPDATE {db_prefix}issue_category
-			SET
-				' . implode(',
-				', $categoryUpdates) . '
-			WHERE id_category = {int:category}',
-			array_merge($categoryOptions, array(
-				'category' => $id_category,
-			))
-		);
-
-	return true;
-}
-
 function DiffParser($text)
 {
 	$text = explode("\n", str_replace(array("\r\n", "\r"), "\n", $text));
@@ -1158,6 +809,237 @@ function issue_link_callback($data)
 	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . project_get_url(array('issue' => '\1.0')) . '">\1</a>', $data[0]);
 
 	return $data[0];
+}
+
+// Send Notification
+function sendProjectNotification($issue, $type, $exclude = 0)
+{
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language;
+
+	if ($type == 'new_issue')
+		$issue['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($issue['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
+			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group, IFNULL(dev.id_member, 0) AS is_developer,
+			p.member_groups' . (!empty($issue['version']) ? ', ver.member_groups AS member_groups_version' : '') . '
+		FROM {db_prefix}log_notify_projects AS ln
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = ln.id_project)
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
+			INNER JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)' : '') . '
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
+		WHERE ln.id_project = {int:project}' . (!empty($issue['version']) ? '
+			AND ver.id_version = {int:version}' : '') . '
+			AND mem.is_activated = {int:is_activated}
+			AND mem.id_member != {int:poster}
+		ORDER BY mem.lngfile',
+		array(
+			'is_activated' => 1,
+			'project' => $issue['project'],
+			'version' => $issue['version'],
+			'poster' => $exclude,
+		)
+	);
+
+	while ($rowmember = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($rowmember['id_group'] != 1 && empty($rowmember['is_developer']))
+		{
+			// Temp
+			if (!empty($issue['private']))
+				continue;
+
+			$p_allowed = explode(',', $rowmember['member_groups']);
+
+			if (!empty($issue['version']))
+				$v_allowed = explode(',', $rowmember['member_groups_version']);
+
+			$rowmember['additional_groups'] = explode(',', $rowmember['additional_groups']);
+			$rowmember['additional_groups'][] = $rowmember['id_group'];
+			$rowmember['additional_groups'][] = $rowmember['id_post_group'];
+
+			// can see project?
+			if (count(array_intersect($p_allowed, $rowmember['additional_groups'])) == 0)
+				continue;
+			// what about version?
+			if (isset($v_allowed) && count(array_intersect($v_allowed, $rowmember['additional_groups'])) == 0)
+				continue;
+		}
+
+		loadLanguage('ProjectEmail', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
+
+		$replacements = array(
+			'ISSUENAME' => $issue['subject'],
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
+			'DETAILS' => $issue['body'],
+			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe')),
+		);
+
+		if ($type == 'new_issue' && !empty($rowmember['notify_send_body']))
+			$type .= '_body';
+
+		$emailtype = 'notification_project_' . $type;
+
+		$emaildata = loadEmailTemplate($emailtype, $replacements, '', false);
+		sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+	}
+}
+
+function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
+{
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt;
+
+	require_once($sourcedir . '/Subs-Post.php');
+
+	if ($type == 'new_comment')
+		$comment['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($comment['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
+
+	if (empty($comment['body']))
+		$comment['body'] = '';
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
+			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group,
+			p.member_groups, IFNULL(ver.member_groups, {string:any}) AS member_groups_version,
+			i.private_issue, IFNULL(dev.id_member, 0) AS is_developer, i.subject
+		FROM {db_prefix}log_notify_projects AS ln
+			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_member = mem.id_member)
+		WHERE ln.id_issue = {int:issue}
+			AND mem.is_activated = {int:is_activated}
+			AND mem.id_member != {int:poster}
+		ORDER BY mem.lngfile',
+		array(
+			'is_activated' => 1,
+			'issue' => $issue['id'],
+			'poster' => $exclude,
+			'any' => '*',
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($row['id_group'] != 1 && empty($row['is_developer']))
+		{
+			// Temp
+			if (!empty($row['private_issue']))
+				continue;
+
+			$p_allowed = explode(',', $row['member_groups']);
+
+			if ($row['member_groups_version'] != '*')
+				$v_allowed = explode(',', $row['member_groups_version']);
+
+			$row['additional_groups'] = explode(',', $row['additional_groups']);
+			$row['additional_groups'][] = $row['id_group'];
+			$row['additional_groups'][] = $row['id_post_group'];
+
+			// can see project?
+			if (count(array_intersect($p_allowed, $row['additional_groups'])) == 0)
+				continue;
+			// what about version?
+			if (isset($v_allowed) && count(array_intersect($v_allowed, $row['additional_groups'])) == 0)
+				continue;
+		}
+
+		$row['subject'] = un_htmlspecialchars($row['subject']);
+
+		loadLanguage('Project', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
+		loadLanguage('ProjectEmail', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
+
+		$update_body = '';
+
+		if (isset($event_data['changes']))
+		{
+			$changes = array();
+
+			foreach ($event_data['changes'] as $key => $field)
+			{
+				list ($field, $old_value, $new_value) = $field;
+
+				// Change values to something meaningful
+				if ($field == 'status')
+				{
+					$old_value = $context['issue_status'][$old_value]['text'];
+					$new_value = $context['issue_status'][$new_value]['text'];
+				}
+				elseif ($field == 'type')
+				{
+					$old_value = $context['issue_types'][$old_value]['name'];
+					$new_value = $context['issue_types'][$new_value]['name'];
+				}
+				elseif ($field == 'view_status')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_view_status_public'];
+					else
+						$old_value = $txt['issue_view_status_private'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_view_status_public'];
+					else
+						$new_value = $txt['issue_view_status_private'];
+				}
+				elseif ($field == 'version' || $field == 'target_version')
+				{
+					// TODO: Make this work?
+					// Check if version is subversion
+					/*if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$old_value]))
+						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+					else
+						$old_value = $context['versions'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$new_value]))
+						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+					else
+						$new_value = $context['versions'][$new_value]['name'];*/
+				}
+
+				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
+			}
+
+			$update_body = strip_tags(implode("\n", $changes));
+		}
+
+		$replacements = array(
+			'ISSUENAME' => $row['subject'],
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
+			'BODY' => $comment['body'],
+			'UPDATES' => $update_body,
+			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe')),
+		);
+
+		if (!empty($replacements['BODY']))
+			$replacements['BODY'] .= "\n\n" . $update_body;
+		else
+			$replacements['BODY'] = $update_body;
+
+		if (isset($comment['id']))
+			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
+
+		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
+		{
+			$replacements['BODY'] = $update_body;
+			$type .= '_body';
+		}
+
+		$emailtype = 'notification_project_' . $type;
+
+		$emaildata = loadEmailTemplate($emailtype, $replacements, '', false);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+	}
+
+	// Back to original language
+	loadLanguage('Project');
 }
 
 ?>
