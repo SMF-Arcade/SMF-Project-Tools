@@ -406,7 +406,7 @@ function loadProjectToolsPage($mode = '')
 	// In SMF (SSI, etc)
 	elseif ($mode == 'smf')
 	{
-
+		loadTemplate(false, array('project'));
 	}
 	// Profile
 	elseif ($mode == 'profile')
