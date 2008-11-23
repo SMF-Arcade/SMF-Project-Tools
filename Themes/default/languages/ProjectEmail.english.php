@@ -1,8 +1,7 @@
 <?php
 // Version: 0.2; ProjectEmail
 
-if (!isset($txt['emails']))
-	$txt['emails'] = array();
+$txt['emails'] = !isset($txt['emails']) ? array() : $txt['emails'];
 
 $txt['emails']['notification_project_new_issue'] = array(
 		/*
