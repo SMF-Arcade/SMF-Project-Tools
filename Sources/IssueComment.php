@@ -385,10 +385,9 @@ function IssueDeleteComment()
 	$smcFunc['db_free_result']($request);
 
 	$smcFunc['db_query']('', '
-		DELETE FROM {db_prefix}issue_comments AS c
+		DELETE FROM {db_prefix}issue_comments
 		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
-			AND c.id_member = {int:current_user}' : '') . '
-		ORDER BY id_comment',
+			AND id_member = {int:current_user}' : '') . '',
 		array(
 			'current_user' => $user_info['id'],
 			'comment' => $row['id_comment'],
