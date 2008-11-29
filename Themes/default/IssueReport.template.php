@@ -62,7 +62,7 @@ function template_report_issue()
 	{
 		echo '
 						<div class="toggle">
-							<input type="radio" id="type_', $id, '" name="type" value="', $id, '" ', $type['selected'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $type['name'], '</label>
+							<input type="radio" id="type_', $id, '" name="type" value="', $id, '" tabindex="', $context['tabindex']++, '"', $type['selected'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $type['name'], '</label>
 						</div>';
 	}
 
@@ -74,7 +74,7 @@ function template_report_issue()
 		echo '
 					<dt>', $txt['issue_version'], ':</dt>
 					<dd>
-						<select name="version">
+						<select name="version" tabindex="', $context['tabindex']++, '">
 							<option value=""></option>';
 
 
@@ -98,7 +98,7 @@ function template_report_issue()
 		echo '
 					<dt>', $txt['issue_category'], ':</dt>
 					<dd>
-						<select name="category">
+						<select name="category" tabindex="', $context['tabindex']++, '">
 							<option></option>';
 
 		foreach ($context['project']['category'] as $c)
