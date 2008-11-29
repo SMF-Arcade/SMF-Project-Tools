@@ -141,7 +141,7 @@ function updateProject($id_project, $projectOptions)
 
 	if (isset($projectOptions['theme']))
 	{
-		$projectUpdates[] = 'project_teheme = {int:theme}';
+		$projectUpdates[] = 'project_theme = {int:theme}';
 		$projectOptions['theme'] = $projectOptions['theme'];
 	}
 	if (isset($projectOptions['override_theme']))
