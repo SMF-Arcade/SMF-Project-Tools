@@ -42,6 +42,8 @@ function ReportIssue()
 	projectIsAllowedTo('issue_report');
 	require_once($sourcedir . '/Subs-Post.php');
 
+	$context['can_subscribe'] = !$user_info['is_guest'];
+
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $id => $type)
@@ -146,6 +148,8 @@ function ReportIssue2()
 
 	projectIsAllowedTo('issue_report');
 
+	$context['can_subscribe'] = !$user_info['is_guest'];
+
 	if (!empty($_REQUEST['details_mode']) && isset($_REQUEST['details']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
@@ -243,6 +247,26 @@ function ReportIssue2()
 
 	// Send notifications
 	sendProjectNotification($issueOptions, 'new_issue', $user_info['id']);
+
+	if (!empty($_POST['issue_subscribe']))
+	{
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_notify_projects',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'sent' => 'int',
+			),
+			array(
+				0,
+				$issueOptions['id'],
+				$user_info['id'],
+				0,
+			),
+			array('id_project', 'id_issue', 'id_member')
+		);
+	}
 
 	cache_put_data('project-' . $project, null, 120);
 

@@ -212,7 +212,6 @@ function ProjectSubscribeIssue()
 		WHERE id_issue = {int:issue}
 			AND id_member = {int:current_member}',
 		array(
-			'project' => $project,
 			'issue' => $issue,
 			'current_member' => $user_info['id'],
 		)

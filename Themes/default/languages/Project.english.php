@@ -140,8 +140,9 @@ $txt['issue_no_issues'] = 'No issues';
 $txt['report_issue'] = 'Report Issue';
 $txt['preview_report_issue'] = 'Preview issue';
 $txt['issue_no_title'] = 'No Title';
-$txt['error_while_submitting_issue'] = ' The following error or errors occurred while posting this issue:';
+$txt['error_while_submitting_issue'] = 'The following error or errors occurred while posting this issue:';
 $txt['private_issue'] = 'Private Issue';
+$txt['subscribe_to_issue'] = 'Subscrube to changes of this issue';
 
 // View Issue
 $txt['issue_edit'] = 'Edit';

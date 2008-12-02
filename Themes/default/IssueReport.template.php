@@ -122,12 +122,20 @@ function template_report_issue()
 						', template_control_richedit($context['post_box_name'], 'message'), '
 					</dd>';
 
+	if (!empty($context['can_subscribe']))
+		echo '
+					<dd>
+						<input id="issue_subscribe" name="issue_subscribe" value="1" type="checkbox" />
+						<label for="issue_subscribe">', $txt['subscribe_to_issue'], '</label>
+					</dd>';
 
 	echo '
 					<dd class="full center">
 						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
 						', template_control_richedit($context['post_box_name'], 'buttons'), '
-					</dd>
+					</dd>';
+
+	echo '
 					<dd class="clear"></dd>
 				</dl>
 			</div>
