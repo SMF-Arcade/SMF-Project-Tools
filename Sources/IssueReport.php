@@ -60,6 +60,8 @@ function ReportIssue()
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
 
+	$context['notify'] = isset($_POST['issue_subscribe']);
+
 	$form_title = '';
 	$form_details = '';
 
@@ -248,7 +250,7 @@ function ReportIssue2()
 	// Send notifications
 	sendProjectNotification($issueOptions, 'new_issue', $user_info['id']);
 
-	if (!empty($_POST['issue_subscribe']))
+	if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'])
 	{
 		$smcFunc['db_insert']('',
 			'{db_prefix}log_notify_projects',

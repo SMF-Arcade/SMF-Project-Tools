@@ -125,7 +125,7 @@ function template_report_issue()
 	if (!empty($context['can_subscribe']))
 		echo '
 					<dd>
-						<input id="issue_subscribe" name="issue_subscribe" value="1" type="checkbox" />
+						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : ''), ' class="check" />
 						<label for="issue_subscribe">', $txt['subscribe_to_issue'], '</label>
 					</dd>';
 
@@ -198,7 +198,16 @@ function template_issue_reply()
 					</dd>
 					<dd>
 						', template_control_richedit($context['post_box_name'], 'message'), '
-					</dd>
+					</dd>';
+
+	if (!empty($context['can_subscribe']))
+		echo '
+					<dd>
+						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : ''), ' class="check" />
+						<label for="issue_subscribe">', $txt['subscribe_to_issue'], '</label>
+					</dd>';
+
+	echo '
 					<dd class="full center">
 						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
 						', template_control_richedit($context['post_box_name'], 'buttons'), '

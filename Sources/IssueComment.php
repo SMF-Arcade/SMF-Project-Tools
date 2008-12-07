@@ -31,6 +31,7 @@ function IssueReply()
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
+	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
@@ -58,6 +59,7 @@ function IssueReply()
 	}
 
 	$context['destination'] = 'reply2';
+	$context['notify'] = isset($_POST['issue_subscribe']);
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -211,6 +213,7 @@ function IssueReply2()
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
+	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach');
@@ -352,6 +355,26 @@ function IssueReply2()
 		modifyComment($_REQUEST['com'], $issue, $commentOptions, $posterOptions);
 
 		$id_comment = $_REQUEST['com'];
+	}
+
+	if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'])
+	{
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_notify_projects',
+			array(
+				'id_project' => 'int',
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'sent' => 'int',
+			),
+			array(
+				0,
+				$issue,
+				$user_info['id'],
+				0,
+			),
+			array('id_project', 'id_issue', 'id_member')
+		);
 	}
 
 	redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_comment)) . '#com' . $id_comment);
