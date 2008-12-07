@@ -31,6 +31,8 @@ $txt['project_description_desc'] = 'Displayed on board index';
 $txt['project_description_long'] = 'Description';
 $txt['project_description_long_desc'] = 'Description displayed on Project Page';
 
+$txt['project_profile'] = 'Permissions Profile';
+
 $txt['project_theme'] = 'Project Theme';
 $txt['project_theme_default'] = '(overall forum default)';
 $txt['project_theme_override'] = 'Override member\'s theme';

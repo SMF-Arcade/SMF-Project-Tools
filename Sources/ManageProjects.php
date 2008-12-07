@@ -168,6 +168,8 @@ function EditProject()
 	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProjectAdmin($_REQUEST['project']))
 		$_REQUEST['sa'] = 'new';
 
+	$context['profiles'] = list_getProfiles();
+
 	if ($_REQUEST['sa'] == 'new')
 	{
 		$curProject = array(
@@ -180,6 +182,7 @@ function EditProject()
 			'name' => '',
 			'description' => '',
 			'long_description' => '',
+			'profile' => 1,
 			'trackers' => array_keys($context['issue_types']),
 			'developers' => array(),
 			'theme' => 0,
@@ -199,6 +202,7 @@ function EditProject()
 			'name' => htmlspecialchars($project['name']),
 			'description' => htmlspecialchars($project['description']),
 			'long_description' => htmlspecialchars($project['long_description']),
+			'profile' => $project['profile'],
 			'trackers' => array_keys($project['trackers']),
 			'groups' => $project['groups'],
 			'developers' => $project['developers'],
@@ -261,7 +265,7 @@ function EditProject()
 			'name' => $row['name'],
 		);
 	$smcFunc['db_free_result']($request);
-	
+
 	// Get all the themes...
 	$request = $smcFunc['db_query']('', '
 		SELECT id_theme AS id, value AS name
@@ -328,6 +332,8 @@ function EditProject2()
 
 		$projectOptions['theme'] = (int) $_POST['theme'];
 		$projectOptions['override_theme'] = !empty($_POST['override_theme']);
+
+		$projectOptions['profile'] = (int) $_POST['project_profile'];
 
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))

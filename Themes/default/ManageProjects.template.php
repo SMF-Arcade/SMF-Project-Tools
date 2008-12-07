@@ -46,7 +46,19 @@ function template_edit_project()
 				<textarea name="long_desc" rows="3" cols="35">', $context['project']['long_description'], '</textarea>
 			</td>
 		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['project_profile'], ':</b><br />
+			</td>
+			<td valign="top" align="left">
+				<select id="profile_profile" name="profile_profile">';
 
+	foreach ($context['profiles'] as $profile)
+		echo '
+					<option value="', $profile['id'], '"', $profile['id'] == $context['project']['profile'] ? ' selected="selected"' : '', '>', $profile['name'], '</option>';
+
+	echo '
+				</select>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_theme'], ':</b><br />

@@ -150,6 +150,12 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['override_theme'] = $projectOptions['override_theme'] ? 1 : 0;
 	}
 
+	if (isset($projectOptions['profile']))
+	{
+		$projectUpdates[] = 'id_profile = {int:profile}';
+		$projectOptions['profile'] = $projectOptions['profile'];
+	}
+
 	if (isset($projectOptions['category']))
 	{
 		$projectUpdates[] = 'id_category = {int:category}';
@@ -334,10 +340,9 @@ function loadProjectAdmin($id_project)
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
 			p.id_category, p.cat_position, p.' . implode(', p.', $context['type_columns']) . ',
-			p.project_theme, p.override_theme
+			p.project_theme, p.override_theme, p.id_profile
 		FROM {db_prefix}projects AS p
-		WHERE {query_see_project}
-			AND p.id_project = {int:project}
+		WHERE p.id_project = {int:project}
 		LIMIT 1',
 		array(
 			'project' => $id_project,
@@ -360,6 +365,7 @@ function loadProjectAdmin($id_project)
 		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
 		'developers' => array(),
+		'profile' => $row['id_profile'],
 		'theme' => $row['project_theme'],
 		'override_theme' => !empty($row['override_theme']),
 		'id_category' => $row['id_category'],
