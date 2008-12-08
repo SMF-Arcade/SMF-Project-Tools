@@ -230,7 +230,7 @@ function template_issue_reply()
 					<tr>
 						<td width="30%">', $txt['issue_title'], '</td>
 						<td>
-							<input name="title" value="', $context['current_issue']['title'], '" />
+							<input name="title" value="', $context['current_issue']['name'], '" />
 						</td>
 					</tr>';
 
