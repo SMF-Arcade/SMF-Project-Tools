@@ -752,7 +752,20 @@ function IssueDelete()
 		'name' => htmlspecialchars($user_info['name']),
 		'email' => htmlspecialchars($user_info['email']),
 	);
+
+	// Send Notifications
+	sendIssueNotification(array('id' => $context['current_issue']['id']), array(), array(), 'issue_delete', $user_info['id']);
+
 	deleteIssue($context['current_issue']['id'], $posterOptions);
+
+	// Remove notifications of this Issue
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_notify_projects
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $context['current_issue']['id'],
+		)
+	);
 
 	redirectexit(project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')));
 }

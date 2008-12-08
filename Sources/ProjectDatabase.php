@@ -612,6 +612,7 @@ $tables = array(
 			),
 		)
 	),
+	// Log table for notify requests
 	'log_notify_projects' => array(
 		'name' => 'log_notify_projects',
 		'columns' => array(

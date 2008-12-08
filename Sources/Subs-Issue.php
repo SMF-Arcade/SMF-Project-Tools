@@ -564,41 +564,9 @@ function deleteIssue($id_issue, $posterOptions)
 		)
 	);
 
-	if (!empty($event_data))
-	{
-		$smcFunc['db_insert']('insert',
-			'{db_prefix}project_timeline',
-			array(
-				'id_project' => 'int',
-				'id_issue' => 'int',
-				'id_version' => 'int',
-				'id_member' => 'int',
-				'poster_name' => 'string',
-				'poster_email' => 'string',
-				'poster_ip' => 'string-60',
-				'event' => 'string',
-				'event_time' => 'int',
-				'event_data' => 'string',
-			),
-			array(
-				$row['id_project'],
-				$id_issue,
-				$row['id_version'],
-				$posterOptions['id'],
-				$posterOptions['name'],
-				$posterOptions['email'],
-				$posterOptions['ip'],
-				'delete_issue',
-				time(),
-				serialize($event_data)
-			),
-			array()
-		);
+	$id_event = createTimelineEvent($id_issue, $row['id_project'], 'delete_issue', $event_data, $posterOptions, array('time' => time()));
 
-		return $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
-	}
-
-	return true;
+	return $id_event;
 }
 
 function createComment($id_project, $id_issue, $commentOptions, $posterOptions, $event_data = array())

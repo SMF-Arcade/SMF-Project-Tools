@@ -39,6 +39,20 @@ Unsubscribe to new issues from this project by using this link:
 {REGARDS}'
 );
 
+$txt['emails']['notification_project_delete_issue'] = array(
+		/*
+			@additional_params: notification_project_delete_issue
+			@description:
+		*/
+		'subject' => 'Deleted Issue: {ISSUENAME}',
+		'body' => 'Issue \'{ISSUENAME}\' has been deleteed from a project you are watching.
+
+Unsubscribe to new issues from this project by using this link:
+{UNSUBSCRIBELINK}
+
+{REGARDS}'
+);
+
 $txt['emails']['notification_project_new_comment'] = array(
 		/*
 			@additional_params: notification_project_new_comment
@@ -50,7 +64,7 @@ $txt['emails']['notification_project_new_comment'] = array(
 You can see comment at
 {COMMENTLINK}
 
-Unsubscribe to new changes from this issue by using this link:
+Unsubscribe to changes from this issue by using this link:
 {UNSUBSCRIBELINK}
 
 {REGARDS}'
@@ -69,7 +83,7 @@ You can see comment at
 
 {BODY}
 
-Unsubscribe to new changes from this issue by using this link:
+Unsubscribe to changes from this issue by using this link:
 {UNSUBSCRIBELINK}
 
 {REGARDS}'
@@ -88,7 +102,7 @@ You can see issue at
 
 {UPDATES}
 
-Unsubscribe to new changes from this issue by using this link:
+Unsubscribe to changes from this issue by using this link:
 {UNSUBSCRIBELINK}
 
 {REGARDS}'

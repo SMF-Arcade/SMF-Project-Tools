@@ -10,8 +10,7 @@ There maybe bugs that may cause data loss.
 You should report all bugs to our Issue Tracker, feature requests are also welcome.
 
 [color=blue][b][size=12pt]Introduction[/size][/b][/color]
-SMF Project Tools is modification for SMF, which can be used to track issues of projects,
-for example bugs and feature request.
+SMF Project Tools is modification for SMF, which can be used to track issues of projects, for example bugs and feature request.
 It's primarily for software but it can be also used for other purposes.
 
 [color=blue][b][size=12pt]Features[/size][/b][/color]
