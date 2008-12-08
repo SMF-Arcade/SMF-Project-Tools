@@ -113,7 +113,7 @@ function IssueList()
 	if (isset($_REQUEST['reporter']))
 	{
 		$context['issue_search']['reporter'] = $_REQUEST['reporter'];
-		$baseurl['reporter'] .= $_REQUEST['reporter'];
+		$baseurl['reporter'] = $_REQUEST['reporter'];
 	}
 
 	if (isset($_REQUEST['assignee']))
