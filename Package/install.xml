@@ -267,7 +267,131 @@ else
 				),
 ]]></add>
 		</operation>
+	</file>
 
+	<file name="$sourcedir/Profile-Modify.php">
+		<operation>
+			<search position="after"><![CDATA[	// What options are set?]]></search>
+			<add><![CDATA[
+	// Now do the project notifications.
+	$listOptions = array(
+		'id' => 'project_notification_list',
+		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_projects'],
+		'width' => '100%',
+		'no_items_label' => $txt['notifications_projects_none'],
+		'no_items_align' => 'left',
+		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
+		'default_sort_col' => 'project_name',
+		'get_items' => array(
+			'function' => 'list_getProjectNotifications',
+			'params' => array(
+				$memID,
+			),
+		),
+		'columns' => array(
+			'project_name' => array(
+				'header' => array(
+					'value' => $txt['project'],
+				),
+				'data' => array(
+					'function' => create_function('$project', '
+						global $settings, $txt;
+
+						$link = $project[\'link\'];
+
+						if ($board[\'new\'])
+							$link .= \' <a href="\' . $project[\'href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
+
+						return $link;
+					'),
+				),
+				'sort' => array(
+					'default' => 'p.name',
+					'reverse' => 'p.name DESC',
+				),
+			),
+			'delete' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'style' => 'width: 4%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="notify_projects[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=profile;save',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'u' => $memID,
+				'area' => $context['menu_item_selected'],
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '<input type="submit" name="edit_notify_projects" value="' . $txt['notifications_update'] . '" />',
+				'class' => 'windowbg',
+				'align' => 'right',
+			),
+		),
+	);
+
+	// Create the notification list.
+	createList($listOptions);
+
+]]></add>
+		</operation>
+
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
+{
+	global $smcFunc, $txt, $scripturl, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			p.id_project, p.name, p.id_comment_mod
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+		FROM {db_prefix}log_notify_projects AS lnp
+			INNER JOIN {db_prefix}projects AS p ON (p.id_project = lnp.id_project)' . ($user_info['is_guest'] ? '' : '
+			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:current_member}
+				AND log.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})
+		WHERE lnp.id_member = {int:selected_member}
+			AND {query_see_project}
+		ORDER BY ' . $sort,
+		array(
+			'current_member' => $user_info['id'],
+			'selected_member' => $memID,
+		)
+	);
+
+	$notification_projects = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$notification_projects[] = array(
+			'id' => $row['id_project'],
+			'name' => $row['name'],
+			'href' => $scripturl . '?project=' . $row['id_project'],
+			'link' => '<a href="' . $scripturl . '?project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+			'new' => $row['new_from'] < $row['id_comment_mod']
+		);
+	$smcFunc['db_free_result']($request);
+
+	return $notification_projects;
+}]]></add>
+		</operation>
 	</file>
 
 	<file name="$sourcedir/Subs.php">
@@ -591,7 +715,7 @@ function template_boardindex_project($category, $position)
 	<file name="$languagedir/Modifications.english.php">
 		<operation>
 			<search position="end" />
-			<add><![CDATA[// SMF Project tools
+			<add><![CDATA[// SMF Project tools start
 $txt['project_tools'] = 'Project Tools';
 $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
@@ -607,6 +731,10 @@ $txt['project_profile_main'] = 'Statistics';
 $txt['project_profile_reported'] = 'Reported Issues';
 $txt['project_profile_assigned'] = 'Assigned Issues';
 
+// Project - Notifications
+$txt['notifications_projects'] = 'Projects';
+$txt['notifications_projects_none'] = 'No projects added for notifications';
+
 // SMF Project tools admin
 $txt['project_general'] = 'General';
 $txt['project_general_main'] = 'Information';
@@ -615,22 +743,13 @@ $txt['project_general_settings'] = 'Settings';
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
-
 $txt['manage_versions'] = 'Versions';
-$txt['modify_versions'] = 'Modify Versions';
-
 $txt['manage_project_category'] = 'Categories';
-$txt['modify_project_category'] = 'Modify Categories';
 
 $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';
 $txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
-
-$txt['projectEnabled'] = 'Enable Project Tools';
-$txt['projectAttachments'] = 'Enable Attachments';
-$txt['issuesPerPage'] = 'Issues Per Page';
-$txt['commentsPerPage'] = 'Comments Per Page';
 
 // Permission Names
 $txt['permissiongroup_project'] = 'Project Tools';
@@ -654,7 +773,8 @@ $txt['cannot_project_report'] = 'You are not allowed to report issues of this pr
 $txt['cannot_project_admin'] = 'You are not allowed to administrate.';
 $txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
 $txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
-$txt['cannot_project_edit_comment_own'] = 'You are not allowed to edit comments.';]]></add>
+$txt['cannot_project_edit_comment_own'] = 'You are not allowed to edit comments.';
+// SMF Project tools end]]></add>
 		</operation>
 	</file>
 

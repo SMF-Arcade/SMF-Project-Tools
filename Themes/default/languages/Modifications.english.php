@@ -19,6 +19,10 @@ $txt['project_profile_main'] = 'Statistics';
 $txt['project_profile_reported'] = 'Reported Issues';
 $txt['project_profile_assigned'] = 'Assigned Issues';
 
+// Project - Notifications
+$txt['notifications_projects'] = 'Projects';
+$txt['notifications_projects_none'] = 'No projects added for notifications';
+
 // SMF Project tools admin
 $txt['project_general'] = 'General';
 $txt['project_general_main'] = 'Information';
@@ -34,11 +38,6 @@ $txt['manage_project_permissions'] = 'Permissions';
 $txt['modify_project_profiles'] = 'Modify Profiles';
 $txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
-
-$txt['projectEnabled'] = 'Enable Project Tools';
-$txt['projectAttachments'] = 'Enable Attachments';
-$txt['issuesPerPage'] = 'Issues Per Page';
-$txt['commentsPerPage'] = 'Comments Per Page';
 
 // Permission Names
 $txt['permissiongroup_project'] = 'Project Tools';

@@ -73,6 +73,8 @@ function ProjectsAdminSettings($return_config = false)
 			array('int', 'issuesPerPage'),
 			array('int', 'commentsPerPage'),
 		'',
+			array('permissions', 'project_access', 0, $txt['setting_project_access'], 'subtext' => $txt['setting_project_access_subtext']),
+			array('permissions', 'project_admin', 0, $txt['setting_project_admin']),
 	);
 
 	if ($return_config)

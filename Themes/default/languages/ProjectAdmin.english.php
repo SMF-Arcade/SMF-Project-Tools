@@ -16,6 +16,15 @@ $txt['project_latest_version'] = 'Latest version';
 $txt['project_settings'] = 'Settings';
 $txt['project_settings_title'] = 'Project Tools Settings';
 
+$txt['projectEnabled'] = 'Enable Project Tools';
+$txt['projectAttachments'] = 'Enable Attachments';
+$txt['issuesPerPage'] = 'Issues Per Page';
+$txt['commentsPerPage'] = 'Comments Per Page';
+
+$txt['setting_project_access'] = 'Groups allowed to access Project Tools';
+$txt['setting_project_access_subtext'] = 'You need to set permission for individual projects to make users able to see them.';
+$txt['setting_project_admin'] = 'Groups allowed to administrate Project Tools';
+
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 
