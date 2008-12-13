@@ -51,7 +51,7 @@ function template_edit_project()
 				<b>', $txt['project_profile'], ':</b><br />
 			</td>
 			<td valign="top" align="left">
-				<select id="profile_profile" name="profile_profile">';
+				<select id="profile_profile" name="project_profile">';
 
 	foreach ($context['profiles'] as $profile)
 		echo '
@@ -64,7 +64,7 @@ function template_edit_project()
 				<b>', $txt['project_theme'], ':</b><br />
 			</td>
 			<td valign="top" align="left">
-				<select name="theme">
+				<select name="project_theme">
 					<option value="0">', $txt['project_theme_default'], '</option>';
 
 	foreach ($context['themes'] as $theme)
@@ -73,7 +73,7 @@ function template_edit_project()
 
 	echo '
 				</select><br />
-				<input type="checkbox" id="override_theme" name="override_theme" value="1" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
+				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', $context['project']['override_theme'] ? ' checked="checked"' : '', ' /> <label for="override_theme">', $txt['project_theme_override'], '</label>
 			</td>
 		</tr>
 

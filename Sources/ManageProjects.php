@@ -330,7 +330,7 @@ function EditProject2()
 		$projectOptions['category'] = (int) $_POST['category'];
 		$projectOptions['category_position'] = $_POST['category_position'];
 
-		$projectOptions['theme'] = (int) $_POST['theme'];
+		$projectOptions['project_theme'] = (int) $_POST['project_theme'];
 		$projectOptions['override_theme'] = !empty($_POST['override_theme']);
 
 		$projectOptions['profile'] = (int) $_POST['project_profile'];

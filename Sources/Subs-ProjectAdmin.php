@@ -140,10 +140,7 @@ function updateProject($id_project, $projectOptions)
 	}
 
 	if (isset($projectOptions['theme']))
-	{
 		$projectUpdates[] = 'project_theme = {int:theme}';
-		$projectOptions['theme'] = $projectOptions['theme'];
-	}
 	if (isset($projectOptions['override_theme']))
 	{
 		$projectUpdates[] = 'override_theme = {int:override_theme}';
@@ -151,21 +148,12 @@ function updateProject($id_project, $projectOptions)
 	}
 
 	if (isset($projectOptions['profile']))
-	{
 		$projectUpdates[] = 'id_profile = {int:profile}';
-		$projectOptions['profile'] = $projectOptions['profile'];
-	}
 
 	if (isset($projectOptions['category']))
-	{
 		$projectUpdates[] = 'id_category = {int:category}';
-		$projectOptions['category'] = $projectOptions['category'];
-	}
 	if (isset($projectOptions['category_position']))
-	{
 		$projectUpdates[] = 'cat_position = {string:category_position}';
-		$projectOptions['category_position'] = $projectOptions['category_position'];
-	}
 
 	if (!empty($projectUpdates))
 		$request = $smcFunc['db_query']('', '
