@@ -6,6 +6,7 @@ SMF Project Tools 0.2                                                          ?
 December 2008
 --------------------------------------------------------------------------------
  + Added permissions to admin settings page
+ ! Membergroups selection didn't save when no groups selected on version edit [Issue #163]
 
 November 2008
 --------------------------------------------------------------------------------
