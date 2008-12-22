@@ -639,6 +639,20 @@ function getComment()
 					else
 						$new_value = $context['versions'][$new_value]['name'];
 				}
+				elseif ($field == 'assign')
+				{
+					loadMemberData(array($old_value, $new_value));
+
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (loadMemberContext($old_value))
+						$old_value = $memberContext[$old_value]['link'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (loadMemberContext($new_value))
+						$new_value = $memberContext[$new_value]['link'];
+				}
 
 				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
 			}
