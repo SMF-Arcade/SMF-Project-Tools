@@ -37,7 +37,7 @@ if (!defined('SMF'))
 
 function ReportIssue()
 {
-	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project;
+	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project, $options;
 
 	projectIsAllowedTo('issue_report');
 	require_once($sourcedir . '/Subs-Post.php');
@@ -60,7 +60,7 @@ function ReportIssue()
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
 
-	$context['notify'] = isset($_POST['issue_subscribe']);
+	$context['notify'] = isset($_POST['issue_subscribe']) ? !empty($_POST['issue_subscribe']) : !empty($options['auto_notify']);
 
 	$form_title = '';
 	$form_details = '';

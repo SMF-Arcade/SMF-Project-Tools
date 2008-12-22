@@ -70,7 +70,6 @@ function Projects($standalone = false)
 		'url' => project_get_url(),
 	);
 
-	// Load Issue if needed
 	if (!isset($_REQUEST['sa']) && !empty($issue))
 		$_REQUEST['sa'] = 'viewIssue';
 	elseif (!isset($_REQUEST['sa']) && !empty($project))

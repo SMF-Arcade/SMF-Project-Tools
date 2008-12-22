@@ -106,6 +106,41 @@ function loadIssue()
 	// If this is private issue are you allowed to see it?
 	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $context['current_issue']['id_reporter'] && !projectAllowedTo('issue_view_private'))
 		$context['project_error'] = 'issue_not_found';
+
+	if (!$user_info['is_guest'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT sent
+			FROM {db_prefix}log_notify_projects
+			WHERE id_issue = {int:issue}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'issue' => $issue,
+				'current_member' => $user_info['id'],
+			)
+		);
+		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+		if ($context['is_subscribed'])
+		{
+			list ($sent) = $smcFunc['db_fetch_row']($request);
+			if (!empty($sent))
+			{
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}log_notify_projects
+					SET sent = {int:is_sent}
+					WHERE id_issue = {int:issue}
+						AND id_member = {int:current_member}',
+					array(
+						'issue' => $issue,
+						'current_member' => $user_info['id'],
+						'is_sent' => 0,
+					)
+				);
+			}
+		}
+		$smcFunc['db_free_result']($request);
+	}
 }
 
 function createIssue($issueOptions, &$posterOptions)

@@ -97,41 +97,6 @@ function IssueView()
 	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_send_pm'] = allowedTo('pm_send');
 
-	if (!$user_info['is_guest'])
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT sent
-			FROM {db_prefix}log_notify_projects
-			WHERE id_issue = {int:issue}
-				AND id_member = {int:current_member}
-			LIMIT 1',
-			array(
-				'issue' => $issue,
-				'current_member' => $user_info['id'],
-			)
-		);
-		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
-		if ($context['is_subscribed'])
-		{
-			list ($sent) = $smcFunc['db_fetch_row']($request);
-			if (!empty($sent))
-			{
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}log_notify_projects
-					SET sent = {int:is_sent}
-					WHERE id_issue = {int:issue}
-						AND id_member = {int:current_member}',
-					array(
-						'issue' => $issue,
-						'current_member' => $user_info['id'],
-						'is_sent' => 0,
-					)
-				);
-			}
-		}
-		$smcFunc['db_free_result']($request);
-	}
-
 	// Fix start to be a number
 	if (!is_numeric($_REQUEST['start']))
 	{

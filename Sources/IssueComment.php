@@ -22,7 +22,7 @@
 
 function IssueReply()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -59,7 +59,7 @@ function IssueReply()
 	}
 
 	$context['destination'] = 'reply2';
-	$context['notify'] = isset($_POST['issue_subscribe']);
+	$context['notify'] = isset($_POST['issue_subscribe']) ? !empty($_POST['issue_subscribe']) : ($context['is_subscribed'] || !empty($options['auto_notify']));
 
 	// Editor
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -357,7 +357,7 @@ function IssueReply2()
 		$id_comment = $_REQUEST['com'];
 	}
 
-	if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'])
+	if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'] && !$context['is_subscribed'])
 	{
 		$smcFunc['db_insert']('',
 			'{db_prefix}log_notify_projects',
@@ -374,6 +374,19 @@ function IssueReply2()
 				0,
 			),
 			array('id_project', 'id_issue', 'id_member')
+		);
+	}
+	// Unsubscribe
+	elseif (empty($_POST['issue_subscribe']) && $context['is_subscribed'])
+	{
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify_projects
+			WHERE id_issue = {int:issue}
+				AND id_member = {int:current_member}',
+			array(
+				'issue' => $issue,
+				'current_member' => $user_info['id'],
+			)
 		);
 	}
 
