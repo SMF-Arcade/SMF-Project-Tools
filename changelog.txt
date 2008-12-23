@@ -7,6 +7,9 @@ December 2008
 --------------------------------------------------------------------------------
  + Added permissions to admin settings page
  ! Membergroups selection didn't save when no groups selected on version edit [Issue #163]
+ ! Fixed database error when commenting with subscribe checked when already subscribed
+ + Unsubscribe if user unchecks subscribe when commenting
+ ! Show member names for assignees on notifications and timelines instead of ids
 
 November 2008
 --------------------------------------------------------------------------------
