@@ -572,6 +572,8 @@ function loadTimeline($project = 0)
 	$now = @getdate($nowtime);
 	$clockFromat = strpos($user_info['time_format'], '%I') === false ? '%H:%M' : '%I:%M %p';
 
+	$members = array();
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$data = unserialize($row['event_data']);
@@ -645,6 +647,18 @@ function loadTimeline($project = 0)
 					else
 						$new_value = $context['versions'][$new_value]['name'];*/
 				}
+				elseif ($field == 'assign')
+				{
+					if (!empty($old_value))
+						$members[$old_value][] = array($index, count($context['events'][$index]['events']), count($changes), 'old_value');
+					else
+						$old_value = $txt['issue_none'];
+
+					if (!empty($new_value))
+						$members[$new_value][] = array($index, count($context['events'][$index]['events']), count($changes), 'new_value');
+					else
+						$new_value = $txt['issue_none'];
+				}
 
 				$changes[] = sprintf($txt['change_timeline_' . $field], $old_value, $new_value);
 			}
@@ -663,6 +677,31 @@ function loadTimeline($project = 0)
 		);
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Get Names for members
+	if (!empty($members))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, real_name
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:members})',
+			array(
+				'members' => array_keys($members),
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			foreach ($members[$row['id_member']] as $log_index)
+			{
+				list ($index, $log_index, $change_index, $type) = $log_index;
+
+				$context['events'][$index]['events'][$log_index]['changes'][$change_index][$type] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+			}
+		}
+		$smcFunc['db_free_result']($request);
+		unset($members);
+	}
 }
 
 // Can I do that?
