@@ -808,6 +808,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
+			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
@@ -816,6 +817,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
@@ -862,6 +864,12 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 				'id' => $row['id_reporter'],
 				'name' => empty($row['reporter']) ? $txt['issue_guest'] : $row['reporter'],
 				'link' => empty($row['reporter']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter'] . '</a>',
+			),
+			'is_assigned' => !empty($row['id_assigned']),
+			'assigned' => array(
+				'id' => $row['id_assigned'],
+				'name' => $row['assigned_name'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_assigned'] . '">' . $row['assigned_name'] . '</a>',
 			),
 			'updater' => array(
 				'id' => $row['id_updater'],

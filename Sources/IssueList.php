@@ -217,6 +217,7 @@ function IssueList()
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
+			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_version_fixed, IFNULL(ver2.version_name, {string:empty}) AS version_fixed_name,
@@ -230,6 +231,7 @@ function IssueList()
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
+			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
@@ -296,6 +298,12 @@ function IssueList()
 				'id' => $row['id_reporter'],
 				'name' => $row['reporter_name'],
 				'link' => !empty($row['id_reporter']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter_name'] . '</a>' : $row['reporter_name'],
+			),
+			'is_assigned' => !empty($row['id_assigned']),
+			'assigned' => array(
+				'id' => $row['id_assigned'],
+				'name' => $row['assigned_name'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_assigned'] . '">' . $row['assigned_name'] . '</a>',
 			),
 			'updater' => array(
 				'id' => $row['id_updater'],

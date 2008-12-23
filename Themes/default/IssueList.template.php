@@ -113,7 +113,7 @@ function template_issue_list()
 						', $issue['replies'], '
 					</td>
 					<td class="windowbg status smalltext center issue_', $issue['status']['name'], '">
-						', $issue['status']['text'], '<br />
+						', $issue['status']['text'], $issue['is_assigned'] ? ' (' . $issue['assigned']['link'] . ')' : '', '
 					</td>
 					<td class="windowbg version smalltext">
 						', $issue['version']['link'], '
