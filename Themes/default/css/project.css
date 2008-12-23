@@ -36,7 +36,7 @@ table.projectsframe td.info p
 	padding: 0 0.4em 0.5em 0.4em;
 	margin: 0;
 }
-table.projectsframe td.info p.developers
+table.projectsframe td.info p.developers, table.boardsframe td.info p.developers
 {
 	font-style: italic;
 }
