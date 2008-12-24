@@ -107,7 +107,7 @@ function ProjectsMaintenance()
 		'repair' => 'ProjectsMaintenanceRepair',
 	);
 
-	$context['sub_template'] = 'project_maintenance';
+	$context['sub_template'] = 'project_admin_maintenance';
 
 	if (isset($_REQUEST['activity']) && isset($maintenaceActions[$_REQUEST['activity']]))
 	{
@@ -134,7 +134,7 @@ function ProjectsMaintenanceRepair()
 			$context['project_errors'][] = sprintf($txt['error_comment_not_linked'], $row['id_comment']);
 
 		if (!empty($context['project_errors']))
-			$context['sub_template'] = 'project_maintenance_repair_list';
+			$context['sub_template'] = 'project_admin_maintenance_repair_list';
 		else
 			$context['maintenance_message'] = $txt['repair_no_errors'];
 	}
