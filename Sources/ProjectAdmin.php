@@ -136,11 +136,66 @@ function ProjectsMaintenanceRepair()
 		if (!empty($context['project_errors']))
 			$context['sub_template'] = 'project_admin_maintenance_repair_list';
 		else
+		{
 			$context['maintenance_message'] = $txt['repair_no_errors'];
+			$context['maintenance_finished'] = true;
+		}
 	}
 	else
 	{
+		// Fix comments without id_event
+		$request = $smcFunc['db_query']('', '
+			SELECT id_comment
+			FROM {db_prefix}issue_comments
+			WHERE id_event = 0');
 
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$event_req = $smcFunc['db_query']('', '
+				SELECT id_event
+				FROM {db_prefix}project_timeline AS tl
+				WHERE tl.event = {string:new_comment}
+					AND INSTR(tl.event_data , {string:comment})',
+				array(
+					'new_comment' => 'new_comment',
+					'comment' => 's:7:"comment";i:' . $row['id_comment'] . ''
+				)
+			);
+
+			list ($id_event) = $smcFunc['db_fetch_row']($event_req);
+			$smcFunc['db_free_result']($event_req);
+
+			if (!$id_event)
+			{
+				$event_req = $smcFunc['db_query']('', '
+					SELECT id_event
+					FROM {db_prefix}issues AS i
+						LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_issue = i.id_issue)
+					WHERE i.id_comment_first = {int:comment}
+						AND tl.event = {string:new_comment}',
+					array(
+						'new_comment' => 'new_issue',
+						'comment' => $row['id_comment'],
+					)
+				);
+				list ($id_event) = $smcFunc['db_fetch_row']($event_req);
+				$smcFunc['db_free_result']($event_req);
+			}
+
+			if ($id_event)
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}issue_comments
+					SET id_event = {int:event}
+					WHERE id_comment = {int:comment}',
+					array(
+						'event' => $id_event,
+						'comment' => $row['id_comment'],
+					)
+				);
+		}
+		$smcFunc['db_free_result']($request);
+
+		$context['maintenance_finished'] = true;
 	}
 }
 

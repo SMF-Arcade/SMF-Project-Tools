@@ -79,12 +79,13 @@ function template_project_admin_maintenance()
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				</form>
 			</td>
-		</tr>';
+		</tr>
+	</table>';
 }
 
 function template_project_admin_maintenance_repair_list()
 {
-	global $context, $settings, $options, $txt, $modSettings, $project_version;
+	global $scripturl, $context, $settings, $options, $txt, $modSettings;
 
 	echo '
 	<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
@@ -96,7 +97,8 @@ function template_project_admin_maintenance_repair_list()
 					<li>', implode('</li>
 					<li>', $context['project_errors']), '</li>
 				</ul>
-				', $txt['fix_errors'], '<b><a href="' . $scripturl . '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;sesc=' . $sc . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=projectsadmin;sa=maintenance">' . $txt['no'] . '</a></b>
+				', $txt['fix_errors'], '
+				<b><a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance">', $txt['no'], '</a></b>
 			</td>
 		</tr>
 	</table>';
