@@ -2,7 +2,7 @@
 /**********************************************************************************
 * installDatabase.php                                                             *
 ***********************************************************************************
-* SMF Issue: Issue tracker for SMF                                                *
+* SMF Project Tools                                                               *
 * =============================================================================== *
 * Software Version:           SMF Project Tools 0.2                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *

@@ -56,6 +56,52 @@ function template_project_admin_main()
 	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/project/news.js?v=', urlencode($project_version), '" defer="defer"></script>';
 }
 
+function template_project_admin_maintenance()
+{
+	global $context, $settings, $options, $txt, $modSettings, $project_version;
+
+	if (!empty($context['maintenance_finished']))
+		echo '
+	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
+		', sprintf($txt['project_maintain_done'], $context['maintenance_action']), !empty($context['maintenance_message']) ? '<div class="smalltext">' . $context['maintenance_message'] . '</div>' : '', '
+	</div>';
+
+	echo '
+	<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
+		<tr class="titlebg">
+			<td>', $txt['project_maintenance_repair'], '</td>
+		</tr>
+		<tr class="windowbg">
+			<td>
+				<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
+					<p>', $txt['project_maintenance_repair_info'], '</p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				</form>
+			</td>
+		</tr>';
+}
+
+function template_project_admin_maintenance_repair_list()
+{
+	global $context, $settings, $options, $txt, $modSettings, $project_version;
+
+	echo '
+	<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
+		<tr class="titlebg">
+			<td>', $txt['errors_list'], '</td>
+		</tr><tr>
+			<td class="windowbg">
+				<ul>
+					<li>', implode('</li>
+					<li>', $context['project_errors']), '</li>
+				</ul>
+				', $txt['fix_errors'], '<b><a href="' . $scripturl . '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;sesc=' . $sc . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=projectsadmin;sa=maintenance">' . $txt['no'] . '</a></b>
+			</td>
+		</tr>
+	</table>';
+}
+
 function template_project_admin_below()
 {
 	global $txt, $context, $project_version;

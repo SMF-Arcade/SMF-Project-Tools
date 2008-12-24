@@ -45,6 +45,7 @@ function ProjectsAdmin()
 	$subActions = array(
 		'main' => array('ProjectsAdminMain'),
 		'settings' => array('ProjectsAdminSettings'),
+		'maintenance' => array('ProjectsMaintenance'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -96,6 +97,51 @@ function ProjectsAdminSettings($return_config = false)
 	$context['sub_template'] = 'show_settings';
 
 	prepareDBSettingContext($config_vars);
+}
+
+function ProjectsMaintenance()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+
+	$maintenaceActions = array(
+		'repair' => 'ProjectsMaintenanceRepair',
+	);
+
+	$context['sub_template'] = 'project_maintenance';
+
+	if (isset($_REQUEST['activity']) && isset($maintenaceActions[$_REQUEST['activity']]))
+	{
+		$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['activity']];
+		$maintenaceActions[$_REQUEST['activity']]();
+	}
+}
+
+function ProjectsMaintenanceRepair()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+
+	if (!isset($_REQUEST['fix']))
+	{
+		$context['project_errors'] = array();
+
+		// Comments not linked to events
+		$request = $smcFunc['db_query']('', '
+			SELECT id_comment
+			FROM {db_prefix}issue_comments
+			WHERE id_event = 0');
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_errors'][] = sprintf($txt['error_comment_not_linked'], $row['id_comment']);
+
+		if (!empty($context['project_errors']))
+			$context['sub_template'] = 'project_maintenance_repair_list';
+		else
+			$context['maintenance_message'] = $txt['repair_no_errors'];
+	}
+	else
+	{
+
+	}
 }
 
 ?>

@@ -27,6 +27,7 @@ $txt['notifications_projects_none'] = 'No projects added for notifications';
 $txt['project_general'] = 'General';
 $txt['project_general_main'] = 'Information';
 $txt['project_general_settings'] = 'Settings';
+$txt['project_general_maintenance'] = 'Maintenance';
 
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';

@@ -25,6 +25,17 @@ $txt['setting_project_access'] = 'Groups allowed to access Project Tools';
 $txt['setting_project_access_subtext'] = 'You need to set permission for individual projects to make users able to see them.';
 $txt['setting_project_admin'] = 'Groups allowed to administrate Project Tools';
 
+// Maintenance
+$txt['project_maintain_done'] = 'The maintenance task \'%1$s\' was executed successfully.';
+$txt['project_maintenance_repair'] = 'Repair';
+$txt['project_maintenance_repair_info'] = 'Find and repair errors';
+
+// Repair maintenance action
+$txt['repair_no_errors'] = 'Congratulations, no errors found!  Thanks for checking.';
+$txt['errors_list'] = 'Errors found';
+$txt['error_comment_not_linked'] = 'Comment #%1$d not linked with event';
+$txt['fix_errors'] = 'Do you want to try to fix errors?';
+
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 

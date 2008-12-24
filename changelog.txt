@@ -10,7 +10,8 @@ December 2008
  ! Fixed database error when commenting with subscribe checked when already subscribed
  + Unsubscribe if user unchecks subscribe when commenting
  ! Show member names for assignees on notifications and timelines instead of ids
-
+ + Maintenance section
+ 
 November 2008
 --------------------------------------------------------------------------------
  + Project Tools Profile
