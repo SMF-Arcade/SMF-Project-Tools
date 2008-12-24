@@ -328,8 +328,11 @@ function EditVersion2()
 		if ($versionOptions['status'] < 0 || $versionOptions['status'] > 6)
 			$versionOptions['status'] = 0;
 
-		$versionOptions['member_groups'] = $_POST['groups'];
-
+		$versionOptions['member_groups'] = array();
+		if (!empty($_POST['groups']))
+			foreach ($_POST['groups'] as $group)
+				$versionOptions['member_groups'][] = $group;
+	
 		if (isset($_POST['add']))
 			createVersion($_POST['project'], $versionOptions);
 		else
