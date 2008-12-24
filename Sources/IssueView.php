@@ -395,6 +395,13 @@ function prepareComments()
 	loadMemberData($posters);
 	$context['num_comments'] = count($comments) - 1;
 
+	if (empty($comments))
+	{
+		$context['comment_request'] = false;
+
+		return;
+	}
+
 	// Load Comments
 	$context['comment_request'] = $smcFunc['db_query']('', '
 		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
