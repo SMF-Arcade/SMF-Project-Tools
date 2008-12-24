@@ -34,8 +34,10 @@ function loadIssue()
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . ',
+			com.id_comment_mod AS id_comment_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time
 		FROM {db_prefix}issues AS i' . ($user_info['is_guest'] ? '' : '
+			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
@@ -62,10 +64,34 @@ function loadIssue()
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+	// Load reporter
+	loadMemberData(array($row['id_reporter']));
+	loadMemberContext($row['id_reporter']);
+
+	$memberContext[$row['id_reporter']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
+
+	$type = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id_member'] ? 'own' : 'any';
+
+	// Prepare issue array
 	$context['current_issue'] = array(
 		'id' => $row['id_issue'],
 		'name' => $row['subject'],
 		'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
+		'details' => array(
+			'id' => $row['id_comment'],
+			'time' => timeformat($row['post_time']),
+			'body' => parse_bbc($row['body']),
+			'ip' => $row['poster_ip'],
+			'modified' => array(
+				'time' => timeformat($row['edit_time']),
+				'timestamp' => forum_time(true, $row['edit_time']),
+				'name' => $row['edit_name'],
+			),
+			'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
+			'can_remove' => projectAllowedTo('delete_comment_' . $type),
+			'can_edit' => projectAllowedTo('edit_comment_' . $type),
+			'first_new' => $row['id_comment_mod'] > $row['new_from'],
+		),
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
@@ -80,6 +106,7 @@ function loadIssue()
 			'name' => $row['vnamefix'],
 		),
 		'id_reporter' => $row['id_reporter'],
+		'reporter' => &$memberContext[$row['id_reporter']],
 		'assignee' => array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],

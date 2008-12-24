@@ -19,7 +19,7 @@ function template_issue_view_above()
 		),
 	);
 
-	$issueDetails = getComment();
+	$issueDetails = &$context['current_issue']['details'];
 	$alternate = false;
 
 	if ($issueDetails['first_new'])
@@ -107,87 +107,87 @@ function template_issue_view_above()
 		<div class="bordercolor">
 			<div class="clearfix topborder windowbg largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
 				<div class="floatleft poster">
-					<h4>', $issueDetails['member']['link'], '</h4>
+					<h4>', $context['current_issue']['reporter']['link'], '</h4>
 					<ul class="smalltext">';
 
 	// Show the member's custom title, if they have one.
-	if (isset($issueDetails['member']['title']) && $issueDetails['member']['title'] != '')
+	if (isset($context['current_issue']['reporter']['title']) && $context['current_issue']['reporter']['title'] != '')
 		echo '
-						<li>', $issueDetails['member']['title'], '</li>';
+						<li>', $context['current_issue']['reporter']['title'], '</li>';
 
 	// Show the member's primary group (like 'Administrator') if they have one.
-	if (isset($issueDetails['member']['group']) && $issueDetails['member']['group'] != '')
+	if (isset($context['current_issue']['reporter']['group']) && $context['current_issue']['reporter']['group'] != '')
 		echo '
-						<li>', $issueDetails['member']['group'], '</li>';
+						<li>', $context['current_issue']['reporter']['group'], '</li>';
 
 	// Don't show these things for guests.
-	if (!$issueDetails['member']['is_guest'])
+	if (!$context['current_issue']['reporter']['is_guest'])
 	{
 		// Show the post group if and only if they have no other group or the option is on, and they are in a post group.
-		if ((empty($settings['hide_post_group']) || $issueDetails['member']['group'] == '') && $issueDetails['member']['post_group'] != '')
+		if ((empty($settings['hide_post_group']) || $context['current_issue']['reporter']['group'] == '') && $context['current_issue']['reporter']['post_group'] != '')
 			echo '
-						<li>', $issueDetails['member']['post_group'], '</li>';
+						<li>', $context['current_issue']['reporter']['post_group'], '</li>';
 		echo '
-						<li>', $issueDetails['member']['group_stars'], '</li>';
+						<li>', $context['current_issue']['reporter']['group_stars'], '</li>';
 
 		// Is karma display enabled?  Total or +/-?
 		if ($modSettings['karmaMode'] == '1')
 			echo '
-						<li class="margintop">', $modSettings['karmaLabel'], ' ', $issueDetails['member']['karma']['good'] - $issueDetails['member']['karma']['bad'], '</li>';
+						<li class="margintop">', $modSettings['karmaLabel'], ' ', $context['current_issue']['reporter']['karma']['good'] - $context['current_issue']['reporter']['karma']['bad'], '</li>';
 		elseif ($modSettings['karmaMode'] == '2')
 			echo '
-						<li class="margintop">', $modSettings['karmaLabel'], ' +', $issueDetails['member']['karma']['good'], '/-', $issueDetails['member']['karma']['bad'], '</li>';
+						<li class="margintop">', $modSettings['karmaLabel'], ' +', $context['current_issue']['reporter']['karma']['good'], '/-', $context['current_issue']['reporter']['karma']['bad'], '</li>';
 
 		// Is this user allowed to modify this member's karma?
-		if ($issueDetails['member']['karma']['allow'])
+		if ($context['current_issue']['reporter']['karma']['allow'])
 			echo '
 						<li>
-								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $issueDetails['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $issueDetails['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
 						</li>';
 
 		// Show online and offline buttons?
 		if (!empty($modSettings['onlineEnable']))
 			echo '
-						<li>', $context['can_send_pm'] ? '<a href="' . $issueDetails['member']['online']['href'] . '" title="' . $issueDetails['member']['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $issueDetails['member']['online']['image_href'] . '" alt="' . $issueDetails['member']['online']['text'] . '" border="0" style="margin-top: 2px;" />' : $issueDetails['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $issueDetails['member']['online']['text'] . '</span>' : '', '</li>';
+						<li>', $context['can_send_pm'] ? '<a href="' . $context['current_issue']['reporter']['online']['href'] . '" title="' . $context['current_issue']['reporter']['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $context['current_issue']['reporter']['online']['image_href'] . '" alt="' . $context['current_issue']['reporter']['online']['text'] . '" border="0" style="margin-top: 2px;" />' : $context['current_issue']['reporter']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['current_issue']['reporter']['online']['text'] . '</span>' : '', '</li>';
 
 		// Show the member's gender icon?
-		if (!empty($settings['show_gender']) && $issueDetails['member']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
+		if (!empty($settings['show_gender']) && $context['current_issue']['reporter']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
 			echo '
-						<li>', $txt['gender'], ': ', $issueDetails['member']['gender']['image'], '</li>';
+						<li>', $txt['gender'], ': ', $context['current_issue']['reporter']['gender']['image'], '</li>';
 
 		// Show how many posts they have made.
 		if (!isset($context['disabled_fields']['posts']))
 			echo '
-						<li>', $txt['member_postcount'], ': ', $issueDetails['member']['posts'], '</li>';
+						<li>', $txt['member_postcount'], ': ', $context['current_issue']['reporter']['posts'], '</li>';
 
 		// Any custom fields?
-		if (!empty($issueDetails['member']['custom_fields']))
+		if (!empty($context['current_issue']['reporter']['custom_fields']))
 		{
-			foreach ($issueDetails['member']['custom_fields'] as $custom)
+			foreach ($context['current_issue']['reporter']['custom_fields'] as $custom)
 				echo '
 						<li>', $custom['title'], ': ', $custom['value'], '</li>';
 		}
 
 		// Show avatars, images, etc.?
-		if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($issueDetails['member']['avatar']['image']))
+		if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($context['current_issue']['reporter']['avatar']['image']))
 			echo '
-						<li class="margintop" style="overflow: auto;">', $issueDetails['member']['avatar']['image'], '</li>';
+						<li class="margintop" style="overflow: auto;">', $context['current_issue']['reporter']['avatar']['image'], '</li>';
 
 		// Show their personal text?
-		if (!empty($settings['show_blurb']) && $issueDetails['member']['blurb'] != '')
+		if (!empty($settings['show_blurb']) && $context['current_issue']['reporter']['blurb'] != '')
 			echo '
-						<li>', $issueDetails['member']['blurb'], '</li>';
+						<li>', $context['current_issue']['reporter']['blurb'], '</li>';
 
 		// This shows the popular messaging icons.
-		if ($issueDetails['member']['has_messenger'] && $issueDetails['member']['can_view_profile'])
+		if ($context['current_issue']['reporter']['has_messenger'] && $context['current_issue']['reporter']['can_view_profile'])
 			echo '
 						<li>
 							<ul class="nolist">
-								', !isset($context['disabled_fields']['icq']) && !empty($issueDetails['member']['icq']['link']) ? '<li>' . $issueDetails['member']['icq']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['msn']) && !empty($issueDetails['member']['msn']['link']) ? '<li>' . $issueDetails['member']['msn']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['aim']) && !empty($issueDetails['member']['aim']['link']) ? '<li>' . $issueDetails['member']['aim']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['yim']) && !empty($issueDetails['member']['yim']['link']) ? '<li>' . $issueDetails['member']['yim']['link'] . '</li>' : '', '
+								', !isset($context['disabled_fields']['icq']) && !empty($context['current_issue']['reporter']['icq']['link']) ? '<li>' . $context['current_issue']['reporter']['icq']['link'] . '</li>' : '', '
+								', !isset($context['disabled_fields']['msn']) && !empty($context['current_issue']['reporter']['msn']['link']) ? '<li>' . $context['current_issue']['reporter']['msn']['link'] . '</li>' : '', '
+								', !isset($context['disabled_fields']['aim']) && !empty($context['current_issue']['reporter']['aim']['link']) ? '<li>' . $context['current_issue']['reporter']['aim']['link'] . '</li>' : '', '
+								', !isset($context['disabled_fields']['yim']) && !empty($context['current_issue']['reporter']['yim']['link']) ? '<li>' . $context['current_issue']['reporter']['yim']['link'] . '</li>' : '', '
 							</ul>
 						</li>';
 
@@ -198,24 +198,24 @@ function template_issue_view_above()
 						<li>
 							<ul class="nolist">';
 			// Don't show the profile button if you're not allowed to view the profile.
-			if ($issueDetails['member']['can_view_profile'])
+			if ($context['current_issue']['reporter']['can_view_profile'])
 				echo '
-								<li><a href="', $issueDetails['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
+								<li><a href="', $context['current_issue']['reporter']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
 
 			// Don't show an icon if they haven't specified a website.
-			if ($issueDetails['member']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
+			if ($context['current_issue']['reporter']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
 				echo '
-								<li><a href="', $issueDetails['member']['website']['url'], '" title="' . $issueDetails['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a></li>';
+								<li><a href="', $context['current_issue']['reporter']['website']['url'], '" title="' . $context['current_issue']['reporter']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a></li>';
 
 			// Don't show the email address if they want it hidden.
-			if (in_array($issueDetails['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
+			if (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 				echo '
 								<li><a href="', $scripturl, '?action=emailuser;sa=email;com=', $issueDetails['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
 
 			// Since we know this person isn't a guest, you *can* message them.
 			if ($context['can_send_pm'])
 				echo '
-								<li><a href="', $scripturl, '?action=pm;sa=send;u=', $issueDetails['member']['id'], '" title="', $issueDetails['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($issueDetails['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $issueDetails['member']['online']['label'] . '" border="0" />' : $issueDetails['member']['online']['label'], '</a></li>';
+								<li><a href="', $scripturl, '?action=pm;sa=send;u=', $context['current_issue']['reporter']['id'], '" title="', $context['current_issue']['reporter']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($context['current_issue']['reporter']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $context['current_issue']['reporter']['online']['label'] . '" border="0" />' : $context['current_issue']['reporter']['online']['label'], '</a></li>';
 
 			echo '
 							</ul>
@@ -223,12 +223,12 @@ function template_issue_view_above()
 		}
 
 		// Are we showing the warning status?
-		if (!isset($context['disabled_fields']['warning_status']) && $issueDetails['member']['warning_status'] && ($context['user']['can_mod'] || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $issueDetails['member']['id'] == $context['user']))))
+		if (!isset($context['disabled_fields']['warning_status']) && $context['current_issue']['reporter']['warning_status'] && ($context['user']['can_mod'] || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $context['current_issue']['reporter']['id'] == $context['user']))))
 			echo '
-						<li>', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;u=' . $issueDetails['member']['id'] . ';sa=issueWarning">' : '', '<img src="', $settings['images_url'], '/warning_', $issueDetails['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $issueDetails['member']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $issueDetails['member']['warning_status'], '">', $txt['warn_' . $issueDetails['member']['warning_status']], '</span></li>';
+						<li>', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;u=' . $context['current_issue']['reporter']['id'] . ';sa=issueWarning">' : '', '<img src="', $settings['images_url'], '/warning_', $context['current_issue']['reporter']['warning_status'], '.gif" alt="', $txt['user_warn_' . $context['current_issue']['reporter']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $context['current_issue']['reporter']['warning_status'], '">', $txt['warn_' . $context['current_issue']['reporter']['warning_status']], '</span></li>';
 	}
 	// Otherwise, show the guest's email.
-	elseif (in_array($issueDetails['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
+	elseif (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 		echo '
 						<li><a href="', $scripturl, '?action=emailuser;sa=email;com=', $issueDetails['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
 
