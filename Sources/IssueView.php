@@ -393,7 +393,7 @@ function prepareComments()
 	$posters = array_unique($posters);
 
 	loadMemberData($posters);
-	$context['num_comments'] = count($comments) - 1;
+	$context['num_comments'] = count($comments);
 
 	if (empty($comments))
 	{
