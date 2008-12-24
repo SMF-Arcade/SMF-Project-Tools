@@ -428,6 +428,9 @@ function getComment()
 	static $first_new = true;
 	static $first = true;
 
+	if (!$context['comment_request'])
+		return false;
+
 	if ($first_new)
 		$first_new = !$context['current_issue']['details']['first_new'];
 
