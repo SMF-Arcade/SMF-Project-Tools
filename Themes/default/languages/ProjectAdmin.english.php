@@ -29,6 +29,7 @@ $txt['setting_project_admin'] = 'Groups allowed to administrate Project Tools';
 $txt['project_maintain_done'] = 'The maintenance task \'%1$s\' was executed successfully.';
 $txt['project_maintenance_repair'] = 'Repair';
 $txt['project_maintenance_repair_info'] = 'Find and repair errors';
+$txt['project_maintain_run_now'] = 'Run';
 
 // Repair maintenance action
 $txt['repair_no_errors'] = 'Congratulations, no errors found!  Thanks for checking.';

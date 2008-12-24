@@ -58,7 +58,7 @@ function template_project_admin_main()
 
 function template_project_admin_maintenance()
 {
-	global $context, $settings, $options, $txt, $modSettings, $project_version;
+	global $scripturl, $context, $settings, $options, $txt, $modSettings, $project_version;
 
 	if (!empty($context['maintenance_finished']))
 		echo '
@@ -75,7 +75,7 @@ function template_project_admin_maintenance()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['project_maintenance_repair_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['project_maintain_run_now'], '" /></p>
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				</form>
 			</td>
