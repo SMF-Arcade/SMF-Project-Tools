@@ -105,7 +105,7 @@ function template_issue_view_above()
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>
 		<div class="bordercolor">
-			<div class="clearfix topborder windowbg largepadding"', !$issueDetails['first'] ? ' id="com' . $issueDetails['id'] . '"' : '', '>
+			<div class="clearfix topborder windowbg largepadding">
 				<div class="floatleft poster">
 					<h4>', $context['current_issue']['reporter']['link'], '</h4>
 					<ul class="smalltext">';
@@ -458,7 +458,7 @@ function template_issue_comments()
 	while ($comment = getComment())
 	{
 		echo '
-			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding"', !$comment['first'] ? ' id="com' . $comment['id'] . '"' : '', '>
+			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding" id="com' . $comment['id'] . '">
 				<div class="floatleft poster">
 					<h4>', $comment['member']['link'], '</h4>
 					<ul class="smalltext">';

@@ -22,7 +22,7 @@
 
 function loadIssue()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $issue, $project, $memberContext;
 
 	if (empty($project) || empty($issue))
 		return;
@@ -35,7 +35,8 @@ function loadIssue()
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . ',
-			com.id_comment_mod AS id_comment_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time
+			com.id_comment_mod AS id_comment_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
+			com.poster_ip
 		FROM {db_prefix}issues AS i' . ($user_info['is_guest'] ? '' : '
 			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
@@ -70,7 +71,7 @@ function loadIssue()
 
 	$memberContext[$row['id_reporter']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
 
-	$type = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id_member'] ? 'own' : 'any';
+	$type = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'] ? 'own' : 'any';
 
 	// Prepare issue array
 	$context['current_issue'] = array(
@@ -78,7 +79,7 @@ function loadIssue()
 		'name' => $row['subject'],
 		'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 		'details' => array(
-			'id' => $row['id_comment'],
+			'id' => $row['id_comment_first'],
 			'time' => timeformat($row['post_time']),
 			'body' => parse_bbc($row['body']),
 			'ip' => $row['poster_ip'],
@@ -105,7 +106,6 @@ function loadIssue()
 			'id' => $row['vidfix'],
 			'name' => $row['vnamefix'],
 		),
-		'id_reporter' => $row['id_reporter'],
 		'reporter' => &$memberContext[$row['id_reporter']],
 		'assignee' => array(
 			'id' => $row['id_member'],
@@ -131,7 +131,7 @@ function loadIssue()
 	if ($row['ver_member_groups'] != '*' && count(array_intersect($user_info['groups'], $context['current_issue']['version_groups'])) == 0 && !$user_info['is_admin'])
 		$context['project_error'] = 'issue_not_found';
 	// If this is private issue are you allowed to see it?
-	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $context['current_issue']['id_reporter'] && !projectAllowedTo('issue_view_private'))
+	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
 		$context['project_error'] = 'issue_not_found';
 
 	if (!$user_info['is_guest'])

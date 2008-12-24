@@ -25,7 +25,7 @@
 		<operation>
 			<search position="after"><![CDATA[	// Load the current theme.  (note that ?theme=1 will also work, may be used for guest theming.)]]></search>
 			<add><![CDATA[
-	// Project Tools
+	// Project Tools (edit 1)
 	global $project, $issue;
 	if (!empty($modSettings['projectEnabled']))
 	{
@@ -34,35 +34,34 @@
 
 		loadProjectTools();
 
-		// Load Project & Issue only on projects page
-		if (empty($_REQUEST['action']) || $_REQUEST['action'] == 'projects' || $_REQUEST['action'] == 'dlattach')
-		{
-			// Load Project (if needed)
-			loadProject();
-
-			// Load Issue (if needed)
-			loadIssue();
-
-			if (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
-			{
-				$_REQUEST['action'] = 'projects';
-				$_GET['action'] = 'projects';
-			}
-		}
+		// Load Project (if needed)
+		loadProject();
 	}
 	else
 	{
 		$user_info['query_see_project'] = '0=1';
 	}
-
 ]]></add>
 		</operation>
 
 		<operation>
-			<search position="before"><![CDATA[loadTheme();]]></search>
+			<search position="after"><![CDATA[	// If we are in a topic and don't have permission to approve it then duck out now.]]></search>
 			<add><![CDATA[
-	if (isset($context['project_error']))
-		fatal_lang_error($context['project_error'], false);]]></add>
+	// Project Tools (edit 2)
+	if (!empty($modSettings['projectEnabled']))
+	{
+		// Load Issue (if needed)
+		loadIssue();
+
+		if (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
+		{
+			$_REQUEST['action'] = 'projects';
+			$_GET['action'] = 'projects';
+		}
+
+		if (isset($context['project_error']))
+			fatal_lang_error($context['project_error'], false);
+	}]]></add>
 		</operation>
 
 		<operation>
