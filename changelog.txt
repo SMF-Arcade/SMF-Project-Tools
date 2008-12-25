@@ -11,7 +11,8 @@ December 2008
  + Unsubscribe if user unchecks subscribe when commenting
  ! Show member names for assignees on notifications and timelines instead of ids
  + Maintenance section
- 
+ + Ability to display both comments and events at same time [Issue #170]
+
 November 2008
 --------------------------------------------------------------------------------
  + Project Tools Profile
