@@ -51,13 +51,11 @@ function IssueView()
 	);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
 		$context['current_tags'][] = array(
 			'id' => urlencode($row['tag']),
 			'tag' => $row['tag'],
 			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 		);
-	}
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
@@ -173,27 +171,140 @@ function IssueView()
 
 	$context['current_view'] = 'comments';
 
-	if (isset($_REQUEST['view']) && $_REQUEST['view'] == 'log')
+	if (!isset($_REQUEST['view']))
+		$context['current_view'] = 'comments';
+	elseif ($_REQUEST['view'] == 'log')
 		$context['current_view'] = 'log';
-
-	if ($context['current_view'] == 'comments')
-		$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
-
-	$context['start'] = $_REQUEST['start'];
+	elseif ($_REQUEST['view'] == 'both')
+		$context['current_view'] = 'both';
 
 	if ($context['current_view'] == 'comments')
 		IssueViewComments();
+	elseif ($context['current_view'] == 'both')
+		IssueViewComments2();
 	elseif ($context['current_view'] == 'log')
 		IssueViewLog();
 	elseif ($context['current_view'] == 'attachments')
 		IssueViewAttachments();
 }
 
+function IssueViewComments2()
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
+
+	$context['start'] = $_REQUEST['start'];
+
+	$posters = array();
+	$events = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_event, id_member
+		FROM {db_prefix}project_timeline
+		WHERE id_issue = {int:issue}
+		LIMIT {int:start}, {int:limit}',
+		array(
+			'issue' => $issue,
+			'comment_first' => $context['current_issue']['comment_first'],
+			'start' => $_REQUEST['start'] + 1,
+			'limit' => $context['comments_per_page'],
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (!empty($row['id_member']))
+			$posters[$row['id_member']] = $row['id_member'];
+		$events[] = $row['id_event'];
+	}
+
+	$smcFunc['db_free_result']($request);
+	$posters = array_unique($posters);
+
+	if (!empty($posters))
+		loadMemberData($posters);
+
+	$context['num_events'] = count($events);
+
+	// Load events
+	$context['comment_request'] = $smcFunc['db_query']('', '
+		SELECT
+			tl.id_event, tl.id_member, tl.event, tl.event_time , tl.event_data, tl.poster_name, tl.poster_email, tl.poster_ip,
+			IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.post_time, c.edit_time, c.body, c.edit_name, c.edit_time, tl.event_data,
+			IFNULL(c.id_comment_mod, {int:new_from}) < {int:new_from} AS is_read
+		FROM {db_prefix}project_timeline AS tl
+			LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
+		WHERE tl.id_event IN ({array_int:events})',
+		array(
+			'events' => $events,
+			'new_from' => $context['current_issue']['new_from'],
+		)
+	);
+
+	$context['counter_start'] = $_REQUEST['start'];
+
+	// Template
+	$context['sub_template'] = 'issue_comments_new';
+	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+}
+
 function IssueViewComments()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
 
-	prepareComments();
+	$context['start'] = $_REQUEST['start'];
+
+	$posters = array();
+	$comments = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_comment, id_member
+		FROM {db_prefix}issue_comments
+		WHERE id_issue = {int:issue}
+			AND NOT (id_comment = {int:comment_first})
+		LIMIT {int:start}, {int:limit}',
+		array(
+			'issue' => $issue,
+			'comment_first' => $context['current_issue']['comment_first'],
+			'start' => $_REQUEST['start'],
+			'limit' => $context['comments_per_page'],
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (!empty($row['id_member']))
+			$posters[$row['id_member']] = $row['id_member'];
+		$comments[] = $row['id_comment'];
+	}
+	$smcFunc['db_free_result']($request);
+	$posters = array_unique($posters);
+
+	loadMemberData($posters);
+	$context['num_comments'] = count($comments);
+
+	if (empty($comments))
+		$context['comment_request'] = false;
+	// Load Comments
+	else
+		$context['comment_request'] = $smcFunc['db_query']('', '
+			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
+				c.poster_name, c.poster_email, c.poster_ip, c.id_member,
+				c.edit_name, c.edit_time, tl.event_data, id_comment_mod < {int:new_from} AS is_read
+			FROM {db_prefix}issue_comments AS c
+				LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_event = c.id_event)
+			WHERE id_comment IN({array_int:comments})
+			ORDER BY id_comment',
+			array(
+				'issue' => $issue,
+				'comments' => $comments,
+				'new_from' => $context['current_issue']['new_from']
+			)
+		);
+
+	$context['counter_start'] = $_REQUEST['start'];
+
+	// Page Index
+	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $context['current_issue']['replies'], $context['comments_per_page'], true);
 
 	// Mark this issue as read
 	if (!$user_info['is_guest'])
@@ -362,63 +473,143 @@ function IssueViewLog()
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 }
 
-function prepareComments()
+function getEvent()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
+	global $context, $smcFunc, $user_info, $txt, $modSettings, $memberContext;
+	static $counter = 0;
+	static $first_new = true;
+	static $first = true;
 
-	$posters = array();
-	$comments = array();
+	if (!$context['comment_request'])
+		return false;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT id_comment, id_member
-		FROM {db_prefix}issue_comments
-		WHERE id_issue = {int:issue}
-			AND NOT (id_comment = {int:comment_first})
-		LIMIT {int:start}, {int:limit}',
-		array(
-			'issue' => $issue,
-			'comment_first' => $context['current_issue']['comment_first'],
-			'start' => $_REQUEST['start'],
-			'limit' => $context['comments_per_page'],
-		)
-	);
+	if ($first_new)
+		$first_new = !$context['current_issue']['details']['first_new'];
 
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
+
+	if (!$row)
 	{
-		if (!empty($row['id_member']))
-			$posters[$row['id_member']] = $row['id_member'];
-		$comments[] = $row['id_comment'];
-	}
-	$smcFunc['db_free_result']($request);
-	$posters = array_unique($posters);
-
-	loadMemberData($posters);
-	$context['num_comments'] = count($comments);
-
-	if (empty($comments))
-	{
-		$context['comment_request'] = false;
-
-		return;
+		$smcFunc['db_free_result']($context['comment_request']);
+		return false;
 	}
 
-	// Load Comments
-	$context['comment_request'] = $smcFunc['db_query']('', '
-		SELECT c.id_comment, c.post_time, c.edit_time, c.body,
-			c.poster_name, c.poster_email, c.poster_ip, c.id_member,
-			c.edit_name, c.edit_time, tl.event_data, id_comment_mod < {int:new_from} AS is_read
-		FROM {db_prefix}issue_comments AS c
-			LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_event = c.id_event)
-		WHERE id_comment IN({array_int:comments})
-		ORDER BY id_comment',
-		array(
-			'issue' => $issue,
-			'comments' => $comments,
-			'new_from' => $context['current_issue']['new_from']
-		)
+	if (!loadMemberContext($row['id_member']))
+	{
+		$memberContext[$row['id_member']]['name'] = $row['poster_name'];
+		$memberContext[$row['id_member']]['id'] = 0;
+		$memberContext[$row['id_member']]['group'] = $txt['guest_title'];
+		$memberContext[$row['id_member']]['link'] = $row['poster_name'];
+		$memberContext[$row['id_member']]['email'] = $row['poster_email'];
+		$memberContext[$row['id_member']]['show_email'] = showEmailAddress(true, 0);
+		$memberContext[$row['id_member']]['is_guest'] = true;
+	}
+	else
+	{
+		$memberContext[$row['id_member']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
+	}
+
+	censorText($row['body']);
+
+	$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
+
+	$changes = array();
+
+	if (!empty($row['event_data']))
+	{
+		$data = unserialize($row['event_data']);
+
+		if (isset($data['changes']))
+		{
+			foreach ($data['changes'] as $key => $field)
+			{
+				list ($field, $old_value, $new_value) = $field;
+
+				// Change values to something meaningful
+				if ($field == 'status')
+				{
+					$old_value = $context['issue_status'][$old_value]['text'];
+					$new_value = $context['issue_status'][$new_value]['text'];
+				}
+				elseif ($field == 'type')
+				{
+					$old_value = $context['issue_types'][$old_value]['name'];
+					$new_value = $context['issue_types'][$new_value]['name'];
+				}
+				elseif ($field == 'view_status')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_view_status_public'];
+					else
+						$old_value = $txt['issue_view_status_private'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_view_status_public'];
+					else
+						$new_value = $txt['issue_view_status_private'];
+				}
+				elseif ($field == 'version' || $field == 'target_version')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$old_value]))
+						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
+					elseif (!empty($context['versions'][$old_value]))
+						$old_value = $context['versions'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (!empty($context['versions_id'][$new_value]))
+						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
+					elseif (!empty($context['versions'][$new_value]))
+						$new_value = $context['versions'][$new_value]['name'];
+				}
+				elseif ($field == 'assign')
+				{
+					loadMemberData(array($old_value, $new_value));
+
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (loadMemberContext($old_value))
+						$old_value = $memberContext[$old_value]['link'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (loadMemberContext($new_value))
+						$new_value = $memberContext[$new_value]['link'];
+				}
+
+				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
+			}
+		}
+	}
+
+	$comment = array(
+		'id' => $row['id_comment'],
+		'counter' => $context['counter_start'] + $counter,
+		'member' => &$memberContext[$row['id_member']],
+		'time' => timeformat($row['post_time']),
+		'body' => parse_bbc($row['body']),
+		'ip' => $row['poster_ip'],
+		'modified' => array(
+			'time' => timeformat($row['edit_time']),
+			'timestamp' => forum_time(true, $row['edit_time']),
+			'name' => $row['edit_name'],
+		),
+		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
+		'can_remove' => projectAllowedTo('delete_comment_' . $type),
+		'can_edit' => projectAllowedTo('edit_comment_' . $type),
+		'new' => empty($row['is_read']),
+		'first_new' => $first_new && empty($row['is_read']),
+		'changes' => $changes,
 	);
 
-	$context['counter_start'] = $_REQUEST['start'];
+	if ($first_new && empty($row['is_read']))
+		$first_new = false;
+
+	$counter++;
+
+	return $comment;
 }
 
 function getComment()

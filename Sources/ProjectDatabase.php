@@ -508,6 +508,10 @@ $tables = array(
 			array(
 				'type' => 'index',
 				'columns' => array('id_issue')
+			),
+			array(
+				'type' => 'index',
+				'columns' => array('id_event')
 			)
 		)
 	),

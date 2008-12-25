@@ -133,15 +133,32 @@ function ProjectsMaintenanceRepair()
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_errors'][] = sprintf($txt['error_comment_not_linked'], $row['id_comment']);
+		$smcFunc['db_free_result']($request);
+
+		/*// Events without issues
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event
+			FROM {db_prefix}project_timeline AS tl
+				LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
+			WHERE ISNULL(i.id_issue)');
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_errors'][] = sprintf($txt['error_issue_info_event'], $row['id_event']);
+		$smcFunc['db_free_result']($request);*/
 
 		// Events without poster info
 		$request = $smcFunc['db_query']('', '
 			SELECT id_event
 			FROM {db_prefix}project_timeline
-			WHERE poster_name = {string:empty} OR poster_email = {string:empty} OR poster_ip = {string:empty}');
+			WHERE poster_name = {string:empty} OR poster_email = {string:empty} OR poster_ip = {string:empty}',
+			array(
+				'empty' => '',
+			)
+		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_errors'][] = sprintf($txt['error_missing_poster_info_event'], $row['id_event']);
+		$smcFunc['db_free_result']($request);
 
 		// Show list if there were errors
 		if (!empty($context['project_errors']))
@@ -206,6 +223,30 @@ function ProjectsMaintenanceRepair()
 				);
 		}
 		$smcFunc['db_free_result']($request);
+
+		// Events without poster info
+		$request = $smcFunc['db_query']('', '
+			SELECT tl.id_event, com.poster_name, com.poster_email, com.poster_ip
+			FROM {db_prefix}project_timeline AS tl
+				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_event = tl.id_event)
+			WHERE tl.poster_name = {string:empty} OR tl.poster_email = {string:empty} OR tl.poster_ip = {string:empty}',
+			array(
+				'empty' => '',
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_timeline
+				SET poster_name = {string:poster_name}, poster_email = {string:poster_email}, poster_ip = {string:poster_ip}
+				WHERE id_event = {int:event}', array(
+					'event' => $row['id_event'],
+					'poster_name' => $row['poster_name'],
+					'poster_email' => $row['poster_email'],
+					'poster_ip' => $row['poster_ip'],
+				)
+			);
+
 
 		$context['maintenance_finished'] = true;
 	}
