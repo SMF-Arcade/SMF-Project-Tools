@@ -120,6 +120,7 @@ function ProjectsMaintenanceRepair()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
+	// Check for errors
 	if (!isset($_REQUEST['fix']))
 	{
 		$context['project_errors'] = array();
@@ -133,6 +134,16 @@ function ProjectsMaintenanceRepair()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['project_errors'][] = sprintf($txt['error_comment_not_linked'], $row['id_comment']);
 
+		// Events without poster info
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event
+			FROM {db_prefix}project_timeline
+			WHERE poster_name = {string:empty} OR poster_email = {string:empty} OR poster_ip = {string:empty}');
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_errors'][] = sprintf($txt['error_missing_poster_info_event'], $row['id_event']);
+
+		// Show list if there were errors
 		if (!empty($context['project_errors']))
 			$context['sub_template'] = 'project_admin_maintenance_repair_list';
 		else
@@ -141,6 +152,7 @@ function ProjectsMaintenanceRepair()
 			$context['maintenance_finished'] = true;
 		}
 	}
+	// Fix errors
 	else
 	{
 		// Fix comments without id_event
