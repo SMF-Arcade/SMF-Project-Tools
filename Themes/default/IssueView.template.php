@@ -240,7 +240,8 @@ function template_issue_view_above()
 						<div class="messageicon floatleft">
 							<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
 						</div>
-						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>							<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
+						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
+						<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
 					</div>
 					<ul class="smalltext postingbuttons">';
 
@@ -594,7 +595,13 @@ function template_issue_view_main()
 					</ul>
 				</div>
 				<div class="postarea">
-					<div class="keyinfo">
+					<div class="keyinfo">';
+
+		if (!empty($event['title']))
+			echo '
+						<h5>', $event['title'], '</h5>';
+
+		echo '
 						<div class="smalltext">&#171; <strong>', !empty($event['counter']) ? $txt['reply'] . ' #' . $event['counter'] : '', ' ', $txt['on'], ':</strong> ', $event['time'], ' &#187;</div>
 					</div>
 					<ul class="smalltext postingbuttons">';

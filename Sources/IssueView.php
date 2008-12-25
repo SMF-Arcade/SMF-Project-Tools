@@ -530,6 +530,7 @@ function getEvent()
 	$event = array(
 		'id' => $row['id_event'],
 		'counter' => $context['counter_start'] + $counter,
+		'title' => sprintf($txt['evt_' . $row['event']], $memberContext[$row['id_member']]['link']),
 		'type' => '',
 		'is_comment' => false,
 		'member' => &$memberContext[$row['id_member']],
@@ -543,6 +544,7 @@ function getEvent()
 	{
 		$event['type'] = 'comment';
 		$event['is_comment'] = true;
+		$event['title'] = '';
 
 		censorText($row['body']);
 
