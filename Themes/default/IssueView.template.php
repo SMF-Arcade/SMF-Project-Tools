@@ -641,7 +641,7 @@ function template_issue_view_main()
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($event['comment']['modified']['name']))
 			echo '
-						&#171; <em>', $txt['last_edit'], ': ', $event['comment']['modified']['time'], ' ', $txt['by'], ' ', $comment['modified']['name'], '</em> &#187;';
+						&#171; <em>', $txt['last_edit'], ': ', $event['comment']['modified']['time'], ' ', $txt['by'], ' ', $event['comment']['modified']['name'], '</em> &#187;';
 
 		echo '
 					</div>
