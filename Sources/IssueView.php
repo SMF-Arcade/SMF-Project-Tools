@@ -509,12 +509,9 @@ function getEvent()
 		$memberContext[$row['id_member']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
 	}
 
-	censorText($row['body']);
-
-	$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
-
 	$changes = array();
 
+	// Parse event data
 	if (!empty($row['event_data']))
 	{
 		$data = unserialize($row['event_data']);
@@ -584,32 +581,46 @@ function getEvent()
 		}
 	}
 
-	$comment = array(
-		'id' => $row['id_comment'],
+	$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
+
+	$event = array(
+		'id' => $row['id_event'],
 		'counter' => $context['counter_start'] + $counter,
+		'type' => '',
 		'member' => &$memberContext[$row['id_member']],
-		'time' => timeformat($row['post_time']),
-		'body' => parse_bbc($row['body']),
-		'ip' => $row['poster_ip'],
-		'modified' => array(
-			'time' => timeformat($row['edit_time']),
-			'timestamp' => forum_time(true, $row['edit_time']),
-			'name' => $row['edit_name'],
-		),
-		'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
-		'can_remove' => projectAllowedTo('delete_comment_' . $type),
-		'can_edit' => projectAllowedTo('edit_comment_' . $type),
-		'new' => empty($row['is_read']),
-		'first_new' => $first_new && empty($row['is_read']),
-		'changes' => $changes,
+		'time' => timeformat($row['event_time']),
 	);
 
-	if ($first_new && empty($row['is_read']))
-		$first_new = false;
+	if ($row['is_comment'])
+	{
+		$event['type'] = 'comment';
+
+		censorText($row['body']);
+
+		$event['comment'] = array(
+			'id' => $row['id_comment'],
+			'body' => parse_bbc($row['body']),
+			'ip' => $row['poster_ip'],
+			'modified' => array(
+				'time' => timeformat($row['edit_time']),
+				'timestamp' => forum_time(true, $row['edit_time']),
+				'name' => $row['edit_name'],
+			),
+			'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
+			'can_remove' => projectAllowedTo('delete_comment_' . $type),
+			'can_edit' => projectAllowedTo('edit_comment_' . $type),
+			'new' => empty($row['is_read']),
+			'first_new' => $first_new && empty($row['is_read']),
+			'changes' => $changes,
+		);
+
+		if ($first_new && empty($row['is_read']))
+			$first_new = false;
+	}
 
 	$counter++;
 
-	return $comment;
+	return $event;
 }
 
 function getComment()

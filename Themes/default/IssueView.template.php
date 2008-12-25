@@ -455,8 +455,10 @@ function template_issue_comments_new()
 		</h3>
 		<div class="bordercolor">';
 
-	while ($comment = getEvent())
+	while ($event = getEvent())
 	{
+		die(print_r($event));
+
 		echo '
 			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding" id="com' . $comment['id'] . '">
 				<div class="floatleft poster">
