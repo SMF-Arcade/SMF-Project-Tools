@@ -230,19 +230,24 @@ function IssueViewMain()
 	$context['num_events'] = count($events);
 
 	// Load events
-	$context['comment_request'] = $smcFunc['db_query']('', '
-		SELECT
-			tl.id_event, tl.id_member, tl.event, tl.event_time , tl.event_data, tl.poster_name, tl.poster_email, tl.poster_ip,
-			IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.post_time, c.edit_time, c.body, c.edit_name, c.edit_time, tl.event_data,
-			IFNULL(c.id_comment_mod, {int:new_from}) < {int:new_from} AS is_read
-		FROM {db_prefix}project_timeline AS tl
-			LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
-		WHERE tl.id_event IN ({array_int:events})',
-		array(
-			'events' => $events,
-			'new_from' => $context['current_issue']['new_from'],
-		)
-	);
+	if (!empty($events))
+	{
+		$context['comment_request'] = $smcFunc['db_query']('', '
+			SELECT
+				tl.id_event, tl.id_member, tl.event, tl.event_time , tl.event_data, tl.poster_name, tl.poster_email, tl.poster_ip,
+				IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.post_time, c.edit_time, c.body, c.edit_name, c.edit_time, tl.event_data,
+				IFNULL(c.id_comment_mod, {int:new_from}) < {int:new_from} AS is_read
+			FROM {db_prefix}project_timeline AS tl
+				LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
+			WHERE tl.id_event IN ({array_int:events})',
+			array(
+				'events' => $events,
+				'new_from' => $context['current_issue']['new_from'],
+			)
+		);
+	}
+	else
+		$context['comment_request'] = false;
 
 	$context['counter_start'] = $_REQUEST['start'];
 
