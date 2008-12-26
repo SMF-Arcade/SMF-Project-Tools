@@ -37,8 +37,8 @@ function loadIssue()
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . ',
 			com.id_comment_mod AS id_comment_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
-		FROM {db_prefix}issues AS i' . ($user_info['is_guest'] ? '' : '
-			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
+		FROM {db_prefix}issues AS i
+			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
