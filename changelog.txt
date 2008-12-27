@@ -6,6 +6,8 @@ SMF Project Tools 0.1.3                                               xx.11.2008
 November 2008
 --------------------------------------------------------------------------------
  + Added interface for changing Issue Title [Issue #47]
+ ! Tab index missing [Issue #156]
+ ! Unable to have version without membergroups [Issue #169]
 
 SMF Project Tools 0.1.2                                               15.11.2008
 ================================================================================
