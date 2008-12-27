@@ -62,7 +62,10 @@ function ProjectRoadmapMain()
 	{
 		$ids[] = $row['id_version'];
 
-		$row['release_date'] = unserialize($row['release_date']);
+		if (!empty($row['release_date']))
+			$row['release_date'] = @unserialize($row['release_date']);
+		else
+			$row['release_date'] = array();
 
 		$time = array();
 
