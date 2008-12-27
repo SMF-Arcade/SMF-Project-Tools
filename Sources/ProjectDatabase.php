@@ -838,20 +838,25 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 {
 	global $smcFunc, $db_prefix, $db_type;
 
+	// debug
+	global $db_show_debug, $db_cache;
+	$db_show_debug = true;
+
 	foreach ($tables as $table)
 	{
 		$table_name = $db_prefix . $table['name'];
 
 		if (!empty($table['rename']))
 		{
-			$table = $smcFunc['db_table_structure']($table_name, array('no_prefix' => true));
+			$oldTable = $smcFunc['db_table_structure']($table_name, array('no_prefix' => true));
 
-			foreach ($table['columns'] as $column)
+			foreach ($oldTable['columns'] as $column)
 			{
 				if (isset($table['rename'][$column['name']]))
 				{
 					$old_name = $column['name'];
 					$column['name'] = $table['rename'][$column['name']];
+
 					$smcFunc['db_change_column']($table_name, $old_name, $column, array('no_prefix' => true));
 				}
 			}
