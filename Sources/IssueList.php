@@ -215,7 +215,7 @@ function IssueList()
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
-			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
+			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
@@ -223,7 +223,7 @@ function IssueList()
 			i.id_version_fixed, IFNULL(ver2.version_name, {string:empty}) AS version_fixed_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
 			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
@@ -312,7 +312,7 @@ function IssueList()
 			),
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
-			'new' => $row['new_from'] <= $row['id_comment_mod'],
+			'new' => $row['new_from'] <= $row['id_event_mod'],
 			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}

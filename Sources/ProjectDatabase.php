@@ -42,6 +42,11 @@ $tables = array(
 	// Projects
 	'projects' => array(
 		'name' => 'projects',
+		// Rename old columns
+		'rename' => array(
+			'id_comment_mod' => 'id_event_mod',
+		),
+		// Columns
 		'columns' => array(
 			array(
 				'name' => 'id_project',
@@ -100,7 +105,7 @@ $tables = array(
 				'default' => 0,
 			),
 			array(
-				'name' => 'id_comment_mod',
+				'name' => 'id_event_mod',
 				'type' => 'int',
 				'unsigned' => true,
 				'default' => 0,
@@ -324,6 +329,11 @@ $tables = array(
 	// Issues table
 	'issues' => array(
 		'name' => 'issues',
+		// Rename old columns
+		'rename' => array(
+			'id_comment_mod' => 'id_event_mod',
+		),
+		// Columns
 		'columns' => array(
 			array(
 				'name' => 'id_issue',
@@ -387,7 +397,7 @@ $tables = array(
 				'default' => 0,
 			),
 			array(
-				'name' => 'id_comment_mod',
+				'name' => 'id_event_mod',
 				'type' => 'int',
 				'default' => 0,
 			),
@@ -436,6 +446,11 @@ $tables = array(
 	// Comments
 	'issue_comments' => array(
 		'name' => 'issue_comments',
+		// Rename old columns
+		'rename' => array(
+			'id_comment_mod' => 'id_event_mod',
+		),
+		// Columns
 		'columns' => array(
 			array(
 				'name' => 'id_comment',
@@ -457,7 +472,7 @@ $tables = array(
 				'default' => 0,
 			),
 			array(
-				'name' => 'id_comment_mod',
+				'name' => 'id_event_mod',
 				'type' => 'int',
 				'default' => 0,
 			),
@@ -659,6 +674,11 @@ $tables = array(
 	// Log tables for read marks
 	'log_projects' => array(
 		'name' => 'log_projects',
+		// Rename old columns
+		'rename' => array(
+			'id_comment' => 'id_event',
+		),
+		// Columns
 		'columns' => array(
 			array(
 				'name' => 'id_project',
@@ -671,7 +691,7 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_comment',
+				'name' => 'id_event',
 				'type' => 'int',
 				'unsigned' => true,
 			),
@@ -689,6 +709,11 @@ $tables = array(
 	),
 	'log_issues' => array(
 		'name' => 'log_issues',
+		// Rename old columns
+		'rename' => array(
+			'id_comment' => 'id_event',
+		),
+		// Columns
 		'columns' => array(
 			array(
 				'name' => 'id_issue',
@@ -701,7 +726,7 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_comment',
+				'name' => 'id_event',
 				'type' => 'int',
 				'unsigned' => true,
 			),
@@ -817,16 +842,16 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 	{
 		$table_name = $db_prefix . $table['name'];
 
-		if (!empty($columnRename))
+		if (!empty($table['rename']))
 		{
 			$table = $smcFunc['db_table_structure']($table_name, array('no_prefix' => true));
 
 			foreach ($table['columns'] as $column)
 			{
-				if (isset($columnRename[$column['name']]))
+				if (isset($table['rename'][$column['name']]))
 				{
 					$old_name = $column['name'];
-					$column['name'] = $columnRename[$column['name']];
+					$column['name'] = $table['rename'][$column['name']];
 					$smcFunc['db_change_column']($table_name, $old_name, $column, array('no_prefix' => true));
 				}
 			}

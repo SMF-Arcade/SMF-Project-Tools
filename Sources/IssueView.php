@@ -106,7 +106,7 @@ function IssueView()
 			else
 			{
 				$request = $smcFunc['db_query']('', '
-					SELECT (IFNULL(log.id_comment, -1) + 1) AS new_from
+					SELECT (IFNULL(log.id_event, -1) + 1) AS new_from
 					FROM {db_prefix}issues AS i
 						LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = {int:current_issue})
 					WHERE i.id_issue = {int:current_issue}
@@ -236,7 +236,7 @@ function IssueViewMain()
 			SELECT
 				tl.id_event, tl.id_member, tl.event, tl.event_time , tl.event_data, tl.poster_name, tl.poster_email, tl.poster_ip,
 				IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.post_time, c.edit_time, c.body, c.edit_name, c.edit_time, tl.event_data,
-				IFNULL(c.id_comment_mod, {int:new_from}) < {int:new_from} AS is_read
+				IFNULL(c.id_event_mod, {int:new_from}) < {int:new_from} AS is_read
 			FROM {db_prefix}project_timeline AS tl
 				LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
 			WHERE tl.id_event IN ({array_int:events})',
@@ -269,12 +269,12 @@ function IssueViewMain()
 			array(
 				'id_issue' => 'int',
 				'id_member' => 'int',
-				'id_comment' => 'int',
+				'id_event' => 'int',
 			),
 			array(
 				$issue,
 				$user_info['id'],
-				$context['current_issue']['comment_mod']
+				$context['current_issue']['id_event_mod']
 			),
 			array('id_issue', 'id_member')
 		);

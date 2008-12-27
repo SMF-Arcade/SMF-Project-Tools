@@ -30,12 +30,12 @@ function loadIssue()
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
-			i.id_comment_first, i.id_comment_last, i.id_comment_mod, i.id_reporter, i.replies, i.private_issue,
+			i.id_comment_first, i.id_comment_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . ',
-			com.id_comment_mod AS id_comment_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
+			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . ',
+			com.id_event_mod AS id_event_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
@@ -91,7 +91,7 @@ function loadIssue()
 			'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 			'can_remove' => projectAllowedTo('delete_comment_' . $type),
 			'can_edit' => projectAllowedTo('edit_comment_' . $type),
-			'first_new' => $row['id_comment_mod'] > $row['new_from'],
+			'first_new' => $row['id_event_mod'] > $row['new_from'],
 		),
 		'category' => array(
 			'id' => $row['id_category'],
@@ -122,7 +122,7 @@ function loadIssue()
 		'new_from' => $row['new_from'],
 		'comment_first' => $row['id_comment_first'],
 		'comment_last' => $row['id_comment_last'],
-		'comment_mod' => $row['id_comment_mod'],
+		'id_event_mod' => $row['id_event_mod'],
 		'replies' => $row['replies'],
 		'private' => !empty($row['private_issue']),
 		'version_groups' => explode(',', $row['ver_member_groups']),
@@ -526,14 +526,36 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 		array()
 	);
 
+	$id_event_new = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
+
+	// Update Issues table too
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET id_event_mod = {int:event}
+		WHERE id_issue = {int:issue}',
+		array(
+			'event' => $id_event_new,
+			'issue' => $id_issue,
+		)
+	);
+
+	// And projects
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}projects
+		SET id_event_mod = {int:event}
+		WHERE id_project = {int:project}',
+		array(
+			'event' => $id_event_new,
+			'project' => $id_project,
+		)
+	);
+
 	$issue = array(
 		'id' => $id_issue,
 	);
 
 	if ($event_name == 'update_issue')
 		sendIssueNotification($issue, array(), $event_data, $event_name, $posterOptions['id']);
-
-	$id_event_new = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
 
 	if (empty($id_event))
 		return $id_event_new;
@@ -676,34 +698,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
 	$time = time();
 
-	// Update Issues table too
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}issues
-		SET
-			replies = replies + {int:rpl}, updated = {int:time},
-			id_comment_mod = {int:comment}, id_comment_last = {int:comment},
-			id_updater = {int:current_user}
-		WHERE id_issue = {int:issue}',
-		array(
-			'comment' => $id_comment,
-			'current_user' => $user_info['id'],
-			'issue' => $id_issue,
-			'time' => $time,
-			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
-		)
-	);
-
-	// And projects
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}projects
-		SET id_comment_mod = {int:comment}
-		WHERE id_project = {int:project}',
-		array(
-			'comment' => $id_comment,
-			'project' => $id_project,
-		)
-	);
-
+	// Make event
 	$id_event = 0;
 
 	if (!isset($commentOptions['no_log']))
@@ -714,13 +709,46 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	}
 	elseif (isset($event_data['id_event']))
 		$id_event = $event_data['id_event'];
+	// Temp
+	else
+		fatal_error('Missing id_event from createComment call');
+
+	// !!! Is updating id_event_mod needed?
+
+	// Update Issues table too
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET
+			replies = replies + {int:rpl}, updated = {int:time},
+			id_event_mod = {int:event}, id_comment_last = {int:comment},
+			id_updater = {int:current_user}
+		WHERE id_issue = {int:issue}',
+		array(
+			'event' => $id_event,
+			'current_user' => $user_info['id'],
+			'issue' => $id_issue,
+			'time' => $time,
+			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
+		)
+	);
+
+	// And projects
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}projects
+		SET id_event_mod = {int:event}
+		WHERE id_project = {int:project}',
+		array(
+			'event' => $id_event,
+			'project' => $id_project,
+		)
+	);
 
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}projects
-		SET id_comment_mod = {int:comment}
+		SET id_event_mod = {int:event}
 		WHERE id_project = {int:project}',
 		array(
-			'comment' => $id_comment,
+			'event' => $id_event,
 			'project' => $id_project,
 		)
 	);
@@ -728,12 +756,12 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	// Set this for read marks
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issue_comments
-		SET id_comment_mod = {int:comment},
+		SET id_event_mod = {int:event},
 			id_event = {int:event}
 		WHERE id_comment = {int:comment}',
 		array(
-			'comment' => $id_comment,
 			'event' => $id_event,
+			'comment' => $id_comment,
 		)
 	);
 
@@ -745,12 +773,12 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 			array(
 				'id_issue' => 'int',
 				'id_member' => 'int',
-				'id_comment' => 'int',
+				'id_event' => 'int',
 			),
 			array(
 				$id_issue,
 				$user_info['id'],
-				$id_comment,
+				$id_event,
 			),
 			array('id_issue', 'id_member')
 		);
@@ -833,7 +861,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
-			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
+			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
@@ -905,7 +933,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			),
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
-			'new' => $row['new_from'] <= $row['id_comment_mod'],
+			'new' => $row['new_from'] <= $row['id_event_mod'],
 			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}

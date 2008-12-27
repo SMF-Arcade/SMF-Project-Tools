@@ -165,14 +165,14 @@ function projectProfileIssues($memID)
 		SELECT
 			p.id_project, p.name AS project_name,
 			i.id_issue, i.issue_type, i.subject, i.priority,
-			i.status, i.created, i.updated, i.id_comment_mod, i.replies,
+			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_version_fixed, IFNULL(ver2.version_name, {string:empty}) AS version_fixed_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
 			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_comment, -1) + 1) AS new_from') . '
+			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . '
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)') . '
@@ -248,7 +248,7 @@ function projectProfileIssues($memID)
 			),
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
-			'new' => $row['new_from'] <= $row['id_comment_mod'],
+			'new' => $row['new_from'] <= $row['id_event_mod'],
 			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}

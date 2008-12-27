@@ -187,7 +187,7 @@ function loadProject()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-				p.id_comment_mod, p.' . implode(', p.', $context['type_columns']) . ', p.project_theme
+				p.id_event_mod, p.' . implode(', p.', $context['type_columns']) . ', p.project_theme
 			FROM {db_prefix}projects AS p
 			WHERE p.id_project = {int:project}
 			LIMIT 1',
@@ -219,7 +219,7 @@ function loadProject()
 			'trackers' => array(),
 			'developers' => array(),
 			'is_developer' => false,
-			'comment_mod' => $row['id_comment_mod'],
+			'id_event_mod' => $row['id_event_mod'],
 			'profile' => $row['id_profile'],
 			'theme' => $row['project_theme'],
 			'override_theme' => !empty($row['override_theme']),

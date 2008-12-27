@@ -12,6 +12,7 @@ December 2008
  ! Show member names for assignees on notifications and timelines instead of ids
  + Maintenance section
  + Ability to display both comments and events at same time [Issue #170]
+ + Use id_event for modification instead of id_comment, not every changes is comment
 
 November 2008
 --------------------------------------------------------------------------------

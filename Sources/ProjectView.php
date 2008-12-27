@@ -54,7 +54,7 @@ function ProjectView()
 			array(
 				$project,
 				$user_info['id'],
-				$context['project']['comment_mod']
+				$context['project']['id_event_mod']
 			),
 			array('id_project', 'id_member')
 		);
