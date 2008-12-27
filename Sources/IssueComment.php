@@ -422,8 +422,7 @@ function IssueDeleteComment()
 
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}issue_comments
-		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
-			AND id_member = {int:current_user}' : '') . '',
+		WHERE id_comment = {int:comment}',
 		array(
 			'current_user' => $user_info['id'],
 			'comment' => $row['id_comment'],
