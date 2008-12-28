@@ -383,14 +383,21 @@ function loadProjectAdmin($id_project)
 		)
 	);
 
+	$last = 0;
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$project['developers'][$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
+			'last' => false,
 		);
+		$last = $row['id_member'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Set last developer
+	$project['developers'][$last]['last'] = true;
 
 	// Category
 	$request = $smcFunc['db_query']('', '

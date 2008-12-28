@@ -280,18 +280,6 @@ function EditProject()
 		$context['themes'][] = $row;
 	$smcFunc['db_free_result']($request);
 
-	require_once($sourcedir . '/Subs-Editor.php');
-
-	// Developer suggester
-	$suggestOptions = array(
-		'id' => 'developer',
-		'search_type' => 'member',
-		'width' => '130px',
-		'value' => '',
-		'button' => $txt['developer_add'],
-	);
-	create_control_autosuggest($suggestOptions);
-
 	if (!isset($_REQUEST['delete']))
 	{
 		$context['sub_template'] = 'edit_project';
@@ -316,7 +304,7 @@ function EditProject2()
 
 	$_POST['project'] = (int) $_POST['project'];
 
-	if (!empty($_POST['project']) && !loadProjectAdmin($_POST['project']))
+	if (!empty($_POST['project']) && !$project = loadProjectAdmin($_POST['project']))
 		fatal_lang_error('project_not_found', false);
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
@@ -354,23 +342,29 @@ function EditProject2()
 		else
 			updateProject($_POST['project'], $projectOptions);
 
-		$developers = array();
-
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}project_developer
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $_POST['project'],
-			)
-		);
-
 		$rows = array();
 
-		if (!empty($_POST['developer']))
+		if (!isset($_POST['developer_list']))
+			$_POST['developer_list'] = array();
+
+		$toRemove = array_diff(array_keys($project['developers']), $_POST['developer_list']);
+		$toAdd = array_diff($_POST['developer_list'], array_keys($project['developers']));
+
+		if (!empty($toRemove))
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_developer
+				WHERE id_member IN({array_int:remove})
+					AND id_project = {int:project}',
+				array(
+					'remove' => $toRemove,
+					'project' => $_POST['project'],
+				)
+			);
+
+		if (!empty($toAdd))
 		{
-			foreach ($_POST['developer'] as $id_member => $i)
-				if (is_numeric($id_member))
-					$rows[] = array($_POST['project'], (int) $id_member);
+			foreach ($toAdd as $id_member)
+				$rows[] = array($_POST['project'], (int) $id_member);
 
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',

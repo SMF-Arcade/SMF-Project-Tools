@@ -59,6 +59,8 @@ function template_edit_project()
 
 	echo '
 				</select>
+			</td>
+		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_theme'], ':</b><br />
@@ -103,23 +105,34 @@ function template_edit_project()
 				<b>', $txt['project_developers'], ':</b><br />
 			</td>
 			<td valign="top" align="left">
-				', template_control_autosuggest('developer'), '';
+				<input type="text" name="developer" id="developer" size="25" />
+				<div id="developer_container"></div>
+				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					var oDeveloperSuggest = new smc_AutoSuggest({
+						sSelf: \'oDeveloperSuggest\',
+						sSessionId: \'', $context['session_id'], '\',
+						sSuggestId: \'developer\',
+						sControlId: \'developer\',
+						sSearchType: \'member\',
+						bItemList: true,
+						sPostName: \'developer_list\',
+						sURLMask: \'action=profile;u=%item_id%\',
+						sItemListContainerId: \'developer_container\',
+						aListItems: [';
 
 	foreach ($context['project']['developers'] as $member)
 		echo '
-				<div id="suggest_template_developer_', $member['id'], '">
-					<input type="hidden" name="developer[', $member['id'], '][id]" value="', $member['id'], '" />
-					<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="developer_link_to_', $member['id'], '" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">', $member['name'], '</a>
-					<input type="image" name="delete_developer" value="', $member['id'], '" onclick="return suggestHandledeveloper.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" />', '
-				</div>';
+							{
+								sItemId: ', JavaScriptEscape($member['id']), ',
+								sItemName: ', JavaScriptEscape($member['name']), '
+							}', $member['last'] ? '' : ',';
+
 
 		echo '
-				<div id="suggest_template_developer" style="visibility: hidden; display: none;">
-					<input type="hidden" name="developer[::MEMBER_ID::][id]" value="::MEMBER_ID::" />
-					<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="developer_link_to_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
-					<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['developer_remove'], '" />
-				</div>
-				<br />
+						]
+					});
+				// ]]></script>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -132,6 +145,7 @@ function template_edit_project()
 	foreach ($context['groups'] as $group)
 		echo '
 				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
 				<br />
