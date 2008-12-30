@@ -441,8 +441,8 @@ function IssueDeleteComment()
 	$posterOptions = array(
 		'id' => $user_info['id'],
 		'ip' => $user_info['ip'],
-		'name' => $_POST['guestname'],
-		'email' => $_POST['email'],
+		'name' => $user_info['name'],
+		'email' => $user_info['email'],
 	);
 	$issueOptions = array(
 		'time' => time(),
