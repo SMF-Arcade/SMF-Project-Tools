@@ -35,7 +35,7 @@ if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
 
 // Temporary
-if (SMF == 'SSI.php') die('Installing database via SSI isn\'t supported due to bugs!!');
+if (SMF == 'SSI') die('Installing database via SSI isn\'t supported due to bugs!!');
 
 require_once($sourcedir . '/ProjectDatabase.php');
 

@@ -49,7 +49,7 @@ function ProjectView()
 			array(
 				'id_project' => 'int',
 				'id_member' => 'int',
-				'id_comment' => 'int',
+				'id_event' => 'int',
 			),
 			array(
 				$project,

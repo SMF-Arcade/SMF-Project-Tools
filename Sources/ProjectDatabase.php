@@ -838,10 +838,6 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 {
 	global $smcFunc, $db_prefix, $db_type;
 
-	// debug
-	global $db_show_debug, $db_cache;
-	$db_show_debug = true;
-
 	foreach ($tables as $table)
 	{
 		$table_name = $db_prefix . $table['name'];
