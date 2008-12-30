@@ -404,7 +404,7 @@ function IssueDeleteComment()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	$request = $smcFunc['db_query']('', '
-		SELECT c.id_comment, c.id_event
+		SELECT c.id_comment, c.id_event, c.poster_name, c.id_member
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
 			AND c.id_member = {int:current_user}' : '') . '
@@ -447,7 +447,7 @@ function IssueDeleteComment()
 	$issueOptions = array(
 		'time' => time(),
 	);
-	createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'delete_comment', array(), $posterOptions, $issueOptions);
+	createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'delete_comment', $row, $posterOptions, $issueOptions);
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
