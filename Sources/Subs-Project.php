@@ -1059,4 +1059,19 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
+if (!function_exists('JavaScriptEscape'))
+{
+	function JavaScriptEscape($string)
+	{
+		return '\'' . strtr($string, array(
+			"\r" => '',
+			"\n" => '\\n',
+			'\\' => '\\\\',
+			'\'' => '\\\'',
+			'</' => '<\' + \'/',
+			'script' => 'scri\' +\'pt',
+		)) . '\'';
+	}
+}
+
 ?>
