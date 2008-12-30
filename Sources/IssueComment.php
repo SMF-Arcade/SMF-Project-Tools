@@ -373,10 +373,12 @@ function IssueDeleteComment()
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
 			AND c.id_member = {int:current_user}' : '') . '
+			AND c.id_issue = {int:issue}
 		ORDER BY id_comment',
 		array(
 			'current_user' => $user_info['id'],
 			'comment' => (int) $_REQUEST['com'],
+			'issue' => $context['current_issue']['id'],
 		)
 	);
 
@@ -388,7 +390,6 @@ function IssueDeleteComment()
 		DELETE FROM {db_prefix}issue_comments AS c
 		WHERE id_comment = {int:comment}',
 		array(
-			'current_user' => $user_info['id'],
 			'comment' => $row['id_comment'],
 		)
 	);
