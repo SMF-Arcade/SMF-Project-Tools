@@ -728,6 +728,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 			'current_user' => $user_info['id'],
 			'issue' => $id_issue,
 			'time' => $time,
+			'comment' => $id_comment,
 			'rpl' => empty($row['id_comment_first']) ? 0 : 1,
 		)
 	);
