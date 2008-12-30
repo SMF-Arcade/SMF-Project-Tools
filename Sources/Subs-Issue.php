@@ -35,7 +35,7 @@ function loadIssue()
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
 			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . ',
-			com.id_event_mod AS id_event_mod, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
+			com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
