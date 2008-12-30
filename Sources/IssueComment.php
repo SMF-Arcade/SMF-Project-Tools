@@ -404,14 +404,16 @@ function IssueDeleteComment()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	$request = $smcFunc['db_query']('', '
-		SELECT c.id_comment
+		SELECT c.id_comment, c.id_event
 		FROM {db_prefix}issue_comments AS c
 		WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
 			AND c.id_member = {int:current_user}' : '') . '
+			AND c.id_issue = {int:issue}
 		ORDER BY id_comment',
 		array(
 			'current_user' => $user_info['id'],
 			'comment' => (int) $_REQUEST['com'],
+			'issue' => $context['current_issue']['id'],
 		)
 	);
 
@@ -424,10 +426,28 @@ function IssueDeleteComment()
 		DELETE FROM {db_prefix}issue_comments
 		WHERE id_comment = {int:comment}',
 		array(
-			'current_user' => $user_info['id'],
 			'comment' => $row['id_comment'],
 		)
 	);
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}project_timeline
+		WHERE id_event = {int:event}',
+		array(
+			'event' => $row['id_event'],
+		)
+	);
+
+	$posterOptions = array(
+		'id' => $user_info['id'],
+		'ip' => $user_info['ip'],
+		'name' => $_POST['guestname'],
+		'email' => $_POST['email'],
+	);
+	$issueOptions = array(
+		'time' => time(),
+	);
+	createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'delete_comment', array(), $posterOptions, $issueOptions);
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
