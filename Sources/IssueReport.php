@@ -319,7 +319,7 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	if (!empty($_REQUEST['title']) && trim($_REQUEST['title']) != '')
 	{
 		$_REQUEST['title'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
-		$issueOptions['title'] = $_REQUEST['title'];
+		$issueOptions['subject'] = $_REQUEST['title'];
 	}
 
 	// Private
