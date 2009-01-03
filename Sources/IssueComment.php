@@ -422,6 +422,7 @@ function IssueDeleteComment()
 		fatal_lang_error('comment_not_found', false);
 	$smcFunc['db_free_result']($request);
 
+	// Delete comment
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}issue_comments
 		WHERE id_comment = {int:comment}',
@@ -430,24 +431,48 @@ function IssueDeleteComment()
 		)
 	);
 
-	$smcFunc['db_query']('', '
-		DELETE FROM {db_prefix}project_timeline
+	// Check event_data, there might be changes that we should keep
+	$request = $smcFunc['db_query']('', '
+		SELECT event_data
+		FROM {db_prefix}project_timeline
 		WHERE id_event = {int:event}',
 		array(
 			'event' => $row['id_event'],
 		)
 	);
 
-	$posterOptions = array(
-		'id' => $user_info['id'],
-		'ip' => $user_info['ip'],
-		'name' => $user_info['name'],
-		'email' => $user_info['email'],
-	);
-	$issueOptions = array(
-		'time' => time(),
-	);
-	createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'delete_comment', $row, $posterOptions, $issueOptions);
+	list ($event_data) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	// By default remove event too
+	$removeEvent = true;
+
+	if ($event_data && $event_data = unserialize($event_data))
+	{
+		if (isset($event_data['changes']) && is_array($event_data['changes']) && !empty($event_data['changes']))
+			$removeEvent = false;
+	}
+
+	if ($removeEvent)
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_timeline
+			WHERE id_event = {int:event}',
+			array(
+				'event' => $row['id_event'],
+			)
+		);
+	else
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_timeline
+			SET event = {string:update_issue}
+			WHERE id_event = {int:event}',
+			array(
+				'update_issue' => 'update_issue',
+				'event' => $row['id_event'],
+			)
+		);
+
+	logAction('project_remove_comment', array('comment' => $row['id_comment']));
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }

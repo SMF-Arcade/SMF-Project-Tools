@@ -196,7 +196,12 @@ function createIssue($issueOptions, &$posterOptions)
 
 	$id_issue = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
 
-	$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'new_issue', array('subject' => $issueOptions['subject']), $posterOptions, array('time' => $issueOptions['created']));
+	$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'new_issue', array('subject' => $issueOptions['subject']), $posterOptions,
+		array(
+			'time' => $issueOptions['created'],
+			'mark_read' => !empty($issueOptions['mark_read']),
+		)
+	);
 
 	$id_comment = createComment(
 		$issueOptions['project'],
@@ -550,6 +555,25 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 		)
 	);
 
+	// Mark read if asked to
+	if (!empty($issueOptions['mark_read']) && !$user_info['is_guest'])
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_issues',
+			array(
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'id_event' => 'int',
+			),
+			array(
+				$id_issue,
+				$user_info['id'],
+				$id_event_new,
+			),
+			array('id_issue', 'id_member')
+		);
+	}
+
 	$issue = array(
 		'id' => $id_issue,
 	);
@@ -705,7 +729,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	{
 		$event_data['subject'] = $row['subject'];
 		$event_data['comment'] = $id_comment;
-		$id_event = createTimelineEvent($id_issue, $id_project, 'new_comment', $event_data, $posterOptions, array('time' => $time));
+		$id_event = createTimelineEvent($id_issue, $id_project, 'new_comment', $event_data, $posterOptions, array('time' => $time, 'mark_read' => !empty($commentOptions['mark_read'])));
 	}
 	elseif (isset($event_data['id_event']))
 		$id_event = $event_data['id_event'];
@@ -766,25 +790,6 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		)
 	);
 
-	// Mark read if user wants to
-	if (!empty($commentOptions['mark_read']) && !$user_info['is_guest'])
-	{
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}log_issues',
-			array(
-				'id_issue' => 'int',
-				'id_member' => 'int',
-				'id_event' => 'int',
-			),
-			array(
-				$id_issue,
-				$user_info['id'],
-				$id_event,
-			),
-			array('id_issue', 'id_member')
-		);
-	}
-
 	return $id_comment;
 }
 
@@ -821,36 +826,8 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 		)
 	);
 
-	if (isset($commentOptions['no_log']))
-		return true;
-
-	// Write to timeline unless it's not wanted (on new issue for example)
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_timeline',
-		array(
-			'id_project' => 'int',
-			'id_issue' => 'int',
-			'id_member' => 'int',
-			'poster_name' => 'string',
-			'poster_email' => 'string',
-			'poster_ip' => 'string-60',
-			'event' => 'string',
-			'event_time' => 'int',
-			'event_data' => 'string',
-		),
-		array(
-			$row['id_project'],
-			$id_issue,
-			$posterOptions['id'],
-			$posterOptions['name'],
-			$posterOptions['email'],
-			$posterOptions['ip'],
-			'edit_comment',
-			time(),
-			serialize(array('subject' => $row['subject'], 'comment' => $id_comment))
-		),
-		array()
-	);
+	if (!isset($commentOptions['no_log']))
+		logAction('project_modify_comment', array('comment' => $id_comment));
 
 	return true;
 }

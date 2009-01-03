@@ -201,9 +201,9 @@ function ProjectsMaintenanceRepair()
 					FROM {db_prefix}issues AS i
 						LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_issue = i.id_issue)
 					WHERE i.id_comment_first = {int:comment}
-						AND tl.event = {string:new_comment}',
+						AND tl.event = {string:new_issue}',
 					array(
-						'new_comment' => 'new_issue',
+						'new_issue' => 'new_issue',
 						'comment' => $row['id_comment'],
 					)
 				);
