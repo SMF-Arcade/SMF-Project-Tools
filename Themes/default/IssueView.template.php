@@ -1039,8 +1039,8 @@ function template_issue_view_below()
 
 		echo '
 				<div style="text-align: right">
-					<input type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
-					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />
+					<input type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
+					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div><br />
@@ -1078,8 +1078,8 @@ function template_issue_view_below()
 		if ($context['can_add_tags'])
 			echo '
 					<li class="tag_editor">
-						<input type="text" name="tag" value="" />
-						<input type="submit" name="add_tag" value="', $txt['add_tag'], '" />
+						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
+						<input type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
 					</li>';
 
 		echo '
@@ -1099,7 +1099,7 @@ function template_issue_view_below()
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['issue_attach'], '</div>
 			<div class="smallpadding windowbg">
-				<input type="file" size="48" name="attachment[]" /><br />';
+				<input type="file" size="48" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
 
 		if (!empty($modSettings['attachmentCheckExtensions']))
 			echo '
@@ -1109,7 +1109,7 @@ function template_issue_view_below()
 
 		echo '
 				<div style="text-align: right">
-					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" />
+					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div>

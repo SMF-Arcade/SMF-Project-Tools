@@ -126,7 +126,7 @@ function template_report_issue()
 		echo '
 					<dd>
 						<input type="hidden" name="issue_subscribe" value="0" />
-						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : ''), ' class="check" />
+						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : ''), ' class="check" tabindex="', $context['tabindex']++, '" />
 						<label for="issue_subscribe">', $txt['subscribe_to_issue'], '</label>
 					</dd>';
 
