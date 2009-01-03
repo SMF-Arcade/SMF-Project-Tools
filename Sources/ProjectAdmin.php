@@ -160,6 +160,21 @@ function ProjectsMaintenanceRepair()
 			$context['project_errors'][] = sprintf($txt['error_missing_poster_info_event'], $row['id_event']);
 		$smcFunc['db_free_result']($request);
 
+		// Unnecessary events
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event
+			FROM {db_prefix}project_timeline
+			WHERE event = {string:edit_comment} OR event = {string:delete_comment}',
+			array(
+				'edit_comment' => 'edit_comment',
+				'delete_comment' => 'delete_comment',
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['project_errors'][] = sprintf($txt['error_unnecessary_event'], $row['id_event']);
+		$smcFunc['db_free_result']($request);
+
 		// Show list if there were errors
 		if (!empty($context['project_errors']))
 			$context['sub_template'] = 'project_admin_maintenance_repair_list';
@@ -247,6 +262,15 @@ function ProjectsMaintenanceRepair()
 				)
 			);
 
+		// Unnecessary events
+		$request = $smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_timeline
+			WHERE event = {string:edit_comment} OR event = {string:delete_comment}',
+			array(
+				'edit_comment' => 'edit_comment',
+				'delete_comment' => 'delete_comment',
+			)
+		);
 
 		$context['maintenance_finished'] = true;
 	}

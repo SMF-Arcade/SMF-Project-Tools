@@ -39,6 +39,7 @@ $txt['fix_errors'] = 'Do you want to try to fix errors?';
 $txt['error_comment_not_linked'] = 'Comment #%1$d not linked with event';
 $txt['error_issue_info_event'] = 'Event #%1$d is linked to non-existing issue';
 $txt['error_missing_poster_info_event'] = 'Event #%1$d is missing poster info';
+$txt['error_unnecessary_event'] = 'Unnecessary Event #%1$d';
 
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
