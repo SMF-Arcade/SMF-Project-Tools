@@ -8,6 +8,7 @@ January 2009
  + Keep event when deleting comment if there's updates
  + Log moderation actions to moderation log instead of making event [Issue #181]
  ! Some more tabindexes missing [Issue #156]
+ - Removed other views in favor of combined view
 
 December 2008
 --------------------------------------------------------------------------------
