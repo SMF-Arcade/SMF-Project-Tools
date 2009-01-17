@@ -292,6 +292,7 @@ else
 			'project_name' => array(
 				'header' => array(
 					'value' => $txt['project'],
+					'style' => 'text-align: left',
 				),
 				'data' => array(
 					'function' => create_function('$project', '
@@ -299,7 +300,7 @@ else
 
 						$link = $project[\'link\'];
 
-						if ($board[\'new\'])
+						if ($project[\'new\'])
 							$link .= \' <a href="\' . $project[\'href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
 
 						return $link;
