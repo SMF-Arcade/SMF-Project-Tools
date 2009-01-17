@@ -6,7 +6,7 @@
 * =============================================================================== *
 * Software Version:           SMF Project Tools 0.2                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
-* Copyright 2007-2008 by:     Niko Pahajoki (http://www.madjoki.com)              *
+* Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
 ***********************************************************************************
 * This program is free software; you may redistribute it and/or modify it under   *
