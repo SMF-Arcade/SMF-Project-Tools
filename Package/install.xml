@@ -393,6 +393,18 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		</operation>
 	</file>
 
+	<file name="$themedir/Profile.template.php">
+		<operation>
+			<search position="before"><![CDATA[template_show_list('board_notification_list');]]></search>
+			<add><![CDATA[
+	echo '
+		<br />';
+
+	template_show_list('project_notification_list');
+]]></add>
+		</operation>
+	</file>
+
 	<file name="$sourcedir/Subs.php">
 		<operation>
 			<search position="before"><![CDATA[	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);]]></search>
