@@ -260,7 +260,7 @@ function template_issue_view_above()
 	echo '
 					</ul>
 					<div id="com_', $issueDetails['id'], '" class="post">
-						', $issueDetails['body'], '
+						<div class="inner">', $issueDetails['body'], '</div>
 					</div>';
 
 	// Show attachments
