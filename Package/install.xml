@@ -271,6 +271,33 @@ else
 
 	<file name="$sourcedir/Profile-Modify.php">
 		<operation>
+			<search position="after"><![CDATA[}
+
+// Save any changes to the custom profile fields...]]></search>
+			<add><![CDATA[
+	// Project Notifications
+	elseif (isset($_POST['edit_notify_projects']) && !empty($_POST['notify_projects']))
+	{
+		// Make sure only integers are deleted.
+		foreach ($_POST['notify_projects'] as $index => $id)
+			$_POST['notify_projects'][$index] = (int) $id;
+
+		// id_project = 0 is reserved for topic notifications.
+		$_POST['notify_projects'] = array_diff($_POST['notify_projects'], array(0));
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify_projects
+			WHERE id_project IN ({array_int:project_list})
+				AND id_member = {int:selected_member}',
+			array(
+				'project_list' => $_POST['notify_projects'],
+				'selected_member' => $memID,
+			)
+		);
+	}
+]]></add>
+		</operation>
+		<operation>
 			<search position="after"><![CDATA[	// What options are set?]]></search>
 			<add><![CDATA[
 	// Now do the project notifications.
