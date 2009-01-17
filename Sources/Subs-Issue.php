@@ -413,7 +413,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $posterOptions, $issueOptions)
 {
-	global $smcFunc, $context;
+	global $smcFunc, $context, $user_info;
 
 	$id_event = 0;
 
