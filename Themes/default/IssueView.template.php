@@ -613,7 +613,7 @@ function template_issue_view_main()
 
 		if ($event['is_comment'])
 			echo '
-						', $event['comment']['body'];
+						<div class="inner">', $event['comment']['body'], '</div>';
 
 		if (!empty($event['changes']))
 		{
