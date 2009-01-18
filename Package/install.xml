@@ -771,7 +771,7 @@ $txt['project_profile_reported'] = 'Reported Issues';
 $txt['project_profile_assigned'] = 'Assigned Issues';
 
 // Project - Notifications
-$txt['notifications_projects'] = 'Projects';
+$txt['notifications_projects'] = 'Current Project Notifications';
 $txt['notifications_projects_none'] = 'No projects added for notifications';
 
 // SMF Project tools admin
