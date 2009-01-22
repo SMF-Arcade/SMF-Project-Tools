@@ -618,7 +618,7 @@ function template_issue_view_main()
 		if (!empty($event['changes']))
 		{
 			echo '
-						<ul class="smalltext">';
+						<ul class="smalltext normallist">';
 
 			foreach ($event['changes'] as $change)
 				echo '
