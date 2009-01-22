@@ -95,6 +95,18 @@ function IssueView()
 	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_send_pm'] = allowedTo('pm_send');
 
+	// How many event there are?
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}project_timeline
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $issue,
+		)
+	);
+	list ($num_events) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
 	// Fix start to be a number
 	if (!is_numeric($_REQUEST['start']))
 	{
@@ -102,7 +114,7 @@ function IssueView()
 		if ($_REQUEST['start'] == 'new')
 		{
 			if ($user_info['is_guest'])
-				$_REQUEST['start'] = $context['current_issue']['replies'];
+				$_REQUEST['start'] = $num_events;
 			else
 			{
 				$request = $smcFunc['db_query']('', '
@@ -129,39 +141,22 @@ function IssueView()
 		{
 			$virtual_msg = (int) substr($_REQUEST['start'], 3);
 
-			if ($virtual_msg >= $context['current_issue']['comment_last'])
-				$context['start_from'] = $context['current_issue']['replies'] - 1;
-			elseif ($virtual_msg <= $context['current_issue']['comment_first'])
-				$context['start_from'] = 0;
-			else
-			{
-				// How many comments before this
-				$request = $smcFunc['db_query']('', '
-					SELECT (COUNT(*) - 1)
-					FROM {db_prefix}issue_comments
-					WHERE id_comment < {int:virtual_msg}
-						AND id_issue = {int:current_issue}',
-					array(
-						'current_issue' => $issue,
-						'virtual_msg' => $virtual_msg,
-					)
-				);
-				list ($context['start_from']) = $smcFunc['db_fetch_row']($request);
-				$smcFunc['db_free_result']($request);
-			}
+			// How many events before this
+			$request = $smcFunc['db_query']('', '
+				SELECT (COUNT(*) - 1)
+				FROM {db_prefix}issue_comments
+				WHERE id_event < {int:virtual_msg}
+					AND id_issue = {int:current_issue}',
+				array(
+					'current_issue' => $issue,
+					'virtual_msg' => $virtual_msg,
+				)
+			);
+			list ($context['start_from']) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 
 			$_REQUEST['start'] = $context['start_from'];
 			$context['robot_no_index'] = true;
-		}
-		elseif ($_REQUEST['start'] == 'log' || $_REQUEST['start'] == 'attachments')
-		{
-			$_REQUEST['view'] = $_REQUEST['start'];
-			$_REQUEST['start'] = 0;
-		}
-		else
-		{
-			$context['robot_no_index'] = true;
-			$_REQUEST['start'] = 0;
 		}
 	}
 
@@ -169,17 +164,6 @@ function IssueView()
 
 	$posters = array();
 	$events = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*)
-		FROM {db_prefix}project_timeline
-		WHERE id_issue = {int:issue}',
-		array(
-			'issue' => $issue,
-		)
-	);
-	list ($num_events) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_event, id_member
