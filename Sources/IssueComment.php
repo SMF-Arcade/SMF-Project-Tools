@@ -304,7 +304,7 @@ function IssueReply2()
 		handleUpdate($posterOptions, $issueOptions);
 
 	if (!empty($issueOptions))
-		$event_data = updateIssue($issue, $issueOptions, $posterOptions, true);
+		$event_data = updateIssue($issue, $issueOptions, $posterOptions, empty($_REQUEST['com']));
 	else
 		$event_data = array();
 
