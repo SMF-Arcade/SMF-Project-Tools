@@ -673,7 +673,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		<operation>
 			<search position="after"><![CDATA[		'mods' => array(]]></search>
 			<add><![CDATA[
-				'SMF Project Tools &copy; 2007-2008<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
+				'SMF Project Tools &copy; 2007-2009<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
 		</operation>
 	</file>
 
