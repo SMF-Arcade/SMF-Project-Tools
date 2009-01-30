@@ -177,7 +177,7 @@ function createVersion($id_project, $versionOptions)
 	if (empty($versionOptions['name']))
 		trigger_error('createVersion(): required parameters missing or invalid');
 
-	if (empty($versionOptions['release_date']) || empty($versionOptions['parent']))
+	if (empty($versionOptions['release_date']))
 		$versionOptions['release_date'] = serialize(array('day' => 0, 'month' => 0, 'year' => 0));
 
 	if (empty($versionOptions['description']))
