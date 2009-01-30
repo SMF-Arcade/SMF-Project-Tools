@@ -300,7 +300,9 @@ function IssueUpdate()
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 	);
-	$issueOptions = array();
+	$issueOptions = array(
+		'mark_read' => true,
+	);
 
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);

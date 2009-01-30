@@ -9,6 +9,7 @@ January 2009
  + Log moderation actions to moderation log instead of making event [Issue #181]
  ! Some more tabindexes missing [Issue #156]
  - Removed other views in favor of combined view
+ ! Updating issue now marks it as read
 
 December 2008
 --------------------------------------------------------------------------------

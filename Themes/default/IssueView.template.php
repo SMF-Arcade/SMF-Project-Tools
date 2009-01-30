@@ -447,8 +447,6 @@ function template_issue_view_main()
 
 	while ($event = getEvent())
 	{
-		//print_r($event);
-
 		$id = isset($event['comment']) ? 'com' . $event['comment']['id'] : 'evt' . $event['id'];
 		$id2 = isset($event['comment']) ? 'com_' . $event['comment']['id'] : 'evt_' . $event['id'];
 

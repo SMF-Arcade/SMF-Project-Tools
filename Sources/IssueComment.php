@@ -297,8 +297,9 @@ function IssueReply2()
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 	);
-
-	$issueOptions = array();
+	$issueOptions = array(
+		'mark_read' => true,
+	);
 
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
@@ -390,7 +391,20 @@ function IssueReply2()
 		);
 	}
 
-	redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_comment)) . '#com' . $id_comment);
+	$request = $smcFunc['db_query']('', '
+		SELECT id_event
+		FROM {db_prefix}issue_comments
+		WHERE id_comment = {int:comment}',
+		array(
+			'current_user' => $user_info['id'],
+			'issue' => $issue,
+			'comment' => (int) $_REQUEST['com'],
+		)
+	);
+	list ($id_event) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_event)) . '#com' . $id_comment);
 }
 
 function IssueDeleteComment()
