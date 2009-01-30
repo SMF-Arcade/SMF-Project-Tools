@@ -666,8 +666,7 @@ function template_issue_view_main()
 		// Show the member's signature?
 		if (!empty($event['member']['signature']) && empty($options['show_no_signatures']))
 			echo '
-						<hr width="100%" size="1" style="clear: right;" class="margintop hrcolor" />
-						<div class="signature">', $event['member']['signature'], '</div>';
+					<div class="signature">', $event['member']['signature'], '</div>';
 
 		echo '
 				</div>
