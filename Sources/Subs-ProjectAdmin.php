@@ -167,6 +167,59 @@ function updateProject($id_project, $projectOptions)
 			))
 		);
 
+	if (isset($projectOptions['developers']))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member
+			FROM {db_prefix}project_developer
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $id_project,
+			)
+		);
+
+		$developers = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$developers[] = $row['id_member'];
+		$smcFunc['db_free_result']($request);
+
+		$toRemove = array_diff($developers, $projectOptions['developers']);
+		$toAdd = array_diff($projectOptions['developers'], $developers);
+
+		if (!empty($toRemove))
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_developer
+				WHERE id_member IN({array_int:remove})
+					AND id_project = {int:project}',
+				array(
+					'remove' => $toRemove,
+					'project' => $id_project,
+				)
+			);
+
+		if (!empty($toAdd))
+		{
+			$rows = array();
+
+			foreach ($toAdd as $id_member)
+				$rows[] = array($id_project, (int) $id_member);
+
+			$smcFunc['db_insert']('insert',
+				'{db_prefix}project_developer',
+				array(
+					'id_project' => 'int',
+					'id_member' => 'int',
+				),
+				$rows,
+				array('id_project', 'id_member')
+			);
+		}
+	}
+
+	cache_put_data('project-' . $id_project, null, 120);
+	cache_put_data('project-version-' . $id_project, null, 120);
+
 	return true;
 }
 
@@ -229,12 +282,12 @@ function createVersion($id_project, $versionOptions)
 
 	unset($versionOptions['parent'], $versionOptions['name'], $versionOptions['description'], $versionOptions['member_groups']);
 
-	updateVersion($id_version, $versionOptions);
+	updateVersion($id_project, $id_version, $versionOptions);
 
 	return $id_version;
 }
 
-function updateVersion($id_version, $versionOptions)
+function updateVersion($id_project, $id_version, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
@@ -270,6 +323,9 @@ function updateVersion($id_version, $versionOptions)
 			))
 		);
 
+	cache_put_data('project-' . $id_project, null, 120);
+	cache_put_data('project-version-' . $id_project, null, 120);
+
 	return true;
 }
 
@@ -290,10 +346,13 @@ function createPTCategory($id_project, $categoryOptions)
 		array('id_category')
 	);
 
+	cache_put_data('project-' . $id_project, null, 120);
+	cache_put_data('project-version-' . $id_project, null, 120);
+	
 	return true;
 }
 
-function updatePTCategory($id_category, $categoryOptions)
+function updatePTCategory($id_project, $id_category, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
@@ -316,6 +375,9 @@ function updatePTCategory($id_category, $categoryOptions)
 				'category' => $id_category,
 			))
 		);
+
+	cache_put_data('project-' . $id_project, null, 120);
+	cache_put_data('project-version-' . $id_project, null, 120);
 
 	return true;
 }

@@ -337,48 +337,15 @@ function EditProject2()
 		if (count($projectOptions['trackers']) == 0)
 			fatal_lang_error('no_issue_types', false);
 
+		if (!isset($_POST['developer_list']) && !is_array())
+			$_POST['developer_list'] = array();
+
+		$projectOptions['developers'] = $_POST['developer_list'];
+
 		if (isset($_POST['add']))
 			$_POST['project'] = createProject($projectOptions);
 		else
 			updateProject($_POST['project'], $projectOptions);
-
-		$rows = array();
-
-		if (!isset($_POST['developer_list']))
-			$_POST['developer_list'] = array();
-
-		$toRemove = array_diff(array_keys($project['developers']), $_POST['developer_list']);
-		$toAdd = array_diff($_POST['developer_list'], array_keys($project['developers']));
-
-		if (!empty($toRemove))
-			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}project_developer
-				WHERE id_member IN({array_int:remove})
-					AND id_project = {int:project}',
-				array(
-					'remove' => $toRemove,
-					'project' => $_POST['project'],
-				)
-			);
-
-		if (!empty($toAdd))
-		{
-			foreach ($toAdd as $id_member)
-				$rows[] = array($_POST['project'], (int) $id_member);
-
-			$smcFunc['db_insert']('insert',
-				'{db_prefix}project_developer',
-				array(
-					'id_project' => 'int',
-					'id_member' => 'int',
-				),
-				$rows,
-				array('id_project', 'id_member')
-			);
-		}
-
-		cache_put_data('project-' . $_POST['project'], null, 120);
-		cache_put_data('project-version-' . $_POST['project'], null, 120);
 	}
 	elseif (isset($_POST['delete']) && !isset($_POST['confirmation']))
 	{
@@ -601,10 +568,7 @@ function EditCategory2()
 		if (isset($_POST['add']))
 			createPTCategory($_POST['project'], $categoryOptions);
 		else
-			updatePTCategory($_POST['category'], $categoryOptions);
-
-		cache_put_data('project-' . $_POST['project'], null, 120);
-		cache_put_data('project-version-' . $_POST['project'], null, 120);
+			updatePTCategory($_POST['project'], $_POST['category'], $categoryOptions);
 	}
 	elseif (isset($_POST['delete']))
 	{
@@ -863,10 +827,7 @@ function EditVersion2()
 		if (isset($_POST['add']))
 			createVersion($_POST['project'], $versionOptions);
 		else
-			updateVersion($_POST['version'], $versionOptions);
-
-		cache_put_data('project-' . $_POST['project'], null, 120);
-		cache_put_data('project-version-' . $_POST['project'], null, 120);
+			updateVersion($_POST['project'], $_POST['version'], $versionOptions);
 	}
 	elseif (isset($_POST['delete']))
 	{
