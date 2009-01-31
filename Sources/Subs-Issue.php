@@ -672,6 +672,15 @@ function deleteIssue($id_issue, $posterOptions)
 		)
 	);
 
+	// Remove notifications of this Issue
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_notify_projects
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $id_issue,
+		)
+	);
+
 	$id_event = createTimelineEvent($id_issue, $row['id_project'], 'delete_issue', $event_data, $posterOptions, array('time' => time()));
 
 	return $id_event;
