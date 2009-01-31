@@ -112,16 +112,6 @@ require_once($sourcedir . '/Subs-Project.php');
 require_once($sourcedir . '/Subs-Issue.php');
 require_once($sourcedir . '/Project.php');
 
-loadProjectTools();
-loadProject();
-loadIssue();
-
-if (!empty($project) || !empty($issue))
-{
-	$_REQUEST['action'] = 'projects';
-	$_GET['action'] = 'projects';
-}
-
 // TEMP
 if (empty($modSettings['projectStandalone']))
 {
@@ -129,9 +119,23 @@ if (empty($modSettings['projectStandalone']))
 	$modSettings['projectStandaloneUrl'] = '/projects';
 }
 
+loadProjectTools();
+loadProject();
+
 // Load theme and check bans
 loadTheme();
 is_not_banned();
+
+loadIssue();
+
+if (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
+{
+	$_REQUEST['action'] = 'projects';
+	$_GET['action'] = 'projects';
+}
+
+if (isset($context['project_error']))
+	fatal_lang_error($context['project_error'], false);
 
 // Main thing
 Projects(true);
