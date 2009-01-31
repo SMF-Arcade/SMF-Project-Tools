@@ -393,7 +393,7 @@ function loadProjectToolsPage($mode = '')
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 
-		// Make Procject Descriptions BBC if needed to
+		// If project is loaded parse BBC now for descriptions
 		if (isset($context['project']))
 		{
 			$context['project']['description'] = parse_bbc($context['project']['description']);

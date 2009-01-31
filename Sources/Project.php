@@ -91,7 +91,7 @@ function Projects($standalone = false)
 	{
 		$context['project_tabs'] = array(
 			'title' => $context['project']['name'],
-			'text' => parse_bbc($context['project']['description']),
+			'text' => $context['project']['description'],
 			'tabs' => array(
 				array(
 					'href' => project_get_url(array('project' => $project)),
