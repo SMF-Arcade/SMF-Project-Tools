@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************
-* installDatabase.php                                                             *
+* install_main.php                                                                *
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
@@ -20,24 +20,11 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smcFunc;
-global $db_package_log;
-global $db_connection, $db_name;
+global $txt, $smcFunc, $db_prefix;
+global $project_version, $addSettings, $permissions, $tables;
 
-// If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
-if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
-	require_once(dirname(__FILE__) . '/SSI.php');
-// Hmm... no SSI.php and no SMF?
-elseif (!defined('SMF'))
-	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
-// Make sure we have access to install packages
-if (!array_key_exists('db_add_column', $smcFunc))
-	db_extend('packages');
-
-// Temporary
-if (SMF == 'SSI') die('Installing database via SSI isn\'t supported due to bugs!!');
-
-require_once($sourcedir . '/ProjectDatabase.php');
+if (!defined('SMF'))
+	die('<b>Error:</b> Cannot install - please run ptinstall/index.php instead');
 
 $tbl = array_keys($tables);
 
@@ -72,9 +59,7 @@ if ($count == 0)
 			'id_profile' => 'int', 'profile_name' => 'string',
 		),
 		array(
-			array(
-				1, 'Default',
-			),
+			1, 'Default',
 		),
 		array()
 	);
@@ -121,8 +106,5 @@ list ($maxEventID) = $smcFunc['db_fetch_row']($request);
 $smcFunc['db_free_result']($request);
 
 updateSettings(array('project_maxEventID' => $maxEventID));
-
-if (SMF == 'SSI')
-	echo 'Database changes are complete!';
 
 ?>

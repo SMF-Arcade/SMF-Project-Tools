@@ -3,6 +3,10 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.2                                                          ?
 ================================================================================
+February 2009
+--------------------------------------------------------------------------------
+ + Installer no longer leaves files behind
+
 January 2009
 --------------------------------------------------------------------------------
  + Keep event when deleting comment if there's updates

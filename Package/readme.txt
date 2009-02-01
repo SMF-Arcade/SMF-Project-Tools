@@ -13,6 +13,20 @@ You should report all bugs to our Issue Tracker, feature requests are also welco
 SMF Project Tools is modification for SMF, which can be used to track issues of projects, for example bugs and feature request.
 It's primarily for software but it can be also used for other purposes.
 
+[color=blue][b][size=12pt]SMF Versions supported[/size][/b][/color]
+Only SMF 2.0 RC1 is supported by SMF Project Tools {version}.
+
+[color=blue][b][size=12pt]Installation[/size][/b][/color]
+To install SMF Project Tools it's recommended to use Package Manager to install.
+
+[color=blue][b][size=12pt]Manual Install (SMF 2.0 RC1)[/size][/b][/color]
+[list type=decimal]
+	[li]Manually apply edits from "install.xml". Package parsers can be used for help[/li]
+	[li]After you have done edits upload "ptinstall" directory to SMF install directory (including directory)[/li]
+	[li]Point browser [nobbc]http://site/path/to/smf/ptinstall/index.php[/nobbc][/li]
+	[li]After install/upgrade is done it's recommended to remove "ptinstall" directory[/li]
+[/list]
+
 [color=blue][b][size=12pt]Features[/size][/b][/color]
 [list]
 [/list]

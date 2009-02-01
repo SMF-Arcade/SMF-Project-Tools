@@ -10,6 +10,7 @@ $build_info = array(
 		'changelog.txt',
 		'modification.xsl' => 'Package/modification.xsl',
 		'package-info.xsl' => 'Package/package-info.xsl',
+		'ptinstall/index.php',
 		'extra/Themes/default/languages/Modifications.english.php' => 'Themes/default/languages/Modifications.english.php',
 	),
 );
@@ -18,7 +19,7 @@ function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 {
 	global $build_info;
 
-	if ($rev && ($filename == 'Sources/Subs-Project.php' || $filename == 'Sources/ProjectDatabase.php'))
+	if ($rev && ($filename == 'Sources/Subs-Project.php' || $filename == 'ptinstall/Database.php'))
 		$content = str_replace('$project_version = \'0.2\';', '$project_version = \'0.2 rev' . $rev . '\';', $content);
 	elseif (in_array($filename, array('readme.txt', 'install.xml',  'package-info.xml')))
 	{
