@@ -533,6 +533,9 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 	$id_event_new = $smcFunc['db_insert_id']('{db_prefix}project_timeline', 'id_event');
 
+	// Update latest event id
+	updateSettings(array('project_maxEventID' => $id_event_new));
+	
 	// Update Issues table too
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues

@@ -48,11 +48,16 @@ foreach ($tbl as $id => $table)
 db_extend('packages');
 $tbl = array_intersect($tbl, $smcFunc['db_list_tables']());
 
+// Step 1: Do tables
 doTables($tbl, $tables);
+
+// Step 2: Do Settings
 doSettings($addSettings);
+
+// Step 3: Do Permissions
 doPermission($permissions);
 
-// Step: Install default groups
+// Step 4: Install default groups if needed
 $request = $smcFunc['db_query']('', '
 	SELECT COUNT(*)
 	FROM {db_prefix}project_profiles');
@@ -64,13 +69,11 @@ if ($count == 0)
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_profiles',
 		array(
-			'id_profile' => 'int',
-			'profile_name' => 'string',
+			'id_profile' => 'int', 'profile_name' => 'string',
 		),
 		array(
 			array(
-				1,
-				'Default',
+				1, 'Default',
 			),
 		),
 		array()
@@ -108,6 +111,16 @@ if ($count == 0)
 		array()
 	);
 }
+
+// Step 5: Update project_maxEventID
+$request = $smcFunc['db_query']('', '
+	SELECT MAX(id_event)
+	FROM {db_prefix}project_timeline');
+
+list ($maxEventID) = $smcFunc['db_fetch_row']($request);
+$smcFunc['db_free_result']($request);
+
+updateSettings(array('project_maxEventID' => $maxEventID));
 
 if (SMF == 'SSI')
 	echo 'Database changes are complete!';
