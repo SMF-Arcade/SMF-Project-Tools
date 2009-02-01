@@ -440,10 +440,11 @@ $tables = array(
 				'columns' => array('id_issue')
 			),
 			array(
+				'name' => 'id_project',
 				'type' => 'index',
-				'columns' => array('id_project', 'id_issue')
-			)
-		)
+				'columns' => array('id_project'),
+			),
+		),
 	),
 	// Comments
 	'issue_comments' => array(
@@ -523,13 +524,15 @@ $tables = array(
 				'columns' => array('id_comment')
 			),
 			array(
+				'name' => 'id_issue',
 				'type' => 'index',
 				'columns' => array('id_issue')
 			),
 			array(
+				'name' => 'id_event',
 				'type' => 'index',
 				'columns' => array('id_event')
-			)
+			),
 		)
 	),
 	// Project Timeline
@@ -631,7 +634,7 @@ $tables = array(
 				'type' => 'primary',
 				'columns' => array('id_issue', 'tag')
 			),
-		)
+		),
 	),
 	// Log table for notify requests
 	'log_notify_projects' => array(
@@ -668,10 +671,11 @@ $tables = array(
 				'columns' => array('id_project', 'id_issue', 'id_member')
 			),
 			array(
+				'name' => 'id_project',
 				'type' => 'index',
 				'columns' => array('id_project')
 			),
-		)
+		),
 	),
 	// Log tables for read marks
 	'log_projects' => array(
@@ -704,6 +708,7 @@ $tables = array(
 				'columns' => array('id_project', 'id_member')
 			),
 			array(
+				'name' => 'id_project',
 				'type' => 'index',
 				'columns' => array('id_project')
 			),
@@ -739,6 +744,7 @@ $tables = array(
 				'columns' => array('id_issue', 'id_member')
 			),
 			array(
+				'name' => 'id_issue',
 				'type' => 'index',
 				'columns' => array('id_issue')
 			),
@@ -769,6 +775,7 @@ $tables = array(
 				'columns' => array('id_member', 'variable')
 			),
 			array(
+				'name' => 'id_member',
 				'type' => 'index',
 				'columns' => array('id_member')
 			),

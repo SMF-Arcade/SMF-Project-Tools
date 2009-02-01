@@ -27,13 +27,16 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 {
 	global $smcFunc, $db_prefix, $db_type;
 
+	$log = array();
+
 	foreach ($tables as $table)
 	{
-		$table_name = $db_prefix . $table['name'];
+		$table_name = $table['name'];
 
+		// Renames in this table?
 		if (!empty($table['rename']))
 		{
-			$oldTable = $smcFunc['db_table_structure']($table_name, array('no_prefix' => true));
+			$oldTable = $smcFunc['db_table_structure']($table_name);
 
 			foreach ($oldTable['columns'] as $column)
 			{
@@ -42,19 +45,53 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 					$old_name = $column['name'];
 					$column['name'] = $table['rename'][$column['name']];
 
-					$smcFunc['db_change_column']($table_name, $old_name, $column, array('no_prefix' => true));
+					$smcFunc['db_change_column']($table_name, $old_name, $column);
 				}
 			}
 		}
 
-		if (empty($table['smf']))
-			$smcFunc['db_create_table']($table_name, $table['columns'], $table['indexes'], array('no_prefix' => true));
-
-		if (in_array($table_name, $tbl))
+		// Global renames? (should be avoided)
+		if (!empty($columnRename) && in_array($db_prefix . $table_name, $tbl))
 		{
-			foreach ($table['columns'] as $column)
+			$currentTable = $smcFunc['db_table_structure']($table_name);
+
+			foreach ($currentTable['columns'] as $column)
 			{
-				$smcFunc['db_add_column']($table_name, $column, array('no_prefix' => true));
+				if (isset($columnRename[$column['name']]))
+				{
+					$old_name = $column['name'];
+					$column['name'] = $columnRename[$column['name']];
+					$smcFunc['db_change_column']($table_name, $old_name, $column);
+				}
+			}
+		}
+
+		// Create table
+		if (!in_array($db_prefix . $table_name, $tbl))
+			$smcFunc['db_create_table']($table_name, $table['columns'], $table['indexes']);
+		// Update table
+		else
+		{
+			$currentTable = $smcFunc['db_table_structure']($table_name);
+
+			// Check that all columns are in
+			foreach ($table['columns'] as $id => $col)
+			{
+				$exists = false;
+
+				// TODO: Check that definition is correct
+				foreach ($currentTable['columns'] as $col2)
+				{
+					if ($col['name'] === $col2['name'])
+					{
+						$exists = true;
+						break;
+					}
+				}
+
+				// Add missing columns
+				if (!$exists)
+					$smcFunc['db_add_column']($table_name, $col);
 
 				// TEMPORARY until SMF package functions works with this
 				if (isset($column['unsigned']) && $db_type == 'mysql')
@@ -66,7 +103,7 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 						$type = $type . '(' . $size . ')';
 
 					$smcFunc['db_query']('', "
-						ALTER TABLE $table_name
+						ALTER TABLE {db_prefix}$table_name
 						CHANGE COLUMN $column[name] $column[name] $type UNSIGNED " . (empty($column['null']) ? 'NOT NULL' : '') . ' ' .
 							(empty($column['default']) ? '' : "default '$column[default]'") . ' ' .
 							(empty($column['auto']) ? '' : 'auto_increment') . ' ',
@@ -75,14 +112,109 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 				}
 			}
 
-			// Update table
-			foreach ($table['indexes'] as $index)
+			// Remove any unnecassary columns
+			foreach ($currentTable['columns'] as $col)
 			{
-				if ($index['type'] != 'primary')
-					$smcFunc['db_add_index']($table_name, $index, array('no_prefix' => true));
+				$exists = false;
+
+				foreach ($table['columns'] as $col2)
+				{
+					if ($col['name'] === $col2['name'])
+					{
+						$exists = true;
+						break;
+					}
+				}
+
+				if (!$exists && isset($table['upgrade']['columns'][$col['name']]))
+				{
+					if ($table['upgrade']['columns'][$col['name']] == 'drop')
+						$smcFunc['db_remove_column']($table_name, $col['name']);
+				}
+				elseif (!$exists)
+					$log[] = sprintf('Table %s has non-required column %s', $table_name, $col['name']);
+			}
+
+			// Check that all indexes are in and correct
+			foreach ($table['indexes'] as $id => $index)
+			{
+				$exists = false;
+
+				foreach ($currentTable['indexes'] as $index2)
+				{
+					// Primary is special case
+					if ($index['type'] == 'primary' && $index2['type'] == 'primary')
+					{
+						$exists = true;
+
+						if ($index['columns'] !== $index2['columns'])
+						{
+							$smcFunc['db_remove_index']($table_name, 'primary');
+							$smcFunc['db_add_index']($table_name, $index);
+						}
+
+						break;
+					}
+					// Make sure index is correct
+					elseif (isset($index['name']) && isset($index2['name']) && $index['name'] == $index2['name'])
+					{
+						$exists = true;
+
+						// Need to be changed?
+						if ($index['type'] != $index2['type'] || $index['columns'] !== $index2['columns'])
+						{
+							$smcFunc['db_remove_index']($table_name, $index['name']);
+							$smcFunc['db_add_index']($table_name, $index);
+						}
+
+						break;
+					}
+				}
+
+				if (!$exists)
+					$smcFunc['db_add_index']($table_name, $index);
+			}
+
+			// Remove unnecassary indexes
+			foreach ($currentTable['indexes'] as $index)
+			{
+				$exists = false;
+
+				foreach ($table['indexes'] as $index2)
+				{
+					// Primary is special case
+					if ($index['type'] == 'primary' && $index2['type'] == 'primary')
+						$exists = true;
+					// Make sure index is correct
+					elseif (isset($index['name']) && isset($index2['name']) && $index['name'] == $index2['name'])
+						$exists = true;
+				}
+
+				if (!$exists)
+				{
+					if (isset($table['upgrade']['indexes']))
+					{
+						foreach ($table['upgrade']['indexes'] as $index2)
+						{
+							if ($index['type'] == 'primary' && $index2['type'] == 'primary' && $index['columns'] === $index2['columns'])
+								$smcFunc['db_remove_index']($table_name, 'primary');
+							elseif (isset($index['name']) && isset($index2['name']) && $index['name'] == $index2['name'] && $index['type'] == $index2['type'] && $index['columns'] === $index2['columns'])
+								$smcFunc['db_remove_index']($table_name, $index['name']);
+							else
+								$log[] = array($table_name . ' has Unneeded index', $index);
+						}
+					}
+					else
+						$log[] = array($table_name . ' has Unneeded index', $index);
+				}
 			}
 		}
 	}
+
+	if (!empty($log))
+		log_error(implode('<br />', $log));
+
+	return $log;
 }
 
 function doSettings($addSettings, $smf2 = true)
