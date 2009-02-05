@@ -304,7 +304,7 @@ function IssueReply2()
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions);
 
-	if (!empty($issueOptions))
+	if (count($issueOptions) > 1)
 		$event_data = updateIssue($issue, $issueOptions, $posterOptions, empty($_REQUEST['com']));
 	else
 		$event_data = array();
@@ -398,7 +398,7 @@ function IssueReply2()
 		array(
 			'current_user' => $user_info['id'],
 			'issue' => $issue,
-			'comment' => (int) $_REQUEST['com'],
+			'comment' => $id_comment,
 		)
 	);
 	list ($id_event) = $smcFunc['db_fetch_row']($request);

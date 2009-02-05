@@ -891,7 +891,7 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 
 function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
 {
-	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt;
+	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt, $memberContext;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
