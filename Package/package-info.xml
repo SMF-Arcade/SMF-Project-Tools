@@ -80,13 +80,16 @@
 	<upgrade for="2.0 Beta 4" from="0.1.2">
 		<readme parsebbc="true">readme.txt</readme>
 
-		<require-file name="Sources/ProjectDatabase.php" destination="$sourcedir" />
-		<database>installDatabase.php</database>
-
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageVersions.php" destination="$sourcedir" />
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
 
-		<!-- These files goes to Theme directory -->
+		<!-- These files goest to Theme directory -->
+		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 	</upgrade>
 

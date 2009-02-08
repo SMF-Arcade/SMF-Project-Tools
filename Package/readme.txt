@@ -10,7 +10,8 @@ There maybe bugs that may cause data loss.
 You should report all bugs to our Issue Tracker, feature request are also welcome.
 
 [color=blue][b][size=12pt]Introduction[/size][/b][/color]
-SMF Project Tools is an issue tracker for SMF.
+SMF Project Tools is modification for SMF, which can be used to track issues of projects, for example bugs and feature request.
+It's primarily for software but it can be also used for other purposes.
 
 [color=blue][b][size=12pt]Notes[/size][/b][/color]
 This software uses icons [url=http://www.famfamfam.com/lab/icons/silk/]FamFamFam Silk[/url] icons licensed under Creative Commons Attribution 2.5 License.
