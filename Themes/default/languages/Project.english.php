@@ -229,6 +229,8 @@ $txt['category_not_found'] = 'Category not found';
 
 $txt['cannot_project_subscribe'] = 'You aren\'t allowed to subscribe to notifications';
 
+$txt['comment_cant_remove_first'] = 'You cannot remove first comment, delete issue instead';
+
 $txt['project_fix_errors'] = 'Please fix following errors';
 $txt['project_is_missing'] = 'Required field %s is empty';
 $txt['project_invalid'] = '%s has invalid value';

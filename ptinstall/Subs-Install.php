@@ -131,7 +131,7 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 					if ($table['upgrade']['columns'][$col['name']] == 'drop')
 						$smcFunc['db_remove_column']($table_name, $col['name']);
 				}
-				elseif (!$exists)
+				elseif (!$exists && empty($table['smf']))
 					$log[] = sprintf('Table %s has non-required column %s', $table_name, $col['name']);
 			}
 
@@ -201,11 +201,11 @@ function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
 							elseif (isset($index['name']) && isset($index2['name']) && $index['name'] == $index2['name'] && $index['type'] == $index2['type'] && $index['columns'] === $index2['columns'])
 								$smcFunc['db_remove_index']($table_name, $index['name']);
 							else
-								$log[] = array($table_name . ' has Unneeded index', $index);
+								$log[] = $table_name . ' has Unneeded index ' . var_dump($index);
 						}
 					}
 					else
-						$log[] = array($table_name . ' has Unneeded index', $index);
+						$log[] = $table_name . ' has Unneeded index ' . var_dump($index);
 				}
 			}
 		}

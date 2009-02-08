@@ -436,6 +436,9 @@ function IssueDeleteComment()
 		fatal_lang_error('comment_not_found', false);
 	$smcFunc['db_free_result']($request);
 
+	if ($row['id_comment'] == $context['current_issue']['details']['id'])
+		fatal_lang_error('comment_cant_remove_first', false);
+
 	// Delete comment
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}issue_comments
