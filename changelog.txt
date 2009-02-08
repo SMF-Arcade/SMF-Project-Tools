@@ -6,6 +6,8 @@ SMF Project Tools 0.2                                                          ?
 February 2009
 --------------------------------------------------------------------------------
  + Installer no longer leaves files behind
+ ! Don't report columns from SMF tables as unnecessary
+ ! Disallow deleting first comment from issues
 
 January 2009
 --------------------------------------------------------------------------------
