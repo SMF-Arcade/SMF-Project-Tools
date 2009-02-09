@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectView()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
+	global $context, $modSettings, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
 	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
@@ -98,14 +98,14 @@ function ProjectView()
 			'title' => 'reported_by_me',
 			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'reporter' => $user_info['id'])),
 			'order' => 'i.updated DESC',
-			'where' => 'i.id_reporter = {int:member}',
+			'where' => 'i.id_reporter = {int:current_member}',
 			'show' => projectAllowedTo('issue_report'),
 		),
 		'assigned' => array(
 			'title' => 'assigned_to_me',
 			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'assignee' => $user_info['id'])),
 			'order' => 'i.updated DESC',
-			'where' => 'i.id_assigned = {int:member} AND NOT (i.status IN ({array_int:closed_status}))',
+			'where' => 'i.id_assigned = {int:current_member} AND NOT (i.status IN ({array_int:closed_status}))',
 			'show' => projectAllowedTo('issue_resolve'),
 		),
 		'new_issues' => array(
