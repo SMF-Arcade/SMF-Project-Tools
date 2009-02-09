@@ -36,6 +36,7 @@ $txt['repair_no_errors'] = 'Congratulations, no errors found!  Thanks for checki
 $txt['errors_list'] = 'Errors found';
 $txt['fix_errors'] = 'Do you want to try to fix errors?';
 
+$txt['repair_step_general_maintenance'] = 'General maintenance';
 $txt['repair_step_comments_not_linked'] = 'Comments not linked to events';
 $txt['repair_step_events_without_poster'] = 'Events without poster info';
 $txt['repair_step_not_needed_events'] = 'Events no longer needed';

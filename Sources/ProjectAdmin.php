@@ -199,6 +199,10 @@ function ProjectsMaintenanceRepair()
 
 	$repairFunctions = array(
 		array(
+			'name' => $txt['repair_step_general_maintenance'],
+			'function' => 'ptMaintenanceGeneral',
+		),
+		array(
 			'name' => $txt['repair_step_comments_not_linked'],
 			'function' => 'ptMaintenanceEvents1',
 		),
@@ -220,7 +224,9 @@ function ProjectsMaintenanceUpgrade()
 	global $txt;
 
 	$repairFunctions = array(
-
+		array(
+			'function' => 'ptUpgrade_log_issues',
+		),
 	);
 
 	return $repairFunctions;

@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 function IssueView()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $issue;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
 
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
@@ -228,14 +228,16 @@ function IssueView()
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_issues',
 			array(
+				'id_project' => 'int',
 				'id_issue' => 'int',
 				'id_member' => 'int',
 				'id_event' => 'int',
 			),
 			array(
+				$project,
 				$issue,
 				$user_info['id'],
-				$context['current_issue']['id_event_mod'],
+				$modSettings['project_maxEventID'],
 			),
 			array('id_issue', 'id_member')
 		);

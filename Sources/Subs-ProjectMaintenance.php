@@ -23,6 +23,42 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+function ptUpgrade_log_issues($check = false)
+{
+	global $smcFunc;
+
+	// Is this step required to run?
+	if ($check)
+	{
+		return true;
+	}
+
+	$request = $smcFunc['db_query']('', '
+		SELECT log.id_issue, i.id_project
+		FROM {db_prefix}log_issues AS log
+			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = log.id_issue)
+		WHERE log.id_project = {int:no_project}
+		GROUP BY log.id_issue',
+		array(
+			'no_project' => 0,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}log_issues
+			SET id_project = {int:project}
+			WHERE id_issue = {int:issue}',
+			array(
+				'project' => $row['id_project'],
+				'issue' => $row['id_issue'],
+			)
+		);
+	}
+	$smcFunc['db_free_result']($request);
+}
+
 function ptMaintenanceGeneral($check = false)
 {
 	global $smcFunc;

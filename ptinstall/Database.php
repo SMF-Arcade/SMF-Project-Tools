@@ -723,6 +723,11 @@ $tables = array(
 		// Columns
 		'columns' => array(
 			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
 				'name' => 'id_issue',
 				'type' => 'int',
 				'unsigned' => true,

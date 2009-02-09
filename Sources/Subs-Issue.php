@@ -564,11 +564,13 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_issues',
 			array(
+				'id_project' => 'int',
 				'id_issue' => 'int',
 				'id_member' => 'int',
 				'id_event' => 'int',
 			),
 			array(
+				$id_project,
 				$id_issue,
 				$user_info['id'],
 				$id_event_new,
