@@ -25,11 +25,6 @@
 	<install for="2.0 RC1">
 		<readme parsebbc="true">readme.txt</readme>
 
-		<!-- Run Installer/upgrader -->
-		<code>ptinstall/Database.php</code>
-		<code>ptinstall/Subs-Install.php</code>
-		<database>ptinstall/install_main.php</database>
-
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
@@ -46,6 +41,7 @@
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 
 		<!-- These files goest to Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
@@ -76,8 +72,16 @@
 		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
 		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
 		<require-file name="Themes/default/languages/ProjectEmail.english.php" destination="$languagedir" />
+		
+		<!-- Run Installer/upgrader -->
+		<code>ptinstall/Database.php</code>
+		<code>ptinstall/Subs-Install.php</code>
+		<database>ptinstall/install_main.php</database>
 
 		<modification format="xml" type="file">install.xml</modification>
+
+		<!-- Redirect to upgrader -->
+		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
 	<uninstall for="2.0 RC1">

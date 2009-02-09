@@ -46,16 +46,8 @@ function ProjectView()
 
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_projects',
-			array(
-				'id_project' => 'int',
-				'id_member' => 'int',
-				'id_event' => 'int',
-			),
-			array(
-				$project,
-				$user_info['id'],
-				$context['project']['id_event_mod']
-			),
+			array('id_project' => 'int', 'id_member' => 'int', 'id_event' => 'int',),
+			array($project, $user_info['id'], $modSettings['project_maxEventID'],),
 			array('id_project', 'id_member')
 		);
 

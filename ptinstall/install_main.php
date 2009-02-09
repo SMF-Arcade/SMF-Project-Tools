@@ -21,10 +21,12 @@
 **********************************************************************************/
 
 global $txt, $smcFunc, $db_prefix;
-global $project_version, $addSettings, $permissions, $tables;
+global $project_version, $addSettings, $permissions, $tables, $sourcedir;
 
 if (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please run ptinstall/index.php instead');
+
+require_once($sourcedir . '/Subs-ProjectMaintenance.php');
 
 $tbl = array_keys($tables);
 
@@ -47,7 +49,8 @@ doPermission($permissions);
 // Step 4: Install default groups if needed
 $request = $smcFunc['db_query']('', '
 	SELECT COUNT(*)
-	FROM {db_prefix}project_profiles');
+	FROM {db_prefix}project_profiles
+	WHERE id_profile = 1');
 
 list ($count) = $smcFunc['db_fetch_row']($request);
 $smcFunc['db_free_result']($request);
@@ -55,13 +58,9 @@ if ($count == 0)
 {
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_profiles',
-		array(
-			'id_profile' => 'int', 'profile_name' => 'string',
-		),
-		array(
-			1, 'Default',
-		),
-		array()
+		array('id_profile' => 'int', 'profile_name' => 'string',),
+		array(1, 'Default',),
+		array('id_profile')
 	);
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_permissions',
@@ -93,18 +92,11 @@ if ($count == 0)
 			array(1, 2, 'delete_comment_own'),
 			array(1, 2, 'delete_comment_any'),
 		),
-		array()
+		array('id_profile', 'id_group')
 	);
 }
 
-// Step 5: Update project_maxEventID
-$request = $smcFunc['db_query']('', '
-	SELECT MAX(id_event)
-	FROM {db_prefix}project_timeline');
-
-list ($maxEventID) = $smcFunc['db_fetch_row']($request);
-$smcFunc['db_free_result']($request);
-
-updateSettings(array('project_maxEventID' => $maxEventID));
+// Step 5: Run general maintenance
+ptMaintenanceGeneral();
 
 ?>

@@ -20,12 +20,20 @@ Only SMF 2.0 RC1 is supported by SMF Project Tools {version}.
 To install SMF Project Tools it's recommended to use Package Manager to install.
 
 [color=blue][b][size=12pt]Manual Install (SMF 2.0 RC1)[/size][/b][/color]
-[list type=decimal]
-	[li]Manually apply edits from "install.xml". Package parsers can be used for help[/li]
-	[li]After you have done edits upload "ptinstall" directory to SMF install directory (including directory)[/li]
-	[li]Point browser [nobbc]http://site/path/to/smf/ptinstall/index.php[/nobbc][/li]
-	[li]After install/upgrade is done it's recommended to remove "ptinstall" directory[/li]
-[/list]
+
+[color=blue][b][size=10pt]1. Apply edits[/size][/b][/color]
+
+Manually apply edits from "install.xml". Package parsers can be used for help
+
+[color=blue][b][size=10pt]2. Create or Upgrade database[/size][/b][/color]
+
+Upload "ptinstall" directory to SMF install directory (including directory)
+Point your browser to [nobbc]http://site/path/to/smf/ptinstall/index.php[/nobbc].
+
+[color=blue][b][size=10pt]3. Upgrade data[/size][/b][/color]
+
+If you upgraded from 0.3 SVN Builds or lower you need to upgrade database from
+[nobbc]http://site/path/to/smf/index.php?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade[/nobbc]
 
 [color=blue][b][size=12pt]Features[/size][/b][/color]
 [list]

@@ -103,8 +103,11 @@ function ProjectsMaintenance()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
+	require_once($sourcedir . '/Subs-ProjectMaintenance.php');
+
 	$maintenaceActions = array(
 		'repair' => 'ProjectsMaintenanceRepair',
+		'upgrade' => 'ProjectsMaintenanceUpgrade',
 	);
 
 	$context['sub_template'] = 'project_admin_maintenance';
@@ -112,168 +115,115 @@ function ProjectsMaintenance()
 	if (isset($_REQUEST['activity']) && isset($maintenaceActions[$_REQUEST['activity']]))
 	{
 		$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['activity']];
-		$maintenaceActions[$_REQUEST['activity']]();
+		$repairFunctions = $maintenaceActions[$_REQUEST['activity']]();
+
+		$context['total_steps'] = count($repairFunctions);
+
+		if (!isset($_GET['step']))
+			$_GET['step'] = 0;
+
+		if (!isset($_SESSION['maintenance']) || $_SESSION['maintenance']['activity'] != $_REQUEST['activity'])
+		{
+			$_SESSION['maintenance'] = array(
+				'activity' => $_REQUEST['activity'],
+				'needed_actions' => array(),
+			);
+
+			foreach ($repairFunctions as $id => $act)
+			{
+				if ($act['function'](true))
+					$_SESSION['maintenance']['needed_actions'][] = $id;
+			}
+
+			if (!empty($_SESSION['maintenance']['needed_actions']))
+				redirectexit('action=admin;area=projectsadmin;sa=maintenance;step=0;activity=' . $_REQUEST['activity'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+		}
+		else
+		{
+			$current_step = -1;
+			foreach ($repairFunctions as $id => $act)
+			{
+				$current_step++;
+
+				if ($_GET['step'] > $current_step)
+					continue;
+
+				if (!in_array($id, $_SESSION['maintenance']['needed_actions']))
+				{
+					$_GET['step']++;
+					continue;
+				}
+
+				$act['function']();
+
+				$_GET['step']++;
+
+				pauseProjectMaintenance(true);
+			}
+		}
+
+		unset($_SESSION['maintenance']);
+		$context['maintenance_finished'] = true;
 	}
+}
+
+function pauseProjectMaintenance($force)
+{
+	global $context, $txt, $time_start;
+
+	// Errr, wait.  How much time has this taken already?
+	if (!$force && time() - array_sum(explode(' ', $time_start)) < 3)
+		return;
+
+	$context['continue_get_data'] = '?action=admin;area=projectsadmin;sa=maintenance;step=' . $_GET['step'] . ';activity=' . $_REQUEST['activity'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+	$context['page_title'] = $txt['not_done_title'];
+	$context['continue_post_data'] = '';
+	$context['continue_countdown'] = '2';
+	$context['sub_template'] = 'not_done';
+
+	// Change these two if more steps are added!
+	if (empty($max_substep))
+		$context['continue_percent'] = round(($_GET['step'] * 100) / $context['total_steps']);
+	else
+		$context['continue_percent'] = round((($_GET['step'] + ($_GET['substep'] / $max_substep)) * 100) / $context['total_steps']);
+
+	// Never more than 100%!
+	$context['continue_percent'] = min($context['continue_percent'], 100);
+
+	obExit();
 }
 
 function ProjectsMaintenanceRepair()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $txt;
 
-	// Check for errors
-	if (!isset($_REQUEST['fix']))
-	{
-		$context['project_errors'] = array();
+	$repairFunctions = array(
+		array(
+			'name' => $txt['repair_step_comments_not_linked'],
+			'function' => 'ptMaintenanceEvents1',
+		),
+		array(
+			'name' => $txt['repair_step_events_without_poster'],
+			'function' => 'ptMaintenanceEvents2',
+		),
+		array(
+			'name' => $txt['repair_step_not_needed_events'],
+			'function' => 'ptMaintenanceEvents3',
+		),
+	);
 
-		// Comments not linked to events
-		$request = $smcFunc['db_query']('', '
-			SELECT id_comment
-			FROM {db_prefix}issue_comments
-			WHERE id_event = 0');
+	return $repairFunctions;
+}
 
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_errors'][] = sprintf($txt['error_comment_not_linked'], $row['id_comment']);
-		$smcFunc['db_free_result']($request);
+function ProjectsMaintenanceUpgrade()
+{
+	global $txt;
 
-		/*// Events without issues
-		$request = $smcFunc['db_query']('', '
-			SELECT id_event
-			FROM {db_prefix}project_timeline AS tl
-				LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
-			WHERE ISNULL(i.id_issue)');
+	$repairFunctions = array(
 
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_errors'][] = sprintf($txt['error_issue_info_event'], $row['id_event']);
-		$smcFunc['db_free_result']($request);*/
+	);
 
-		// Events without poster info
-		$request = $smcFunc['db_query']('', '
-			SELECT id_event
-			FROM {db_prefix}project_timeline
-			WHERE poster_name = {string:empty} OR poster_email = {string:empty} OR poster_ip = {string:empty}',
-			array(
-				'empty' => '',
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_errors'][] = sprintf($txt['error_missing_poster_info_event'], $row['id_event']);
-		$smcFunc['db_free_result']($request);
-
-		// Unnecessary events
-		$request = $smcFunc['db_query']('', '
-			SELECT id_event
-			FROM {db_prefix}project_timeline
-			WHERE event = {string:edit_comment} OR event = {string:delete_comment}',
-			array(
-				'edit_comment' => 'edit_comment',
-				'delete_comment' => 'delete_comment',
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_errors'][] = sprintf($txt['error_unnecessary_event'], $row['id_event']);
-		$smcFunc['db_free_result']($request);
-
-		// Show list if there were errors
-		if (!empty($context['project_errors']))
-			$context['sub_template'] = 'project_admin_maintenance_repair_list';
-		else
-		{
-			$context['maintenance_message'] = $txt['repair_no_errors'];
-			$context['maintenance_finished'] = true;
-		}
-	}
-	// Fix errors
-	else
-	{
-		// Fix comments without id_event
-		$request = $smcFunc['db_query']('', '
-			SELECT id_comment
-			FROM {db_prefix}issue_comments
-			WHERE id_event = 0');
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			$event_req = $smcFunc['db_query']('', '
-				SELECT id_event
-				FROM {db_prefix}project_timeline AS tl
-				WHERE tl.event = {string:new_comment}
-					AND INSTR(tl.event_data , {string:comment})',
-				array(
-					'new_comment' => 'new_comment',
-					'comment' => 's:7:"comment";i:' . $row['id_comment'] . ''
-				)
-			);
-
-			list ($id_event) = $smcFunc['db_fetch_row']($event_req);
-			$smcFunc['db_free_result']($event_req);
-
-			if (!$id_event)
-			{
-				$event_req = $smcFunc['db_query']('', '
-					SELECT id_event
-					FROM {db_prefix}issues AS i
-						LEFT JOIN {db_prefix}project_timeline AS tl ON (tl.id_issue = i.id_issue)
-					WHERE i.id_comment_first = {int:comment}
-						AND tl.event = {string:new_issue}',
-					array(
-						'new_issue' => 'new_issue',
-						'comment' => $row['id_comment'],
-					)
-				);
-				list ($id_event) = $smcFunc['db_fetch_row']($event_req);
-				$smcFunc['db_free_result']($event_req);
-			}
-
-			if ($id_event)
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}issue_comments
-					SET id_event = {int:event}
-					WHERE id_comment = {int:comment}',
-					array(
-						'event' => $id_event,
-						'comment' => $row['id_comment'],
-					)
-				);
-		}
-		$smcFunc['db_free_result']($request);
-
-		// Events without poster info
-		$request = $smcFunc['db_query']('', '
-			SELECT tl.id_event, com.poster_name, com.poster_email, com.poster_ip
-			FROM {db_prefix}project_timeline AS tl
-				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_event = tl.id_event)
-			WHERE tl.poster_name = {string:empty} OR tl.poster_email = {string:empty} OR tl.poster_ip = {string:empty}',
-			array(
-				'empty' => '',
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}project_timeline
-				SET poster_name = {string:poster_name}, poster_email = {string:poster_email}, poster_ip = {string:poster_ip}
-				WHERE id_event = {int:event}', array(
-					'event' => $row['id_event'],
-					'poster_name' => $row['poster_name'],
-					'poster_email' => $row['poster_email'],
-					'poster_ip' => $row['poster_ip'],
-				)
-			);
-
-		// Unnecessary events
-		$request = $smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}project_timeline
-			WHERE event = {string:edit_comment} OR event = {string:delete_comment}',
-			array(
-				'edit_comment' => 'edit_comment',
-				'delete_comment' => 'delete_comment',
-			)
-		);
-
-		$context['maintenance_finished'] = true;
-	}
+	return $repairFunctions;
 }
 
 ?>
