@@ -34,12 +34,13 @@ function loadIssue()
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
 			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . ',
+			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from AS new_from') . ',
 			com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
+			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
+			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = i.id_project AND lmr.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
@@ -48,7 +49,7 @@ function loadIssue()
 			AND i.id_project = {int:project}
 		LIMIT 1',
 		array(
-			'member' => $user_info['id'],
+			'current_member' => $user_info['id'],
 			'issue' => $issue,
 			'project' => $project,
 			'any' => '*',
@@ -859,10 +860,11 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . '
+			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from AS new_from') . '
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = i.id_issue)') . '
+			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
+			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = p.id_project AND lmr.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
@@ -879,7 +881,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			'empty' => '',
 			'start' => 0,
 			'num_issues' => $num_issues,
-			'member' => $user_info['id'],
+			'current_member' => $user_info['id'],
 			'closed_status' => $context['closed_status'],
 		), $queryArray)
 	);

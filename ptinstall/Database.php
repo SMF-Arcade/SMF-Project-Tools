@@ -714,6 +714,40 @@ $tables = array(
 			),
 		)
 	),
+	// Log tables for read marks
+	'log_project_mark_read' => array(
+		'name' => 'log_project_mark_read',
+		// Columns
+		'columns' => array(
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_event',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_project', 'id_member')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+		)
+	),
+	// Log for issues
 	'log_issues' => array(
 		'name' => 'log_issues',
 		// Rename old columns

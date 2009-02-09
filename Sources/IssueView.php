@@ -118,13 +118,14 @@ function IssueView()
 			else
 			{
 				$request = $smcFunc['db_query']('', '
-					SELECT (IFNULL(log.id_event, -1) + 1) AS new_from
+					SELECT IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from
 					FROM {db_prefix}issues AS i
-						LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:member} AND log.id_issue = {int:current_issue})
+						LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = {int:current_issue})
+						LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = i.id_project AND lmr.id_member = {int:current_member})
 					WHERE i.id_issue = {int:current_issue}
 					LIMIT 1',
 					array(
-						'member' => $user_info['id'],
+						'current_member' => $user_info['id'],
 						'current_issue' => $issue,
 					)
 				);

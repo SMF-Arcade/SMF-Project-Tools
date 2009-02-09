@@ -35,10 +35,11 @@ function ProjectList()
 		SELECT
 			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['type_columns']) . ', p.id_event_mod,
 			mem.id_member, mem.real_name,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : '(IFNULL(log.id_event, -1) + 1) AS new_from') . '
+			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . '
 		FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:member}
-				AND log.id_project = p.id_project)') . '
+			LEFT JOIN {db_prefix}log_projects AS log ON (log.id_member = {int:current_member}
+				AND log.id_project = p.id_project)
+			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = p.id_project AND lmr.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}project_developer AS pdev ON (pdev.id_project = p.id_project)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pdev.id_member)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
@@ -46,7 +47,7 @@ function ProjectList()
 		WHERE {query_see_project}
 		ORDER BY p.name',
 		array(
-			'member' => $user_info['id'],
+			'current_member' => $user_info['id'],
 		)
 	);
 

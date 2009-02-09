@@ -457,83 +457,6 @@ function getPrivateProfiles()
 	return $profiles;
 }
 
-// Function to generate urls
-function project_get_url($params = array(), $project = null)
-{
-	global $scripturl, $modSettings;
-
-	// Running in "standalone" mode WITH rewrite
-	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
-	{
-		// Main Page? Too easy
-		if (empty($params))
-			return $modSettings['projectStandaloneUrl'] . '/';
-
-		if (isset($params['project']))
-		{
-			$project = $params['project'];
-			unset($params['project']);
-		}
-		elseif (!empty($GLOBALS['project']))
-			$project = $GLOBALS['project'];
-		elseif ($project == null)
-			die(print_r(debug_backtrace(), true));
-
-
-		if (count($params) === 0)
-			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
-
-		$query = '';
-
-		foreach ($params as $p => $value)
-		{
-			if ($value === null)
-				continue;
-
-			if (!empty($query))
-				$query .= ';';
-			else
-				$query .= '?';
-
-			if (is_int($p))
-				$query .= $value;
-			else
-				$query .= $p . '=' . $value;
-		}
-
-		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
-	}
-	//Running in "standalone" mode without rewrite or standard mode
-	else
-	{
-		$return = '';
-
-		if (empty($params) && empty($modSettings['projectStandaloneUrl']))
-			$params['action'] = 'projects';
-
-		foreach ($params as $p => $value)
-		{
-			if ($value === null)
-				continue;
-
-			if (!empty($return))
-				$return .= ';';
-			else
-				$return .= '?';
-
-			if (is_int($p))
-				$return .= $value;
-			else
-				$return .= $p . '=' . $value;
-		}
-
-		if (!empty($modSettings['projectStandalone']))
-			return $modSettings['projectStandaloneUrl'] . $return;
-		else
-			return $scripturl . $return;
-	}
-}
-
 // Load Timeline
 function loadTimeline($project = 0)
 {
@@ -665,6 +588,149 @@ function loadTimeline($project = 0)
 		);
 	}
 	$smcFunc['db_free_result']($request);
+}
+
+function markProjectsRead($projects, $unread = false)
+{
+	global $smcFunc, $modSettings, $user_info;
+
+	if (!is_array($projects))
+		$projects = array($projects);
+	else
+		$projects = array_unique($projects);
+
+	if (empty($projects))
+		return;
+
+	// Mark unread
+	if ($unread)
+	{
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_project_mark_read
+			WHERE id_project IN ({array_int:projects})
+				AND id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'projects' => $projects,
+			)
+		);
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_projects
+			WHERE id_project IN ({array_int:projects})
+				AND id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'projects' => $projects,
+			)
+		);
+	}
+	else
+	{
+		$markRead = array();
+		foreach ($projects as $project)
+			$markRead[] = array($project, $user_info['id'], $modSettings['project_maxEventID']);
+
+		// Update log_project_mark_read and log_projects.
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_project_mark_read',
+			array('id_project' => 'int', 'id_member' => 'int', 'id_event' => 'int'),
+			$markRead,
+			array('id_project', 'id_member')
+		);
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}log_projects',
+			array('id_project' => 'int', 'id_member' => 'int', 'id_event' => 'int'),
+			$markRead,
+			array('id_project', 'id_member')
+		);
+	}
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_issues
+		WHERE id_member = {int:current_member}
+			AND id_project IN ({array_int:projects})',
+		array(
+			'current_member' => $user_info['id'],
+			'projects' => $projects,
+		)
+	);
+}
+
+// Function to generate urls
+function project_get_url($params = array(), $project = null)
+{
+	global $scripturl, $modSettings;
+
+	// Running in "standalone" mode WITH rewrite
+	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
+	{
+		// Main Page? Too easy
+		if (empty($params))
+			return $modSettings['projectStandaloneUrl'] . '/';
+
+		if (isset($params['project']))
+		{
+			$project = $params['project'];
+			unset($params['project']);
+		}
+		elseif (!empty($GLOBALS['project']))
+			$project = $GLOBALS['project'];
+		elseif ($project == null)
+			die(print_r(debug_backtrace(), true));
+
+
+		if (count($params) === 0)
+			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
+
+		$query = '';
+
+		foreach ($params as $p => $value)
+		{
+			if ($value === null)
+				continue;
+
+			if (!empty($query))
+				$query .= ';';
+			else
+				$query .= '?';
+
+			if (is_int($p))
+				$query .= $value;
+			else
+				$query .= $p . '=' . $value;
+		}
+
+		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
+	}
+	//Running in "standalone" mode without rewrite or standard mode
+	else
+	{
+		$return = '';
+
+		if (empty($params) && empty($modSettings['projectStandaloneUrl']))
+			$params['action'] = 'projects';
+
+		foreach ($params as $p => $value)
+		{
+			if ($value === null)
+				continue;
+
+			if (!empty($return))
+				$return .= ';';
+			else
+				$return .= '?';
+
+			if (is_int($p))
+				$return .= $value;
+			else
+				$return .= $p . '=' . $value;
+		}
+
+		if (!empty($modSettings['projectStandalone']))
+			return $modSettings['projectStandaloneUrl'] . $return;
+		else
+			return $scripturl . $return;
+	}
 }
 
 // Can I do that?
