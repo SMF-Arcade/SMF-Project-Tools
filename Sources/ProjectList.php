@@ -43,7 +43,7 @@ function ProjectList()
 			LEFT JOIN {db_prefix}project_developer AS pdev ON (pdev.id_project = p.id_project)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pdev.id_member)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-				AND dev.id_member = {int:member})
+				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}
 		ORDER BY p.name',
 		array(

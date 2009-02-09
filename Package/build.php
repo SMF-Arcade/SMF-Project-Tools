@@ -22,10 +22,16 @@ function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 
 	if ($rev && ($filename == 'Sources/Subs-Project.php' || $filename == 'ptinstall/Database.php'))
 		$content = str_replace('$project_version = \'' . $build_info['version_str']. '\';', '$project_version = \'' . $build_info['version_str']. ' rev' . $rev . '\';', $content);
-	elseif (in_array($filename, array('readme.txt', 'install.xml',  'package-info.xml')))
+	elseif (in_array($filename, array('readme.txt')))
 	{
 		$content = strtr($content, array(
-			'{version}' => $build_info['version_int'] . ($rev ? ' rev' . $build_info['version_int'] : ''),
+			'{version}' => $build_info['version_str'] . ($rev ? ' rev' . $rev : ''),
+		));
+	}
+	elseif (in_array($filename, array('install.xml',  'package-info.xml')))
+	{
+		$content = strtr($content, array(
+			'{version}' => $build_info['version_int'] . ($rev ? ' rev' . $rev : ''),
 		));
 	}
 }
