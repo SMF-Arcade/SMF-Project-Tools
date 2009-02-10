@@ -28,17 +28,8 @@ if (!defined('SMF'))
 
 require_once($sourcedir . '/Subs-ProjectMaintenance.php');
 
-$tbl = array_keys($tables);
-
-// Add prefixes to array
-foreach ($tbl as $id => $table)
-	$tbl[$id] = $db_prefix . $table;
-
-db_extend('packages');
-$tbl = array_intersect($tbl, $smcFunc['db_list_tables']());
-
 // Step 1: Do tables
-doTables($tbl, $tables);
+doTables($tables);
 
 // Step 2: Do Settings
 doSettings($addSettings);
