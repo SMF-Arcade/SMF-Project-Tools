@@ -23,56 +23,55 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function doTables($tbl, $tables, $columnRename = array(), $smf2 = true)
+function doTables($tables, $columnRename = array(), $smf2 = true)
 {
 	global $smcFunc, $db_prefix, $db_type;
 
 	$log = array();
+	$existingTables = $smcFunc['db_list_tables']();
 
 	foreach ($tables as $table)
 	{
 		$table_name = $table['name'];
 
-		// Renames in this table?
-		if (!empty($table['rename']))
-		{
-			$oldTable = $smcFunc['db_table_structure']($table_name);
-
-			foreach ($oldTable['columns'] as $column)
-			{
-				if (isset($table['rename'][$column['name']]))
-				{
-					$old_name = $column['name'];
-					$column['name'] = $table['rename'][$column['name']];
-
-					$smcFunc['db_change_column']($table_name, $old_name, $column);
-				}
-			}
-		}
-
-		// Global renames? (should be avoided)
-		if (!empty($columnRename) && in_array($db_prefix . $table_name, $tbl))
-		{
-			$currentTable = $smcFunc['db_table_structure']($table_name);
-
-			foreach ($currentTable['columns'] as $column)
-			{
-				if (isset($columnRename[$column['name']]))
-				{
-					$old_name = $column['name'];
-					$column['name'] = $columnRename[$column['name']];
-					$smcFunc['db_change_column']($table_name, $old_name, $column);
-				}
-			}
-		}
+		$tableExists = in_array($db_prefix . $table_name, $tbl);
 
 		// Create table
-		if (!in_array($db_prefix . $table_name, $tbl))
+		if (!$tableExists && empty($table['smf']))
 			$smcFunc['db_create_table']($table_name, $table['columns'], $table['indexes']);
 		// Update table
 		else
 		{
 			$currentTable = $smcFunc['db_table_structure']($table_name);
+
+			// Renames in this table?
+			if (!empty($table['rename']))
+			{
+				foreach ($currentTable['columns'] as $column)
+				{
+					if (isset($table['rename'][$column['name']]))
+					{
+						$old_name = $column['name'];
+						$column['name'] = $table['rename'][$column['name']];
+
+						$smcFunc['db_change_column']($table_name, $old_name, $column);
+					}
+				}
+			}
+
+			// Global renames? (should be avoided)
+			if (!empty($columnRename))
+			{
+				foreach ($currentTable['columns'] as $column)
+				{
+					if (isset($columnRename[$column['name']]))
+					{
+						$old_name = $column['name'];
+						$column['name'] = $columnRename[$column['name']];
+						$smcFunc['db_change_column']($table_name, $old_name, $column);
+					}
+				}
+			}
 
 			// Check that all columns are in
 			foreach ($table['columns'] as $id => $col)
