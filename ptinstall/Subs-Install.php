@@ -34,7 +34,7 @@ function doTables($tables, $columnRename = array(), $smf2 = true)
 	{
 		$table_name = $table['name'];
 
-		$tableExists = in_array($db_prefix . $table_name, $tbl);
+		$tableExists = in_array($db_prefix . $table_name, $existingTables);
 
 		// Create table
 		if (!$tableExists && empty($table['smf']))
