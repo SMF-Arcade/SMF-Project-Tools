@@ -23,7 +23,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function doTables($tables, $columnRename = array(), $smf2 = true)
+function doTables($tables, $columnRename = array())
 {
 	global $smcFunc, $db_prefix, $db_type;
 
@@ -216,7 +216,7 @@ function doTables($tables, $columnRename = array(), $smf2 = true)
 	return $log;
 }
 
-function doSettings($addSettings, $smf2 = true)
+function doSettings($addSettings)
 {
 	global $smcFunc;
 
@@ -243,7 +243,7 @@ function doSettings($addSettings, $smf2 = true)
 		updateSettings($update);
 }
 
-function doPermission($permissions, $smf2 = true)
+function doPermission($permissions)
 {
 	global $smcFunc;
 
@@ -269,16 +269,13 @@ function doPermission($permissions, $smf2 = true)
 		}
 	}
 
-	$group = $smf2 ? 'id_group': 'ID_GROUP';
-
 	if (empty($perm))
 		return;
 
-	$smcFunc['db_insert'](
-		'insert',
+	$smcFunc['db_insert']('insert',
 		'{db_prefix}permissions',
 		array(
-			$group => 'int',
+			'id_group' => 'int',
 			'permission' => 'string'
 		),
 		$perm,
