@@ -159,6 +159,7 @@ function projectProfileIssues($memID)
 	list ($issueCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
+	$tags_url = $scripturl . '?action=profile;u=' . $memID . ';sa=' . $type;
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=' . $type, $_REQUEST['start'], $issueCount, $context['issues_per_page']);
 
 	$request = $smcFunc['db_query']('', '

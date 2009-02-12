@@ -932,4 +932,12 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 	return $return;
 }
 
+function link_tags(&$tag, $key, $baseurl)
+{
+	if (is_array($baseurl))
+		$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
+	else
+		$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
+}
+
 ?>
