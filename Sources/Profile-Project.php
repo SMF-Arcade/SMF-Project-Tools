@@ -144,6 +144,8 @@ function projectProfileIssues($memID)
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}
 			AND {query_see_issue}' . (!empty($where) ? '
 			AND ' . implode('
@@ -151,6 +153,7 @@ function projectProfileIssues($memID)
 		array(
 			'empty' => '',
 			'start' => $_REQUEST['start'],
+			'current_member' => $user_info['id'],
 			'profile_member' => $memID,
 			'closed_status' => $context['closed_status'],
 		)
@@ -184,6 +187,8 @@ function projectProfileIssues($memID)
 			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}
 			AND {query_see_issue}' . (!empty($where) ? '
 			AND ' . implode('

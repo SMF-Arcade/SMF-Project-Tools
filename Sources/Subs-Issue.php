@@ -865,7 +865,9 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
+			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)' . (empty($project) ? '
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})' : '') . '
 		WHERE ' . (!empty($project) ? '{query_see_issue_project}
 			AND i.id_project = {int:project}' : '{query_see_project}
 			AND {query_see_issue}') . '
