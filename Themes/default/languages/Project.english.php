@@ -228,6 +228,8 @@ $txt['comment_not_found'] = 'Comment not found';
 $txt['category_not_found'] = 'Category not found';
 
 $txt['cannot_project_subscribe'] = 'You aren\'t allowed to subscribe to notifications';
+$txt['cannot_project_profile_any'] = 'You aren\'t allowed to view Project Tools statistics for any user';
+$txt['cannot_project_profile_own'] = 'You aren\'t allowed to view your own Project Tools statistics';
 
 $txt['comment_cant_remove_first'] = 'You cannot remove first comment, delete issue instead';
 
