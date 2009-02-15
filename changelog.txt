@@ -1,12 +1,6 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.2.1                                                       ??
-================================================================================
-February 2009
---------------------------------------------------------------------------------
- ! Profile page had error
- 
 SMF Project Tools 0.2                                                 13.02.2009
 ================================================================================
 February 2009
@@ -16,6 +10,7 @@ February 2009
  ! Disallow deleting first comment from issues
  ! Tags was causing problems in profile section [Issues #217 and #218]
  ! Profile section didn't work with non-admins [Issue #219]
+ ! Profile page caused database error [Issue #221]
 
 January 2009
 --------------------------------------------------------------------------------
