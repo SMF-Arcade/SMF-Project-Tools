@@ -80,6 +80,14 @@
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
 
+	<upgrade for="2.0 RC1" from="0.2">
+		<readme parsebbc="true">readme.txt</readme>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+	</upgrade>
+
 	<uninstall for="2.0 RC1">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>

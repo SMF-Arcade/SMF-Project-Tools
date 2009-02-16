@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.2                               *
+* Software Version:           SMF Project Tools 0.2.1                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -144,7 +144,7 @@ function IssueView()
 			// How many events before this
 			$request = $smcFunc['db_query']('', '
 				SELECT (COUNT(*) - 1)
-				FROM {db_prefix}issue_comments
+				FROM {db_prefix}project_timeline
 				WHERE id_event < {int:virtual_msg}
 					AND id_issue = {int:current_issue}',
 				array(
@@ -159,6 +159,9 @@ function IssueView()
 			$context['robot_no_index'] = true;
 		}
 	}
+
+	// Page Index
+	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events, $context['comments_per_page'], true);
 
 	$context['start'] = $_REQUEST['start'];
 
@@ -211,9 +214,6 @@ function IssueView()
 		$context['comment_request'] = false;
 
 	$context['counter_start'] = $_REQUEST['start'];
-
-	// Page Index
-	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events, $context['comments_per_page'], true);
 
 	// Mark this issue as read
 	if (!$user_info['is_guest'])
