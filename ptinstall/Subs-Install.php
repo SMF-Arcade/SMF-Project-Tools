@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 function doTables($tables, $columnRename = array(), $smf2 = true)
 {
-	global $smcFunc, $db_prefix, $db_type;
+	global $smcFunc, $db_prefix, $db_type, $db_show_debug;
 
 	$log = array();
 	$existingTables = $smcFunc['db_list_tables']();
@@ -200,18 +200,18 @@ function doTables($tables, $columnRename = array(), $smf2 = true)
 							elseif (isset($index['name']) && isset($index2['name']) && $index['name'] == $index2['name'] && $index['type'] == $index2['type'] && $index['columns'] === $index2['columns'])
 								$smcFunc['db_remove_index']($table_name, $index['name']);
 							else
-								$log[] = $table_name . ' has Unneeded index ' . var_dump($index);
+								$log[] = array($table_name . ' has Unneeded index ', var_export($index, true));
 						}
 					}
 					else
-						$log[] = $table_name . ' has Unneeded index ' . var_dump($index);
+						$log[] = array($table_name . ' has Unneeded index ', var_export($index, true));
 				}
 			}
 		}
 	}
 
-	if (!empty($log))
-		log_error(implode('<br />', $log));
+	if (!empty($log) && isset($db_show_debug))
+		log_error(var_export($log));
 
 	return $log;
 }

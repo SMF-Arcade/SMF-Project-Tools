@@ -1,11 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.2.1                                                       ??
+SMF Project Tools 0.2.1                                               17.02.2009
 ================================================================================
 February 2009
 --------------------------------------------------------------------------------
  ! In some cases some events weren't shown
+ ! Admin didn't work when project tools was disabled [Issue #224]
+ ! Don't show debug data if not in debug mode
+
 SMF Project Tools 0.2                                                 13.02.2009
 ================================================================================
 February 2009

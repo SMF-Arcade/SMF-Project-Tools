@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.2                               *
+* Software Version:           SMF Project Tools 0.2.1                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -27,7 +27,7 @@ function ManageProjects()
 {
 	global $context, $sourcedir, $user_info, $txt;
 
-	require_once($sourcedir . '/Project.php');
+	require_once($sourcedir . '/Subs-Project.php');
 
 	isAllowedTo('project_admin');
 	loadProjectToolsPage('admin');

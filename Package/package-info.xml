@@ -84,7 +84,9 @@
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 	</upgrade>
 
