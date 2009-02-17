@@ -8,6 +8,7 @@ February 2009
  + Improved maintenance
  + Store id_project in log_issues for future uses
  ! In some cases some events weren't shown
+ ! Admin didn't work when project tools was disabled [Issue #224]
 
 SMF Project Tools 0.2                                                 13.02.2009
 ================================================================================

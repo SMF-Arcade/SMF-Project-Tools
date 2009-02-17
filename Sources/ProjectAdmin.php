@@ -31,7 +31,7 @@ function ProjectsAdmin()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
-	require_once($sourcedir . '/Project.php');
+	require_once($sourcedir . '/Subs-Project.php');
 	require_once($sourcedir . '/ManageServer.php');
 
 	isAllowedTo('project_admin');

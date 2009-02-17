@@ -27,7 +27,7 @@ function ManageProjects()
 {
 	global $context, $sourcedir, $user_info, $txt;
 
-	require_once($sourcedir . '/Project.php');
+	require_once($sourcedir . '/Subs-Project.php');
 
 	isAllowedTo('project_admin');
 	loadProjectToolsPage('admin');
