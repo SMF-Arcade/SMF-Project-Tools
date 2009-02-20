@@ -218,24 +218,15 @@ function doTables($tables, $columnRename = array())
 
 function doSettings($addSettings)
 {
-	global $smcFunc;
+	global $smcFunc, $modSettings;
 
 	$update = array();
 
-	foreach ($addSettings as $variable => $s)
+	foreach ($addSettings as $variable => $value)
 	{
-		list ($value, $overwrite) = $s;
+		list ($value, $overwrite) = $value;
 
-		$result = $smcFunc['db_query']('', '
-			SELECT value
-			FROM {db_prefix}settings
-			WHERE variable = {string:variable}',
-			array(
-				'variable' => $variable,
-			)
-		);
-
-		if ($smcFunc['db_num_rows']($result) == 0 || $overwrite == true)
+		if ($overwrite || !isset($modSettings[$variable]))
 			$update[$variable] = $value;
 	}
 
@@ -281,6 +272,25 @@ function doPermission($permissions)
 		$perm,
 		array()
 	);
+}
+
+function updateAdminFeatures($item, $enabled = false)
+{
+	global $modSettings;
+
+	$admin_features = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+
+	if (!is_array($item))
+		$item = array($item);
+
+	if ($enabled)
+		$admin_features = array_merge($admin_features, $item);
+	else
+		$admin_features = array_diff($admin_features, $item);
+
+	updateSettings(array('admin_features' => implode(',', $admin_features)));
+
+	return true;
 }
 
 ?>

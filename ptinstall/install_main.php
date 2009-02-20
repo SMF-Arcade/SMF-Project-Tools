@@ -20,7 +20,7 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-global $txt, $smcFunc, $db_prefix;
+global $txt, $smcFunc, $db_prefix, $modSettings;
 global $project_version, $addSettings, $permissions, $tables, $sourcedir;
 
 if (!defined('SMF'))
@@ -33,6 +33,9 @@ doTables($tables);
 
 // Step 2: Do Settings
 doSettings($addSettings);
+
+// Step 3: Update admin features
+updateAdminFeatures('pj', !empty($modSettings['projectEnabled']));
 
 // Step 3: Do Permissions
 doPermission($permissions);
