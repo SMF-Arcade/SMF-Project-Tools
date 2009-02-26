@@ -319,7 +319,7 @@ function PTloadProfile()
 	else
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT group_name, id_group, min_posts
+			SELECT id_group, id_parent, group_name, min_posts
 			FROM {db_prefix}membergroups
 			WHERE id_group = {int:group}' . (empty($modSettings['permission_enable_postgroups']) ? '
 				AND min_posts = {int:min_posts}' : '') . '
@@ -335,6 +335,9 @@ function PTloadProfile()
 
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
+
+		if ($row['id_parent'] != -2)
+			fatal_lang_error('cannot_edit_permissions_inherited');
 
 		$context['group'] = array(
 			'id' => $row['id_group'],
@@ -452,7 +455,6 @@ function EditProfilePermissions2()
 	}
 
 	if (!empty($delete))
-	{
 		$smcFunc['db_query']('' , '
 			DELETE FROM {db_prefix}project_permissions
 			WHERE permission IN({array_string:permissions})
@@ -464,23 +466,90 @@ function EditProfilePermissions2()
 				'profile' => $context['profile']['id'],
 			)
 		);
-	}
 
 	if (!empty($permissions))
-	{
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}project_permissions',
-			array(
-				'id_profile' => 'int',
-				'id_group' => 'int',
-				'permission' => 'string',
-			),
+			array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string',),
 			$permissions,
 			array('id_profile', 'id_group', 'permission')
 		);
-	}
+
+	updatePTChildPermissions($context['group']['id'], $context['profile']['id']);
 
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
+}
+
+function updatePTChildPermissions($parents, $profile)
+{
+	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
+
+	// All the parent groups to sort out.
+	if (!is_array($parents))
+		$parents = array($parents);
+
+	// Find all the children for parents
+	$request = $smcFunc['db_query']('', '
+		SELECT id_parent, id_group
+		FROM {db_prefix}membergroups
+		WHERE id_parent != {int:not_inherited}
+			' . (empty($parents) ? '' : 'AND id_parent IN ({array_int:parent_list})'),
+		array(
+			'parent_list' => $parents,
+			'not_inherited' => -2,
+		)
+	);
+	$children = array();
+	$parents = array();
+	$child_groups = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$children[$row['id_parent']][] = $row['id_group'];
+		$child_groups[] = $row['id_group'];
+		$parents[] = $row['id_parent'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	// No children?
+	if (empty($children))
+		return;
+
+	// Fetch all the parent permissions.
+	$request = $smcFunc['db_query']('', '
+		SELECT id_profile, id_group, permission
+		FROM {db_prefix}project_permissions
+		WHERE id_group IN ({array_int:parent_list})
+			AND id_profile = {int:profile}',
+		array(
+			'parent_list' => $parents,
+			'profile' => $profile,
+		)
+	);
+	$permissions = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		foreach ($children[$row['id_group']] as $child)
+			$permissions[] = array($row['id_profile'], $child, $row['permission']);
+	$smcFunc['db_free_result']($request);
+
+	// Delete current permissions
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}project_permissions
+		WHERE id_group IN ({array_int:child_groups})
+			AND id_profile = {int:profile}',
+		array(
+			'child_groups' => $child_groups,
+			'profile' => $profile,
+		)
+	);
+
+	// Insert new permissions
+	if (!empty($permissions))
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_permissions',
+			array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
+			$permissions,
+			array('id_profile', 'id_group', 'permission')
+		);
 }
 
 ?>
