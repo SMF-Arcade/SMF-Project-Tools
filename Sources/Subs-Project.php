@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.2.1                             *
+* Software Version:           SMF Project Tools 0.2.2                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -35,7 +35,7 @@ function loadProjectTools()
 		return;
 
 	// Which version this is?
-	$project_version = '0.2.1';
+	$project_version = '0.2.2';
 
 	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 	{
@@ -593,7 +593,7 @@ function loadTimeline($project = 0)
 			elseif (($date['yday'] == $now['yday'] - 1 && $date['year'] == $now['year']) || ($now['yday'] == 0 && $date['year'] == $now['year'] - 1) && $date['mon'] == 12 && $date['mday'] == 31)
 				$context['events'][$index]['date'] = $txt['project_yesterday'];
 			else
-				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
+				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $date['year'];
 		}
 
 		$extra = '';

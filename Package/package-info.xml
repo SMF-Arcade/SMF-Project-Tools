@@ -80,6 +80,13 @@
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
 
+	<upgrade for="2.0 RC1" from="0.2001">
+		<readme parsebbc="true">readme.txt</readme>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+	</upgrade>
+
 	<upgrade for="2.0 RC1" from="0.2">
 		<readme parsebbc="true">readme.txt</readme>
 

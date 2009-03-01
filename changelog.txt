@@ -1,6 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
+SMF Project Tools 0.2.2                                                       ??
+================================================================================
+March 2009
+--------------------------------------------------------------------------------
+ ! Timeline did show wrong year for past years
+
 SMF Project Tools 0.2.1                                               17.02.2009
 ================================================================================
 February 2009
