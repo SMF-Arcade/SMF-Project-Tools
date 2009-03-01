@@ -6,7 +6,8 @@ SMF Project Tools 0.3                                                          ?
 March 2009
 --------------------------------------------------------------------------------
  + Store trackers in database
- 
+ ! Timeline did show wrong year for past years
+
 February 2009
 --------------------------------------------------------------------------------
  + Improved maintenance

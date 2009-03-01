@@ -514,7 +514,7 @@ function loadTimeline($project = 0)
 			elseif (($date['yday'] == $now['yday'] - 1 && $date['year'] == $now['year']) || ($now['yday'] == 0 && $date['year'] == $now['year'] - 1) && $date['mon'] == 12 && $date['mday'] == 31)
 				$context['events'][$index]['date'] = $txt['project_yesterday'];
 			else
-				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $now['year'];
+				$context['events'][$index]['date'] = $date['mday'] . '. ' . $txt['months'][$date['mon']] . ' ' . $date['year'];
 		}
 
 		$extra = '';
