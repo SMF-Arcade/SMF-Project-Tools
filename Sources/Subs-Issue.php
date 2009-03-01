@@ -29,7 +29,7 @@ function loadIssue()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.issue_type,
+			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.id_tracker,
 			i.id_comment_first, i.id_comment_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
 			mem.id_member, mem.real_name,
 			cat.id_category, cat.category_name,
@@ -114,7 +114,7 @@ function loadIssue()
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 		),
 		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
-		'type' => &$context['issue_types'][$row['issue_type']],
+		'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 		'status' => &$context['issue_status'][$row['status']],
 		'priority_num' => $row['priority'],
 		'priority' => $context['issue']['priority'][$row['priority']],
@@ -237,7 +237,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			id_project, subject, id_version, status, id_category,
-			priority, issue_type, id_assigned, id_version_fixed, private_issue
+			priority, id_tracker, id_assigned, id_version_fixed, private_issue
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -336,12 +336,12 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		);
 	}
 
-	if (!empty($issueOptions['type']) && $issueOptions['type'] != $row['issue_type'])
+	if (!empty($issueOptions['tracker']) && $issueOptions['tracker'] != $row['id_tracker'])
 	{
-		$issueUpdates[] = 'issue_type = {string:type}';
+		$issueUpdates[] = 'id_tracker = {int:tracker}';
 
 		$event_data['changes'][] = array(
-			'type', $row['issue_type'], $issueOptions['type'],
+			'tracker', $row['id_tracker'], $issueOptions['tracker'],
 		);
 	}
 
@@ -355,8 +355,8 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 	else
 		$newStatus = $oldStatus;
 
-	if (!isset($issueOptions['type']))
-		$issueOptions['type'] = $row['issue_type'];
+	if (!isset($issueOptions['tracker']))
+		$issueOptions['tracker'] = $row['id_tracker'];
 
 	// Updates needed?
 	if (empty($issueUpdates))
@@ -378,36 +378,40 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		))
 	);
 
-	$projectUpdates = array();
-
-	if (!empty($issueOptions['type']) && ($issueOptions['type'] != $row['issue_type'] || $oldStatus != $newStatus))
-	{
-		if (!empty($oldStatus))
-			$projectUpdates[] = "{$oldStatus}_$row[issue_type] = {$oldStatus}_$row[issue_type] - 1";
-
-		$projectUpdates[] = "{$newStatus}_$issueOptions[type] = {$newStatus}_$issueOptions[type] + 1";
-	}
-
 	if (!isset($issueOptions['project']))
 		$issueOptions['project'] = $row['id_project'];
 
+	$projectUpdates = array();
+
+	if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $row['id_tracker'] || $oldStatus != $newStatus))
+	{
+		$oldTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $oldStatus];
+		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
+
+		if (!empty($oldStatus))
+			$projectUpdates[$row['id_project']][] = "$oldTracker = $oldTracker - 1";
+
+		$projectUpdates[$issueOptions['project']][] = "$newTracker = $newTracker + 1";
+	}
+
 	if (!empty($projectUpdates))
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}projects
-			SET
-				' . implode(',
-				', $projectUpdates) . '
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $issueOptions['project'],
-			)
-		);
+		foreach ($projectUpdates as $id => $updates)
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}projects
+				SET
+					' . implode(',
+					', $updates) . '
+				WHERE id_project = {int:project}',
+				array(
+					'project' => $id,
+				)
+			);
 
 	if ($return_log)
 		return $event_data;
 
 	if (!isset($issueOptions['no_log']) && !empty($event_data))
-		return createTimelineEvent($id_issue, $row['id_project'], 'update_issue', $event_data, $posterOptions, $issueOptions);
+		return createTimelineEvent($id_issue, $issueOptions['project'], 'update_issue', $event_data, $posterOptions, $issueOptions);
 
 	return true;
 }
@@ -636,8 +640,10 @@ function deleteIssue($id_issue, $posterOptions)
 	else
 		$status = '';
 
+	$curTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $status];
+
 	$projectUpdates = array(
-		"{$status}_$row[issue_type] = {$status}_$row[issue_type] - 1"
+		"$curTracker = $curTracker - 1"
 	);
 
 	if (!empty($projectUpdates) && !empty($status))
@@ -853,7 +859,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
+			i.id_issue, p.id_project, i.id_tracker, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
@@ -907,7 +913,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 				'name' => $row['version_name'],
 				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
 			),
-			'type' => $row['issue_type'],
+			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
 			'status' => &$context['issue_status'][$row['status']],

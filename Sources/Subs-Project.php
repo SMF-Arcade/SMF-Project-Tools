@@ -83,25 +83,32 @@ function loadProjectTools()
 	$user_info['query_see_issue'] = $see_issue;
 	$user_info['query_see_issue_project'] = $see_issue_p;
 
-	// Issue Types
-	$context['issue_types'] = array(
-		'bug' => array(
-			'id' => 'bug',
-			'image' => 'bug.png',
-		),
-		'feature' => array(
-			'id' => 'feature',
-			'image' => 'feature.png',
-		),
-	);
+	// Trackers
+	$context['issue_trackers'] = array();
+	$context['tracker_columns'] = array();
 
-	// Make list of columns that need to be selected
-	$context['type_columns'] = array();
-	foreach ($context['issue_types'] as $id => $info)
+	$request = $smcFunc['db_query']('', '
+		SELECT id_tracker, short_name, tracker_name, plural_name
+		FROM {db_prefix}project_trackers',
+		array(
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['type_columns'][] = "open_$id";
-		$context['type_columns'][] = "closed_$id";
+		$context['issue_trackers'][$row['id_tracker']] = array(
+			'id' => $row['id_tracker'],
+			'name' => $row['tracker_name'],
+			'short' => $row['short_name'],
+			'plural' => $row['plural_name'],
+			'image' => $row['short_name'] . '.png',
+			'column_open' => 'open_' . $row['short_name'],
+			'column_closed' => 'closed_' . $row['short_name'],
+		);
+
+		$context['tracker_columns'][] = "open_$row[short_name]";
+		$context['tracker_columns'][] = "closed_$row[short_name]";
 	}
+	$smcFunc['db_free_result']($request);
 
 	// Status, types, priorities
 	$context['issue_status'] = array(
@@ -187,7 +194,7 @@ function loadProject()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-				p.id_event_mod, p.' . implode(', p.', $context['type_columns']) . ', p.project_theme
+				p.id_event_mod, p.' . implode(', p.', $context['tracker_columns']) . ', p.project_theme
 			FROM {db_prefix}projects AS p
 			WHERE p.id_project = {int:project}
 			LIMIT 1',
@@ -227,15 +234,19 @@ function loadProject()
 
 		$trackers = explode(',', $row['trackers']);
 
-		foreach ($trackers as $key)
+		foreach ($trackers as $id)
 		{
-			$context['project']['trackers'][$key] = array(
-				'id' => $key,
-				'open' => $row['open_' . $key],
-				'closed' => $row['closed_' . $key],
-				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
+			$tracker = &$context['issue_trackers'][$id];
+			$context['project']['trackers'][$id] = array(
+				'id' => $id,
+				'tracker' => $tracker,
+				'open' => $row['open_' . $tracker['short']],
+				'closed' => $row['closed_' . $tracker['short']],
+				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
+				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
+				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
 			);
+			unset($tracker);
 		}
 
 		// Developers
@@ -362,18 +373,6 @@ function loadProjectToolsPage($mode = '')
 	if (loadLanguage('Project') == false)
 		loadLanguage('Project', 'english');
 
-	// Load Issue Type texts
-	foreach ($context['issue_types'] as $id => $type)
-	{
-		if (isset($txt['issue_type_' . $type['id']]))
-			$type['name'] = $txt['issue_type_' . $type['id']];
-
-		if (isset($txt['issue_type_plural_' . $type['id']]))
-			$type['plural'] = $txt['issue_type_plural_' . $type['id']];
-
-		$context['issue_types'][$id] = $type;
-	}
-
 	// Load status texts
 	foreach ($context['issue_status'] as $id => $status)
 	{
@@ -465,10 +464,9 @@ function loadTimeline($project = 0)
 	// Load timeline
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, i.issue_type, i.subject, i.priority, i.status,
+			i.id_issue, i.id_tracker, i.subject, i.priority, i.status,
 			tl.id_project, tl.event, tl.event_data, tl.event_time, tl.id_version,
-			mem.id_member, IFNULL(mem.real_name, tl.poster_name) AS user,
-			p.id_project, p.name
+			mem.id_member, IFNULL(mem.real_name, tl.poster_name) AS user, p.id_project, p.name
 		FROM {db_prefix}project_timeline AS tl
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = tl.id_project)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
@@ -537,8 +535,8 @@ function loadTimeline($project = 0)
 				}
 				elseif ($field == 'type')
 				{
-					$old_value = $context['issue_types'][$old_value]['name'];
-					$new_value = $context['issue_types'][$new_value]['name'];
+					$old_value = $context['issue_trackers'][$old_value]['name'];
+					$new_value = $context['issue_trackers'][$new_value]['name'];
 				}
 				elseif ($field == 'view_status')
 				{
@@ -1039,8 +1037,8 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 				}
 				elseif ($field == 'type')
 				{
-					$old_value = $context['issue_types'][$old_value]['name'];
-					$new_value = $context['issue_types'][$new_value]['name'];
+					$old_value = $context['issue_trackers'][$old_value]['name'];
+					$new_value = $context['issue_trackers'][$new_value]['name'];
 				}
 				elseif ($field == 'view_status')
 				{

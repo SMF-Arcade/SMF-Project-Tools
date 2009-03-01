@@ -73,7 +73,7 @@ function IssueList()
 		'title' => '',
 		'status' => 'open',
 		'tag' => '',
-		'type' => '',
+		'tracker' => '',
 		'version' => null,
 		'version_fixed' => null,
 		'category' => null,
@@ -83,8 +83,8 @@ function IssueList()
 
 	$context['possible_types'] = array();
 
-	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['issue_types'][$id];
+	foreach ($context['project']['trackers'] as $tracker)
+		$context['possible_types'][$tracker['tracker']['short']] = &$context['issue_trackers'][$tracker['tracker']['short']];
 
 	if (!empty($_REQUEST['title']))
 	{
@@ -98,10 +98,10 @@ function IssueList()
 		$baseurl['status'] = $_REQUEST['status'];
 	}
 
-	if (!empty($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
+	if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
 	{
-		$context['issue_search']['type'] = $_REQUEST['type'];
-		$baseurl['type'] = $_REQUEST['type'];
+		$context['issue_search']['tracker'] = $_REQUEST['tracker'];
+		$baseurl['tracker'] = $_REQUEST['tracker'];
 	}
 
 	if (isset($_REQUEST['category']))
@@ -159,8 +159,8 @@ function IssueList()
 	if (!empty($context['issue_search']['title']))
 		$where[] = 'i.subject LIKE {string:search_title}';
 
-	if (!empty($context['issue_search']['type']))
-		$where[] = 'i.issue_type = {string:search_type}';
+	if (!empty($context['issue_search']['tracker']))
+		$where[] = 'i.id_tracker = {int:search_tracker}';
 
 	if (isset($context['issue_search']['category']))
 		$where[] = 'i.id_category = {int:search_category}';
@@ -202,7 +202,7 @@ function IssueList()
 			'search_category' => $context['issue_search']['category'],
 			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
-			'search_type' => $context['issue_search']['type'],
+			'search_tracker' => $context['issue_search']['tracker'],
 			'search_tag' => $context['issue_search']['tag'],
 		)
 	);
@@ -214,7 +214,7 @@ function IssueList()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			i.id_issue, p.id_project, i.issue_type, i.subject, i.priority,
+			i.id_issue, p.id_project, i.id_tracker, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
@@ -258,7 +258,7 @@ function IssueList()
 			'search_category' => $context['issue_search']['category'],
 			'search_assignee' => $context['issue_search']['assignee'],
 			'search_reporter' => $context['issue_search']['reporter'],
-			'search_type' => $context['issue_search']['type'],
+			'search_tracker' => $context['issue_search']['tracker'],
 			'search_tag' => $context['issue_search']['tag'],
 		)
 	);
@@ -291,7 +291,7 @@ function IssueList()
 				'link' => !empty($row['version_fixed_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $row['id_version_fixed'])) . '">' . $row['version_fixed_name'] . '</a>' : ''
 			),
 			'tags' => $row['tags'],
-			'type' => $row['issue_type'],
+			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
 			'status' => &$context['issue_status'][$row['status']],

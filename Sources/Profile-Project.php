@@ -163,12 +163,12 @@ function projectProfileIssues($memID)
 	$smcFunc['db_free_result']($request);
 
 	$tags_url = $scripturl . '?action=profile;u=' . $memID . ';sa=' . $type;
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=' . $type, $_REQUEST['start'], $issueCount, $context['issues_per_page']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=project;sa=' . $type . ';u=' . $memID, $_REQUEST['start'], $issueCount, $context['issues_per_page']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name AS project_name,
-			i.id_issue, i.issue_type, i.subject, i.priority,
+			i.id_issue, i.id_tracker, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_event_mod, i.replies,
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
@@ -239,7 +239,7 @@ function projectProfileIssues($memID)
 				'link' => !empty($row['version_fixed_name']) ? '<a href="' . project_get_url(array('project' =>  $row['id_project'], 'sa' => 'issues', 'version_fixed' => $row['id_version_fixed'])) . '">' . $row['version_fixed_name'] . '</a>' : ''
 			),
 			'tags' => $row['tags'],
-			'type' => $row['issue_type'],
+			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
 			'status' => &$context['issue_status'][$row['status']],

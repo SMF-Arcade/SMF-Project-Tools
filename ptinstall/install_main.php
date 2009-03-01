@@ -58,11 +58,7 @@ if ($count == 0)
 	);
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}project_permissions',
-		array(
-			'id_profile' => 'int',
-			'id_group' => 'int',
-			'permission' => 'string',
-		),
+		array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 		array(
 			// Guest
 			array(1, -1, 'issue_view'),
@@ -90,7 +86,18 @@ if ($count == 0)
 	);
 }
 
-// Step 5: Run general maintenance
+// Step 5: Install Default trackers
+$smcFunc['db_insert']('ignore',
+	'{db_prefix}project_trackers',
+	array('id_tracker' => 'int', 'short_name' => 'string', 'tracker_name' => 'string',  'plural_name' => 'string'),
+	array(
+		array(1, 'bug', 'Bug', 'Bugs'),
+		array(2, 'feature', 'Feature', 'Features'),
+	),
+	array('id_tracker')
+);
+
+// Step 6: Run general maintenance
 ptMaintenanceGeneral();
 
 ?>

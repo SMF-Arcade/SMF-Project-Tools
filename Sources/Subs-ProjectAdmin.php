@@ -348,7 +348,7 @@ function createPTCategory($id_project, $categoryOptions)
 
 	cache_put_data('project-' . $id_project, null, 120);
 	cache_put_data('project-version-' . $id_project, null, 120);
-	
+
 	return true;
 }
 
@@ -389,7 +389,7 @@ function loadProjectAdmin($id_project)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
-			p.id_category, p.cat_position, p.' . implode(', p.', $context['type_columns']) . ',
+			p.id_category, p.cat_position, p.' . implode(', p.', $context['tracker_columns']) . ',
 			p.project_theme, p.override_theme, p.id_profile
 		FROM {db_prefix}projects AS p
 		WHERE p.id_project = {int:project}
@@ -424,13 +424,14 @@ function loadProjectAdmin($id_project)
 
 	$trackers = explode(',', $row['trackers']);
 
-	foreach ($trackers as $key)
+	foreach ($trackers as $id)
 	{
+		$tracker = $context['issue_trackers'][$key];
 		$project['trackers'][$key] = array(
-			'info' => &$context['issue_types'][$key],
-			'open' => $row['open_' . $key],
-			'closed' => $row['closed_' . $key],
-			'total' => $row['open_' . $key] + $row['closed_' . $key],
+			'info' => &$context['issue_trackers'][$id],
+			'open' => $row['open_' . $tracker['short']],
+			'closed' => $row['closed_' . $tracker['short']],
+			'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
 		);
 	}
 

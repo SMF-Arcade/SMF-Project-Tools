@@ -183,7 +183,7 @@ function EditProject()
 			'description' => '',
 			'long_description' => '',
 			'profile' => 1,
-			'trackers' => array_keys($context['issue_types']),
+			'trackers' => array_keys($context['issue_trackers']),
 			'developers' => array(),
 			'theme' => 0,
 			'override_theme' => false,
@@ -326,7 +326,7 @@ function EditProject2()
 		$projectOptions['trackers'] = array();
 		if (!empty($_POST['trackers']))
 			foreach ($_POST['trackers'] as $tracker)
-				if (isset($context['issue_types'][$tracker]))
+				if (isset($context['issue_trackers'][$tracker]))
 					$projectOptions['trackers'][] = $tracker;
 
 		$projectOptions['member_groups'] = array();

@@ -74,7 +74,7 @@ $tables = array(
 				'name' => 'trackers',
 				'type' => 'varchar',
 				'size' => 255,
-				'default' => 'bug,feature',
+				'default' => '1,2',
 			),
 			array(
 				'name' => 'member_groups',
@@ -179,6 +179,39 @@ $tables = array(
 				'columns' => array('id_project')
 			),
 		)
+	),
+	// Trackers
+	'project_trackers' => array(
+		'name' => 'project_trackers',
+		'columns' => array(
+			array(
+				'name' => 'id_tracker',
+				'type' => 'int',
+				'auto' => true,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'short_name',
+				'type' => 'varchar',
+				'size' => 10,
+			),
+			array(
+				'name' => 'tracker_name',
+				'type' => 'varchar',
+				'size' => 255,
+			),
+			array(
+				'name' => 'plural_name',
+				'type' => 'varchar',
+				'size' => 255,
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_tracker')
+			),
+		),
 	),
 	// Project Permission Profiles
 	'project_profiles' => array(
@@ -353,10 +386,10 @@ $tables = array(
 				'default' => '',
 			),
 			array(
-				'name' => 'issue_type',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => 'bug',
+				'name' => 'id_tracker',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
 			),
 			array(
 				'name' => 'id_category',

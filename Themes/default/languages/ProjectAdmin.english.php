@@ -164,6 +164,9 @@ $txt['permissionname_project_edit_comment_own'] = 'Modify their own comments';
 $txt['permissionname_project_edit_comment_any'] = 'Modify any comment';
 $txt['permission_save'] = 'Save Changes';
 
+// Upgrade
+$txt['upgrade_no_tracker'] = 'There is no tracker &quot;%s&quot;, please create it and re-run upgrade';
+
 // Errors
 $txt['admin_no_projects'] = 'No Projects Created';
 $txt['no_issue_types'] = 'No issue types selected';

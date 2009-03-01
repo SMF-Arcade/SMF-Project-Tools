@@ -44,18 +44,10 @@ function ReportIssue()
 
 	$context['can_subscribe'] = !$user_info['is_guest'];
 
-	$context['possible_types'] = array();
-
-	foreach ($context['project']['trackers'] as $id => $type)
-	{
-		$context['possible_types'][$id] = &$context['issue_types'][$id];
-		$context['possible_types'][$id]['selected'] = isset($_REQUEST['type']) && $_REQUEST['type'] == $id;
-	}
-
 	$context['issue'] = array(
 		'title' => '',
 		'private' => !empty($_REQUEST['private']),
-		'type' => isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]) ? $_REQUEST['type'] : '',
+		'tracker' => isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]) ? $_REQUEST['tracker'] : '',
 		'version' => isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0,
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
@@ -185,15 +177,10 @@ function ReportIssue2()
 			$post_errors[] = 'no_details';
 	}
 
-	$context['possible_types'] = array();
+	if (count($context['project']['trackers']) == 1)
+		list ($_POST['tracker']) = array_keys($context['project']['trackers']);
 
-	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['issue_types'][$id];
-
-	if (count($context['possible_types']) == 1)
-		list ($_POST['type']) = array_keys($context['possible_types']);
-
-	if (empty($_POST['type']) || !isset($context['possible_types'][$_POST['type']]))
+	if (empty($_POST['tracker']) || !isset($context['project']['trackers'][$_POST['tracker']]))
 		$post_errors[] = 'no_issue_type';
 	if (!empty($_POST['version']) && !isset($context['versions_id'][$_POST['version']]))
 		$_POST['version'] = 0;
@@ -232,7 +219,7 @@ function ReportIssue2()
 	$issueOptions = array(
 		'project' => $project,
 		'subject' => $_POST['title'],
-		'type' => $_POST['type'],
+		'tracker' => $_POST['tracker'],
 		'status' => 1,
 		'priority' => 2,
 		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
@@ -254,18 +241,8 @@ function ReportIssue2()
 	{
 		$smcFunc['db_insert']('',
 			'{db_prefix}log_notify_projects',
-			array(
-				'id_project' => 'int',
-				'id_issue' => 'int',
-				'id_member' => 'int',
-				'sent' => 'int',
-			),
-			array(
-				0,
-				$issueOptions['id'],
-				$user_info['id'],
-				0,
-			),
+			array('id_project' => 'int', 'id_issue' => 'int', 'id_member' => 'int', 'sent' => 'int'),
+			array(0, $issueOptions['id'], $user_info['id'], 0),
 			array('id_project', 'id_issue', 'id_member')
 		);
 	}
@@ -402,13 +379,8 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 			$issueOptions['status'] = (int) $_REQUEST['status'];
 	}
 
-	$context['possible_types'] = array();
-
-	foreach ($context['project']['trackers'] as $id => $type)
-		$context['possible_types'][$id] = &$context['issue_types'][$id];
-
-	if (isset($_REQUEST['type']) && isset($context['possible_types'][$_REQUEST['type']]))
-		$issueOptions['type'] = $_REQUEST['type'];
+	if (isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]))
+		$issueOptions['tracker'] = $_REQUEST['tracker'];
 }
 
 function IssueUpload()

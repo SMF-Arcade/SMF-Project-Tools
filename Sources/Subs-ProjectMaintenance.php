@@ -29,9 +29,7 @@ function ptUpgrade_log_issues($check = false)
 
 	// Is this step required to run?
 	if ($check)
-	{
 		return true;
-	}
 
 	$request = $smcFunc['db_query']('', '
 		SELECT log.id_issue, i.id_project
@@ -59,15 +57,100 @@ function ptUpgrade_log_issues($check = false)
 	$smcFunc['db_free_result']($request);
 }
 
+function ptUpgrade_trackers($check = false)
+{
+	global $smcFunc;
+
+	// Is this step required to run?
+	if ($check)
+		return true;
+
+	db_extend('packages');
+
+	$trackers = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_tracker, short_name
+		FROM {db_prefix}project_trackers',
+		array(
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$trackers[$row['short_name']] = $row['id_tracker'];
+	$smcFunc['db_free_result']($request);
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_project, trackers
+		FROM {db_prefix}projects',
+		array(
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$update = false;
+		$currentTrackers = explode(',', $row['trackers']);
+		foreach ($currentTrackers as $key => $shortName)
+		{
+			if (!is_numeric($shortName))
+			{
+				$update = true;
+				if (!isset($trackers[$shortName]))
+					fatal_lang_error('upgrade_no_tracker', null, $shortName);
+
+				$currentTrackers[$key] = $trackers[$shortName];
+			}
+		}
+
+		if ($update)
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}projects
+				SET trackers = {string:trackers}
+				WHERE id_project = {int:project}',
+				array(
+					'project' => $row['id_project'],
+					'trackers' => implode(',', $currentTrackers),
+				)
+			);
+	}
+	$smcFunc['db_free_result']($request);
+
+	if (in_array('issue_type', $smcFunc['db_list_columns']('issues')))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT DISTINCT issue_type
+			FROM {db_prefix}issues',
+			array(
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if (!isset($trackers[$row['issue_type']]))
+				fatal_lang_error('upgrade_no_tracker', null, $row['issue_type']);
+
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}issues
+				SET id_tracker = {int:tracker}
+				WHERE issue_type = {string:shortname}',
+				array(
+					'shortname' => $row['issue_type'],
+					'tracker' => $trackers[$row['issue_type']],
+				)
+			);
+		}
+		$smcFunc['db_free_result']($request);
+
+		$smcFunc['db_remove_column']('issues', 'issue_type');
+	}
+}
+
 function ptMaintenanceGeneral($check = false)
 {
 	global $smcFunc;
 
 	// Is this step required to run?
 	if ($check)
-	{
 		return true;
-	}
 
 	// Set maxEventID
 	$request = $smcFunc['db_query']('', '

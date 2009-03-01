@@ -594,22 +594,27 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 				'href' => project_get_url(array('project' => $row['id_project'])),
 				'name' => $row['name'],
 				'description' => $row['description'],
-				'trackers' =>  explode(',', $row['trackers']),
 				'new' => $row['new_from'] <= $row['id_event_mod'] && !$user_info['is_guest'],
-				'issues' => array(),
+				'trackers' => array(),
 				'developers' => array(
 					'<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 				),
 			);
 
-			foreach ($context['projects'][$key][$row['id_project']]['trackers'] as $tracker)
+			$trackers = explode(',', $row['trackers']);
+			foreach ($trackers as $id)
 			{
-				$context['projects'][$key][$row['id_project']]['issues'][$tracker] = array(
-					'open' => $row['open_' . $tracker],
-					'closed' => $row['closed_' . $tracker],
-					'total' => $row['open_' . $tracker] + $row['closed_' . $tracker],
-					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $tracker)),
+				$tracker = &$context['issue_trackers'][$id];
+				$context['projects'][$key][$row['id_project']]['trackers'][$id] = array(
+					'id' => $id,
+					'tracker' => $tracker,
+					'open' => $row['open_' . $tracker['short']],
+					'closed' => $row['closed_' . $tracker['short']],
+					'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
+					'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
+					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
 				);
+				unset($tracker);
 			}
 		}
 		$smcFunc['db_free_result']($request);
@@ -735,9 +740,9 @@ function template_boardindex_project($category, $position)
 			</td>
 			<td class="windowbg stats smalltext">';
 
-		foreach ($project['issues'] as $key => $type)
-			echo '
-				', $type['open'], ' / ', $type['total'], ' ', $context['issue_types'][$key]['plural'], '<br />';
+			foreach ($project['trackers'] as $tracker)
+				echo '
+					', $tracker['open'], ' / ', $tracker['total'], ' ', $tracker['tracker']['plural'], '<br />';
 
 		echo '
 			</td>

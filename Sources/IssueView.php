@@ -74,14 +74,6 @@ function IssueView()
 
 	if ($context['can_issue_update'])
 	{
-		$context['possible_types'] = array();
-
-		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['issue_types'][$id];
-
-		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
-			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
-
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
@@ -311,8 +303,23 @@ function getEvent()
 				}
 				elseif ($field == 'type')
 				{
-					$old_value = $context['issue_types'][$old_value]['name'];
-					$new_value = $context['issue_types'][$new_value]['name'];
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $old_value)
+						{
+							$old_value = $tracker['name'];
+							break;
+						}
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $new_value)
+						{
+							$new_value = $tracker['name'];
+							break;
+						}
+				}
+				elseif ($field == 'tracker')
+				{
+					$old_value = $context['issue_trackers'][$old_value]['name'];
+					$new_value = $context['issue_trackers'][$new_value]['name'];
 				}
 				elseif ($field == 'view_status')
 				{

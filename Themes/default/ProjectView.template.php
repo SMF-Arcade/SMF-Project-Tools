@@ -106,8 +106,8 @@ function template_project_view()
 				echo '
 					<tr>
 						<td class="windowbg icon">
-							<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'type' => $issue['type'])), '">
-								<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+							<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+								<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="" />
 							</a>
 						</td>
 						<td class="windowbg2 info issue_', $issue['status']['name'], '">
@@ -181,21 +181,15 @@ function template_project_view()
 				<p class="section"></p>
 				<div class="windowbg2 sectionbody middletext">
 					<table width="100%">';
-/*
- 			foreach ($project['issues'] as $key => $type)
-				echo '
-					', $type['open'], ' / ', $type['total'], ' ', $context['issue_types'][$key]['plural'], '<br />';
-*/
 
-	// TODO: Move calculations to ProjectView.php
-	foreach ($context['project']['trackers'] as $key => $type)
+	foreach ($context['project']['trackers'] as $type)
 		echo '
 						<tr>
 							<td width="10%">
-								<a href="', $type['link'], '" style="color: gray">', $context['issue_types'][$key]['plural'], '</a><br />
+								<a href="', $type['link'], '" style="color: gray">', $type['tracker']['plural'], '</a><br />
 							</td>
 							<td>
-								<div class="progressbar"><div class="done" style="width: ', round(($type['closed'] / max(1, $type['total'])) * 100, 2), '%"></div></div>
+								<div class="progressbar"><div class="done" style="width: ', $type['progress'], '%"></div></div>
 							</td>
 						</tr>
 						<tr>

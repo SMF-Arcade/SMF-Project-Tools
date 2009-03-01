@@ -33,7 +33,7 @@ function ProjectList()
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['type_columns']) . ', p.id_event_mod,
+			p.id_project, p.name, p.description, p.trackers, p.' . implode(', p.', $context['tracker_columns']) . ', p.id_event_mod,
 			mem.id_member, mem.real_name,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . '
 		FROM {db_prefix}projects AS p' . ($user_info['is_guest'] ? '' : '
@@ -71,22 +71,27 @@ function ProjectList()
 			'href' => project_get_url(array('project' => $row['id_project'])),
 			'name' => $row['name'],
 			'description' => $row['description'],
-			'trackers' =>  explode(',', $row['trackers']),
 			'new' => $row['new_from'] <= $row['id_event_mod'] && !$user_info['is_guest'],
-			'issues' => array(),
+			'trackers' => array(),
 			'developers' => array(
 				'<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 			),
 		);
 
-		foreach ($context['projects'][$row['id_project']]['trackers'] as $key)
+		$trackers = explode(',', $row['trackers']);
+
+		foreach ($trackers as $id)
 		{
-			$context['projects'][$row['id_project']]['issues'][$key] = array(
-				'open' => $row['open_' . $key],
-				'closed' => $row['closed_' . $key],
-				'total' => $row['open_' . $key] + $row['closed_' . $key],
-				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'type' => $key)),
+			$tracker = &$context['issue_trackers'][$id];
+			$context['projects'][$row['id_project']]['trackers'][$id] = array(
+				'tracker' => &$context['issue_trackers'][$id],
+				'open' => $row['open_' . $tracker['short']],
+				'closed' => $row['closed_' . $tracker['short']],
+				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
+				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
+				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
 			);
+			unset($tracker);
 		}
 	}
 	$smcFunc['db_free_result']($request);

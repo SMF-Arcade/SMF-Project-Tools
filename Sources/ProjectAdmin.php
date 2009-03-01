@@ -227,6 +227,9 @@ function ProjectsMaintenanceUpgrade()
 		array(
 			'function' => 'ptUpgrade_log_issues',
 		),
+		array(
+			'function' => 'ptUpgrade_trackers',
+		),
 	);
 
 	return $repairFunctions;

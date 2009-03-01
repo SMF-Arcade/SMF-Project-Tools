@@ -40,14 +40,6 @@ function IssueReply()
 
 	if ($context['can_issue_update'])
 	{
-		$context['possible_types'] = array();
-
-		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['issue_types'][$id];
-
-		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
-			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
-
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}
@@ -222,14 +214,6 @@ function IssueReply2()
 
 	if ($context['can_issue_update'])
 	{
-		$context['possible_types'] = array();
-
-		foreach ($context['project']['trackers'] as $id => $type)
-			$context['possible_types'][$id] = &$context['issue_types'][$id];
-
-		if (isset($context['possible_types'][$context['current_issue']['type']['id']]))
-			$context['possible_types'][$context['current_issue']['type']['id']]['selected'] = true;
-
 		$context['can_edit'] = true;
 		$context['show_update'] = true;
 	}

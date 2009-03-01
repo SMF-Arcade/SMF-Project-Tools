@@ -37,11 +37,11 @@ function template_issue_list()
 	echo '
 					</select>
 					<select name="type">
-						<option value="0"', empty($context['issue_search']['type']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
+						<option value="0"', empty($context['issue_search']['tracker']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
 
-	foreach ($context['possible_types'] as $type)
+	foreach ($context['project']['trackers'] as $tracker)
 		echo '
-						<option value="', $type['id'], '"', $context['issue_search']['type'] == $type['id'] ? ' selected="selected"' : '', '>', $type['name'], '</option>';
+						<option value="', $tracker['tracker']['short'], '"', $context['issue_search']['tracker'] == $tracker['tracker']['short'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
 	echo '
 					</select>
@@ -93,8 +93,8 @@ function template_issue_list()
 			echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'type' => $issue['type'])), '">
-							<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+						<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+							<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="" />
 						</a>
 					</td>
 					<td class="windowbg2 info">

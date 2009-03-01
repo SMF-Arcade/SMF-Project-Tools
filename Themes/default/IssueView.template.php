@@ -51,10 +51,10 @@ function template_issue_view_above()
 						<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
 					</dl>
 				</li>
-				<li id="issue_type" class="clearfix">
+				<li id="issue_tracker" class="clearfix">
 					<dl class="clearfix">
 						<dt>', $txt['issue_type'], '</dt>
-						<dd>', $context['current_issue']['type']['name'], '</dd>
+						<dd>', $context['current_issue']['tracker']['name'], '</dd>
 					</dl>
 				</li>
 				<li id="issue_status" class="clearfix">
@@ -101,7 +101,7 @@ function template_issue_view_above()
 	echo '
 	<div id="firstcomment" class="tborder">
 		<h3 class="catbg3 headerpadding">
-			<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" />
+			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="" width="20" />
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>
 		<div class="bordercolor">
@@ -238,7 +238,7 @@ function template_issue_view_above()
 				<div class="postarea">
 					<div class="keyinfo">
 						<div class="messageicon floatleft">
-							<img src="', $settings['images_url'], '/', $context['current_issue']['type']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
+							<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
 						</div>
 						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
 						<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
@@ -337,7 +337,7 @@ function template_issue_view_above()
 	{
 		echo '
 	<script language="JavaScript" type="text/javascript">
-		var ddIssueType = new PTDropdown("issue_type", "type", "', $context['current_issue']['type']['id'], '", ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueType = new PTDropdown("issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '", ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
 		var ddIssueViewS = new PTDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
@@ -347,9 +347,9 @@ function template_issue_view_above()
 		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
 		// Types
-		foreach ($context['possible_types'] as $id => $type)
+		foreach ($context['project']['trackers'] as $id => $tracker)
 			echo '
-		ddIssueType.addOption("', $id, '", "', $type['name'], '");';
+		ddIssueType.addOption(', $id, ', "', $tracker['tracker']['name'], '");';
 
 		// Categories
 		foreach ($context['project']['category'] as $c)

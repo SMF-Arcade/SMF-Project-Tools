@@ -56,17 +56,17 @@ function template_report_issue()
 						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
 					</dd>';
 
-	if (count($context['possible_types']) > 1)
+	if (count($context['project']['trackers']) > 1)
 	{
 		echo '
 					<dt>', $txt['issue_type'], ':</dt>
 					<dd>';
 
-		foreach ($context['possible_types'] as $id => $type)
+		foreach ($context['project']['trackers'] as $id => $tracker)
 		{
 			echo '
 						<div class="toggle">
-							<input type="radio" id="type_', $id, '" name="type" value="', $id, '" tabindex="', $context['tabindex']++, '"', $type['selected'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $type['name'], '</label>
+							<input type="radio" id="type_', $id, '" name="tracker" value="', $id, '" tabindex="', $context['tabindex']++, '"', $id == $context['issue']['tracker'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $tracker['tracker']['name'], '</label>
 						</div>';
 		}
 
@@ -267,9 +267,9 @@ function template_issue_reply()
 						<td>
 							<select name="type">';
 
-		foreach ($context['possible_types'] as $id => $type)
+		foreach ($context['project']['trackers'] as $id => $tracker)
 			echo '
-								<option value="', $id, '" ', !empty($type['selected']) ? ' selected="selected"' : '', '>', $type['name'], '</option>';
+								<option value="', $id, '" ', $id == $context['current_issue']['tracker']['id'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
 		echo '
 							</select>

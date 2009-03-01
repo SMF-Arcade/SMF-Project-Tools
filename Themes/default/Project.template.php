@@ -48,10 +48,10 @@ function template_project_list()
 				</td>
 				<td class="windowbg stats smalltext">';
 
-			foreach ($project['issues'] as $key => $type)
+			foreach ($project['trackers'] as $tracker)
 				echo '
-					', $type['open'], ' / ', $type['total'], ' ', $context['issue_types'][$key]['plural'], '<br />';
-
+					', $tracker['open'], ' / ', $tracker['total'], ' ', $tracker['tracker']['plural'], '<br />';
+					
 			echo '
 				</td>
 				<td class="windowbg2 lastissue">
