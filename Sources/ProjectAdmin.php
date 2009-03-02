@@ -37,7 +37,7 @@ function ProjectsAdmin()
 	isAllowedTo('project_admin');
 	loadProjectToolsPage('admin');
 
-	$context[$context['admin_menu_name']]['tab_data']['title'] = &$txt['project_tools_admin'];
+	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['project_tools_admin'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['project_tools_admin_desc'];
 
 	$context['page_title'] = $txt['project_tools_admin'];
