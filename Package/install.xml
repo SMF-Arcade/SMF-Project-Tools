@@ -220,7 +220,7 @@ else
 			<search position="after"><![CDATA[	// If they have specified a particular theme to use with SSI allow it to be used.]]></search>
 			<add><![CDATA[	elseif (!empty($context['project']['theme']) && !empty($context['project']['override_theme']))
 		$id_theme = $context['project']['theme'];
-	elseif (!empty($modSettings['project_force_theme']))
+	elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'projects' && !empty($modSettings['project_force_theme']))
 		id_theme = (int) $modSettings['project_force_theme'];
 ]]></add>
 		</operation>
