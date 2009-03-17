@@ -68,7 +68,6 @@ function ProjectsAdminSettings($return_config = false)
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 
 	$config_vars = array(
-			array('check', 'projectEnabled'),
 			array('check', 'projectAttachments'),
 		'',
 			array('int', 'issuesPerPage'),

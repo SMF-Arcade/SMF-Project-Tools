@@ -104,6 +104,7 @@ else
 					'label' => $txt['project_general'],
 					'file' => 'ProjectAdmin.php',
 					'function' => 'ProjectsAdmin',
+					'enabled' => !empty($modSettings['projectEnabled']),
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'main' => array($txt['project_general_main']),
@@ -115,6 +116,7 @@ else
 					'label' => $txt['manage_projects'],
 					'file' => 'ManageProjects.php',
 					'function' => 'ManageProjects',
+					'enabled' => !empty($modSettings['projectEnabled']),
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'list' => array($txt['modify_projects']),
@@ -127,6 +129,7 @@ else
 					'label' => $txt['manage_project_permissions'],
 					'file' => 'ProjectPermissions.php',
 					'function' => 'ManageProjectPermissions',
+					'enabled' => !empty($modSettings['projectEnabled']),
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'main' => array($txt['modify_project_profiles']),
@@ -221,7 +224,7 @@ else
 			<add><![CDATA[	elseif (!empty($context['project']['theme']) && !empty($context['project']['override_theme']))
 		$id_theme = $context['project']['theme'];
 	elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'projects' && !empty($modSettings['project_force_theme']))
-		id_theme = (int) $modSettings['project_force_theme'];
+		$id_theme = (int) $modSettings['project_force_theme'];
 ]]></add>
 		</operation>
 	</file>
@@ -257,6 +260,7 @@ else
 					'label' => $txt['project_profile'],
 					'file' => 'Profile-Project.php',
 					'function' => 'projectProfile',
+					'enabled' => !empty($modSettings['projectEnabled']),
 					'subsections' => array(
 						'main' => array($txt['project_profile_main']),
 						'reported' => array($txt['project_profile_reported']),
@@ -278,7 +282,7 @@ else
 // Save any changes to the custom profile fields...]]></search>
 			<add><![CDATA[
 	// Project Notifications
-	elseif (isset($_POST['edit_notify_projects']) && !empty($_POST['notify_projects']))
+	elseif (!empty($modSettings['projectEnabled']) && isset($_POST['edit_notify_projects']) && !empty($_POST['notify_projects']))
 	{
 		// Make sure only integers are deleted.
 		foreach ($_POST['notify_projects'] as $index => $id)
@@ -302,83 +306,85 @@ else
 		<operation>
 			<search position="after"><![CDATA[	// What options are set?]]></search>
 			<add><![CDATA[
-	// Now do the project notifications.
-	$listOptions = array(
-		'id' => 'project_notification_list',
-		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_projects'],
-		'width' => '100%',
-		'no_items_label' => $txt['notifications_projects_none'],
-		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
-		'default_sort_col' => 'project_name',
-		'get_items' => array(
-			'function' => 'list_getProjectNotifications',
-			'params' => array(
-				$memID,
-			),
-		),
-		'columns' => array(
-			'project_name' => array(
-				'header' => array(
-					'value' => $txt['project'],
-					'style' => 'text-align: left',
-				),
-				'data' => array(
-					'function' => create_function('$project', '
-						global $settings, $txt;
-
-						$link = $project[\'link\'];
-
-						if ($project[\'new\'])
-							$link .= \' <a href="\' . $project[\'href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
-
-						return $link;
-					'),
-				),
-				'sort' => array(
-					'default' => 'p.name',
-					'reverse' => 'p.name DESC',
+	if (!empty($modSettings['projectEnabled']))
+	{
+		// Now do the project notifications.
+		$listOptions = array(
+			'id' => 'project_notification_list',
+			'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_projects'],
+			'width' => '100%',
+			'no_items_label' => $txt['notifications_projects_none'],
+			'no_items_align' => 'left',
+			'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
+			'default_sort_col' => 'project_name',
+			'get_items' => array(
+				'function' => 'list_getProjectNotifications',
+				'params' => array(
+					$memID,
 				),
 			),
-			'delete' => array(
-				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
-					'style' => 'width: 4%;',
-				),
-				'data' => array(
-					'sprintf' => array(
-						'format' => '<input type="checkbox" name="notify_projects[]" value="%1$d" class="check" />',
-						'params' => array(
-							'id' => false,
-						),
+			'columns' => array(
+				'project_name' => array(
+					'header' => array(
+						'value' => $txt['project'],
+						'style' => 'text-align: left',
 					),
-					'style' => 'text-align: center;',
+					'data' => array(
+						'function' => create_function('$project', '
+							global $settings, $txt;
+
+							$link = $project[\'link\'];
+
+							if ($project[\'new\'])
+								$link .= \' <a href="\' . $project[\'href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
+
+							return $link;
+						'),
+					),
+					'sort' => array(
+						'default' => 'p.name',
+						'reverse' => 'p.name DESC',
+					),
+				),
+				'delete' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+						'style' => 'width: 4%;',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="notify_projects[]" value="%1$d" class="check" />',
+							'params' => array(
+								'id' => false,
+							),
+						),
+						'style' => 'text-align: center;',
+					),
 				),
 			),
-		),
-		'form' => array(
-			'href' => $scripturl . '?action=profile;save',
-			'include_sort' => true,
-			'include_start' => true,
-			'hidden_fields' => array(
-				'u' => $memID,
-				'area' => $context['menu_item_selected'],
-				'sc' => $context['session_id'],
+			'form' => array(
+				'href' => $scripturl . '?action=profile;save',
+				'include_sort' => true,
+				'include_start' => true,
+				'hidden_fields' => array(
+					'u' => $memID,
+					'area' => $context['menu_item_selected'],
+					'sc' => $context['session_id'],
+				),
 			),
-		),
-		'additional_rows' => array(
-			array(
-				'position' => 'bottom_of_list',
-				'value' => '<input type="submit" name="edit_notify_projects" value="' . $txt['notifications_update'] . '" />',
-				'class' => 'windowbg',
-				'align' => 'right',
+			'additional_rows' => array(
+				array(
+					'position' => 'bottom_of_list',
+					'value' => '<input type="submit" name="edit_notify_projects" value="' . $txt['notifications_update'] . '" />',
+					'class' => 'windowbg',
+					'align' => 'right',
+				),
 			),
-		),
-	);
+		);
 
-	// Create the notification list.
-	createList($listOptions);
-
+		// Create the notification list.
+		createList($listOptions);
+	}
 ]]></add>
 		</operation>
 
@@ -427,10 +433,13 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		<operation>
 			<search position="before"><![CDATA[template_show_list('board_notification_list');]]></search>
 			<add><![CDATA[
-	echo '
-		<br />';
+	if (!empty($modSettings['projectEnabled']))
+	{
+		echo '
+			<br />';
 
-	template_show_list('project_notification_list');
+		template_show_list('project_notification_list');
+	}
 ]]></add>
 		</operation>
 	</file>
