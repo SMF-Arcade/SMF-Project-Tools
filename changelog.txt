@@ -8,6 +8,7 @@ March 2009
  + Store trackers in database
  ! Timeline did show wrong year for past years
  ! Don't show anything related to Project Tools when disabled
+ ! Issue Trackers wasn't shown when creating or editing project
 
 February 2009
 --------------------------------------------------------------------------------

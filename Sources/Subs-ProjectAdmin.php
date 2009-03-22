@@ -426,8 +426,8 @@ function loadProjectAdmin($id_project)
 
 	foreach ($trackers as $id)
 	{
-		$tracker = $context['issue_trackers'][$key];
-		$project['trackers'][$key] = array(
+		$tracker = $context['issue_trackers'][$id];
+		$project['trackers'][$id] = array(
 			'info' => &$context['issue_trackers'][$id],
 			'open' => $row['open_' . $tracker['short']],
 			'closed' => $row['closed_' . $tracker['short']],
