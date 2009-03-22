@@ -203,7 +203,8 @@ function updateProject($id_project, $projectOptions)
 			$rows = array();
 
 			foreach ($toAdd as $id_member)
-				$rows[] = array($id_project, (int) $id_member);
+				if (!empty($id_member))
+					$rows[] = array($id_project, (int) $id_member);
 
 			$smcFunc['db_insert']('insert',
 				'{db_prefix}project_developer',
@@ -451,7 +452,7 @@ function loadProjectAdmin($id_project)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$project['developers'][$row['id_member']] = array(
-			'id' => $row['id_member'],
+			'id' => (int) $row['id_member'],
 			'name' => $row['real_name'],
 			'last' => false,
 		);
@@ -460,7 +461,8 @@ function loadProjectAdmin($id_project)
 	$smcFunc['db_free_result']($request);
 
 	// Set last developer
-	$project['developers'][$last]['last'] = true;
+	if (!empty($last))
+		$project['developers'][$last]['last'] = true;
 
 	// Category
 	$request = $smcFunc['db_query']('', '

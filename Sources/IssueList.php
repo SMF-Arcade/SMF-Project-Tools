@@ -92,12 +92,6 @@ function IssueList()
 		$baseurl['tilte'] = $_REQUEST['title'];
 	}
 
-	if (!empty($_REQUEST['status']))
-	{
-		$context['issue_search']['status'] = $_REQUEST['status'];
-		$baseurl['status'] = $_REQUEST['status'];
-	}
-
 	if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
 	{
 		$context['issue_search']['tracker'] = $_REQUEST['tracker'];
@@ -132,12 +126,20 @@ function IssueList()
 
 	if (isset($_REQUEST['version_fixed']))
 	{
-		$_REQUEST['version'] = (int) trim($_REQUEST['version_fixed']);
+		$_REQUEST['version_fixed'] = (int) trim($_REQUEST['version_fixed']);
 
 		$context['issue_search']['version_fixed'] = $_REQUEST['version_fixed'];
 		$baseurl['version_fixed'] = $_REQUEST['version_fixed'];
+
+		$context['issue_search']['status'] = 'all';
 	}
 
+	if (!empty($_REQUEST['status']))
+	{
+		$context['issue_search']['status'] = $_REQUEST['status'];
+		$baseurl['status'] = $_REQUEST['status'];
+	}
+	
 	$tags_url = $baseurl;
 
 	if (!empty($_REQUEST['tag']))

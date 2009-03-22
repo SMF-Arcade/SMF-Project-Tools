@@ -337,7 +337,7 @@ function EditProject2()
 		if (count($projectOptions['trackers']) == 0)
 			fatal_lang_error('no_issue_types', false);
 
-		if (!isset($_POST['developer_list']) && !is_array())
+		if (!isset($_POST['developer_list']) || !is_array($_POST['developer_list']))
 			$_POST['developer_list'] = array();
 
 		$projectOptions['developers'] = $_POST['developer_list'];

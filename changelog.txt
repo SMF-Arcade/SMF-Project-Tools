@@ -11,6 +11,9 @@ March 2009
  ! Issue Trackers wasn't shown when creating or editing project
  ! Database error with clean install
  ! Developers line was shown even without developers
+ ! Sometimes guest was added as a developer
+ + Show all issues by default when browsing issues of certain version
+ ! "not set" version caused not found error when clicked
 
 February 2009
 --------------------------------------------------------------------------------

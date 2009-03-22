@@ -140,8 +140,8 @@ function ProjectRoadmapMain()
 	}
 
 	// Hide "not set" version if it has no issues
-	if ($context['roadmap'][0]['issues']['total'] == 0)
-		unset($context['roadmap'][0]);
+	/*if ($context['roadmap'][0]['issues']['total'] == 0)
+		unset($context['roadmap'][0]);*/
 
 	// Template
 	$context['page_title'] = sprintf($txt['project_roadmap_title'], $context['project']['name']);
@@ -153,26 +153,41 @@ function ProjectRoadmapVersion()
 {
 	global $context, $project, $user_info, $smcFunc, $txt;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			ver.id_version, ver.id_parent, ver.version_name, ver.status,
-			ver.description, ver.release_date
-		FROM {db_prefix}project_versions AS ver
-		WHERE ({query_see_version})
-			AND ver.id_project = {int:project}
-			AND ver.id_version = {int:version}',
-		array(
-			'project' => $project,
-			'version' => $_REQUEST['version'],
-		)
-	);
-	$row = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
+	if ($_REQUEST['version'] != '0')
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				ver.id_version, ver.id_parent, ver.version_name, ver.status,
+				ver.description, ver.release_date
+			FROM {db_prefix}project_versions AS ver
+			WHERE ({query_see_version})
+				AND ver.id_project = {int:project}
+				AND ver.id_version = {int:version}',
+			array(
+				'project' => $project,
+				'version' => (int) $_REQUEST['version'],
+			)
+		);
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+	}
+	else
+	{
+		$row = array(
+			'id_version' => 0,
+			'id_parent' => 0,
+			'version_name' => $txt['version_na'],
+			'status' => 0,
+			'description' => $txt['version_na_desc'],
+			'release_date' => '',
+		);
+	}
 
 	if (!$row)
 		fatal_lang_error('version_not_found', false);
 
 	// Make release date string
+	if (!empty($row['release_date']))
 	$row['release_date'] = unserialize($row['release_date']);
 
 	$time = array();
