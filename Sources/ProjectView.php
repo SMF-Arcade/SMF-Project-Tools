@@ -34,7 +34,7 @@ function ProjectView()
 	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
 
-	if (!$user_info['is_guest'])
+	if (!$user_info['is_guest'] && !empty($modSettings['project_maxEventID']))
 	{
 		// We can't know they read it if we allow prefetches.
 		if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')

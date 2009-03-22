@@ -9,6 +9,7 @@ March 2009
  ! Timeline did show wrong year for past years
  ! Don't show anything related to Project Tools when disabled
  ! Issue Trackers wasn't shown when creating or editing project
+ ! Database error with clean install
 
 February 2009
 --------------------------------------------------------------------------------
