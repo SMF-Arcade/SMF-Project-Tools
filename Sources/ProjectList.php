@@ -73,10 +73,11 @@ function ProjectList()
 			'description' => $row['description'],
 			'new' => $row['new_from'] <= $row['id_event_mod'] && !$user_info['is_guest'],
 			'trackers' => array(),
-			'developers' => array(
-				'<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
-			),
+			'developers' => array(),
 		);
+
+		if (!empty($row['id_member']))
+			$context['projects'][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
 		$trackers = explode(',', $row['trackers']);
 

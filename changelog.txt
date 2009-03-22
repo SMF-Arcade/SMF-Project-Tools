@@ -10,6 +10,7 @@ March 2009
  ! Don't show anything related to Project Tools when disabled
  ! Issue Trackers wasn't shown when creating or editing project
  ! Database error with clean install
+ ! Developers line was shown even without developers
 
 February 2009
 --------------------------------------------------------------------------------
