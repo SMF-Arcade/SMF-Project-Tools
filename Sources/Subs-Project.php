@@ -240,6 +240,7 @@ function loadProject()
 			$context['project']['trackers'][$id] = array(
 				'id' => $id,
 				'tracker' => $tracker,
+				'short' => $tracker['short'],
 				'open' => $row['open_' . $tracker['short']],
 				'closed' => $row['closed_' . $tracker['short']],
 				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
