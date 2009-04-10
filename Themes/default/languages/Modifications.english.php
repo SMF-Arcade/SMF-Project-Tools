@@ -55,6 +55,11 @@ $txt['permissiongroup_simple_project'] = 'Use Project Tools';
 $txt['permissionname_simple_project_profile_own'] = 'View their own Project Tools profile';
 $txt['permissionname_simple_project_profile_any'] = 'View any Project Tools profile';
 
+// Who's online
+$txt['who_project_index'] = 'Viewing <a href="%1$s">project list</a>.';
+$txt['who_project'] = 'Viewing the project <a href="%1$s">%2$s</a>.';
+$txt['who_project_issue'] = 'Viewing the issue <a href="%1$s">%2$s</a>.';
+
 // Errors
 $txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
 $txt['cannot_project_view'] = 'You are not allowed to view this project.';
