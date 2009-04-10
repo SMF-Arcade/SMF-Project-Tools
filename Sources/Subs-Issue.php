@@ -258,6 +258,20 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 	$issueUpdates = array();
 
+	// Make sure project exists always
+	if (!isset($issueOptions['project']))
+		$issueOptions['project'] = $row['id_project'];
+
+	if (isset($issueOptions['project']) && $issueOptions['project'] != $row['id_project'])
+	{
+		$issueUpdates[] = 'id_project = {int:project}';
+		$issueOptions['project'] = $issueOptions['project'];
+
+		$event_data['changes'][] = array(
+			'project', $row['id_project'], $issueOptions['project']
+		);		
+	}
+
 	if (isset($issueOptions['private']) && $issueOptions['private'] != $row['private_issue'])
 	{
 		$issueUpdates[] = 'private_issue = {int:private}';
@@ -378,9 +392,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		))
 	);
 
-	if (!isset($issueOptions['project']))
-		$issueOptions['project'] = $row['id_project'];
-
 	$projectUpdates = array();
 
 	if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $row['id_tracker'] || $oldStatus != $newStatus))
@@ -406,6 +417,20 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 					'project' => $id,
 				)
 			);
+			
+	// Update id_project in timeline if needed
+	if ($row['id_project'] != $issueOptions['project'])
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_timeline
+			SET id_project = {int:project}
+			WHERE id_issue = {int:issue}',
+			array(
+				'project' => $issueOptions['project'],
+				'issue' => $id_issue,
+			)
+		);
+	}
 
 	if ($return_log)
 		return $event_data;

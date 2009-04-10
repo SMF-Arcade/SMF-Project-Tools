@@ -246,6 +246,7 @@ else
 		// pm = post moderation.]]></search>
 			<add><![CDATA[		// pj = project tools
 		'pj' => array(
+			'url' => 'action=admin;area=projectsadmin',
 			'settings' => array(
 				'projectEnabled' => 1,
 			),
