@@ -275,123 +275,6 @@ else
 ]]></add>
 		</operation>
 	</file>
-	
-	<file name="$sourcedir/Who.php">
-		<operation>
-			<search position="before"><![CDATA[	$board_ids = array();]]></search>
-			<add><![CDATA[
-	
-	// Project Tools
-	$project_ids = array();
-	$issue_ids = array();
-]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[			// It's the board index!!  It must be!]]></search>
-			<add><![CDATA[			// Project Tools
-			elseif (isset($actions['project']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$project_ids[$actions['project']][$k] = $txt['who_project'];
-			}
-			elseif (isset($actions['issue']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
-			}
-]]></add>
-		</operation>
-		
-		
-		<operation>
-			<search position="before"><![CDATA[if (!isset($actions['action']) || $actions['action'] == 'display']]></search>
-			<add><![CDATA[ || $actions['action'] == 'projects']]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[			// It's the board index!!  It must be!]]></search>
-			<add><![CDATA[			// Project Tools
-			elseif (isset($actions['project']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$project_ids[$actions['project']][$k] = $txt['who_project'];
-			}
-			elseif (isset($actions['issue']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
-			}
-			elseif (isset($actions['action']) && $actions['action'] == 'projects')
-			{
-				if (allowedTo('project_access'))
-					$data[$k] = $txt['who_project_index'];
-				else
-					$data[$k] = $txt['who_hidden'];
-			}
-]]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[
-	// Load board names.]]></search>
-			<add><![CDATA[	// Project Tools
-	if (!empty($project_ids))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT p.id_project, p.name
-			FROM {db_prefix}projects AS p
-				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-					AND dev.id_member = {int:current_member})
-			WHERE {query_see_project}
-				AND p.id_project IN({array_int:projects})
-			ORDER BY p.name',
-			array(
-				'projects' => array_keys($project_ids),
-				'current_member' => $user_info['id'],
-			)
-		);
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			// Put the project name into the string for each member...
-			foreach ($project_ids[$row['id_project']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('project' => $row['id_project'])), $row['name']);
-		}
-		$smcFunc['db_free_result']($request);
-	}
-	
-	if (!empty($issue_ids))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				i.id_issue, i.subject
-			FROM {db_prefix}issues AS i
-				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
-				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-					AND dev.id_member = {int:current_member})
-			WHERE {query_see_project}
-				AND {query_see_issue}
-				AND id_issue IN ({array_int:issues})',
-			array(
-				'issues' => $issue_ids,
-				'current_member' => $user_info['id'],
-			)
-		);
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			// Put the project name into the string for each member...
-			foreach ($issue_ids[$row['id_issue']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue'])), $row['subject']);
-		}
-		$smcFunc['db_free_result']($request);
-	}
-]]></add>
-		</operation>
-	</file>
 
 	<file name="$sourcedir/Profile-Modify.php">
 		<operation>
@@ -810,6 +693,120 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			<add><![CDATA[
 				'SMF Project Tools &copy; 2007-2009<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
 		</operation>
+		
+<operation>
+			<search position="before"><![CDATA[	$board_ids = array();]]></search>
+			<add><![CDATA[
+	
+	// Project Tools
+	$project_ids = array();
+	$issue_ids = array();
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[			// It's the board index!!  It must be!]]></search>
+			<add><![CDATA[			// Project Tools
+			elseif (isset($actions['project']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$project_ids[$actions['project']][$k] = $txt['who_project'];
+			}
+			elseif (isset($actions['issue']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
+			}
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[if (!isset($actions['action']) || $actions['action'] == 'display']]></search>
+			<add><![CDATA[ || $actions['action'] == 'projects']]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[			// It's the board index!!  It must be!]]></search>
+			<add><![CDATA[			// Project Tools
+			elseif (isset($actions['project']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$project_ids[$actions['project']][$k] = $txt['who_project'];
+			}
+			elseif (isset($actions['issue']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
+			}
+			elseif (isset($actions['action']) && $actions['action'] == 'projects')
+			{
+				if (allowedTo('project_access'))
+					$data[$k] = $txt['who_project_index'];
+				else
+					$data[$k] = $txt['who_hidden'];
+			}
+]]></add>
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+	// Load board names.]]></search>
+			<add><![CDATA[	// Project Tools
+	if (!empty($project_ids))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT p.id_project, p.name
+			FROM {db_prefix}projects AS p
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})
+			WHERE {query_see_project}
+				AND p.id_project IN({array_int:projects})
+			ORDER BY p.name',
+			array(
+				'projects' => array_keys($project_ids),
+				'current_member' => $user_info['id'],
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			// Put the project name into the string for each member...
+			foreach ($project_ids[$row['id_project']] as $k => $session_text)
+				$data[$k] = sprintf($session_text, project_get_url(array('project' => $row['id_project'])), $row['name']);
+		}
+		$smcFunc['db_free_result']($request);
+	}
+	
+	if (!empty($issue_ids))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT
+				i.id_issue, i.subject
+			FROM {db_prefix}issues AS i
+				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})
+			WHERE {query_see_project}
+				AND {query_see_issue}
+				AND id_issue IN ({array_int:issues})',
+			array(
+				'issues' => $issue_ids,
+				'current_member' => $user_info['id'],
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			// Put the project name into the string for each member...
+			foreach ($issue_ids[$row['id_issue']] as $k => $session_text)
+				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue'])), $row['subject']);
+		}
+		$smcFunc['db_free_result']($request);
+	}
+]]></add>
+		</operation>		
 	</file>
 
 	<!-- Themes -->
