@@ -101,7 +101,7 @@ function template_issue_view_above()
 	echo '
 	<div id="firstcomment" class="tborder">
 		<h3 class="catbg3 headerpadding">
-			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="" width="20" />
+			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>
 		<div class="bordercolor">
@@ -238,7 +238,7 @@ function template_issue_view_above()
 				<div class="postarea">
 					<div class="keyinfo">
 						<div class="messageicon floatleft">
-							<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="" width="20" style="padding: 6px 3px" />
+							<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" style="padding: 6px 3px" />
 						</div>
 						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
 						<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>

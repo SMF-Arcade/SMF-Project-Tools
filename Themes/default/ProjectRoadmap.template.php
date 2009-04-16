@@ -66,7 +66,7 @@ function template_project_roadmap_version()
 			<tr>
 				<td class="windowbg icon">
 					<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'type' => $issue['type'])), '">
-						<img src="', $settings['images_url'], '/', $issue['type'], '.png" alt="" />
+						<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['name'], '" />
 					</a>
 				</td>
 				<td class="windowbg2 info issue_', $issue['status']['name'], '">
