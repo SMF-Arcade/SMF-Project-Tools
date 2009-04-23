@@ -337,10 +337,12 @@ function template_issue_view_above()
 	{
 		echo '
 	<script language="JavaScript" type="text/javascript">
-		var ddIssueType = new PTDropdown("issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '", ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		var ddIssueCate = new PTDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		var ddIssueVers = new PTDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		var ddIssueViewS = new PTDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var currentIssue = new PTIssue(', $context['current_issue']['id'], ', "', $context['issue_xml_url'], '")
+		
+		var ddIssueType = new PTDropdown(currentIssue, "issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");
+		var ddIssueCate = new PTDropdown(currentIssue, "issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');
+		var ddIssueVers = new PTDropdown(currentIssue, "issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');
+		var ddIssueViewS = new PTDropdown(currentIssue, "issue_view_status", "private", ', (int) $context['current_issue']['private'], ');
 		ddIssueViewS.addOption(0, "', $txt['issue_view_status_public'], '");
 		ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");
 		ddIssueCate.addOption(0, "', $txt['issue_none'], '");
@@ -360,7 +362,7 @@ function template_issue_view_above()
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", "font-weight: bold");';
+		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", "group");';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
@@ -370,10 +372,10 @@ function template_issue_view_above()
 		if (!empty($context['can_issue_moderate']))
 		{
 			echo '
-		var ddIssueStat = new PTDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		var ddIssueAssi = new PTDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
-		var ddIssueFixv = new PTDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '")
-		var ddIssuePrio = new PTDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ', ', $context['current_issue']['id'], ', "', $context['session_id'], '");
+		var ddIssueStat = new PTDropdown(currentIssue, "issue_status", "status", ', (int) $context['current_issue']['status']['id'], ');
+		var ddIssueAssi = new PTDropdown(currentIssue, "issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ');
+		var ddIssueFixv = new PTDropdown(currentIssue, "issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ')
+		var ddIssuePrio = new PTDropdown(currentIssue, "issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ');
 		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");
 		ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
 
@@ -391,7 +393,7 @@ function template_issue_view_above()
 			foreach ($context['versions'] as $v)
 			{
 				echo '
-		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", "font-weight: bold");';
+		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", "group");';
 
 				foreach ($v['sub_versions'] as $subv)
 					echo '

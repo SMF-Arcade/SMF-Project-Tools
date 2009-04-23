@@ -3,6 +3,10 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.3                                                          ?
 ================================================================================
+April 2009
+--------------------------------------------------------------------------------
+ + Improved Ajax Dropdown code to support saving multiple items at the same time
+ 
 March 2009
 --------------------------------------------------------------------------------
  + Store trackers in database

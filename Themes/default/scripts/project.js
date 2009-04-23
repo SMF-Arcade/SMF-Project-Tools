@@ -1,7 +1,61 @@
 // Project Tools Dropdown
-function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
+function PTIssue(id_issue, saveURL)
 {
-	var object;
+	var changes = [];
+	var callbacks = [];
+	
+	var saveInProgress = false;
+	
+	this.id_issue = id_issue;
+	
+	this.addChange = addChange;
+	this.addCallback = addCallback;
+	this.saveChanges = saveChanges;
+	
+	function addCallback(callback)
+	{
+		i = callbacks.length;
+		callbacks[i] = callback;
+	}
+	
+	function addChange(item, value)
+	{
+		if (saveInProgress)
+			return setTimeout(addChange, 500, item, value);
+			
+		i = changes.length;
+		changes[i] = item + "=" + value;
+		
+		return true;
+	}
+	
+	function saveChanges()
+	{
+		if (saveInProgress)
+			return;
+		
+		saveInProgress = true;
+		
+		sendXMLDocument(saveURL, changes.join("&"), onSaveDone);
+		changes = [];
+	}
+	
+	function onSaveDone(oXMLDoc)
+	{
+		for (i = 0; i < callbacks.length; i++)
+		{
+			callbacks[i](oXMLDoc);
+		}
+		
+		// Reset callbacks
+		callbacks = [];
+		
+		saveInProgress = false;
+	}
+}
+
+function PTDropdown(issue, name, fieldName, selectedValue)
+{
 	var options = [];
 	var visible = false;
 	var dropdownHandle = document.getElementById(name);
@@ -13,7 +67,7 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 	var handled = true;
 	var selectedItem = null;
 
-	this.currentIssue = currentIssue;
+	this.issue = issue;
 	this.addOption = addOption;
 	this.fieldName = fieldName;
 
@@ -51,7 +105,8 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 			newOption = document.createElement('li');
 			newOption.optionValue = options[i]['id'];
 			newOption.optionItem = options[i];
-			newOption.innerHTML = '<span style="' + options[i]['style'] + '">' + options[i]['name'] + '</span>';
+			newOption.className = options[i]['style'];
+			newOption.innerHTML = options[i]['name'];
 
 			createEventListener(newOption);
 			newOption.addEventListener('click', dropDownItemClick, false);
@@ -89,9 +144,6 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 
 		var target = (evt.target) ? evt.target : evt.srcElement;
 
-		if (target.tagName == 'SPAN')
-			target = target.parentNode;
-
 		if (target.optionValue != selectedValue)
 		{
 			selectedValue = target.optionValue;
@@ -99,28 +151,36 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 
 			dropdownBtn.className = "button_work";
 
-			//xmlRequestHandle = callback(fieldName, name, target.optionValue, currentIssue, sessionID);
+			// Register change and add callback to update status after request is done	
+			issue.addChange(fieldName, selectedValue);
+			issue.addCallback(saveDone)
 
-			getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'issue=' + currentIssue + ';sa=update;name=' + name + ';' + fieldName + '=' + selectedValue + ';xml;sesc=' + sessionID,
-				function (oXMLDoc)
-				{
-					dropdownBtn.className = "button";
-
-					var node = oXMLDoc.getElementsByTagName('update')[0];
-
-					if (node.nodeValue == '' || node.nodeValue == null || node.nodeValue == undefined)
-					{
-						dropdownValue.innerHTML = selectedItem['name'];
-					}
-					else
-					{
-						dropdownValue.innerHTML = oXMLDoc.getElementsByTagName('update')[0].nodeValue;
-					}
-				}
-			);
+			// Save changes now
+			issue.saveChanges();
 		}
 
 		dropDownHide();
+	}
+	
+	function saveDone(oXMLDoc)
+	{
+		dropdownBtn.className = "button";
+		
+		var nodes = oXMLDoc.getElementsByTagName('update');
+		
+		for (var i = 0; i < nodes.length; i++)
+		{
+			field = nodes[i].getAttribute("field"); 
+			
+			if (field == fieldName && node.nodeValue != '' && node.nodeValue != null && node.nodeValue != undefined)
+			{
+				dropdownValue.innerHTML = nodes[i].nodeValue;
+				
+				return;
+			}
+		}
+		
+		dropdownValue.innerHTML = selectedItem['name'];
 	}
 
 	function checkParent(domItem)
@@ -128,16 +188,11 @@ function PTDropdown(name, fieldName, selectedValue, currentIssue, sessionID)
 		if (domItem == dropdownHandle)
 			return true;
 		else if (domItem.tagName == 'BODY')
-		{
 			return false;
-		}
+		else if (domItem.parentNode.tagName != 'BODY')
+			return checkParent(domItem.parentNode);
 		else
-		{
-			if (domItem.parentNode.tagName != 'BODY')
-				return checkParent(domItem.parentNode);
-
 			return false;
-		}
 	}
 
 	function bodyClick(evt)

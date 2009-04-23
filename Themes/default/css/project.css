@@ -331,6 +331,10 @@ table.issuetable td.lastissue
 	margin: 0 !important;
 	padding: 1px 2.5px !important;
 }
+.dropdown ul li.group
+{
+	font-weight: bold;
+}
 .dropdown ul li a
 {
 	color: black;

@@ -62,6 +62,9 @@ function IssueView()
 	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+	
+	// URL for posting updates from ajax
+	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 
 	// Tags
 	$context['can_add_tags'] = projectAllowedTo('issue_moderate');

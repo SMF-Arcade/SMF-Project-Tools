@@ -305,7 +305,7 @@ function template_issue_update()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
-	<update success="', $context['update_success'] ? 1 : 0, '"></update>
+	<update field="issue" success="', $context['update_success'] ? 1 : 0, '"></update>
 </smf>';
 }
 
