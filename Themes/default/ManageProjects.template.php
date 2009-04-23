@@ -1,5 +1,5 @@
 <?php
-// Version: 0.2; ManageProjects
+// Version: 0.2.2; ManageProjects
 
 function template_projects_list()
 {
@@ -25,7 +25,7 @@ function template_edit_project()
 				<b>', $txt['project_name'], ':</b>
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="project_name" value="', $context['project']['name'], '" size="30" />
+				<input type="text" name="project_name" value="', $context['project']['name'], '" size="30" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -34,7 +34,7 @@ function template_edit_project()
 				<span class="smalltext">', $txt['project_description_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="desc" rows="3" cols="35">', $context['project']['description'], '</textarea>
+				<textarea name="desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', $context['project']['description'], '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -43,7 +43,7 @@ function template_edit_project()
 				<span class="smalltext">', $txt['project_description_long_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="long_desc" rows="3" cols="35">', $context['project']['long_description'], '</textarea>
+				<textarea name="long_desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', $context['project']['long_description'], '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -75,7 +75,7 @@ function template_edit_project()
 
 	echo '
 				</select><br />
-				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', $context['project']['override_theme'] ? ' checked="checked"' : '', ' /> <label for="override_theme">', $txt['project_theme_override'], '</label>
+				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', $context['project']['override_theme'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
 			</td>
 		</tr>
 
@@ -105,7 +105,7 @@ function template_edit_project()
 				<b>', $txt['project_developers'], ':</b><br />
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="developer" id="developer" size="25" />
+				<input type="text" name="developer" id="developer" size="25" tabindex="', $context['tabindex']++, '" />
 				<div id="developer_container"></div>
 				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -144,10 +144,10 @@ function template_edit_project()
 
 	foreach ($context['groups'] as $group)
 		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 
 	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
 				<br />
 			</td>
 		</tr>';
@@ -162,10 +162,10 @@ function template_edit_project()
 
 	foreach ($context['issue_types'] as $key => $type)
 		echo '
-				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
+				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
 
 	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'trackers[]\');" /><br />
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'trackers[]\');" tabindex="', $context['tabindex']++, '" /><br />
 				<br />
 			</td>
 		</tr>
@@ -174,11 +174,11 @@ function template_edit_project()
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 	if (isset($context['project']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" />';
+				<input type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_project'], '" onclick="return !isEmptyText(this.form.project_name);" />
-				<input type="submit" name="delete" value="', $txt['delete_project'], '" onclick="return confirm(\'', $txt['pdelete_warning'], '\');" />';
+				<input type="submit" name="edit" value="', $txt['edit_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="delete" value="', $txt['delete_project'], '" onclick="return confirm(\'', $txt['pdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>
@@ -191,7 +191,7 @@ function template_confirm_project_delete()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageprojects;sa=project2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="project" value="', $context['project']['id'], '" />
 
 	<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
@@ -203,8 +203,8 @@ function template_confirm_project_delete()
 		</tr>
 		<tr>
 			<td align="center" class="windowbg2">
-				<input type="submit" name="delete" value="', $txt['confirm_delete'], '" />
-				<input type="submit" name="cancel" value="', $txt['cancel_delete'], '" />
+				<input type="submit" name="delete" value="', $txt['confirm_delete'], '" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="cancel" value="', $txt['cancel_delete'], '" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 	</table>
@@ -239,7 +239,7 @@ function template_edit_category()
 				<b>', $txt['category_name'], ':</b>
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="category_name" value="', $context['category']['name'], '" size="30" />
+				<input type="text" name="category_name" value="', $context['category']['name'], '" size="30" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 		<tr class="windowbg2">
@@ -248,11 +248,11 @@ function template_edit_category()
 
 	if (isset($context['category']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" />';
+				<input type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_category'], '" onclick="return !isEmptyText(this.form.category_name);" />
-				<input type="submit" name="delete" value="', $txt['delete_category'], '" onclick="return confirm(\'', $txt['cdelete_warning'], '\');" />';
+				<input type="submit" name="edit" value="', $txt['edit_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="delete" value="', $txt['delete_category'], '" onclick="return confirm(\'', $txt['cdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>
@@ -286,7 +286,7 @@ function template_edit_version()
 				<b>', $txt['version_name'], ':</b>
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="version_name" value="', $context['version']['name'], '" size="30" />
+				<input type="text" name="version_name" value="', $context['version']['name'], '" size="30" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -295,7 +295,7 @@ function template_edit_version()
 				<span class="smalltext">', $txt['version_description_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="desc" rows="3" cols="35">', $context['version']['description'], '</textarea>
+				<textarea name="desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', $context['version']['description'], '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -304,9 +304,9 @@ function template_edit_version()
 				<span class="smalltext">', $txt['version_release_date_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="release_date[]" value="', $context['version']['release_date']['day'], '" size="3" />.
-				<input type="text" name="release_date[]" value="', $context['version']['release_date']['month'], '" size="3" />.
-				<input type="text" name="release_date[]" value="', $context['version']['release_date']['year'], '" size="5" />
+				<input type="text" name="release_date[]" value="', $context['version']['release_date']['day'], '" size="3" tabindex="', $context['tabindex']++, '" />.
+				<input type="text" name="release_date[]" value="', $context['version']['release_date']['month'], '" size="3" tabindex="', $context['tabindex']++, '" />.
+				<input type="text" name="release_date[]" value="', $context['version']['release_date']['year'], '" size="5" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -331,9 +331,9 @@ function template_edit_version()
 
 	foreach ($context['groups'] as $group)
 		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
 				<br />
 			</td>
 		</tr>
@@ -342,11 +342,11 @@ function template_edit_version()
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 	if (isset($context['version']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_version'], '" onclick="return !isEmptyText(this.form.version_name);" />';
+				<input type="submit" name="add" value="', $txt['new_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_version'], '" onclick="return !isEmptyText(this.form.version_name);" />
-				<input type="submit" name="delete" value="', $txt['delete_version'], '" onclick="return confirm(\'', $txt['vdelete_warning'], '\');" />';
+				<input type="submit" name="edit" value="', $txt['edit_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="delete" value="', $txt['delete_version'], '" onclick="return confirm(\'', $txt['vdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>

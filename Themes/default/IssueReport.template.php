@@ -1,5 +1,5 @@
 <?php
-// Version: 0.2; IssueReport
+// Version: 0.2.2; IssueReport
 
 function template_report_issue()
 {
@@ -205,7 +205,7 @@ function template_issue_reply()
 		echo '
 					<dd>
 						<input type="hidden" name="issue_subscribe" value="0" />
-						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', $context['notify'] ? ' checked="checked"' : '', ' class="check" />
+						<input type="checkbox" id="issue_subscribe" name="issue_subscribe" value="1"', $context['notify'] ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" />
 						<label for="issue_subscribe">', $txt['subscribe_to_issue'], '</label>
 					</dd>';
 
@@ -232,7 +232,7 @@ function template_issue_reply()
 					<tr>
 						<td width="30%">', $txt['issue_title'], '</td>
 						<td>
-							<input name="title" value="', $context['current_issue']['name'], '" />
+							<input name="title" value="', $context['current_issue']['name'], '" tabindex="', $context['tabindex']++, '" />
 						</td>
 					</tr>';
 

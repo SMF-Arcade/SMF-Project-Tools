@@ -85,6 +85,14 @@
 
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		
+		<!-- These files goest to Theme directory -->
+		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 	</upgrade>
 
 	<upgrade for="2.0 RC1" from="0.2">

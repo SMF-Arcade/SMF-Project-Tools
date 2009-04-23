@@ -1,5 +1,5 @@
 <?php
-// Version: 0.2; IssueView
+// Version: 0.2.2; IssueView
 
 function template_issue_view_above()
 {
@@ -708,7 +708,7 @@ function template_issue_view_below()
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['comment_issue'], '</div>
 			<div class="smallpadding windowbg" style="text-align: center">
-				<textarea id="comment" name="comment" rows="7" cols="75"></textarea>';
+				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
 
 		echo '
 				<div style="text-align: right">

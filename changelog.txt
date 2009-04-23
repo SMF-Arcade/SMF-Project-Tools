@@ -1,8 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.2.2                                                       ??
+SMF Project Tools 0.2.2                                               xx.04.2009
 ================================================================================
+April 2009
+--------------------------------------------------------------------------------
+ ! Unable to delete project
+ ! Many places were missing tabindex [Issue #235]
+ 
 March 2009
 --------------------------------------------------------------------------------
  ! Timeline did show wrong year for past years

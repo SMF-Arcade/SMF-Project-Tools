@@ -1,5 +1,5 @@
 <?php
-// Version: 0.2; ProjectPermissions
+// Version: 0.2.2; ProjectPermissions
 
 function template_profiles_list()
 {
@@ -18,7 +18,7 @@ function template_profile_new()
 			<div class="headerpadding titlebg">', $txt['new_profile'], '</div>
 			<div class="windowbg2 clearfix">
 				<span class="floatleft"><label for="profile_name">', $txt['profile_name'], '</label></span>
-				<span class="floatright"><input id="profile_name" name="profile_name" value="', $context['profile']['name'], '" /></span>
+				<span class="floatright"><input id="profile_name" name="profile_name" value="', $context['profile']['name'], '" tabindex="', $context['tabindex']++, '" /></span>
 			</div>
 			<div class="windowbg2 clearfix">
 				<span class="floatleft"><label for="profile_base">', $txt['profile_name'], '</label></span>
@@ -34,7 +34,7 @@ function template_profile_new()
 				</span>
 			</div>
 			<div style="text-align: right">
-				<input type="submit" name="save" value="', $txt['profile_create'], '" />
+				<input type="submit" name="save" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
 			</div>
 		</div>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -97,7 +97,7 @@ function template_profile_permissions()
 					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
 					<span class="floatright">
 						<input type="hidden" name="permission[', $id,']" value="0" />
-						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' />
+						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" />
 					</span>
 				</div>';
 
@@ -106,7 +106,7 @@ function template_profile_permissions()
 
 	echo '
 				<div style="text-align: right">
-					<input type="submit" name="save" value="', $txt['permission_save'], '" />
+					<input type="submit" name="save" value="', $txt['permission_save'], '" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div>
