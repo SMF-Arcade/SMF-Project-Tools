@@ -8,6 +8,7 @@ April 2009
  + Improved Ajax Dropdown code to support saving multiple items at the same time
  ! Unable to delete project
  ! Many places were missing tabindex [Issue #235]
+ ! Text string for Issue Assigned to was inconsistent with other strings [Issue #234]
  
 March 2009
 --------------------------------------------------------------------------------
