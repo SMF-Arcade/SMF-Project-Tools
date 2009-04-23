@@ -23,7 +23,7 @@ function template_issue_list()
 			<div class="windowbg2" style="padding: 0.5em 0.7em">
 				<form action="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')), '" method="post">
 					', $txt['issue_title'], ':
-					<input type="text" name="title" value="', $context['issue_search']['title'], '" />
+					<input type="text" name="title" value="', $context['issue_search']['title'], '" tabindex="', $context['tabindex']++, '" />
 					<select name="status">
 						<option value="all"', $context['issue_search']['status'] == 'all' ? ' selected="selected"' : '', '>', $txt['issue_search_all_issues'], '</option>
 						<option value="open"', $context['issue_search']['status'] == 'open' ? ' selected="selected"' : '', '>', $txt['issue_search_open_issues'], '</option>
@@ -45,7 +45,7 @@ function template_issue_list()
 
 	echo '
 					</select>
-					<input type="submit" name="search" value="', $txt['issue_search_button'], '" />
+					<input type="submit" name="search" value="', $txt['issue_search_button'], '" tabindex="', $context['tabindex']++, '" />
 				</form>
 			</div>
 		</div>
