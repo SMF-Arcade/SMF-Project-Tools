@@ -6,6 +6,7 @@ SMF Project Tools 0.3                                                          ?
 April 2009
 --------------------------------------------------------------------------------
  + Improved Ajax Dropdown code to support saving multiple items at the same time
+ ! Unable to delete project
  
 March 2009
 --------------------------------------------------------------------------------

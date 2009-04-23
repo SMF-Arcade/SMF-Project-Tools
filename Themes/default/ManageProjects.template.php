@@ -191,7 +191,7 @@ function template_confirm_project_delete()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageprojects;sa=project2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="project" value="', $context['project']['id'], '" />
 
 	<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
