@@ -793,7 +793,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 				AND {query_see_issue}
 				AND id_issue IN ({array_int:issues})',
 			array(
-				'issues' => $issue_ids,
+				'issues' => array_keys($issue_ids),
 				'current_member' => $user_info['id'],
 			)
 		);
