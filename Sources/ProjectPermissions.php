@@ -27,6 +27,8 @@ function ManageProjectPermissions()
 	require_once($sourcedir . '/Subs-Project.php');
 
 	isAllowedTo('project_admin');
+	
+	loadLanguage('ManagePermissions');
 	loadProjectToolsPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_permissions'];
@@ -244,10 +246,12 @@ function EditProjectProfile()
 		SELECT id_group, id_parent, group_name, min_posts, online_color, stars
 		FROM {db_prefix}membergroups' . (empty($modSettings['permission_enable_postgroups']) ? '
 		WHERE min_posts = {int:min_posts}' : '') . '
+			AND id_group != {int:moderator_group}
 		ORDER BY id_parent = {int:not_inherited} DESC, min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
 			'min_posts' => -1,
 			'not_inherited' => -2,
+			'moderator_group' => 3,
 			'newbie_group' => 4,
 		)
 	);
@@ -348,6 +352,9 @@ function EditProjectProfile()
 		if ($data['href'] != '')
 			$context['groups'][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['num_members'] . '</a>';
 	}
+	
+	// All permissions can be edited
+	$context['can_modify'] = true;
 
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['name']);

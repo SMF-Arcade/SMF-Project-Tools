@@ -137,7 +137,9 @@ $txt['not_in_use'] = 'Not in use';
 // New Profile
 $txt['title_new_profile'] = 'New Project Profile';
 $txt['new_profile'] = 'New Profile';
-$txt['profile_name'] = 'Name';
+$txt['profile_name'] = 'Profile Name';
+$txt['profile_copy_from'] = 'Copy Permissions From';
+
 $txt['profile_create'] = 'Create';
 
 // Edit Profile

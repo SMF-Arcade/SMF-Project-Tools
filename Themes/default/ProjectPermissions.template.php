@@ -11,15 +11,15 @@ function template_profiles_list()
 	<br /><br />
 	
 	<form action="', $scripturl, '?action=admin;area=projectpermissions" method="post" accept-charset="', $context['character_set'], '">
-		<div class="tborder">
+		<div class="tborder" style="width: 50%; margin: 0 auto;">
 			<div class="headerpadding titlebg">', $txt['new_profile'], '</div>
-			<div class="windowbg2 clearfix">
-				<span class="floatleft"><label for="profile_name">', $txt['profile_name'], '</label></span>
-				<span class="floatright"><input id="profile_name" name="profile_name" value="" tabindex="', $context['tabindex']++, '" /></span>
+			<div class="smallpadding windowbg2 clearfix">
+				<span class="floatleft" style="width: 50%;"><label for="profile_name">', $txt['profile_name'], '</label></span>
+				<span class="floatleft"><input id="profile_name" name="profile_name" value="" tabindex="', $context['tabindex']++, '" /></span>
 			</div>
-			<div class="windowbg2 clearfix">
-				<span class="floatleft"><label for="profile_base">', $txt['profile_name'], '</label></span>
-				<span class="floatright">
+			<div class="smallpadding windowbg2 clearfix">
+				<span class="floatleft" style="width: 50%;"><label for="profile_base">', $txt['profile_copy_from'], '</label></span>
+				<span class="floatleft">
 					<select id="profile_base" name="profile_base">';
 
 	foreach ($context['profiles'] as $profile)
@@ -30,7 +30,7 @@ function template_profiles_list()
 					</select>
 				</span>
 			</div>
-			<div style="text-align: right">
+			<div class="headerpadding titlebg" style="text-align: right">
 				<input type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
 			</div>
 		</div>
@@ -46,12 +46,19 @@ function template_profile_edit()
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=edit" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<div class="windowbg2">
-				<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor">
-					<tr>
-						<th class="catbg3">', $txt['header_group_name'], '</th>
-						<th class="catbg3"></th>
-					</tr>';
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor">
+				<tr class="catbg3">
+					<th valign="middle">', $txt['membergroups_name'], '</th>
+					<th width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</th>
+					<th width="16%" align="center"', empty($modSettings['permission_enable_deny']) ? '' : ' class="smalltext"', '>
+						', $txt['membergroups_permissions'], empty($modSettings['permission_enable_deny']) ? '' : '<br />
+						<div style="float: left; width: 50%;">' . $txt['permissions_allowed'] . '</div> ' . $txt['permissions_denied'], '
+					</th>
+					<th width="10%" align="center" valign="middle">', $context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view'], '</th>
+					<th width="4%" align="center" valign="middle">
+						', $context['can_modify'] ? '<input type="checkbox" class="check" onclick="invertAll(this, this.form, \'group\');" />' : '', '
+					</th>
+				</tr>';
 
 	foreach ($context['groups'] as $group)
 	{
@@ -83,8 +90,7 @@ function template_profile_edit()
 	}
 
 	echo '
-				</table>
-			</div>
+			</table>
 		</div>
 
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
