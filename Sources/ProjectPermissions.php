@@ -195,22 +195,48 @@ function EditProjectProfile()
 		'name' => $row['profile_name'],
 	);
 
-	// Gropus
+	// Fill the context variable with 'Guests' and 'Regular Members'.
 	$context['groups'] = array(
 		-1 => array(
-			'id' => '-1',
-			'name' => $txt['guests'],
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=-1',
+			'id' => -1,
+			'name' => $txt['membergroups_guests'],
+			'num_members' => $txt['membergroups_guests_na'],
+			'allow_delete' => false,
+			'allow_modify' => true,
+			'can_search' => false,
+			'edit_href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=-1',
+			'href' => '',
+			'link' => '',
 			'is_post_group' => false,
-			'can_edit' => true,
+			'color' => '',
+			'stars' => '',
+			'children' => array(),
+			'num_permissions' => array(
+				'allowed' => 0,
+				// Can't deny guest permissions!
+				'denied' => '(' . $txt['permissions_none'] . ')'
+			),
+			'access' => false
 		),
 		0 => array(
-			'id' => '0',
-			'name' => $txt['regular_members'],
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=0',
+			'id' => 0,
+			'name' => $txt['membergroups_members'],
+			'num_members' => $num_members,
+			'allow_delete' => false,
+			'allow_modify' => true,
+			'can_search' => false,
+			'href' => $scripturl . '?action=moderate;area=viewgroups;sa=members;group=0',
+			'edit_href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=0',
 			'is_post_group' => false,
-			'can_edit' => true,
-		)
+			'color' => '',
+			'stars' => '',
+			'children' => array(),
+			'num_permissions' => array(
+				'allowed' => 0,
+				'denied' => 0
+			),
+			'access' => false
+		),
 	);
 
 	// Query the database defined membergroups.
@@ -231,9 +257,8 @@ function EditProjectProfile()
 		if ($row['id_parent'] != -2)
 		{
 			if (isset($context['groups'][$row['id_parent']]))
-			{
 				$context['groups'][$row['id_parent']]['children'][$row['id_group']] = $row['group_name'];
-			}
+
 			continue;
 		}
 
@@ -246,6 +271,7 @@ function EditProjectProfile()
 			'allow_modify' => $row['id_group'] > 1,
 			'can_search' => $row['id_group'] != 3,
 			'href' => $scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $row['id_group'],
+			'edit_href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
 			'color' => empty($row['online_color']) ? '' : $row['online_color'],
 			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
@@ -500,24 +526,18 @@ function EditProfilePermissions2()
 		{
 			if (!empty($_POST['permission'][$perm . '_own']))
 				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm . '_own');
-			else
-				$delete[] = $perm . '_own';
+
 			if (!empty($_POST['permission'][$perm . '_any']))
 				$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm . '_any');
-			else
-				$delete[] = $perm . '_any';
 		}
 		elseif (!empty($_POST['permission'][$perm]))
 			$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm);
-		else
-			$delete[] = $perm;
 	}
 
 	if (!empty($delete))
 		$smcFunc['db_query']('' , '
 			DELETE FROM {db_prefix}project_permissions
-			WHERE permission IN({array_string:permissions})
-				AND id_group = {int:group}
+			WHERE id_group = {int:group}
 				AND id_profile = {int:profile}',
 			array(
 				'permissions' => $delete,

@@ -55,14 +55,31 @@ function template_profile_edit()
 
 	foreach ($context['groups'] as $group)
 	{
-		if ($group['can_edit'])
-		{
+		echo '
+				<tr>
+					<td class="windowbg2">
+						', $group['name'], $group['id'] == -1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_guests" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 0 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_regular_members" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_administrator" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 3 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)' : '')));
+
+		if (!empty($group['children']))
 			echo '
-					<tr>
-						<td class="windowbg2"><a href="', $group['href'], '">', $group['name'], '</a></td>
-						<td class="windowbg"></td>
-					</tr>';
-		}
+						<br /><span class="smalltext">', $txt['permissions_includes_inherited'], ': &quot;', implode('&quot;, &quot;', $group['children']), '&quot;</span>';
+
+		echo '
+					</td>
+					<td class="windowbg" align="center">', $group['can_search'] ? $group['link'] : $group['num_members'], '</td>
+					<td class="windowbg2" align="center"', $group['id'] == 1 ? ' style="font-style: italic;"' : '', '>';
+		
+		/*if (empty($modSettings['permission_enable_deny']))
+			echo '
+						', $group['num_permissions']['allowed'];
+		else
+			echo '
+						<div style="float: left; width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<span style="font-style: italic;">' . $group['num_permissions']['denied'] . '</span>' : '<span style="color: red;">' . $group['num_permissions']['denied'] . '</span>');*/
+		echo '
+					</td>
+					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $group['edit_href'] . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>
+					<td class="windowbg" align="center">', $group['allow_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="check" />' : '', '</td>
+				</tr>';
 	}
 
 	echo '
