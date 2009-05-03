@@ -281,35 +281,36 @@ function IssueUpdate()
 		'mark_read' => true,
 	);
 
+	$context['xml_data'] = array(
+		'updates' => array(
+			'identifier' => 'update',
+			'children' => array(
+			),
+		),
+	);
+
+
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
-		handleUpdate($posterOptions, $issueOptions);
+		handleUpdate($posterOptions, $issueOptions, true);
 
 	if (!empty($issueOptions))
 		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 	else
-		$context['update_success'] = false;
+		$id_event = false;
 
-	if (!isset($id_event) || $id_event === true)
-		$id_event = 0;
-
-	$context['update_success'] = true;
+	$context['xml_data']['success'] = array(
+		'identifier' => 'success',
+		'children' => array(
+			array('value' => $id_event !== false ? 1 : 0)
+		),		
+	);
 
 	// Template
 	loadTemplate('Xml');
-	$context['sub_template'] = 'issue_update';
+	$context['sub_template'] = 'generic_xml';
 }
 
-function template_issue_update()
-{
-	global $context, $settings, $options, $txt;
-
-	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
-<smf>
-	<update field="issue" success="', $context['update_success'] ? 1 : 0, '"></update>
-</smf>';
-}
-
-function handleUpdate(&$posterOptions, &$issueOptions)
+function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 {
 	global $context, $user_info, $smcFunc, $sourcedir;
 
@@ -324,6 +325,9 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 				$_REQUEST['assign'] = 0;
 
 			$issueOptions['assignee'] = (int) $_REQUEST['assign'];
+			
+			if ($xml_data)
+				$context['xml_data']['updates']['children'][] = array('field' => 'assign', 'value' => $issueOptions['assignee']);
 		}
 	}
 
@@ -332,6 +336,9 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	{
 		$_REQUEST['title'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
 		$issueOptions['subject'] = $_REQUEST['title'];
+		
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'subject', 'value' => $issueOptions['subject']);
 	}
 
 	// Private
@@ -339,10 +346,12 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 		$issueOptions['private'] = !empty($_REQUEST['private']);
 
 	// Priority
-	if (isset($_REQUEST['priority']))
+	if (isset($_REQUEST['priority']) && isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
 	{
-		if (isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
-			$issueOptions['priority'] = (int) $_REQUEST['priority'];
+		$issueOptions['priority'] = (int) $_REQUEST['priority'];
+		
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'priority', 'value' => $issueOptions['priority']);
 	}
 
 	// Version
@@ -352,6 +361,9 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 			$_REQUEST['version'] = 0;
 
 		$issueOptions['version'] = (int) $_REQUEST['version'];
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'version', 'value' => $issueOptions['version']);
 	}
 
 	// Version fixed
@@ -361,6 +373,9 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 			$_REQUEST['version_fixed'] = 0;
 
 		$issueOptions['version_fixed'] = (int) $_REQUEST['version_fixed'];
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'version_fixed', 'value' => $issueOptions['version_fixed']);
 	}
 
 	// Category
@@ -370,6 +385,9 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 			$_REQUEST['category'] = 0;
 
 		$issueOptions['category'] = (int) $_REQUEST['category'];
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'category', 'value' => $issueOptions['category']);
 	}
 
 	// Status
@@ -377,10 +395,18 @@ function handleUpdate(&$posterOptions, &$issueOptions)
 	{
 		if (isset($context['issue_status'][(int) $_REQUEST['status']]))
 			$issueOptions['status'] = (int) $_REQUEST['status'];
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'status', 'value' => $issueOptions['status']);
 	}
 
 	if (isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]))
+	{
 		$issueOptions['tracker'] = $_REQUEST['tracker'];
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array('field' => 'tracker', 'value' => $issueOptions['tracker']);
+	}
 }
 
 function IssueUpload()
