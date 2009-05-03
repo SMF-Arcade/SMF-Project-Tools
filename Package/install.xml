@@ -212,19 +212,57 @@ else
 	</file>
 
 	<file name="$sourcedir/Load.php">
+		<!-- Project Theme -->
 		<operation>
 			<search position="after"><![CDATA[	// The theme is the forum's default.]]></search>
 			<add><![CDATA[	elseif (!empty($context['project']['theme']))
 		$id_theme = $context['project']['theme'];
 ]]></add>
 		</operation>
-
 		<operation>
 			<search position="after"><![CDATA[	// If they have specified a particular theme to use with SSI allow it to be used.]]></search>
 			<add><![CDATA[	elseif (!empty($context['project']['theme']) && !empty($context['project']['override_theme']))
 		$id_theme = $context['project']['theme'];
 	elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'projects' && !empty($modSettings['project_force_theme']))
 		$id_theme = (int) $modSettings['project_force_theme'];
+]]></add>
+		</operation>
+		
+		<!-- Load Permissions -->
+		<operation>
+			<search position="after"><![CDATA[	// Banned?  Watch, don't touch..]]></search>
+			<add><![CDATA[
+	// Project Tools
+	global $project;
+	
+	if (!empty($modSettings['projectEnabled']) && !empty($project) && empty($context['project']['is_developer']))
+	{
+		if (!empty($modSettings['cache_enable']) && ($temp = cache_get_data('project_permissions:' . $cache_groups . ':' . $project, 240)) != null && time() - 240 > $modSettings['settings_updated'])
+			list ($user_info['project_permissions']) = $temp;
+		else
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT permission
+				FROM {db_prefix}project_permissions
+				WHERE id_group IN({array_int:groups})
+					AND id_profile = {int:profile}',
+				array(
+					'profile' => $context['project']['profile'],
+					'groups' => $user_info['groups'],
+				)
+			);
+	
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$user_info['project_permissions'][$row['permission']] = true;	
+			$smcFunc['db_free_result']($request);
+		}
+
+		if (!empty($context['project_permissions']['issue_view_private']))
+			$user_info['query_see_issue_project'] = $user_info['query_see_version'];
+			
+		cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['permissions'], null), 240);			
+	}
+
 ]]></add>
 		</operation>
 	</file>

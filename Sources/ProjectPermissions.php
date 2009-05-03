@@ -561,7 +561,11 @@ function EditProfilePermissions2()
 			array('id_profile', 'id_group', 'permission')
 		);
 
+	// Update inherited groups
 	updatePTChildPermissions($context['group']['id'], $context['profile']['id']);
+	
+	// Make sure cached permissions doesn't get used
+	updateSettings(array('settings_updated' => time()));
 
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }

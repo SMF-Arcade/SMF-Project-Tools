@@ -339,32 +339,11 @@ function loadProject()
 
 	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
 
-	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
-		$context['project_error'] = 'project_not_found';
-
 	if ($context['project']['is_developer'])
 		$user_info['query_see_issue_project'] = $user_info['query_see_version'];
-	elseif (!$user_info['is_admin'])
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT permission
-			FROM {db_prefix}project_permissions
-			WHERE id_group IN({array_int:groups})
-				AND id_profile = {int:profile}',
-			array(
-				'profile' => $context['project']['profile'],
-				'groups' => $user_info['groups'],
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project_permissions'][$row['permission']] = true;
-
-		if (!empty($context['project_permissions']['issue_view_private']))
-			$user_info['query_see_issue_project'] = $user_info['query_see_version'];
-
-		$smcFunc['db_free_result']($request);
-	}
+			
+	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
+		$context['project_error'] = 'project_not_found';
 }
 
 function loadProjectToolsPage($mode = '')
@@ -735,20 +714,16 @@ function project_get_url($params = array(), $project = null)
 // Can I do that?
 function projectAllowedTo($permission)
 {
-	global $context, $project;
+	global $context, $user_info, $project;
 
 	if (empty($project))
 		fatal_error('projectAllowedTo(): Project not loaded');
 
-	// Admins can do anything
-	if (allowedTo('project_admin'))
+	// Admins and developers can do anything
+	if (allowedTo('project_admin') || $context['project']['is_developer'])
 		return true;
 
-	// Project Developers can do anything too
-	if ($context['project']['is_developer'])
-		return true;
-
-	if (isset($context['project_permissions'][$permission]) && $context['project_permissions'][$permission])
+	if (isset($user_info['project_permissions'][$permission]) && $user_info['project_permissions'][$permission])
 		return true;
 
 	return false;
