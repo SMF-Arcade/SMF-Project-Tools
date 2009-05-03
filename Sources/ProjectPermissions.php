@@ -36,8 +36,6 @@ function ManageProjectPermissions()
 
 	$subActions = array(
 		'main' => array('ManageProjectPermissionsMain'),
-		'new' => array('NewProjectProfile'),
-		'new2' => array('NewProjectProfile2'),
 		'edit' => array('EditProjectProfile'),
 		'permissions' => array('EditProfilePermissions'),
 		'permissions2' => array('EditProfilePermissions2'),
@@ -58,6 +56,49 @@ function ManageProjectPermissionsMain()
 {
 	global $context, $sourcedir, $scripturl, $user_info, $txt;
 
+	if (isset($_POST['create']) && !empty($_REQUEST['profile_name']))
+	{
+		checkSession();
+	
+		$_POST['profile_name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['profile_name']);
+	
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_profiles',
+			array('profile_name' => 'string-255',),
+			array($_POST['profile_name'],),
+			array('id_profile')
+		);
+	
+		$id_profile = $smcFunc['db_insert_id']('{db_prefix}project_profiles', 'id_profile');
+	
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, permission
+			FROM {db_prefix}project_permissions
+			WHERE id_profile = {int:profile}',
+			array(
+				'profile' => (int) $_POST['profile_base'],
+			)
+		);
+	
+		$permissions = array();
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$permissions[] = array($id_profile, $row['id_group'], $row['permission']);
+		$smcFunc['db_free_result']($request);
+	
+		if (!empty($permissions))
+		{
+			$smcFunc['db_insert']('insert',
+				'{db_prefix}project_permissions',
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string',),
+				$permissions,
+				array('id_profile', 'id_group', 'permission')
+			);
+		}
+	
+		redirectexit('action=admin;area=projectpermissions');
+	}
+	
 	$listOptions = array(
 		'id' => 'profiles_list',
 		'base_href' => $scripturl . '?action=admin;area=projectpermissions',
@@ -122,81 +163,12 @@ function ManageProjectPermissionsMain()
 
 	require_once($sourcedir . '/Subs-List.php');
 	createList($listOptions);
+	
+	// Load List of Profiles
+	$context['profiles'] = list_getProfiles();
 
 	// Template
 	$context['sub_template'] = 'profiles_list';
-}
-
-function NewProjectProfile()
-{
-	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
-
-	$context['profiles'] = list_getProfiles();
-
-	$context['profile'] = array(
-		'name' => '',
-		'copy_from' => 0,
-	);
-
-	// Template
-	$context['page_title'] = $txt['title_new_profile'];
-	$context['sub_template'] = 'profile_new';
-}
-
-function NewProjectProfile2()
-{
-	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
-
-	if (empty($_REQUEST['profile_name']))
-		return NewProjectProfile();
-
-	checkSession();
-
-	$_POST['profile_name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['profile_name']);
-
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}project_profiles',
-		array(
-			'profile_name' => 'string-255',
-		),
-		array(
-			$_POST['profile_name'],
-		),
-		array()
-	);
-
-	$id_profile = $smcFunc['db_insert_id']('{db_prefix}project_profiles', 'id_profile');
-
-	$request = $smcFunc['db_query']('', '
-		SELECT id_group, permission
-		FROM {db_prefix}project_permissions
-		WHERE id_profile = {int:profile}',
-		array(
-			'profile' => (int) $_POST['profile_base'],
-		)
-	);
-
-	$permissions = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$permissions[] = array($id_profile, $row['id_group'], $row['permission']);
-	$smcFunc['db_free_result']($request);
-
-	if (!empty($permissions))
-	{
-		$smcFunc['db_insert']('insert',
-			'{db_prefix}project_permissions',
-			array(
-				'id_profile' => 'int',
-				'id_group' => 'int',
-				'permission' => 'string',
-			),
-			$permissions,
-			array('id_profile', 'id_group', 'permission')
-		);
-	}
-
-	redirectexit('action=admin;area=projectpermissions');
 }
 
 function EditProjectProfile()
@@ -241,28 +213,115 @@ function EditProjectProfile()
 		)
 	);
 
-	// Load membergroups.
-	$request = $smcFunc['db_query']('', '
-		SELECT group_name, id_group, min_posts
+	// Query the database defined membergroups.
+	$query = $smcFunc['db_query']('', '
+		SELECT id_group, id_parent, group_name, min_posts, online_color, stars
 		FROM {db_prefix}membergroups' . (empty($modSettings['permission_enable_postgroups']) ? '
 		WHERE min_posts = {int:min_posts}' : '') . '
-		ORDER BY min_posts, id_group != 2, group_name',
+		ORDER BY id_parent = {int:not_inherited} DESC, min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
 			'min_posts' => -1,
+			'not_inherited' => -2,
+			'newbie_group' => 4,
 		)
 	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($query))
 	{
-		$context['groups'][(int) $row['id_group']] = array(
+		// If it's inherited just add it as a child.
+		if ($row['id_parent'] != -2)
+		{
+			if (isset($context['groups'][$row['id_parent']]))
+			{
+				$context['groups'][$row['id_parent']]['children'][$row['id_group']] = $row['group_name'];
+			}
+			continue;
+		}
+
+		$row['stars'] = explode('#', $row['stars']);
+		$context['groups'][$row['id_group']] = array(
 			'id' => $row['id_group'],
-			'name' => trim($row['group_name']),
-			'href' => $scripturl . '?action=admin;area=projectpermissions;sa=permissions;profile=' . $context['profile']['id'] . ';group=' . $row['id_group'],
+			'name' => $row['group_name'],
+			'num_members' => $row['id_group'] != 3 ? 0 : $txt['membergroups_guests_na'],
+			'allow_delete' => $row['id_group'] > 4,
+			'allow_modify' => $row['id_group'] > 1,
+			'can_search' => $row['id_group'] != 3,
+			'href' => $scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $row['id_group'],
 			'is_post_group' => $row['min_posts'] != -1,
-			'can_edit' => $row['id_group'] != 1 && $row['id_group'] != 3,
+			'color' => empty($row['online_color']) ? '' : $row['online_color'],
+			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
+			'children' => array(),
+			'num_permissions' => array(
+				'allowed' => $row['id_group'] == 1 ? '(' . $txt['permissions_all'] . ')' : 0,
+				'denied' => $row['id_group'] == 1 ? '(' . $txt['permissions_none'] . ')' : 0
+			),
+			'access' => false,
 		);
+
+		if ($row['min_posts'] == -1)
+			$normalGroups[$row['id_group']] = $row['id_group'];
+		else
+			$postGroups[$row['id_group']] = $row['id_group'];
 	}
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($query);
+
+	// This code is borrowed from SMF
+	// Get the number of members in this post group.
+	if (!empty($postGroups))
+	{
+		$query = $smcFunc['db_query']('', '
+			SELECT id_post_group AS id_group, COUNT(*) AS num_members
+			FROM {db_prefix}members
+			WHERE id_post_group IN ({array_int:post_group_list})
+			GROUP BY id_post_group',
+			array(
+				'post_group_list' => $postGroups,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($query))
+			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
+		$smcFunc['db_free_result']($query);
+	}
+
+	if (!empty($normalGroups))
+	{
+		// First, the easy one!
+		$query = $smcFunc['db_query']('', '
+			SELECT id_group, COUNT(*) AS num_members
+			FROM {db_prefix}members
+			WHERE id_group IN ({array_int:normal_group_list})
+			GROUP BY id_group',
+			array(
+				'normal_group_list' => $normalGroups,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($query))
+			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
+		$smcFunc['db_free_result']($query);
+
+		// This one is slower, but it's okay... careful not to count twice!
+		$query = $smcFunc['db_query']('', '
+			SELECT mg.id_group, COUNT(*) AS num_members
+			FROM {db_prefix}membergroups AS mg
+				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
+					AND mem.id_group != mg.id_group
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+			WHERE mg.id_group IN ({array_int:normal_group_list})
+			GROUP BY mg.id_group',
+			array(
+				'normal_group_list' => $normalGroups,
+				'blank_string' => '',
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($query))
+			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
+		$smcFunc['db_free_result']($query);
+	}
+
+	foreach ($context['groups'] as $id => $data)
+	{
+		if ($data['href'] != '')
+			$context['groups'][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['num_members'] . '</a>';
+	}
 
 	// Template
 	$context['page_title'] = sprintf($txt['title_edit_profile'], $context['profile']['name']);

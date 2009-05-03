@@ -171,7 +171,7 @@ function template_edit_project()
 		</tr>
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 	if (isset($context['project']['is_new']))
 		echo '
 				<input type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
@@ -210,7 +210,7 @@ function template_confirm_project_delete()
 	</table>
 
 	<input type="hidden" name="confirmation" value="1" />
-	<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 </form>';
 }
 
@@ -244,7 +244,7 @@ function template_edit_category()
 		</tr>
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	if (isset($context['category']['is_new']))
 		echo '
@@ -339,7 +339,7 @@ function template_edit_version()
 		</tr>
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 	if (isset($context['version']['is_new']))
 		echo '
 				<input type="submit" name="add" value="', $txt['new_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />';

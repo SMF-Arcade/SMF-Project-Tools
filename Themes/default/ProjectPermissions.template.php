@@ -6,19 +6,16 @@ function template_profiles_list()
 	global $context, $settings, $options, $txt, $modSettings;
 
 	template_show_list('profiles_list');
-}
-
-function template_profile_new()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
+	
 	echo '
-	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=new2" method="post" accept-charset="', $context['character_set'], '">
+	<br /><br />
+	
+	<form action="', $scripturl, '?action=admin;area=projectpermissions" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="headerpadding titlebg">', $txt['new_profile'], '</div>
 			<div class="windowbg2 clearfix">
 				<span class="floatleft"><label for="profile_name">', $txt['profile_name'], '</label></span>
-				<span class="floatright"><input id="profile_name" name="profile_name" value="', $context['profile']['name'], '" tabindex="', $context['tabindex']++, '" /></span>
+				<span class="floatright"><input id="profile_name" name="profile_name" value="" tabindex="', $context['tabindex']++, '" /></span>
 			</div>
 			<div class="windowbg2 clearfix">
 				<span class="floatleft"><label for="profile_base">', $txt['profile_name'], '</label></span>
@@ -34,10 +31,10 @@ function template_profile_new()
 				</span>
 			</div>
 			<div style="text-align: right">
-				<input type="submit" name="save" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
+				<input type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
 			</div>
 		</div>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -111,7 +108,7 @@ function template_profile_permissions()
 			</div>
 		</div>
 
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
 		<input type="hidden" name="group" value="', $context['group']['id'], '" />
 	</form>';

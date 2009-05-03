@@ -76,7 +76,7 @@ function template_project_admin_maintenance()
 				<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['project_maintenance_repair_info'], '</p>
 					<p><input type="submit" value="', $txt['project_maintain_run_now'], '" tabindex="', $context['tabindex']++, '" /></p>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
 		</tr>
@@ -98,7 +98,7 @@ function template_project_admin_maintenance_repair_list()
 					<li>', $context['project_errors']), '</li>
 				</ul>
 				', $txt['fix_errors'], '
-				<b><a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance">', $txt['no'], '</a></b>
+				<b><a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance">', $txt['no'], '</a></b>
 			</td>
 		</tr>
 	</table>';

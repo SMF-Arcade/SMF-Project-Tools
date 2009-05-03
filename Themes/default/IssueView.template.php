@@ -142,8 +142,8 @@ function template_issue_view_above()
 		if ($context['current_issue']['reporter']['karma']['allow'])
 			echo '
 						<li>
-								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $issueDetails['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $issueDetails['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $issueDetails['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
 						</li>';
 
 		// Show online and offline buttons?
@@ -247,15 +247,15 @@ function template_issue_view_above()
 
 	if ($context['can_comment'])
 		echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $issueDetails['id'], 'sesc' => $context['session_id'])), '">', $reply_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $issueDetails['id'], $context['session_var'] => $context['session_id'])), '">', $reply_button, '</a></li>';
 
 	if ($issueDetails['can_edit'])
 		echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $issueDetails['id'], 'sesc' => $context['session_id'])), '">', $modify_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $issueDetails['id'], $context['session_var'] => $context['session_id'])), '">', $modify_button, '</a></li>';
 
 	if ($issueDetails['can_remove'])
 		echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $issueDetails['id'], 'sesc' => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $issueDetails['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 	echo '
 					</ul>
@@ -490,8 +490,8 @@ function template_issue_view_main()
 			if ($event['member']['karma']['allow'])
 				echo '
 						<li>
-								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $event['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $event['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';com=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
+								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';com=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
 						</li>';
 
 			// Show online and offline buttons?
@@ -597,15 +597,15 @@ function template_issue_view_main()
 
 		if ($event['is_comment'] && $context['can_comment'])
 			echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $event['comment']['id'], 'sesc' => $context['session_id'])), '">', $reply_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $reply_button, '</a></li>';
 
 		if ($event['is_comment'] && $event['comment']['can_edit'])
 			echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $event['comment']['id'], 'sesc' => $context['session_id'])), '">', $modify_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $modify_button, '</a></li>';
 
 		if ($event['is_comment'] && $event['comment']['can_remove'])
 			echo '
-						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $event['comment']['id'], 'sesc' => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 		echo '
 					</ul>
@@ -691,8 +691,8 @@ function template_issue_view_below()
 	global $context, $settings, $options, $txt, $modSettings, $settings;
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', 'sesc' => $context['session_id']))),
-		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', 'sesc' => $context['session_id']))),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
 	);
 
 	echo '
@@ -719,7 +719,7 @@ function template_issue_view_below()
 				</div>
 			</div>
 		</div><br />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form><br />';
 	}
 
@@ -743,7 +743,7 @@ function template_issue_view_below()
 
 				if ($context['can_remove_tags'])
 					echo '
-						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], 'sesc' => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
 					echo '
 					</li>';
@@ -764,7 +764,7 @@ function template_issue_view_below()
 	echo '
 			</div>
 		</div><br />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form><br />';
 
 	if ($context['can_issue_attach'])
@@ -788,7 +788,7 @@ function template_issue_view_below()
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 	}
 

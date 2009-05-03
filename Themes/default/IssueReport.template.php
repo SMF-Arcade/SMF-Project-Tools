@@ -143,7 +143,7 @@ function template_report_issue()
 		</div>
 
 		<input type="hidden" name="project" value="', $context['project']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';
 }
@@ -364,7 +364,7 @@ function template_issue_reply()
 
 	echo '
 		<input type="hidden" name="issue" value="', $context['current_issue']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';
 }
