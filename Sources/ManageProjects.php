@@ -147,7 +147,7 @@ function ManageProjectsList()
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'no_items_label' => $txt['no_projects'],
@@ -462,7 +462,7 @@ function ManageCategoriesList()
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'additional_rows' => array(
@@ -652,7 +652,7 @@ function ManageVersionsList()
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'additional_rows' => array(

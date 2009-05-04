@@ -405,7 +405,7 @@ else
 				'hidden_fields' => array(
 					'u' => $memID,
 					'area' => $context['menu_item_selected'],
-					'sc' => $context['session_id'],
+					$context['session_var'] => $context['session_id'],
 				),
 			),
 			'additional_rows' => array(

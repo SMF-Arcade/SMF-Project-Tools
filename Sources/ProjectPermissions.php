@@ -56,7 +56,7 @@ function ManageProjectPermissions()
 
 function ManageProjectPermissionsMain()
 {
-	global $context, $sourcedir, $scripturl, $user_info, $txt;
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt;
 
 	if (isset($_POST['create']) && !empty($_REQUEST['profile_name']))
 	{
@@ -107,23 +107,8 @@ function ManageProjectPermissionsMain()
 		'get_items' => array(
 			'function' => 'list_getProfiles',
 		),
+		'width' => '50%',
 		'columns' => array(
-			'check' => array(
-				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
-					'style' => 'width: 4%;',
-				),
-				'data' => array(
-					'sprintf' => array(
-						'format' => '<input type="checkbox" name="profiles[]" value="%1$d" class="check" %2$s/>',
-						'params' => array(
-							'id' => false,
-							'disabled' => false,
-						),
-					),
-					'style' => 'text-align: center;',
-				),
-			),
 			'name' => array(
 				'header' => array(
 					'value' => $txt['header_profile'],
@@ -151,13 +136,37 @@ function ManageProjectPermissionsMain()
 					'reverse' => 'num_project',
 				),
 			),
+			'check' => array(
+				'header' => array(
+					'value' => $txt['header_delete'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="profiles[]" value="%1$d" class="check" %2$s/>',
+						'params' => array(
+							'id' => false,
+							'disabled' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
 		),
 		'form' => array(
 			'href' => $scripturl . '?action=admin;area=projectpermissions',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '
+					<input type="submit" name="delete_profiles" value="' . $txt['profiles_delete_selected'] . ' />',
+				'class' => 'titlebg',
+				'align' => 'right',
 			),
 		),
 		'no_items_label' => '', // Not possible

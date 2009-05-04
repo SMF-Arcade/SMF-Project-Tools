@@ -131,15 +131,16 @@ $txt['manage_project_permissions_description'] = 'Here you can create and edit p
 // Profile List
 $txt['header_profile'] = 'Profile';
 $txt['header_used_by'] = 'Used By';
+$txt['header_delete'] = 'Delete';
 $txt['used_by_projects'] = '%s projects';
 $txt['not_in_use'] = 'Not in use';
+$txt['profiles_delete_selected'] = 'Remove selected';
 
 // New Profile
 $txt['title_new_profile'] = 'New Project Profile';
 $txt['new_profile'] = 'New Profile';
 $txt['profile_name'] = 'Profile Name';
 $txt['profile_copy_from'] = 'Copy Permissions From';
-
 $txt['profile_create'] = 'Create';
 
 // Edit Profile

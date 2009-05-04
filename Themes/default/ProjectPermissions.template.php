@@ -3,7 +3,7 @@
 
 function template_profiles_list()
 {
-	global $context, $settings, $options, $txt, $modSettings;
+	global $context, $scripturl, $txt, $modSettings;
 
 	template_show_list('profiles_list');
 	
