@@ -757,29 +757,6 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 				$data[$k] = $txt['who_hidden'];
 				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
 			}
-]]></add>
-		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[if (!isset($actions['action']) || $actions['action'] == 'display']]></search>
-			<add><![CDATA[ || $actions['action'] == 'projects']]></add>
-		</operation>
-		
-		<operation>
-			<search position="after"><![CDATA[			// It's the board index!!  It must be!]]></search>
-			<add><![CDATA[			// Project Tools
-			elseif (isset($actions['project']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$project_ids[$actions['project']][$k] = $txt['who_project'];
-			}
-			elseif (isset($actions['issue']))
-			{
-				// Hide first, show later.
-				$data[$k] = $txt['who_hidden'];
-				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
-			}
 			elseif (isset($actions['action']) && $actions['action'] == 'projects')
 			{
 				if (allowedTo('project_access'))
@@ -788,6 +765,11 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 					$data[$k] = $txt['who_hidden'];
 			}
 ]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[if (!isset($actions['action']) || $actions['action'] == 'display']]></search>
+			<add><![CDATA[ || $actions['action'] == 'projects']]></add>
 		</operation>
 		
 		<operation>
