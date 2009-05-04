@@ -36,8 +36,6 @@ $txt['manage_versions'] = 'Versions';
 $txt['manage_project_category'] = 'Categories';
 
 $txt['manage_project_permissions'] = 'Permissions';
-$txt['modify_project_profiles'] = 'Modify Profiles';
-$txt['new_project_profile'] = 'New Profile';
 $txt['project_permissions'] = 'Permissions';
 
 // Permission Names

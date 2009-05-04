@@ -328,21 +328,6 @@ function ptMaintenanceEvents3($check = false)
 		)
 	);
 
-	/*$request = $smcFunc['db_query']('', '
-		SELECT id_event
-		FROM {db_prefix}project_timeline AS tl
-			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
-		WHERE ISNULL(i.id_issue)');
-
-	$temp = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$temp[] = sprintf($txt['error_issue_info_event'], $row['id_event']);
-	$smcFunc['db_free_result']($request);
-
-	// TEMP
-	var_dump($temp);die();*/
-
 	return true;
 }
 
