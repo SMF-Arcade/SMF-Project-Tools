@@ -297,7 +297,15 @@ function IssueUpdate()
 		$id_event = updateIssue($issue, $issueOptions, $posterOptions);
 	else
 		$id_event = false;
-
+		
+	// Update time
+	if ($id_event !== false)
+		$context['xml_data']['updates']['children'][] = array(
+			'field' => 'issue_updated',
+			'id' => 0,
+			'value' => timeformat(time()),
+		);
+	
 	$context['xml_data']['success'] = array(
 		'identifier' => 'success',
 		'children' => array(
@@ -338,7 +346,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['subject'] = $_REQUEST['title'];
 		
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'subject', 'value' => $issueOptions['subject']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'subject',
+				'id' => 0,
+				'value' => $issueOptions['subject']
+			);
 	}
 
 	// Private
@@ -351,7 +363,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['priority'] = (int) $_REQUEST['priority'];
 		
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'priority', 'value' => $issueOptions['priority']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'priority',
+				'id' => $issueOptions['priority'],
+			);
 	}
 
 	// Version
@@ -363,7 +378,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['version'] = (int) $_REQUEST['version'];
 
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'version', 'value' => $issueOptions['version']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'version',
+				'id' => $issueOptions['version']
+			);
 	}
 
 	// Version fixed
@@ -375,7 +393,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['version_fixed'] = (int) $_REQUEST['version_fixed'];
 
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'version_fixed', 'value' => $issueOptions['version_fixed']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'version_fixed',
+				'id' => $issueOptions['version_fixed'],
+			);
 	}
 
 	// Category
@@ -387,7 +408,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['category'] = (int) $_REQUEST['category'];
 
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'category', 'value' => $issueOptions['category']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'category',
+				'id' => $issueOptions['category'],
+			);
 	}
 
 	// Status
@@ -397,7 +421,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			$issueOptions['status'] = (int) $_REQUEST['status'];
 
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'status', 'value' => $issueOptions['status']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'status',
+				'id' => $issueOptions['status'],
+			);
 	}
 
 	if (isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]))
@@ -405,7 +432,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		$issueOptions['tracker'] = $_REQUEST['tracker'];
 
 		if ($xml_data)
-			$context['xml_data']['updates']['children'][] = array('field' => 'tracker', 'value' => $issueOptions['tracker']);
+			$context['xml_data']['updates']['children'][] = array(
+				'field' => 'tracker',
+				'id' => $issueOptions['tracker']
+			);
 	}
 }
 

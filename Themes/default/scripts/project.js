@@ -4,13 +4,23 @@ function PTIssue(id_issue, saveURL)
 	var changes = [];
 	var callbacks = [];
 	
+	var items = [];
+	
 	var saveInProgress = false;
 	
 	this.id_issue = id_issue;
 	
 	this.addChange = addChange;
+	this.addLabel = addLabel;
 	this.addCallback = addCallback;
 	this.saveChanges = saveChanges;
+	
+	function addLabel(item)
+	{
+		items[item] = new Array(2);
+		items[item]['id'] = item;
+		items[item]['object'] = PTLabel(this, item);
+	}
 	
 	function addCallback(callback)
 	{
@@ -47,10 +57,45 @@ function PTIssue(id_issue, saveURL)
 			callbacks[i](oXMLDoc);
 		}
 		
+		// Call setValue for each item
+		var nodes = oXMLDoc.getElementsByTagName('update');
+		
+		for (var i = 0; i < nodes.length; i++)
+		{
+			field = nodes[i].getAttribute("field");
+			
+			if (items[field] != undefined && node.nodeValue != '' && node.nodeValue != null && node.nodeValue != undefined)
+			{
+				dropdownValue.innerHTML = nodes[i].nodeValue;
+				
+				items[field]['object'].setValue(nodes[i].getAttribute("id"), node.nodeValue);
+				
+				return;
+			}
+		}
+				
+		
 		// Reset callbacks
 		callbacks = [];
 		
 		saveInProgress = false;
+	}
+}
+
+function PTLabel(issue, name)
+{
+	var labelHandle = document.getElementById(name);
+	var labelDL = dropdownHandle.getElementsByTagName('dl')[0];
+	var labelItem = dropdownDL.getElementsByTagName('dt')[0];
+	var labelValue = dropdownDL.getElementsByTagName('dd')[0];
+
+	this.issue = issue;
+	this.fieldName = fieldName;
+	this.setValue = setValue;
+
+	function setValue(id, value)
+	{
+		labelValue.innerHTML = value; 
 	}
 }
 
