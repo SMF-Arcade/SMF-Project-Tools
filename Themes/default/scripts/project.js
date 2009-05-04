@@ -15,11 +15,12 @@ function PTIssue(id_issue, saveURL)
 	this.addCallback = addCallback;
 	this.saveChanges = saveChanges;
 	
-	function addLabel(item)
+	function addLabel(item, fieldName)
 	{
-		items[item] = new Array(2);
-		items[item]['id'] = item;
-		items[item]['object'] = PTLabel(this, item);
+		items[fieldName] = new Array(3);
+		items[fieldName]['id'] = item;
+		items[fieldName]['field'] = fieldName;
+		items[fieldName]['object'] = PTLabel(this, item);
 	}
 	
 	function addCallback(callback)
@@ -73,7 +74,6 @@ function PTIssue(id_issue, saveURL)
 				return;
 			}
 		}
-				
 		
 		// Reset callbacks
 		callbacks = [];
@@ -82,7 +82,7 @@ function PTIssue(id_issue, saveURL)
 	}
 }
 
-function PTLabel(issue, name)
+function PTLabel(issue, name, fieldName)
 {
 	var labelHandle = document.getElementById(name);
 	var labelDL = labelHandle.getElementsByTagName('dl')[0];

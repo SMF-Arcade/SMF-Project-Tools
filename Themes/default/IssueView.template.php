@@ -39,8 +39,8 @@ function template_issue_view_above()
 						<dd>', $context['current_issue']['created'], '</dd>
 					</dl>
 				</li>
-				<li>
-					<dl id="issue_updated" class="clearfix">
+				<li id="issue_updated">
+					<dl class="clearfix">
 						<dt>', $txt['issue_updated'], '</dt>
 						<dd>', $context['current_issue']['updated'], '</dd>
 					</dl>
@@ -339,7 +339,7 @@ function template_issue_view_above()
 	<script language="JavaScript" type="text/javascript">
 		var currentIssue = new PTIssue(', $context['current_issue']['id'], ', "', $context['issue_xml_url'], '")
 		
-		var updateLabel = currentIssue.addLabel("issue_updated");
+		var updateLabel = currentIssue.addLabel("issue_updated", "updated");
 		
 		var ddIssueType = new PTDropdown(currentIssue, "issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");
 		var ddIssueCate = new PTDropdown(currentIssue, "issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');

@@ -289,7 +289,6 @@ function IssueUpdate()
 		),
 	);
 
-
 	if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
 		handleUpdate($posterOptions, $issueOptions, true);
 
@@ -301,7 +300,7 @@ function IssueUpdate()
 	// Update time
 	if ($id_event !== false)
 		$context['xml_data']['updates']['children'][] = array(
-			'field' => 'issue_updated',
+			'field' => 'updated',
 			'id' => 0,
 			'value' => timeformat(time()),
 		);
@@ -336,8 +335,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			
 			if ($xml_data)
 				$context['xml_data']['updates']['children'][] = array(
-					'field' => 'assign',
-					'id' => $issueOptions['assignee'],
+					'attributes' => array(
+						'field' => 'assign',
+						'id' => $issueOptions['assignee'],
+					),
+					'value' => $issueOptions['assignee'],
 				);
 		}
 	}
@@ -350,15 +352,28 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'subject',
-				'id' => 0,
+				'attributes' => array(
+					'field' => 'subject',
+					'id' => 0,
+				),
 				'value' => $issueOptions['subject'],
 			);
 	}
 
 	// Private
 	if (isset($_REQUEST['private']))
+	{
 		$issueOptions['private'] = !empty($_REQUEST['private']);
+
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array(
+				'attributes' => array(
+					'field' => 'private',
+					'id' => $issueOptions['private'],
+				),
+				'value' => $issueOptions['private'],
+			);		
+	}
 
 	// Priority
 	if (isset($_REQUEST['priority']) && isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
@@ -367,8 +382,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'priority',
-				'id' => $issueOptions['priority'],
+				'attributes' => array(
+					'field' => 'priority',
+					'id' => $issueOptions['priority'],
+				),
+				'value' => $issueOptions['priority'],
 			);
 	}
 
@@ -382,8 +400,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'version',
-				'id' => $issueOptions['version'],
+				'attributes' => array(
+					'field' => 'version',
+					'id' => $issueOptions['version'],
+				),
+				'value' => $issueOptions['version'],
 			);
 	}
 
@@ -397,8 +418,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'version_fixed',
-				'id' => $issueOptions['version_fixed'],
+				'attributes' => array(
+					'field' => 'version_fixed',
+					'id' => $issueOptions['version_fixed'],
+				),
+				'value' => $issueOptions['version_fixed'],
 			);
 	}
 
@@ -412,8 +436,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'category',
-				'id' => $issueOptions['category'],
+				'attributes' => array(
+					'field' => 'category',
+					'id' => $issueOptions['category'],
+				),
+				'value' => $issueOptions['category'],
 			);
 	}
 
@@ -425,8 +452,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'status',
-				'id' => $issueOptions['status'],
+				'attributes' => array(
+					'field' => 'status',
+					'id' => $issueOptions['status'],
+				),
+				'value' => $issueOptions['status'],
 			);
 	}
 
@@ -436,8 +466,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
-				'field' => 'tracker',
-				'id' => $issueOptions['tracker']
+				'attributes' => array(
+					'field' => 'tracker',
+					'id' => $issueOptions['tracker']
+				),
+				'value' => $issueOptions['tracker'],
 			);
 	}
 }
