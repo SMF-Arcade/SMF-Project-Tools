@@ -335,7 +335,10 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			$issueOptions['assignee'] = (int) $_REQUEST['assign'];
 			
 			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array('field' => 'assign', 'value' => $issueOptions['assignee']);
+				$context['xml_data']['updates']['children'][] = array(
+					'field' => 'assign',
+					'id' => $issueOptions['assignee'],
+				);
 		}
 	}
 
@@ -349,7 +352,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			$context['xml_data']['updates']['children'][] = array(
 				'field' => 'subject',
 				'id' => 0,
-				'value' => $issueOptions['subject']
+				'value' => $issueOptions['subject'],
 			);
 	}
 
@@ -380,7 +383,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
 				'field' => 'version',
-				'id' => $issueOptions['version']
+				'id' => $issueOptions['version'],
 			);
 	}
 

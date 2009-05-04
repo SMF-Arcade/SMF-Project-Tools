@@ -257,10 +257,10 @@ else
 			$smcFunc['db_free_result']($request);
 		}
 
-		if (!empty($context['project_permissions']['issue_view_private']))
+		if (!empty($user_info['project_permissions']['issue_view_private']))
 			$user_info['query_see_issue_project'] = $user_info['query_see_version'];
 			
-		cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['permissions'], null), 240);			
+		cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['project_permissions'], null), 240);			
 	}
 
 ]]></add>

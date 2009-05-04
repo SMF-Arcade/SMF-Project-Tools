@@ -85,9 +85,9 @@ function PTIssue(id_issue, saveURL)
 function PTLabel(issue, name)
 {
 	var labelHandle = document.getElementById(name);
-	var labelDL = dropdownHandle.getElementsByTagName('dl')[0];
-	var labelItem = dropdownDL.getElementsByTagName('dt')[0];
-	var labelValue = dropdownDL.getElementsByTagName('dd')[0];
+	var labelDL = labelHandle.getElementsByTagName('dl')[0];
+	var labelItem = labelDL.getElementsByTagName('dt')[0];
+	var labelValue = labelDL.getElementsByTagName('dd')[0];
 
 	this.issue = issue;
 	this.fieldName = fieldName;
