@@ -233,7 +233,7 @@ else
 			<search position="after"><![CDATA[	// Banned?  Watch, don't touch..]]></search>
 			<add><![CDATA[
 	// Project Tools
-	global $project;
+	global $project, $context;
 	
 	if (!empty($modSettings['projectEnabled']) && !empty($project) && empty($context['project']['is_developer']))
 	{
