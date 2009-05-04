@@ -641,8 +641,8 @@ function deleteIssue($id_issue, $posterOptions)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_project, subject, id_version, status, id_category,
-			priority, issue_type, id_assigned, id_version_fixed
+			id_project, id_tracker, subject, id_version, status, id_category,
+			priority, id_assigned, id_version_fixed
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -718,8 +718,11 @@ function deleteIssue($id_issue, $posterOptions)
 		)
 	);
 
-	$id_event = createTimelineEvent($id_issue, $row['id_project'], 'delete_issue', $event_data, $posterOptions, array('time' => time()));
-
+	if ($posterOptions !== false)
+		$id_event = createTimelineEvent($id_issue, $row['id_project'], 'delete_issue', $event_data, $posterOptions, array('time' => time()));
+	else
+		return true;
+	
 	return $id_event;
 }
 

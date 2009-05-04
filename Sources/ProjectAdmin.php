@@ -213,6 +213,10 @@ function ProjectsMaintenanceRepair()
 			'name' => $txt['repair_step_not_needed_events'],
 			'function' => 'ptMaintenanceEvents3',
 		),
+		array(
+			'name' => '',
+			'function' => 'ptMaintenanceIssues1',
+		),
 	);
 
 	return $repairFunctions;

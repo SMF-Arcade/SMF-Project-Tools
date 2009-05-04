@@ -346,4 +346,29 @@ function ptMaintenanceEvents3($check = false)
 	return true;
 }
 
+// Delete invalid issues
+function ptMaintenanceIssues1($check = false)
+{
+	global $smcFunc, $txt;
+
+	if ($check)
+	{
+		// TODO: Write actual code
+		return true;
+	}
+
+	$request = $smcFunc['db_query']('', '
+		SELECT i.id_issue
+		FROM {db_prefix}issues AS i
+			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
+		WHERE ISNULL(com.id_comment)');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		deleteIssue($row['id_issue'], false);
+
+	$smcFunc['db_free_result']($request);
+	
+	return true;
+}
+
 ?>
