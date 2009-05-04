@@ -300,8 +300,10 @@ function IssueUpdate()
 	// Update time
 	if ($id_event !== false)
 		$context['xml_data']['updates']['children'][] = array(
-			'field' => 'updated',
-			'id' => 0,
+			'attributes' => array(
+				'field' => 'updated',
+				'id' => 0,
+			),
 			'value' => timeformat(time()),
 		);
 	
@@ -369,9 +371,9 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			$context['xml_data']['updates']['children'][] = array(
 				'attributes' => array(
 					'field' => 'private',
-					'id' => $issueOptions['private'],
+					'id' => $issueOptions['private'] ? 1 : 0,
 				),
-				'value' => $issueOptions['private'],
+				'value' => $issueOptions['private'] ? 1 : 0,
 			);		
 	}
 

@@ -4,7 +4,7 @@ function PTIssue(id_issue, saveURL)
 	var changes = [];
 	var callbacks = [];
 	
-	var items = [];
+	var formItems = [];
 	
 	var saveInProgress = false;
 	
@@ -12,17 +12,24 @@ function PTIssue(id_issue, saveURL)
 	
 	this.addChange = addChange;
 	this.addLabel = addLabel;
+	this.addDropdown = addDropdown;
 	this.addCallback = addCallback;
 	this.saveChanges = saveChanges;
 	
 	function addLabel(item, fieldName)
 	{
-		items[fieldName] = new Array(3);
-		items[fieldName]['id'] = item;
-		items[fieldName]['field'] = fieldName;
-		items[fieldName]['object'] = PTLabel(this, item);
+		formItems[fieldName] = new PTLabel(this, item, fieldName);
+		
+		return formItems[fieldName];
 	}
-	
+
+	function addDropdown(item, fieldName, value)
+	{
+		formItems[fieldName] = new PTDropdown(this, item, fieldName, value);
+		
+		return formItems[fieldName];
+	}
+		
 	function addCallback(callback)
 	{
 		i = callbacks.length;
@@ -54,25 +61,18 @@ function PTIssue(id_issue, saveURL)
 	function onSaveDone(oXMLDoc)
 	{
 		for (i = 0; i < callbacks.length; i++)
-		{
 			callbacks[i](oXMLDoc);
-		}
 		
 		// Call setValue for each item
 		var nodes = oXMLDoc.getElementsByTagName('update');
 		
 		for (var i = 0; i < nodes.length; i++)
 		{
-			field = nodes[i].getAttribute("field");
+			node = nodes[i];
+			fieldName = node.getAttribute("field");
 			
-			if (items[field] != undefined && node.nodeValue != '' && node.nodeValue != null && node.nodeValue != undefined)
-			{
-				dropdownValue.innerHTML = nodes[i].nodeValue;
-				
-				items[field]['object'].setValue(nodes[i].getAttribute("id"), node.nodeValue);
-				
-				return;
-			}
+			if (formItems[fieldName] != undefined)
+				formItems[fieldName].setValue(node.getAttribute("id"), node.textContent);
 		}
 		
 		// Reset callbacks
@@ -91,6 +91,7 @@ function PTLabel(issue, name, fieldName)
 
 	this.issue = issue;
 	this.fieldName = fieldName;
+	
 	this.setValue = setValue;
 
 	function setValue(id, value)
@@ -101,6 +102,7 @@ function PTLabel(issue, name, fieldName)
 
 function PTDropdown(issue, name, fieldName, selectedValue)
 {
+	var optionsID = [];
 	var options = [];
 	var visible = false;
 	var dropdownHandle = document.getElementById(name);
@@ -113,22 +115,34 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 	var selectedItem = null;
 
 	this.issue = issue;
-	this.addOption = addOption;
 	this.fieldName = fieldName;
+
+	this.addOption = addOption;
+	this.setValue = setValue;
 
 	function addOption(id, text, style)
 	{
-		i = options.length;
-		options[i] = new Array(3);
-		options[i]['id'] = id;
-		options[i]['name'] = text;
+		i = optionsID.length;
+		optionsID[i] = id;
+		
+		options[id] = new Array(3);
+		options[id]['id'] = id;
+		options[id]['name'] = text;
 
 		if (style == undefined)
 			style = "";
 
-		options[i]['style'] = style;
+		options[id]['style'] = style;
 	}
 
+	function setValue(id, value)
+	{
+		selectedValue = id;
+		selectedItem = options[id];
+		
+		dropdownValue.innerHTML = selectedItem['name'];
+	}
+	
 	function dropDownHide()
 	{
 		dropdownHandle.removeChild(dropdownMenu);
@@ -145,13 +159,15 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 
 		dropdownMenu.style.width = (dropdownHandle.clientWidth) + "px";
 
-		for (i = 0; i < options.length; i++)
+		for (i = 0; i < optionsID.length; i++)
 		{
+			optionID = optionsID[i];
+			
 			newOption = document.createElement('li');
-			newOption.optionValue = options[i]['id'];
-			newOption.optionItem = options[i];
-			newOption.className = options[i]['style'];
-			newOption.innerHTML = options[i]['name'];
+			newOption.optionValue = options[optionID]['id'];
+			newOption.optionItem = options[optionID];
+			newOption.className = options[optionID]['style'];
+			newOption.innerHTML = options[optionID]['name'];
 
 			createEventListener(newOption);
 			newOption.addEventListener('click', dropDownItemClick, false);
@@ -174,13 +190,9 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 			return;
 
 		if (visible)
-		{
 			dropDownHide();
-		}
 		else
-		{
 			dropDownShow();
-		}
 	}
 
 	function dropDownItemClick(evt)
@@ -210,22 +222,6 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 	function saveDone(oXMLDoc)
 	{
 		dropdownBtn.className = "button";
-		
-		var nodes = oXMLDoc.getElementsByTagName('update');
-		
-		for (var i = 0; i < nodes.length; i++)
-		{
-			field = nodes[i].getAttribute("field"); 
-			
-			if (field == fieldName && node.nodeValue != '' && node.nodeValue != null && node.nodeValue != undefined)
-			{
-				dropdownValue.innerHTML = nodes[i].nodeValue;
-				
-				return;
-			}
-		}
-		
-		dropdownValue.innerHTML = selectedItem['name'];
 	}
 
 	function checkParent(domItem)

@@ -341,24 +341,31 @@ function template_issue_view_above()
 		
 		var updateLabel = currentIssue.addLabel("issue_updated", "updated");
 		
-		var ddIssueType = new PTDropdown(currentIssue, "issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");
-		var ddIssueCate = new PTDropdown(currentIssue, "issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');
-		var ddIssueVers = new PTDropdown(currentIssue, "issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');
-		var ddIssueViewS = new PTDropdown(currentIssue, "issue_view_status", "private", ', (int) $context['current_issue']['private'], ');
+		var ddIssueViewS = currentIssue.addDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ');
 		ddIssueViewS.addOption(0, "', $txt['issue_view_status_public'], '");
-		ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");
-		ddIssueCate.addOption(0, "', $txt['issue_none'], '");
-		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
-
+		ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");';
+		
 		// Types
+		echo '
+		var ddIssueType = currentIssue.addDropdown("issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");';
+		
 		foreach ($context['project']['trackers'] as $id => $tracker)
 			echo '
 		ddIssueType.addOption(', $id, ', "', $tracker['tracker']['name'], '");';
-
+		
 		// Categories
+		echo '
+		var ddIssueCate = currentIssue.addDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');
+		ddIssueCate.addOption(0, "', $txt['issue_none'], '");';
+
 		foreach ($context['project']['category'] as $c)
 			echo '
 		ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
+		
+		// Affected Version
+		echo '
+		var ddIssueVers = currentIssue.addDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');
+		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
 
 		// Versions
 		foreach ($context['versions'] as $v)
@@ -373,23 +380,27 @@ function template_issue_view_above()
 
 		if (!empty($context['can_issue_moderate']))
 		{
-			echo '
-		var ddIssueStat = new PTDropdown(currentIssue, "issue_status", "status", ', (int) $context['current_issue']['status']['id'], ');
-		var ddIssueAssi = new PTDropdown(currentIssue, "issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ');
-		var ddIssueFixv = new PTDropdown(currentIssue, "issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ')
-		var ddIssuePrio = new PTDropdown(currentIssue, "issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ');
-		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");
-		ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
-
 			// Status
+			echo '
+		var ddIssueStat = currentIssue.addDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ');';
+
 			foreach ($context['issue_status'] as $status)
 				echo '
 		ddIssueStat.addOption(', $status['id'], ', "', $status['text'], '");';
 
-			// Members
+			// Assigned to
+			echo '
+		var ddIssueAssi = currentIssue.addDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ');
+		ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
+		
 			foreach ($context['assign_members'] as $mem)
 				echo '
 		ddIssueAssi.addOption(', $mem['id'], ', "', $mem['name'], '");';
+		
+			// Fixed Version
+			echo '
+		var ddIssueFixv = currentIssue.addDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ')
+		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
 
 			// Versions
 			foreach ($context['versions'] as $v)
@@ -402,7 +413,10 @@ function template_issue_view_above()
 		ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '");';
 			}
 
-			// Priorities
+			// Priority
+			echo '
+		var ddIssuePrio = currentIssue.addDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ');';
+
 			foreach ($context['issue']['priority'] as $id => $text)
 				echo '
 		ddIssuePrio.addOption(', $id, ', "', $txt[$text], '");';
