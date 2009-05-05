@@ -563,14 +563,8 @@ function IssueUpload()
 	foreach ($attachIDs as $id)
 		$rows[] = array($context['current_issue']['id'], $id, $user_info['id'], $id_event);
 
-	$smcFunc['db_insert']('insert',
-		'{db_prefix}issue_attachments',
-		array(
-			'id_issue' => 'int',
-			'id_attach' => 'int',
-			'id_member' => 'int',
-			'id_event' => 'int',
-		),
+	$smcFunc['db_insert']('insert', '{db_prefix}issue_attachments',
+		array('id_issue' => 'int', 'id_attach' => 'int', 'id_member' => 'int', 'id_event' => 'int',),
 		$rows,
 		array('id_issue', 'id_attach')
 	);

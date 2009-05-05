@@ -528,6 +528,16 @@ function IssueTag()
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
 
+	$posterOptions = array(
+		'id' => $user_info['id'],
+		'name' => $user_info['name'],
+		'email' => $user_info['email'],
+		'ip' => $user_info['ip'],
+	);
+	$eventOptions = array(
+		'time' => time(),
+	);
+	
 	if (isset($_REQUEST['tag']) && !isset($_REQUEST['remove']))
 	{
 		projectIsAllowedTo('issue_moderate');
@@ -545,30 +555,32 @@ function IssueTag()
 		if (empty($tags))
 			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}issue_tags',
-			array(
-				'id_issue' => 'int',
-				'tag' => 'string-30',
-			),
+		$smcFunc['db_insert']('replace', '{db_prefix}issue_tags',
+			array('id_issue' => 'int', 'tag' => 'string-30',),
 			$tags,
 			array('id_issue', 'tag')
 		);
+		
+		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_tag', serialize(array('tags' => $tags)), $posterOptions, $eventOptions);
 	}
 	elseif (isset($_REQUEST['tag']))
 	{
 		projectIsAllowedTo('issue_moderate');
 		$_REQUEST['tag'] = urldecode($_REQUEST['tag']);
+		
+		$tags = array($_REQUEST['tag']);
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}issue_tags
 			WHERE id_issue = {int:issue}
-				AND tag = {string:tag}',
+				AND tag IN({array_string:tag})',
 			array(
 				'issue' => $context['current_issue']['id'],
-				'tag' => $_REQUEST['tag'],
+				'tag' => $tags,
 			)
 		);
+		
+		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'remove_tag', serialize(array('tags' => $tags)), $posterOptions, $eventOptions);
 	}
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
