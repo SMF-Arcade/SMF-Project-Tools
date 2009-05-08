@@ -196,6 +196,9 @@ function loadProject()
 	// Not needed
 	else
 		return;
+	
+	// For Who's online
+	$_GET['project'] = $project;
 
 	if (($context['project'] = cache_get_data('project-' . $project, 120)) === null)
 	{
