@@ -172,7 +172,7 @@ else
 
 		// Make sure this attachment is on this issue.
 		$request = $smcFunc['db_query']('', '
-			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}issues AS i ON (i.id_issue = a.id_issue)
 				LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
@@ -193,9 +193,8 @@ else
 		</operation>
 
 		<operation>
-			<search position="before"><![CDATA[	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach'], $id_folder);]]></search>
-			<add><![CDATA[
-	if (!isset($_REQUEST['dl']) && ($file_ext == 'patch' || $file_ext == 'diff'))
+			<search position="after"><![CDATA[	// This is done to clear any output that was made before now. (would use ob_clean(), but that's PHP 4.2.0+...)]]></search>
+			<add><![CDATA[	if (!isset($_REQUEST['dl']) && ($file_ext == 'patch' || $file_ext == 'diff'))
 	{
 		loadTemplate('PatchView', array('project'));
 		$context['diff'] = DiffParser(file_get_contents($filename));
@@ -204,7 +203,9 @@ else
 		$context['page_title'] = sprintf($txt['patch_highlight'], $real_filename);
 
 		return;
-	}]]></add>
+	}
+
+]]></add>
 		</operation>
 	</file>
 
@@ -746,13 +747,13 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			{
 				// Hide first, show later.
 				$data[$k] = $txt['who_hidden'];
-				$project_ids[$actions['project']][$k] = $txt['who_project'];
+				$project_ids[(int) $actions['project']][$k] = $txt['who_project'];
 			}
 			elseif (isset($actions['issue']))
 			{
 				// Hide first, show later.
 				$data[$k] = $txt['who_hidden'];
-				$issue_ids[$actions['issue']][$k] = $txt['who_project_issue'];
+				$issue_ids[(int) $actions['issue']][$k] = $txt['who_project_issue'];
 			}
 			elseif (isset($actions['action']) && $actions['action'] == 'projects')
 			{
