@@ -41,9 +41,17 @@ function loadProjectTools()
 	{
 		list ($_REQUEST['issue'], $_REQUEST['start']) = explode('.', $_REQUEST['issue'], 2);
 		$issue = (int) $_REQUEST['issue'];
+		
+		// This is for Who's online
+		$_GET['issue'] = $issue;
 	}
 	elseif (isset($_REQUEST['issue']))
+	{
 		$issue = (int) $_REQUEST['issue'];
+		
+		// This is for Who's online
+		$_GET['issue'] = $issue;
+	}
 	else
 		$issue = 0;
 
