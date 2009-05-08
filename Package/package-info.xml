@@ -22,6 +22,64 @@
 	<version>{version}</version>
 	<type>modification</type>
 
+	<install for="2.0 RC1-1">
+		<readme parsebbc="true">readme.txt</readme>
+
+		<!-- Run Installer/upgrader -->
+		<code>ptinstall/Database.php</code>
+		<code>ptinstall/Subs-Install.php</code>
+		<database>ptinstall/install_main.php</database>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
+		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Project.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
+
+		<!-- These files goest to Theme directory -->
+		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
+		<require-file name="Themes/default/PatchView.template.php" destination="$themedir" />
+		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
+
+		<!-- CSS -->
+		<require-file name="Themes/default/css/project.css" destination="$themedir/css" />
+
+		<!-- Scripts -->
+		<require-file name="Themes/default/scripts/project.js" destination="$themedir/scripts" />
+
+		<!-- Images -->
+		<require-file name="Themes/default/images/bug.png" destination="$imagesdir" />
+		<require-file name="Themes/default/images/feature.png" destination="$imagesdir" />
+		<require-file name="Themes/default/images/pdropdown.gif" destination="$imagesdir" />
+		<require-file name="Themes/default/images/ploading.gif" destination="$imagesdir" />
+
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectEmail.english.php" destination="$languagedir" />
+
+		<modification format="xml" type="file">install-rc1.1.xml</modification>
+	</install>
+	
 	<install for="2.0 RC1">
 		<readme parsebbc="true">readme.txt</readme>
 
@@ -79,8 +137,15 @@
 
 		<modification format="xml" type="file">install.xml</modification>
 	</install>
-
-	<upgrade for="2.0 RC1" from="0.2001">
+	
+	<upgrade for="2.0 RC1, 2.0 RC1-1" from="0.2002">
+		<readme parsebbc="true">readme.txt</readme>
+		
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+	</upgrade>
+	
+	<upgrade for="2.0 RC1, 2.0 RC1-1" from="0.2001">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -95,7 +160,7 @@
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 	</upgrade>
 
-	<upgrade for="2.0 RC1" from="0.2">
+	<upgrade for="2.0 RC1, 2.0 RC1-1" from="0.2">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -112,6 +177,56 @@
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 	</upgrade>
+
+	<uninstall for="2.0 RC1-1">
+		<!-- Remove code modifications -->
+		<modification format="xml" type="file" reverse="true">install-rc1.1.xml</modification>
+
+		<!-- Remove these files from Sources -->
+		<remove-file name="$sourcedir/IssueComment.php" />
+		<remove-file name="$sourcedir/IssueList.php" />
+		<remove-file name="$sourcedir/IssueView.php" />
+		<remove-file name="$sourcedir/IssueReport.php" />
+		<remove-file name="$sourcedir/ManageProjects.php" />
+		<remove-file name="$sourcedir/Project.php" />
+		<remove-file name="$sourcedir/ProjectAdmin.php" />
+		<remove-file name="$sourcedir/ProjectList.php" />
+		<remove-file name="$sourcedir/ProjectPermissions.php" />
+		<remove-file name="$sourcedir/ProjectRoadmap.php" />
+		<remove-file name="$sourcedir/ProjectView.php" />
+		<remove-file name="$sourcedir/Subs-Issue.php" />
+		<remove-file name="$sourcedir/Subs-Project.php" />
+		<remove-file name="$sourcedir/Subs-ProjectAdmin.php" />
+
+		<!-- Templates -->
+		<remove-file name="$themedir/IssueList.template.php" />
+		<remove-file name="$themedir/IssueReport.template.php" />
+		<remove-file name="$themedir/IssueView.template.php" />
+		<remove-file name="$themedir/ManageProjects.template.php" />
+		<remove-file name="$themedir/PatchView.template.php" />
+		<remove-file name="$themedir/Project.template.php" />
+		<remove-file name="$themedir/ProjectAdmin.template.php" />
+		<remove-file name="$themedir/ProjectPermissions.template.php" />
+		<remove-file name="$themedir/ProjectRoadmap.template.php" />
+		<remove-file name="$themedir/ProjectView.template.php" />
+
+		<!-- CSS -->
+		<remove-file name="$themedir/css/project.css" />
+
+		<!-- Scripts -->
+		<remove-file name="$themedir/scripts/project.js" />
+
+		<!-- Images -->
+		<remove-file name="$imagesdir/bug.png" />
+		<remove-file name="$imagesdir/feature.png" />
+		<remove-file name="$imagesdir/pdropdown.gif" />
+		<remove-file name="$imagesdir/ploading.gif" />
+
+		<!-- Languages -->
+		<remove-file name="$languagedir/Project.english.php" />
+		<remove-file name="$languagedir/ProjectAdmin.english.php" />
+		<remove-file name="$languagedir/ProjectEmail.english.php" />
+	</uninstall>
 
 	<uninstall for="2.0 RC1">
 		<!-- Remove code modifications -->
