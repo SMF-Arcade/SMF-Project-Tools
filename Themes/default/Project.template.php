@@ -1,5 +1,5 @@
 <?php
-// Version: 0.2; Project
+// Version: 0.2.3; Project
 
 function template_project_above()
 {
@@ -28,10 +28,10 @@ function template_project_list()
 
 				if ($project['new'])
 					echo '
-						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" />';
+						<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
 				else
 					echo '
-						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';
+						<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
 
 				echo '
 					</a>

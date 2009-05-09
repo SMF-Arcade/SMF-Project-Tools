@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="modification.xsl" type="text/xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+================================================================================
+
+	Modification files can be used to modify files so that they do what
+	your package needs them to do to work properly.
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<!-- This information needs to be the same as that in the package-info.xml. -->
+	<id>Niko:SMFProject</id>
+	<version>{version}</version>
+
+	<!-- Themes -->
+	<file name="$themedir/BoardIndex.template.php">
+
+		<operation>
+			<search position="replace"><![CDATA[			if ($project['new'])
+				echo '
+					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_issues'], '" />';
+			else
+				echo '
+					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_issues'], '" />';]]></search>
+		<add><![CDATA[			if ($project['new'])
+				echo '
+					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
+			else
+				echo '
+					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';]]></add>
+		</operation>
+	</file>
+
+	<!-- Languages -->
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[// SMF Project tools start
+$txt['project_tools'] = 'Project Tools';
+$txt['issue_tracker'] = 'Issue Tracker';
+$txt['issues'] = 'Issues';
+$txt['project'] = 'Project';
+$txt['projects'] = 'Projects';
+$txt['core_settings_item_pj'] = 'Project Tools';
+$txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
+$txt['patch_highlight'] = 'Viewing Highlight of Patch: %s';
+
+// Profile
+$txt['project_profile'] = 'Project Tools';
+$txt['project_profile_main'] = 'Statistics';
+$txt['project_profile_reported'] = 'Reported Issues';
+$txt['project_profile_assigned'] = 'Assigned Issues';
+
+// Project - Notifications
+$txt['notifications_projects'] = 'Current Project Notifications';
+$txt['notifications_projects_none'] = 'No projects added for notifications';
+
+// SMF Project tools admin
+$txt['project_general'] = 'General';
+$txt['project_general_main'] = 'Information';
+$txt['project_general_settings'] = 'Settings';
+$txt['project_general_maintenance'] = 'Maintenance';
+
+$txt['manage_projects'] = 'Projects';
+$txt['modify_projects'] = 'Modify Projects';
+$txt['new_project'] = 'New Project';
+$txt['manage_versions'] = 'Versions';
+$txt['manage_project_category'] = 'Categories';
+
+$txt['manage_project_permissions'] = 'Permissions';
+$txt['modify_project_profiles'] = 'Modify Profiles';
+$txt['new_project_profile'] = 'New Profile';
+$txt['project_permissions'] = 'Permissions';
+
+// Permission Names
+$txt['permissiongroup_project'] = 'Project Tools';
+$txt['permissionname_project_access'] = 'Access Project Tools';
+$txt['permissionname_project_profile'] = 'View Project Tools Profile';
+$txt['permissionname_project_profile_own'] = 'Own';
+$txt['permissionname_project_profile_any'] = 'Any';
+$txt['permissionname_project_admin'] = 'Administrate Project Tools';
+
+// Simple permission gropus
+$txt['permissiongroup_simple_project'] = 'Use Project Tools';
+
+// Simple permission names
+$txt['permissionname_simple_project_profile_own'] = 'View their own Project Tools profile';
+$txt['permissionname_simple_project_profile_any'] = 'View any Project Tools profile';
+
+// Errors
+$txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
+$txt['cannot_project_view'] = 'You are not allowed to view this project.';
+$txt['cannot_project_report'] = 'You are not allowed to report issues of this project.';
+$txt['cannot_project_admin'] = 'You are not allowed to administrate.';
+$txt['cannot_project_issue_view'] = 'You are not allowed to view issues of this project.';
+$txt['cannot_project_issue_report'] = 'You are not allowed to report issues of this project.';
+$txt['cannot_project_edit_comment_own'] = 'You are not allowed to edit comments.';
+// SMF Project tools end]]></add>
+		</operation>
+	</file>
+
+</modification>
