@@ -14,12 +14,12 @@ SMF Project Tools is modification for SMF, which can be used to track issues of 
 It's primarily for software but it can be also used for other purposes.
 
 [color=blue][b][size=12pt]SMF Versions supported[/size][/b][/color]
-Only SMF 2.0 RC1 is supported by SMF Project Tools {version}.
+Only SMF 2.0 RC1 and SMF 2.0 RC1-1 is supported by SMF Project Tools {version}.
 
 [color=blue][b][size=12pt]Installation[/size][/b][/color]
 To install SMF Project Tools it's recommended to use Package Manager to install.
 
-[color=blue][b][size=12pt]Manual Install (SMF 2.0 RC1)[/size][/b][/color]
+[color=blue][b][size=12pt]Manual Install (SMF 2.0 RC1 and SMF 2.0 RC1-1)[/size][/b][/color]
 [list type=decimal]
 	[li]Manually apply edits from "install.xml". Package parsers can be used for help[/li]
 	[li]After you have done edits upload "ptinstall" directory to SMF install directory (including directory)[/li]
