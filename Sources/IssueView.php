@@ -555,7 +555,8 @@ function IssueTag()
 		if (empty($tags))
 			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
-		$smcFunc['db_insert']('replace', '{db_prefix}issue_tags',
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}issue_tags',
 			array('id_issue' => 'int', 'tag' => 'string-30',),
 			$tags,
 			array('id_issue', 'tag')
