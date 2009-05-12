@@ -327,7 +327,8 @@ function template_edit_version()
 				<b>', $txt['version_membergroups'], ':</b><br />
 				<span class="smalltext">', $txt['version_membergroups_desc'], '</span><br />
 			</td>
-			<td valign="top" align="left">';
+			<td valign="top" align="left">
+				<input type="checkbox" id="permission_inherit" name="permission_inherit" value="1"', $context['version']['permission_inherit'] ? ' checked="checked"' : '', ' /> <label for="permission_inherit">', $txt['version_inherit_permission'], '</label><br /><br />';
 
 	foreach ($context['groups'] as $group)
 		echo '

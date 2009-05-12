@@ -708,6 +708,7 @@ function EditVersion()
 			'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
 			'status' => 0,
 			'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
+			'permission_inherit' => true,
 		);
 	}
 	else
@@ -715,7 +716,7 @@ function EditVersion()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				v.id_version, v.id_project, v.id_parent, v.version_name,
-				v.status, v.member_groups, v.description, v.release_date
+				v.status, v.member_groups, v.description, v.release_date, v.permission_inherit
 			FROM {db_prefix}project_versions AS v
 			WHERE id_version = {int:version}',
 			array(
@@ -744,6 +745,7 @@ function EditVersion()
 			'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
 			'status' => $row['status'],
 			'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
+			'permission_inherit' => !empty($row['permission_inherit']),
 		);
 	}
 
@@ -823,6 +825,8 @@ function EditVersion2()
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group)
 				$versionOptions['member_groups'][] = $group;
+				
+		$versionOptions['permission_inherit'] = !empty($_POST['permission_inherit']);
 
 		if (isset($_POST['add']))
 			createVersion($_POST['project'], $versionOptions);

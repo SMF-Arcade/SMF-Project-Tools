@@ -135,6 +135,24 @@ function updateProject($id_project, $projectOptions)
 
 	if (isset($projectOptions['member_groups']))
 	{
+		// Update versions with permission inherited
+		$request = $smcFunc['db_query']('', '
+			SELECT id_version
+			FROM {db_prefix}project_versions
+			WHERE id_project = {int:project}
+				AND permission_inherit = {int:inherit}
+				AND id_parent = {int:no_parent}',
+			array(
+				'project' => $id_project,
+				'inherit' => 1,
+				'no_parent' => 0,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			updateVersion($id_project, $row['id_version'], array('member_groups' => $projectOptions['member_groups']));
+
+		$smcFunc['db_free_result']($request);
+
 		$projectUpdates[] = 'member_groups = {string:member_groups}';
 		$projectOptions['member_groups'] = implode(',', $projectOptions['member_groups']);
 	}
@@ -156,7 +174,7 @@ function updateProject($id_project, $projectOptions)
 		$projectUpdates[] = 'cat_position = {string:category_position}';
 
 	if (!empty($projectUpdates))
-		$request = $smcFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}projects
 			SET
 				' . implode(',
@@ -291,7 +309,34 @@ function createVersion($id_project, $versionOptions)
 function updateVersion($id_project, $id_version, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
-
+	
+	$request = $smcFunc['db_query']('', '
+		SELECT id_parent, permission_inherit
+		FROM {db_prefix}project_versions
+		WHERE id_project = {int:project}
+			AND id_version = {int:version}',
+		array(
+			'project' => $id_project,
+			'version' => $id_version,
+		)
+	);
+	
+	$versionRow = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+	
+	if (!$versionRow)
+		return false;
+	
+	$inherited = !empty($versionRow['permission_inherit']);
+	
+	// Will it change?
+	if (isset($versionOptions['permission_inherit']))
+		$inherited = !empty($versionOptions['permission_inherit']);
+	
+	// Don't allow changing member_groups when inherited
+	if (isset($versionOptions['member_groups']) && !$inherited)
+		unset($versionOptions['member_groups']);
+			
 	$versionUpdates = array();
 
 	if (isset($versionOptions['name']))
@@ -302,9 +347,64 @@ function updateVersion($id_project, $id_version, $versionOptions)
 
 	if (isset($versionOptions['release_date']))
 		$versionUpdates[] = 'release_date = {string:release_date}';
+		
+	if (isset($versionOptions['permission_inherit']))
+	{
+		// Make sure it's not overwritten
+		if (isset($versionOptions['member_groups']) && !empty($versionOptions['permission_inherit']))
+			unset($versionOptions['member_groups']);
+			
+		$versionUpdates[] = 'permission_inherit = {int:permission_inherit}';
+		$versionOptions['permission_inherit'] = !empty($versionOptions['permission_inherit']) ? 1 : 0;
+		$versionRow = $versionOptions['permission_inherit'];
+		
+		// Inherit from parent version
+		if (!empty($versionRow['id_parent']))
+			$request = $smcFunc['db_query']('', '
+				SELECT member_groups
+				FROM {db_prefix}project_versions
+				WHERE id_project = {int:project}
+					AND id_version = {int:version}',
+				array(
+					'project' => $id_project,
+					'version' => $versionRow['id_parent'],
+				)
+			);
+		// or from project
+		else
+			$request = $smcFunc['db_query']('', '
+				SELECT member_groups
+				FROM {db_prefix}projects
+				WHERE id_project = {int:project}',
+				array(
+					'project' => $id_project,
+				)
+			);
+			
+		$versionUpdates[] = 'member_groups = {string:member_groups}';
+		list ($versionOptions['member_groups']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
 
 	if (isset($versionOptions['member_groups']))
 	{
+		// Update versions with permission inherited
+		$request = $smcFunc['db_query']('', '
+			SELECT id_version
+			FROM {db_prefix}project_versions
+			WHERE id_project = {int:project}
+				AND permission_inherit = {int:inherit}
+				AND id_parent = {int:parent}',
+			array(
+				'project' => $id_project,
+				'inherit' => 1,
+				'parent' => $id_version,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			updateVersion($id_project, $row['id_version'], array('member_groups' => $versionOptions['member_groups']));
+		$smcFunc['db_free_result']($request);
+		
 		$versionUpdates[] = 'member_groups = {string:member_groups}';
 		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
 	}
@@ -336,14 +436,8 @@ function createPTCategory($id_project, $categoryOptions)
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_category',
-		array(
-			'id_project' => 'int',
-			'category_name' => 'string'
-		),
-		array(
-			$id_project,
-			$categoryOptions['name']
-		),
+		array('id_project' => 'int', 'category_name' => 'string'),
+		array($id_project, $categoryOptions['name']),
 		array('id_category')
 	);
 

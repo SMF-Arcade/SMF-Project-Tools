@@ -315,6 +315,11 @@ $tables = array(
 				'default' => '-1,0,2',
 				'size' => 255,
 			),
+			array(
+				'name' => 'permission_inherit',
+				'type' => 'int',
+				'default' => 0,
+			),
 		),
 		'indexes' => array(
 			array(

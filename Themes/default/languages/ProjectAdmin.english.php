@@ -121,6 +121,7 @@ $txt['version_release_date'] = 'Release date';
 $txt['version_release_date_desc'] = 'Format is dd.mm.yy';
 $txt['version_status'] = 'Status';
 $txt['version_membergroups'] = 'Membergroups';
+$txt['version_inherit_permission'] = 'Inherit membergroups permissions from project or parent version';
 $txt['version_membergroups_desc'] = 'Select Membergroups allowed to see this version';
 $txt['delete_version'] = 'Delete Version';
 $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues assigned to it, do you still to continue?';
