@@ -328,14 +328,15 @@ function template_edit_version()
 				<span class="smalltext">', $txt['version_membergroups_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<input type="checkbox" id="permission_inherit" name="permission_inherit" value="1"', $context['version']['permission_inherit'] ? ' checked="checked"' : '', ' /> <label for="permission_inherit">', $txt['version_inherit_permission'], '</label><br /><br />';
+				<input type="checkbox" id="permission_inherit" name="permission_inherit" value="1"', $context['version']['permission_inherit'] ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="check" /> <label for="permission_inherit">', $txt['version_inherit_permission'], '</label><br />
+				<div id="section_membergroups">';
 
 	foreach ($context['groups'] as $group)
 		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+					<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
-				<br />
+					<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
+				</div>
 			</td>
 		</tr>
 		<tr class="windowbg2">
@@ -353,6 +354,19 @@ function template_edit_version()
 		</tr>
 	</table>
 </form>';
+
+	// Script for showing / hiding elements
+	echo '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		function refreshOptions()
+		{
+			var inheritEnabled = document.getElementById("permission_inherit").checked;
+
+			// What to show?
+			document.getElementById("section_membergroups").style.display = inheritEnabled ? "none" : "";
+		}
+		refreshOptions();
+	// ]]></script>';
 }
 
 ?>
