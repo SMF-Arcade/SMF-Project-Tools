@@ -150,7 +150,6 @@ function updateProject($id_project, $projectOptions)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			updateVersion($id_project, $row['id_version'], array('member_groups' => $projectOptions['member_groups']));
-
 		$smcFunc['db_free_result']($request);
 
 		$projectUpdates[] = 'member_groups = {string:member_groups}';
@@ -386,7 +385,7 @@ function updateVersion($id_project, $id_version, $versionOptions)
 		$smcFunc['db_free_result']($request);
 	}
 
-	if (isset($versionOptions['member_groups']) && !$inherited)
+	if (isset($versionOptions['member_groups']))
 	{
 		// Update versions with permission inherited
 		$request = $smcFunc['db_query']('', '
@@ -406,7 +405,7 @@ function updateVersion($id_project, $id_version, $versionOptions)
 		$smcFunc['db_free_result']($request);
 		
 		$versionUpdates[] = 'member_groups = {string:member_groups}';
-		$versionOptions['member_groups'] = implode(',', $versionOptions['member_groups']);
+		$versionOptions['member_groups'] = is_array($versionOptions['member_groups']) ? implode(',', $versionOptions['member_groups']) : $versionOptions['member_groups'];
 	}
 
 	if (isset($versionOptions['status']))
