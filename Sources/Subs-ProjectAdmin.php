@@ -386,7 +386,7 @@ function updateVersion($id_project, $id_version, $versionOptions)
 		$smcFunc['db_free_result']($request);
 	}
 
-	if (isset($versionOptions['member_groups']))
+	if (isset($versionOptions['member_groups']) && !$inherited)
 	{
 		// Update versions with permission inherited
 		$request = $smcFunc['db_query']('', '
