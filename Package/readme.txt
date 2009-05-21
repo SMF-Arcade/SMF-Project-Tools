@@ -27,10 +27,6 @@ To install SMF Project Tools it's recommended to use Package Manager to install.
 	[li]After install/upgrade is done it's recommended to remove "ptinstall" directory[/li]
 [/list]
 
-[color=blue][b][size=12pt]Features[/size][/b][/color]
-[list]
-[/list]
-
 [color=blue][b][size=12pt]Notes[/size][/b][/color]
 This software uses icons [url=http://www.famfamfam.com/lab/icons/silk/]FamFamFam Silk[/url] icons licensed under Creative Commons Attribution 2.5 License.
 
