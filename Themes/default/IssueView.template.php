@@ -827,7 +827,7 @@ function template_issue_move()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="catbg headerpadding">', $txt['move_issue'], '</div>
 			<div class="smallpadding windowbg">

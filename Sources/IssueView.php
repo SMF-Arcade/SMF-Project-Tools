@@ -622,7 +622,7 @@ function IssueMove()
 	
 	if (!empty($_POST['move_issue']) && isset($context['projects'][$_POST['project_to']]))
 	{
-		checkSession('get');
+		checkSession('post');
 
 		$posterOptions = array(
 			'id' => $user_info['id'],
