@@ -90,7 +90,7 @@ function template_project_list()
 	{
 		echo '
 					<h5 class="windowbg', $first ? ' first' : '' ,'">', $date['date'], '</h5>
-					<ul>';
+					<ul class="reset">';
 
 		foreach ($date['events'] as $event)
 			echo '

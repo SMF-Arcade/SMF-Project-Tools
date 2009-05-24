@@ -9,6 +9,7 @@ May 2009
  + Support for SMF 2.0 RC 1-1
  ! Wrong alternative text for issue indicators
  + Version can inherit permissions from project/parent version
+ + Ability to move issues to another project [Issue #231]
  
 April 2009
 --------------------------------------------------------------------------------
