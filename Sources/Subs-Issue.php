@@ -269,7 +269,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 		$event_data['changes'][] = array(
 			'project', $row['id_project'], $issueOptions['project']
-		);		
+		);
 	}
 
 	if (isset($issueOptions['private']) && $issueOptions['private'] != $row['private_issue'])

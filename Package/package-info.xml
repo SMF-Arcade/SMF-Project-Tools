@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install for="2.0 RC1">
+	<install for="2.0 RC1-1">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -84,7 +84,7 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
-	<uninstall for="2.0 RC1">
+	<uninstall for="2.0 RC1-1">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 

@@ -26,80 +26,10 @@ function template_issue_view_above()
 		echo '
 	<a name="new"></a>';
 
-	// Issue Info table
-	echo '
-	<a name="com', $context['current_issue']['comment_first'], '"></a>
-	<div id="issueinfo" class="floatright tborder">
-		<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
-		<div id="issueinfot" class="clearfix topborder windowbg smalltext">
-			<ul class="details">
-				<li>
-					<dl class="clearfix">
-						<dt>', $txt['issue_reported'], '</dt>
-						<dd>', $context['current_issue']['created'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_updated">
-					<dl class="clearfix">
-						<dt>', $txt['issue_updated'], '</dt>
-						<dd>', $context['current_issue']['updated'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_view_status" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_view_status'], '</dt>
-						<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_tracker" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_type'], '</dt>
-						<dd>', $context['current_issue']['tracker']['name'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_status" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_status'], '</dt>
-						<dd>', $context['current_issue']['status']['text'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_priority" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_priority'], '</dt>
-						<dd>', $txt[$context['current_issue']['priority']], '</dd>
-					</dl>
-				</li>
-				<li id="issue_version" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_version'], '</dt>
-						<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_verfix" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_version_fixed'], '</dt>
-						<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_assign" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_assigned_to'], '</dt>
-						<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
-					</dl>
-				</li>
-				<li id="issue_category" class="clearfix">
-					<dl class="clearfix">
-						<dt>', $txt['issue_category'], '</dt>
-						<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
-					</dl>
-				</li>
-			</ul>
-		</div>
-	</div>';
-
 	// Issue Details
 	echo '
-	<div id="firstcomment" class="tborder">
+	<a name="com', $context['current_issue']['comment_first'], '"></a>
+	<div id="firstcomment" class="floatleft tborder">
 		<h3 class="catbg3 headerpadding">
 			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
@@ -108,7 +38,7 @@ function template_issue_view_above()
 			<div class="clearfix topborder windowbg largepadding">
 				<div class="floatleft poster">
 					<h4>', $context['current_issue']['reporter']['link'], '</h4>
-					<ul class="smalltext">';
+					<ul class="reset smalltext">';
 
 	// Show the member's custom title, if they have one.
 	if (isset($context['current_issue']['reporter']['title']) && $context['current_issue']['reporter']['title'] != '')
@@ -183,7 +113,7 @@ function template_issue_view_above()
 		if ($context['current_issue']['reporter']['has_messenger'] && $context['current_issue']['reporter']['can_view_profile'])
 			echo '
 						<li>
-							<ul class="nolist">
+							<ul class="reset nolist">
 								', !isset($context['disabled_fields']['icq']) && !empty($context['current_issue']['reporter']['icq']['link']) ? '<li>' . $context['current_issue']['reporter']['icq']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['msn']) && !empty($context['current_issue']['reporter']['msn']['link']) ? '<li>' . $context['current_issue']['reporter']['msn']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['aim']) && !empty($context['current_issue']['reporter']['aim']['link']) ? '<li>' . $context['current_issue']['reporter']['aim']['link'] . '</li>' : '', '
@@ -196,7 +126,7 @@ function template_issue_view_above()
 		{
 			echo '
 						<li>
-							<ul class="nolist">';
+							<ul class="reset nolist">';
 			// Don't show the profile button if you're not allowed to view the profile.
 			if ($context['current_issue']['reporter']['can_view_profile'])
 				echo '
@@ -242,8 +172,11 @@ function template_issue_view_above()
 						</div>
 						<h5><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $issueDetails['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a></h5>
 						<div class="smalltext">&#171; <strong>', !empty($issueDetails['counter']) ? $txt['reply'] . ' #' . $issueDetails['counter'] : '', ' ', $txt['on'], ':</strong> ', $issueDetails['time'], ' &#187;</div>
-					</div>
-					<ul class="smalltext postingbuttons">';
+					</div>';
+				
+	if ($context['can_comment'] || $issueDetails['can_edit'] || $issueDetails['can_remove'])	
+		echo '
+					<ul class="reset smalltext postingbuttons">';
 
 	if ($context['can_comment'])
 		echo '
@@ -257,9 +190,12 @@ function template_issue_view_above()
 		echo '
 						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $issueDetails['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
+	if ($context['can_comment'] || $issueDetails['can_edit'] || $issueDetails['can_remove'])
+		echo '
+					</ul>';
+					
 	echo '
-					</ul>
-					<div id="com_', $issueDetails['id'], '" class="post">
+					<div id="com_', $issueDetails['id'], '" class="post floatleft">
 						<div class="inner">', $issueDetails['body'], '</div>
 					</div>';
 
@@ -330,8 +266,78 @@ function template_issue_view_above()
 				</div>
 			</div>
 		</div>
-	</div><br />';
+	</div>';
 
+	// Issue Info table
+	echo '
+	<div id="issueinfo" class="tborder floatright">
+		<h3 class="catbg3 headerpadding clearfix">', $txt['issue_details'], '</h3>
+		<div class="clearfix topborder windowbg smalltext">
+			<ul class="details">
+				<li>
+					<dl class="clearfix">
+						<dt>', $txt['issue_reported'], '</dt>
+						<dd>', $context['current_issue']['created'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_updated">
+					<dl class="clearfix">
+						<dt>', $txt['issue_updated'], '</dt>
+						<dd>', $context['current_issue']['updated'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_view_status" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_view_status'], '</dt>
+						<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_tracker" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_type'], '</dt>
+						<dd>', $context['current_issue']['tracker']['name'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_status" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_status'], '</dt>
+						<dd>', $context['current_issue']['status']['text'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_priority" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_priority'], '</dt>
+						<dd>', $txt[$context['current_issue']['priority']], '</dd>
+					</dl>
+				</li>
+				<li id="issue_version" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_version'], '</dt>
+						<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_verfix" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_version_fixed'], '</dt>
+						<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_assign" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_assigned_to'], '</dt>
+						<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+				<li id="issue_category" class="clearfix">
+					<dl class="clearfix">
+						<dt>', $txt['issue_category'], '</dt>
+						<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
+					</dl>
+				</li>
+			</ul>
+		</div>
+	</div>';
+	
 	// Javascript for Dropdowns
 	if (!empty($context['can_issue_update']))
 	{
@@ -457,7 +463,7 @@ function template_issue_view_main()
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'bottom'), '
 	</div>
-	<div class="tborder">
+	<div class="tborder comments">
 		<h3 class="catbg3 headerpadding">
 			', $txt['issue_comments'], '
 		</h3>
@@ -472,7 +478,7 @@ function template_issue_view_main()
 			<div class="clearfix topborder windowbg', $alternate ? '' : '2', ' largepadding" id="', $id, '">
 				<div class="floatleft poster">
 					<h4>', $event['member']['link'], '</h4>
-					<ul class="smalltext">';
+					<ul class="reset smalltext">';
 
 		// Show the member's custom title, if they have one.
 		if (isset($event['member']['title']) && $event['member']['title'] != '')
@@ -547,7 +553,7 @@ function template_issue_view_main()
 			if ($event['member']['has_messenger'] && $event['member']['can_view_profile'])
 				echo '
 						<li>
-							<ul class="nolist">
+							<ul class="reset nolist">
 								', !isset($context['disabled_fields']['icq']) && !empty($event['member']['icq']['link']) ? '<li>' . $event['member']['icq']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['msn']) && !empty($event['member']['msn']['link']) ? '<li>' . $event['member']['msn']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['aim']) && !empty($event['member']['aim']['link']) ? '<li>' . $event['member']['aim']['link'] . '</li>' : '', '
@@ -560,7 +566,7 @@ function template_issue_view_main()
 			{
 				echo '
 						<li>
-							<ul class="nolist">';
+							<ul class="reset nolist">';
 				// Don't show the profile button if you're not allowed to view the profile.
 				if ($event['member']['can_view_profile'])
 					echo '
@@ -608,8 +614,11 @@ function template_issue_view_main()
 
 		echo '
 						<div class="smalltext">&#171; <strong>', !empty($event['counter']) ? $txt['reply'] . ' #' . $event['counter'] : '', ' ', $txt['on'], ':</strong> ', $event['time'], ' &#187;</div>
-					</div>
-					<ul class="smalltext postingbuttons">';
+					</div>';
+					
+		if ($event['is_comment'] && ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove']))
+			echo '
+					<ul class="reset smalltext postingbuttons">';
 
 		if ($event['is_comment'] && $context['can_comment'])
 			echo '
@@ -623,8 +632,12 @@ function template_issue_view_main()
 			echo '
 						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
+		if ($event['is_comment'] && ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove']))
+			echo '
+					</ul>';
+		
+		// Message / Edit
 		echo '
-					</ul>
 					<div id="', $id2, '" class="post">';
 
 		if ($event['is_comment'])
@@ -807,7 +820,33 @@ function template_issue_view_below()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 	}
+}
 
+function template_issue_move()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+
+	echo '
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
+		<div class="tborder">
+			<div class="catbg headerpadding">', $txt['move_issue'], '</div>
+			<div class="smallpadding windowbg">
+				', $txt['project_to'], ' <select id="project_to" name="project_to">';
+	
+	foreach ($context['projects'] as $project)
+		echo '
+					<option value="', $project['id'], '">', $project['name'], '</option>';
+		
+	echo '
+				
+				</select>
+				<div style="text-align: right">
+					<input type="submit" name="move_issue" value="', $txt['move_issue_btn'], '" tabindex="', $context['tabindex']++, '" />
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+	</form>';		
 }
 
 ?>

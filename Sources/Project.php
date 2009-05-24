@@ -51,6 +51,7 @@ function Projects($standalone = false)
 		'update' => array('IssueReport.php', 'IssueUpdate', true),
 		'upload' => array('IssueReport.php', 'IssueUpload', true),
 		'delete' => array('IssueView.php', 'IssueDelete', true),
+		'move' => array('IssueView.php', 'IssueMove', true),
 		// Reply
 		'reply' => array('IssueComment.php', 'IssueReply', true),
 		'reply2' => array('IssueComment.php', 'IssueReply2', true),

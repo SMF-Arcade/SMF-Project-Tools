@@ -587,6 +587,60 @@ function IssueTag()
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
 
+function IssueMove()
+{
+	global $context, $user_info, $smcFunc;
+
+	checkSession('get');
+
+	if (!isset($context['current_issue']))
+		fatal_lang_error('issue_not_found', false);
+
+	projectIsAllowedTo('issue_move');
+
+	// Get list of projects
+	$request = $smcFunc['db_query']('', '
+		SELECT p.id_project, p.name
+		FROM {db_prefix}projects AS p
+			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+				AND dev.id_member = {int:current_member})
+		WHERE {query_see_project}
+		ORDER BY p.name',
+		array(
+			'current_member' => $user_info['id'],
+		)
+	);
+	
+	$context['projects'] = array();
+	
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['projects'][$row['id_project']] = array(
+			'id' => $row['id_project'],
+			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+			'href' => project_get_url(array('project' => $row['id_project'])),
+			'name' => $row['name'],
+		);
+	$smcFunc['db_free_result']($request);
+	
+	if (!empty($_POST['move_issue']) && isset($context['projects'][$_POST['project_to']]))
+	{
+		$posterOptions = array(
+			'id' => $user_info['id'],
+			'ip' => $user_info['ip'],
+			'name' => htmlspecialchars($user_info['name']),
+			'email' => htmlspecialchars($user_info['email']),
+		);
+		
+		updateIssue($context['current_issue']['id'], array('project' => $_POST['project_to']), $posterOptions);
+		
+		redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+	}
+	
+	// Template
+	loadTemplate('IssueView');
+	$context['sub_template'] = 'issue_move';
+}
+
 function IssueDelete()
 {
 	global $context, $user_info, $smcFunc;

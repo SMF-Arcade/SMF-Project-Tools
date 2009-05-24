@@ -257,24 +257,24 @@ table.issuetable td.lastissue
 	color: gray;
 	font-weight: bold;
 }
-#issueinfot ul.details
+#issueinfo ul.details
 {
 	list-style: none;
 	margin: 0 2.5px;
 	padding: 0;
 }
-#issueinfot ul.details li
+#issueinfo ul.details li
 {
 	border: 1px solid transparent;
 	margin: 1.5px 0;
 }
 
-#issueinfot dl
+#issueinfo ul.details dl
 {
 	margin: 0;
 }
 
-#issueinfot dt
+#issueinfo ul.details dt
 {
 	margin: 0;
 	margin-right: 5px;
@@ -283,7 +283,7 @@ table.issuetable td.lastissue
 	color: gray;
 	font-weight: bold;
 }
-#issueinfot dd
+#issueinfo ul.details dd
 {
 	float: left;
 	margin: 0;
@@ -349,6 +349,13 @@ table.issuetable td.lastissue
 	background: #3399ff;
 }
 
+/* Style for comments */
+.comments div.postarea .keyinfo
+{
+	min-height: 1em;
+}
+
+/* Textarea for writing comment */
 #comment
 {
 	width: 95%;
@@ -383,12 +390,6 @@ ul.changes li
 /* ************************************* */
 /* styles from IssueReport.template      */
 /* ************************************* */
-#reportissue
-{
-}
-#reportform
-{
-}
 #reportform dl
 {
 	padding: 5px;

@@ -162,10 +162,13 @@ $txt['permissionname_project_issue_update_own'] = 'Update their own Issues';
 $txt['permissionname_project_issue_update_any'] = 'Update any Issue';
 $txt['permissionname_project_issue_attach'] = 'Add Attachements to Issues';
 $txt['permissionname_project_issue_moderate'] = 'Edit Issues';
+$txt['permissionname_project_issue_move'] = 'Move Issue to another Project';
+
 $txt['permissionname_project_delete_comment_own'] = 'Delete their own comments';
 $txt['permissionname_project_delete_comment_any'] = 'Delete any comment';
 $txt['permissionname_project_edit_comment_own'] = 'Modify their own comments';
 $txt['permissionname_project_edit_comment_any'] = 'Modify any comment';
+
 $txt['permission_save'] = 'Save Changes';
 
 // Upgrade

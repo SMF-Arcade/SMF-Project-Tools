@@ -111,6 +111,7 @@ function template_edit_project()
 				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 					var oDeveloperSuggest = new smc_AutoSuggest({
 						sSelf: \'oDeveloperSuggest\',
+						sSessionVar: \'', $context['session_var'], '\',
 						sSessionId: \'', $context['session_id'], '\',
 						sSuggestId: \'developer\',
 						sControlId: \'developer\',

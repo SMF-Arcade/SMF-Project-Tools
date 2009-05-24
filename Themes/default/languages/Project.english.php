@@ -214,6 +214,11 @@ $txt['issue_reply'] = 'Reply';
 $txt['preview'] = 'Preview';
 $txt['issue_save'] = 'Save';
 
+// Move Project
+$txt['move_issue'] = 'Move Issue';
+$txt['project_move_to'] = 'Move To Project:';
+$txt['move_issue_btn'] = 'Move Issue';
+
 // Page Titles
 $txt['project_list_title'] = '%s - Projects';
 $txt['project_title'] = 'Projects - %s';
