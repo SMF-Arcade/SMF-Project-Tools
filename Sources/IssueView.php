@@ -591,8 +591,6 @@ function IssueMove()
 {
 	global $context, $user_info, $smcFunc;
 
-	checkSession('get');
-
 	if (!isset($context['current_issue']))
 		fatal_lang_error('issue_not_found', false);
 
@@ -624,6 +622,8 @@ function IssueMove()
 	
 	if (!empty($_POST['move_issue']) && isset($context['projects'][$_POST['project_to']]))
 	{
+		checkSession('get');
+
 		$posterOptions = array(
 			'id' => $user_info['id'],
 			'ip' => $user_info['ip'],
