@@ -761,7 +761,7 @@ function template_issue_view_below()
 	if (!empty($context['current_tags']) || $context['can_add_tags'])
 	{
 		echo '
-				<ul class="clearfix tags">';
+				<ul class="reset clearfix tags">';
 
 		if (!empty($context['current_tags']))
 		{
