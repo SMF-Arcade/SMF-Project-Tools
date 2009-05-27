@@ -10,6 +10,7 @@ May 2009
  ! Wrong alternative text for issue indicators
  + Version can inherit permissions from project/parent version
  + Ability to move issues to another project [Issue #231]
+ ! Language strings for rename missing [Issue #244]
  
 April 2009
 --------------------------------------------------------------------------------
