@@ -323,10 +323,12 @@ table.issuetable td.lastissue
 	background: white;
 	position: absolute;
 	margin: 0;
+	padding: 0;
 	margin-left: -1px;
 }
 .dropdown ul li
 {
+	list-style: none;
 	border: 0 !important;
 	margin: 0 !important;
 	padding: 1px 2.5px !important;
