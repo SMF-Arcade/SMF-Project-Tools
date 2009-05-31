@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.3                                                          ?
+SMF Project Tools 0.3                                                 01.06.2009
 ================================================================================
 May 2009
 --------------------------------------------------------------------------------
@@ -11,6 +11,8 @@ May 2009
  + Version can inherit permissions from project/parent version
  + Ability to move issues to another project [Issue #231]
  ! Language strings for rename missing [Issue #244]
+ ! getBoardIndex conflicted with ProjectList when used on same page [Issue #246]
+ ! Missing strings for project change
  
 April 2009
 --------------------------------------------------------------------------------

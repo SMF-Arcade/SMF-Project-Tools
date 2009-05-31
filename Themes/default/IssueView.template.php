@@ -721,11 +721,12 @@ function template_issue_view_below()
 
 	$mod_buttons = array(
 		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
+		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
 		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
 	);
 
 	echo '
-	<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
+	<div id="moderationbuttons" class="clearfix">', template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	echo '
 	<div class="tborder">

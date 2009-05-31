@@ -173,7 +173,8 @@ $txt['change_status'] = 'Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_view_status'] = 'View Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_priority'] = 'Priority changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_category'] = 'Category changed from <em>%1$s</em> to <em>%2$s</em>';
-$txt['change_rename'] = 'Issue renamed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_rename'] = 'Issue renamed from <em>&quot;%1$s&quot;</em> to <em>&quot;%2$s&quot;</em>';
+$txt['change_project'] = 'Issue moved from <em>%1$s</em> to <em>%2$s</em>';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
@@ -186,10 +187,12 @@ $txt['change_timeline_view_status'] = 'View Status';
 $txt['change_timeline_priority'] = 'Priority';
 $txt['change_timeline_category'] = 'Category';
 $txt['change_timeline_rename'] = 'Rename';
+$txt['change_timeline_project'] = 'Project';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
+$txt['issue_move'] = 'Move Issue';
 
 // Reply
 $txt['comment_issue'] = 'Comment Issue';

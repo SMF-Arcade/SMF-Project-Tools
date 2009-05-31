@@ -620,23 +620,23 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			)
 		);
 
-		$context['projects'] = array();
+		$context['boardindex_projects'] = array();
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$key = $row['id_category'] . '_' . $row['cat_position'];
 
-			if (isset($context['projects'][$key][$row['id_project']]))
+			if (isset($context['boardindex_projects'][$key][$row['id_project']]))
 			{
 				if (empty($row['id_member']))
 					continue;
 
-				$context['projects'][$key][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+				$context['boardindex_projects'][$key][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
 				continue;
 			}
 
-			$context['projects'][$key][$row['id_project']] = array(
+			$context['boardindex_projects'][$key][$row['id_project']] = array(
 				'id' => $row['id_project'],
 				'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 				'href' => project_get_url(array('project' => $row['id_project'])),
@@ -648,13 +648,13 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			);
 
 			if (!empty($row['id_member']))
-				$context['projects'][$key][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+				$context['boardindex_projects'][$key][$row['id_project']]['developers'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
 			$trackers = explode(',', $row['trackers']);
 			foreach ($trackers as $id)
 			{
 				$tracker = &$context['issue_trackers'][$id];
-				$context['projects'][$key][$row['id_project']]['trackers'][$id] = array(
+				$context['boardindex_projects'][$key][$row['id_project']]['trackers'][$id] = array(
 					'id' => $id,
 					'tracker' => $tracker,
 					'open' => $row['open_' . $tracker['short']],
@@ -853,10 +853,10 @@ function template_boardindex_project($category, $position)
 {
 	global $context, $settings, $options, $txt, $modSettings;
 
-	if (empty($context['projects'][$category . '_' . $position]))
+	if (empty($context['boardindex_projects'][$category . '_' . $position]))
 		return;
 
-	foreach ($context['projects'][$category . '_' . $position] as $project)
+	foreach ($context['boardindex_projects'][$category . '_' . $position] as $project)
 	{
 		echo '
 		<tr>
