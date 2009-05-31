@@ -604,7 +604,7 @@ function IssueMove()
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}
-			AND NOT id_project = {int:current_project}
+			AND NOT p.id_project = {int:current_project}
 		ORDER BY p.name',
 		array(
 			'current_member' => $user_info['id'],
