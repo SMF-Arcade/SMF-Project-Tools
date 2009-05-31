@@ -172,6 +172,7 @@ $txt['change_status'] = 'Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_view_status'] = 'View Status changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_priority'] = 'Priority changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_category'] = 'Category changed from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_rename'] = 'Issue renamed from <em>%1$s</em> to <em>%2$s</em>';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
@@ -182,6 +183,7 @@ $txt['change_timeline_status'] = 'Status';
 $txt['change_timeline_view_status'] = 'View Status';
 $txt['change_timeline_priority'] = 'Priority';
 $txt['change_timeline_category'] = 'Category';
+$txt['change_timeline_rename'] = 'Rename';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';

@@ -7,6 +7,7 @@ May 2009
 --------------------------------------------------------------------------------
  + Support for SMF 2.0 RC 1-1
  ! Wrong alternative text for issue indicators
+ ! Language strings for rename missing [Issue #244]
  
 SMF Project Tools 0.2.2                                               01.05.2009
 ================================================================================
