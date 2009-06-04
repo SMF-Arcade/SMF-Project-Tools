@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.3                                                 01.06.2009
+SMF Project Tools 0.3                                                 04.06.2009
 ================================================================================
 May 2009
 --------------------------------------------------------------------------------
