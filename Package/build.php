@@ -3,9 +3,9 @@
 // Build info
 $build_info = array(
 	'branch' => 'trunk',
-	'version' => '0.3',
-	'version_str' => '0.3',
-	'version_int' => '0.3',
+	'version' => '0.4',
+	'version_str' => '0.4',
+	'version_int' => '0.4',
 	'build_replaces' => 'build_replaces_project01',
 	'extra_files' => array(
 		'changelog.txt',
@@ -28,7 +28,7 @@ function build_replaces_project01(&$content, $filename, $rev, $svnInfo)
 			'{version}' => $build_info['version_str'] . ($rev ? ' rev' . $rev : ''),
 		));
 	}
-	elseif (in_array($filename, array('install.xml',  'package-info.xml')))
+	elseif (in_array($filename, array('install.xml', 'package-info.xml')))
 	{
 		$content = strtr($content, array(
 			'{version}' => $build_info['version_int'] . ($rev ? ' rev' . $rev : ''),
