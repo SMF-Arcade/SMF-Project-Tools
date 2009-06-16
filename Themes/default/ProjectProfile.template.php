@@ -1,5 +1,5 @@
 <?php
-// Version: 0.3; ProjectProfile
+// Version: 0.4; ProjectProfile
 
 function template_project_profile_main()
 {
