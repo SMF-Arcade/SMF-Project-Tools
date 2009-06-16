@@ -526,6 +526,21 @@ function loadTimeline($project = 0)
 				}
 				elseif ($field == 'type')
 				{
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $old_value)
+						{
+							$old_value = $tracker['name'];
+							break;
+						}
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $new_value)
+						{
+							$new_value = $tracker['name'];
+							break;
+						}
+				}
+				elseif ($field == 'tracker')
+				{
 					$old_value = $context['issue_trackers'][$old_value]['name'];
 					$new_value = $context['issue_trackers'][$new_value]['name'];
 				}
@@ -1022,6 +1037,21 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 					$new_value = $context['issue_status'][$new_value]['text'];
 				}
 				elseif ($field == 'type')
+				{
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $old_value)
+						{
+							$old_value = $tracker['name'];
+							break;
+						}
+					foreach ($context['issue_trackers'] as $tracker)
+						if ($tracker['short'] == $new_value)
+						{
+							$new_value = $tracker['name'];
+							break;
+						}
+				}
+				elseif ($field == 'tracker')
 				{
 					$old_value = $context['issue_trackers'][$old_value]['name'];
 					$new_value = $context['issue_trackers'][$new_value]['name'];
