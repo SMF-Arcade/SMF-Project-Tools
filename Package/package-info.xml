@@ -83,6 +83,10 @@
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
+	
+	<upgrade for="2.0 RC1-1" from="0.3">
+		
+	</upgrade>
 
 	<uninstall for="2.0 RC1-1">
 		<!-- Remove code modifications -->

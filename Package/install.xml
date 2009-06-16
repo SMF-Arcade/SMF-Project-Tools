@@ -807,6 +807,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 					AND dev.id_member = {int:current_member})
+				LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			WHERE {query_see_project}
 				AND {query_see_issue}
 				AND id_issue IN ({array_int:issues})',
