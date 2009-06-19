@@ -726,7 +726,8 @@ function template_issue_view_below()
 	);
 
 	echo '
-	<div id="moderationbuttons" class="clearfix">', template_button_strip($mod_buttons, 'bottom'), '</div>';
+	<div id="moderationbuttons" class="clearfix" style="clear: both;">
+		', template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	echo '
 	<div class="tborder">
