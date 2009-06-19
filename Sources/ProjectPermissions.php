@@ -164,7 +164,7 @@ function ManageProjectPermissionsMain()
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '
-					<input type="submit" name="delete_profiles" value="' . $txt['profiles_delete_selected'] . ' />',
+					<input type="submit" name="delete_profiles" value="' . $txt['profiles_delete_selected'] . '" />',
 				'class' => 'titlebg',
 				'align' => 'right',
 			),

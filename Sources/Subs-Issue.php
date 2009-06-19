@@ -396,7 +396,9 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 	if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $row['id_tracker'] || $oldStatus != $newStatus))
 	{
-		$oldTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $oldStatus];
+		if (!empty($row['id_tracker']))
+			$oldTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $oldStatus];
+		
 		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
 
 		if (!empty($oldStatus))
@@ -420,7 +422,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 			
 	// Update id_project in timeline if needed
 	if ($row['id_project'] != $issueOptions['project'])
-	{
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}project_timeline
 			SET id_project = {int:project}
@@ -430,7 +431,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 				'issue' => $id_issue,
 			)
 		);
-	}
 
 	if ($return_log)
 		return $event_data;
