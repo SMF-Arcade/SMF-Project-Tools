@@ -1,5 +1,5 @@
 <?php
-// Version: 0.3; IssueView
+// Version: 0.3.1; IssueView
 
 function template_issue_view_above()
 {

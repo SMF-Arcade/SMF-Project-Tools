@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="modification.xsl" type="text/xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+================================================================================
+
+	Modification files can be used to modify files so that they do what
+	your package needs them to do to work properly.
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<!-- This information needs to be the same as that in the package-info.xml. -->
+	<id>Niko:SMFProject</id>
+	<version>{version}</version>
+
+	<file name="$sourcedir/Who.php">
+		<operation>
+			<search position="replace"><![CDATA[$request = $smcFunc['db_query']('', '
+			SELECT
+				i.id_issue, i.subject
+			FROM {db_prefix}issues AS i
+				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})
+			WHERE {query_see_project}
+				AND {query_see_issue}
+				AND id_issue IN ({array_int:issues})',
+			array(
+				'issues' => array_keys($issue_ids),
+				'current_member' => $user_info['id'],
+			)
+		);]]></search>
+			<add><![CDATA[$request = $smcFunc['db_query']('', '
+			SELECT
+				i.id_issue, i.subject
+			FROM {db_prefix}issues AS i
+				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})
+				LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
+			WHERE {query_see_project}
+				AND {query_see_issue}
+				AND id_issue IN ({array_int:issues})',
+			array(
+				'issues' => array_keys($issue_ids),
+				'current_member' => $user_info['id'],
+			)
+		);]]></add>
+		</operation>		
+	</file>
+	
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="replace"><![CDATA[cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['project_permissions'], null), 240);]]></search>
+			<add><![CDATA[if (!empty($modSettings['cache_enable']))
+			cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['project_permissions'], null), 240);]]></add>
+		</operation>
+	</file>
+
+</modification>
