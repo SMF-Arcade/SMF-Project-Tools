@@ -85,7 +85,7 @@
 	</install>
 	
 	<upgrade for="2.0 RC1-1" from="0.3">
-		
+		<modification format="xml" type="file">upgrade-0.3-0.3.1.xml</modification>
 	</upgrade>
 
 	<uninstall for="2.0 RC1-1">
