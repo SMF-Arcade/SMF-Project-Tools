@@ -295,6 +295,10 @@ function IssueReply2()
 
 	if (empty($_REQUEST['com']))
 	{
+		// Event data might be boolean in certain cases
+		if (!is_array($event_data))
+			$event_data = array();
+			
 		$commentOptions = array(
 			'body' => $_POST['comment'],
 		);
