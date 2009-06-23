@@ -72,8 +72,8 @@ $txt['who_project'] = 'Viewing the project <a href="%1s$">%2s$</a>.';
 $txt['who_project_issue'] = 'Viewing the issue <a href="%1s$">%2s$</a>.';]]></search>
 			<add><![CDATA[// Who's online
 $txt['who_project_index'] = 'Viewing <a href="%1$s">project list</a>.';
-$txt['who_project'] = 'Viewing the project <a href="%1s$">%2s$</a>.';
-$txt['who_project_issue'] = 'Viewing the issue <a href="%1s$">%2s$</a>.';]]></add>
+$txt['who_project'] = 'Viewing the project <a href="%1$s">%2$s</a>.';
+$txt['who_project_issue'] = 'Viewing the issue <a href="%1$s">%2$s</a>.';]]></add>
 		</operation>
 	</file>
 	
