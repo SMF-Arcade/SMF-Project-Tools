@@ -759,7 +759,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			elseif (isset($actions['action']) && $actions['action'] == 'projects')
 			{
 				if (allowedTo('project_access'))
-					$data[$k] = $txt['who_project_index'];
+					$data[$k] = sprintf($txt['who_project_index'], project_get_url());
 				else
 					$data[$k] = $txt['who_hidden'];
 			}
@@ -957,6 +957,7 @@ $txt['permissionname_simple_project_profile_own'] = 'View their own Project Tool
 $txt['permissionname_simple_project_profile_any'] = 'View any Project Tools profile';
 
 // Who's online
+$txt['who_project_index'] = 'Viewing <a href="%1$s">project list</a>.';
 $txt['who_project'] = 'Viewing the project <a href="%1s$">%2s$</a>.';
 $txt['who_project_issue'] = 'Viewing the issue <a href="%1s$">%2s$</a>.';
 
