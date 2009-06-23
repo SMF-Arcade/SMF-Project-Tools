@@ -958,8 +958,8 @@ $txt['permissionname_simple_project_profile_any'] = 'View any Project Tools prof
 
 // Who's online
 $txt['who_project_index'] = 'Viewing <a href="%1$s">project list</a>.';
-$txt['who_project'] = 'Viewing the project <a href="%1s$">%2s$</a>.';
-$txt['who_project_issue'] = 'Viewing the issue <a href="%1s$">%2s$</a>.';
+$txt['who_project'] = 'Viewing the project <a href="%1$s">%2$s</a>.';
+$txt['who_project_issue'] = 'Viewing the issue <a href="%1$s">%2$s</a>.';
 
 // Errors
 $txt['cannot_project_access'] = 'You are not allowed to access Project Tools.';
