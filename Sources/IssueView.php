@@ -293,7 +293,7 @@ function getEvent()
 	{
 		$data = unserialize($row['event_data']);
 
-		if (isset($data['changes']))
+		if (isset($data['changes']) && is_array($data['changes']))
 		{
 			foreach ($data['changes'] as $key => $field)
 			{
