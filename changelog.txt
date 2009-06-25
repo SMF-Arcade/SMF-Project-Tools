@@ -8,6 +8,8 @@ June 2009
  ! Roadmap had invalid link to tracker
  ! Change of tracker might not show in changes
  ! Who's online page would cause database error in some cases
+ ! Fixed warning when $data['changes'] was not an array [Issue #258]
+ ! Viewing issue wasn't shown in Who's Online [Issue #255]
  
 SMF Project Tools 0.3                                                 04.06.2009
 ================================================================================

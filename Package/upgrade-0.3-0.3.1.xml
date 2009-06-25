@@ -53,7 +53,34 @@
 				'current_member' => $user_info['id'],
 			)
 		);]]></add>
-		</operation>		
+		</operation>
+		
+		<operation>
+			<search position="after"><![CDATA[elseif (isset($actions['project']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$project_ids[(int) $actions['project']][$k] = $txt['who_project'];
+			}
+			elseif (isset($actions['issue']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$issue_ids[(int) $actions['issue']][$k] = $txt['who_project_issue'];
+			}]]></search>
+			<add><![CDATA[elseif (isset($actions['issue']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$issue_ids[(int) $actions['issue']][$k] = $txt['who_project_issue'];
+			}
+			elseif (isset($actions['project']))
+			{
+				// Hide first, show later.
+				$data[$k] = $txt['who_hidden'];
+				$project_ids[(int) $actions['project']][$k] = $txt['who_project'];
+			}]]></add>
+		</operation>
 	</file>
 	
 	<file name="$sourcedir/Load.php">
