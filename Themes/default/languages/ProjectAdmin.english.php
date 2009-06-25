@@ -1,5 +1,5 @@
 <?php
-// Version: 0.3; ProjectAdmin
+// Version: 0.3.1; ProjectAdmin
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
@@ -28,6 +28,7 @@ $txt['setting_project_admin'] = 'Groups allowed to administrate Project Tools';
 // Maintenance
 $txt['project_maintain_done'] = 'The maintenance task \'%1$s\' was executed successfully.';
 $txt['project_maintenance_repair'] = 'Repair';
+$txt['project_maintenance_upgrade'] = 'Upgrade Project Tools database content for 0.3';
 $txt['project_maintenance_repair_info'] = 'Find and repair errors';
 $txt['project_maintain_run_now'] = 'Run';
 

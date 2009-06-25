@@ -43,7 +43,7 @@
 		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 
-		<!-- These files goest to Theme directory -->
+		<!-- These files goes to Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
@@ -89,8 +89,11 @@
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 
-		<!-- These files goest to Theme directory -->
+		<!-- These files goes to Theme directory -->
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
+		
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
 
 		<modification format="xml" type="file">upgrade-0.3-0.3.1.xml</modification>
 	</upgrade>
