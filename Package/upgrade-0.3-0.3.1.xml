@@ -83,7 +83,7 @@
 		</operation>
 		
 		<operation>
-			<search><![CDATA[		$request = $smcFunc['db_query']('', '
+			<search position="replace"><![CDATA[$request = $smcFunc['db_query']('', '
 			SELECT
 				i.id_issue, i.subject
 			FROM {db_prefix}issues AS i
@@ -98,7 +98,7 @@
 				'current_member' => $user_info['id'],
 			)
 		);]]></search>
-			<add><![CDATA[		$request = $smcFunc['db_query']('', '
+			<add><![CDATA[$request = $smcFunc['db_query']('', '
 			SELECT
 				i.id_issue, i.subject
 			FROM {db_prefix}issues AS i
