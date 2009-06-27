@@ -113,7 +113,7 @@
 				'issues' => array_keys($issue_ids),
 				'current_member' => $user_info['id'],
 			)
-		);]]>
+		);]]></add>
 		</operation>
 	</file>
 	
