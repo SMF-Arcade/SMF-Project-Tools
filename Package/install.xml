@@ -75,13 +75,18 @@
 		<operation>
 			<search position="after"><![CDATA[// Load the stuff like the menu bar, etc.]]></search>
 			<add><![CDATA[// Project Tools
-if (!empty($modSettings['projectEnabled']))
+if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project_tools === true))
 {
 	require_once($sourcedir . '/Subs-Project.php');
 	require_once($sourcedir . '/Subs-Issue.php');
 
 	loadProjectTools();
-	loadProjectToolsPage('smf');
+	
+	if (empty($project_tools))
+		loadProjectToolsPage('smf');
+	// Load Project (if needed)
+	else
+		loadProject();
 }
 else
 {
@@ -803,7 +808,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
-				i.id_issue, i.subject
+				i.id_issue, i.id_project, i.subject
 			FROM {db_prefix}issues AS i
 				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
@@ -821,7 +826,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		{
 			// Put the project name into the string for each member...
 			foreach ($issue_ids[$row['id_issue']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue'])), $row['subject']);
+				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue']), $row['id_project']), $row['subject']);
 		}
 		$smcFunc['db_free_result']($request);
 	}

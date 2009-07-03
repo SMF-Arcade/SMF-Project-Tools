@@ -165,10 +165,12 @@ function loadProjectTools()
 // Loads current project
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $user_info, $project, $issue, $modSettings;
+	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings;
 
+	if (isset($force_project))
+		$project = $force_project;
 	// Project as parameter?
-	if (!empty($_REQUEST['project']))
+	elseif (!empty($_REQUEST['project']))
 		$project = (int) $_REQUEST['project'];
 	// Do we have issue?
 	elseif (!empty($issue))
@@ -665,23 +667,28 @@ function project_get_url($params = array(), $project = null)
 {
 	global $scripturl, $modSettings;
 
+	// Detect project
+	if ($project === null && !empty($params))
+	{
+		if (isset($params['project']))
+			$project = $params['project'];
+		elseif (!empty($GLOBALS['project']))
+			$project = $GLOBALS['project'];
+		// Should never happen
+		else
+			fatal_error(print_r(debug_backtrace(), true));
+	}
+			
 	// Running in "standalone" mode WITH rewrite
 	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
 	{
 		// Main Page? Too easy
 		if (empty($params))
 			return $modSettings['projectStandaloneUrl'] . '/';
-
+			
 		if (isset($params['project']))
-		{
-			$project = $params['project'];
 			unset($params['project']);
-		}
-		elseif (!empty($GLOBALS['project']))
-			$project = $GLOBALS['project'];
-		elseif ($project == null)
-			die(print_r(debug_backtrace(), true));
-
+		
 		if (count($params) === 0)
 			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
 
@@ -705,12 +712,49 @@ function project_get_url($params = array(), $project = null)
 
 		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
 	}
-	//Running in "standalone" mode without rewrite or standard mode
+	// Running in "standalone" mode without rewrite
+	elseif (!empty($modSettings['projectStandalone']))
+	{
+		$return = '';
+		
+		// Which url shall be base for this?
+		$base = !empty($modSettings['projectStandaloneUrl_project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]) ?  $modSettings['projectStandaloneUrl_project_' . $project] : (!empty($modSettings['projectStandaloneUrl']) ? $modSettings['projectStandaloneUrl'] : '{SCRIPTURL}');
+		
+		if (isset($params['project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]))
+			unset($params['project']);
+			
+		if (count($params) === 0)
+		{
+			if ($base == '{SCRIPTURL}')
+				return $scripturl . '?action=projects';
+			
+			return strtr($base, array('{SCRIPTURL}' => $scripturl, '{BOARDURL}' => $GLOBALS['boardurl']));
+		}
+
+		foreach ($params as $p => $value)
+		{
+			if ($value === null)
+				continue;
+
+			if (!empty($return))
+				$return .= ';';
+			else
+				$return .= '?';
+
+			if (is_int($p))
+				$return .= $value;
+			else
+				$return .= $p . '=' . $value;
+		}
+
+		return strtr($base, array('{SCRIPTURL}' => $scripturl, '{BOARDURL}' => $GLOBALS['boardurl'])) . $return;		
+	}
+	// Running in standard mode
 	else
 	{
 		$return = '';
 
-		if (empty($params) && empty($modSettings['projectStandaloneUrl']))
+		if (empty($params))
 			$params['action'] = 'projects';
 
 		foreach ($params as $p => $value)
@@ -729,10 +773,7 @@ function project_get_url($params = array(), $project = null)
 				$return .= $p . '=' . $value;
 		}
 
-		if (!empty($modSettings['projectStandalone']))
-			return $modSettings['projectStandaloneUrl'] . $return;
-		else
-			return $scripturl . $return;
+		return $scripturl . $return;
 	}
 }
 
@@ -939,9 +980,9 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 
 		$replacements = array(
 			'ISSUENAME' => $issue['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $issue['project']),
 			'DETAILS' => $issue['body'],
-			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe')),
+			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe'), $issue['project']),
 		);
 
 		if ($type == 'new_issue' && !empty($rowmember['notify_send_body']))
@@ -1109,10 +1150,10 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 		$replacements = array(
 			'ISSUENAME' => $row['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0')),
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $issue['project']),
 			'BODY' => $comment['body'],
 			'UPDATES' => $update_body,
-			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe')),
+			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe'), $issue['project']),
 		);
 
 		if (!empty($replacements['BODY']))
@@ -1121,7 +1162,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 			$replacements['BODY'] = $update_body;
 
 		if (isset($comment['id']))
-			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']));
+			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']), $issue['project']);
 
 		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
 		{
