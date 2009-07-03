@@ -3,6 +3,11 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.4                                                          ?
 ================================================================================
+July 2009
+--------------------------------------------------------------------------------
+ + Support for different urls for each project
+ ! Project wasn't detected correctly for some urls, current project was assumed
+ 
 June 2009
 --------------------------------------------------------------------------------
  ! Roadmap had invalid link to tracker
@@ -10,8 +15,6 @@ June 2009
  ! Who's online page would cause database error in some cases
  ! Fixed warning when $data['changes'] was not an array [Issue #258]
  ! Viewing issue wasn't shown in Who's Online [Issue #255]
- + Support for different urls for each project
- ! Project wasn't detected correctly for some urls, current project was assumed
  
 SMF Project Tools 0.3                                                 04.06.2009
 ================================================================================

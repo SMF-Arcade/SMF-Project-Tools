@@ -915,7 +915,7 @@ function issue_link_callback($data)
 {
 	global $smcFunc, $modSettings;
 
-	$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . project_get_url(array('issue' => '\1.0')) . '">\1</a>', $data[0]);
+	//$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . project_get_url(array('issue' => '\1.0')) . '">\1</a>', $data[0]);
 
 	return $data[0];
 }
@@ -1010,8 +1010,8 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
-			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group,
-			p.member_groups, IFNULL(ver.member_groups, {string:any}) AS member_groups_version,
+			ln.sent, mem.id_group, mem.additional_groups, mem.id_post_group,
+			p.id_project, p.member_groups, IFNULL(ver.member_groups, {string:any}) AS member_groups_version,
 			i.private_issue, IFNULL(dev.id_member, 0) AS is_developer, i.subject
 		FROM {db_prefix}log_notify_projects AS ln
 			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
@@ -1150,10 +1150,10 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 		$replacements = array(
 			'ISSUENAME' => $row['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $issue['project']),
+			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $row['id_project']),
 			'BODY' => $comment['body'],
 			'UPDATES' => $update_body,
-			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe'), $issue['project']),
+			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe'), $row['id_project']),
 		);
 
 		if (!empty($replacements['BODY']))
