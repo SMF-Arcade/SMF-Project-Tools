@@ -929,7 +929,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 		$return[] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>',
 			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']),
 			'category' => array(
 				'id' => $row['id_category'],
