@@ -110,7 +110,7 @@ function ProjectView()
 		),
 		'new_issues' => array(
 			'title' => 'new_issues',
-			'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'status' => 1,)),
 			'order' => 'i.created DESC',
 			'where' => 'i.status = 1',
 			'show' => projectAllowedTo('issue_view'),
