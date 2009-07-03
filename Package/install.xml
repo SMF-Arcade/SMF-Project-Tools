@@ -826,7 +826,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		{
 			// Put the project name into the string for each member...
 			foreach ($issue_ids[$row['id_issue']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue']), $row['id_project']), $row['subject']);
+				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']), $row['subject']);
 		}
 		$smcFunc['db_free_result']($request);
 	}
