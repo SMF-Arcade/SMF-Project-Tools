@@ -9,6 +9,7 @@ July 2009
  ! Project wasn't detected correctly for some urls, current project was assumed
  ! Link to complete "New issues" was wrong
  + Allow using hidden setting to select shown projects
+ + Canonical urls for SMF 2.0 RC2
  
 June 2009
 --------------------------------------------------------------------------------
