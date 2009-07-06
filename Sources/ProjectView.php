@@ -31,6 +31,9 @@ function ProjectView()
 {
 	global $context, $modSettings, $smcFunc, $sourcedir, $user_info, $txt, $project;
 
+	// Canonical url for search engines
+	$context['canonical_url'] = project_get_url(array('project' => $project));
+	
 	$context['can_subscribe'] = !$user_info['is_guest'];
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
 

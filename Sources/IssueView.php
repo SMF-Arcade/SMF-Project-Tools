@@ -66,7 +66,7 @@ function IssueView()
 	
 	// URL for posting updates from ajax
 	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
-
+	
 	// Tags
 	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
 	$context['can_remove_tags'] = projectAllowedTo('issue_moderate');
@@ -160,6 +160,9 @@ function IssueView()
 	// Page Index
 	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events, $context['comments_per_page'], true);
 
+	// Canonical url for search engines
+	$context['canonical_url'] = project_get_url(array('issue' => $issue . '.' . $_REQUEST['start']));
+	
 	$context['start'] = $_REQUEST['start'];
 
 	$posters = array();

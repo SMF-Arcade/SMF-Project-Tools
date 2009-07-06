@@ -214,6 +214,12 @@ function IssueList()
 
 	$context['page_index'] = constructPageIndex(project_get_url($baseurl), $_REQUEST['start'], $issueCount, $context['issues_per_page']);
 
+	// Canonical url for search engines
+	if (!empty($_REQUEST['start']))
+		$context['canonical_url'] = project_get_url(array_merge($baseurl, array('start' => $_REQUEST['start'])));
+	else
+		$context['canonical_url'] = project_get_url($baseurl);
+	
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, p.id_project, i.id_tracker, i.subject, i.priority,

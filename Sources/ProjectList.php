@@ -30,6 +30,9 @@ if (!defined('SMF'))
 function ProjectList()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	
+	// Canonical url for search engines
+	$context['canonical_url'] = project_get_url();
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
