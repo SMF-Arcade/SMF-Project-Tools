@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function loadProjectTools()
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue, $projects_show;
 
 	if (!empty($project_version))
 		return;
@@ -85,12 +85,18 @@ function loadProjectTools()
 		$see_issue = '(' . $see_version . ' AND ' . $see_private . ')';
 		$see_issue_p = '(' . $see_version . ' AND (i.private_issue = 0 OR ' . $my_issue . '))';
 	}
-
+	
 	$user_info['query_see_project'] = $see_project;
 	$user_info['query_see_version'] = $see_version;
 	$user_info['query_see_issue'] = $see_issue;
 	$user_info['query_see_issue_project'] = $see_issue_p;
-
+	
+	if (isset($projects_show) && (empty($projects_show) || !is_array($projects_show)))
+		$user_info['query_see_project'] = '0=1';
+	elseif (isset($projects_show))
+		$user_info['query_see_project'] = '(p.id_project IN(' . implode(',', $projects_show) . ') AND ' . $see_project . ')';
+		
+	
 	// Trackers
 	$context['issue_trackers'] = array();
 	$context['tracker_columns'] = array();
