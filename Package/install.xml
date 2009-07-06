@@ -73,7 +73,7 @@
 
 	<file name="$boarddir/SSI.php">
 		<operation>
-			<search position="after"><![CDATA[// Load the stuff like the menu bar, etc.]]></search>
+			<search position="after"><![CDATA[// Take care of any banning that needs to be done.]]></search>
 			<add><![CDATA[// Project Tools
 if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project_tools === true))
 {

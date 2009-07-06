@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function ProjectList()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $projects_show;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -44,10 +44,12 @@ function ProjectList()
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pdev.id_member)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})
-		WHERE {query_see_project}
+		WHERE {query_see_project}'. (!empty($projects_show) ? '
+				AND id_project IN ({array_int:projects})' : '') . '
 		ORDER BY p.name',
 		array(
 			'current_member' => $user_info['id'],
+			'projects' => !empty($projects_show) ? $projects_show : 0,
 		)
 	);
 

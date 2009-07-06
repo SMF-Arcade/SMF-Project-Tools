@@ -3,13 +3,13 @@
 
 function template_project_admin_above()
 {
-	global $txt, $context, $project_version;
+	global $txt, $context;
 
 }
 
 function template_project_admin_main()
 {
-	global $context, $settings, $options, $txt, $modSettings, $project_version;
+	global $context, $settings, $options, $txt, $modSettings, $project_version, $forum_version;
 
 	echo '
 	<div class="tborder floatleft" style="width: 69%;">
@@ -53,7 +53,7 @@ function template_project_admin_main()
 			setInnerHTML(document.getElementById("project_latest_version"), window.projectCurrentVersion);
 		}
 	// ]]></script>
-	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/project/news.js?v=', urlencode($project_version), '" defer="defer"></script>';
+	<script language="JavaScript" type="text/javascript" src="http://service.smfproject.net/news.js?v=', urlencode($project_version), ';smf_version=', urlencode($forum_version), '" defer="defer"></script>';
 }
 
 function template_project_admin_maintenance()

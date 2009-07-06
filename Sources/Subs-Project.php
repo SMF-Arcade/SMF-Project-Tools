@@ -165,7 +165,7 @@ function loadProjectTools()
 // Loads current project
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings;
+	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings, $projects_show;
 
 	if (isset($force_project))
 		$project = $force_project;
@@ -356,6 +356,9 @@ function loadProject()
 		$user_info['query_see_issue_project'] = $user_info['query_see_version'];
 			
 	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
+		$context['project_error'] = 'project_not_found';
+		
+	if (!empty($projects_show) && !in_array($context['project']['id'], $projects_show))
 		$context['project_error'] = 'project_not_found';
 }
 
