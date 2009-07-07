@@ -10,6 +10,7 @@ July 2009
  ! Link to complete "New issues" was wrong
  + Allow using hidden setting to select shown projects
  + Canonical urls for SMF 2.0 RC2
+ ! Multiple changes within 2 minutes might cause data loss
  
 June 2009
 --------------------------------------------------------------------------------

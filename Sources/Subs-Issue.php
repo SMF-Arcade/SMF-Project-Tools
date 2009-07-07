@@ -457,7 +457,8 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				AND event IN({array_string:event})
 				AND id_member = {int:member}
 				AND event_time > {int:event_time}
-			ORDER BY id_event DESC',
+			ORDER BY id_event DESC
+			LIMIT 1',
 			array(
 				'issue' => $id_issue,
 				'project' => $id_project,
@@ -493,14 +494,16 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 				$temp_changes = array();
 
-				foreach ($event_data['changes'] as $id => $data)
+				// Add old changes to array first
+				foreach ($event_data2['changes'] as $id => $data)
 				{
 					list ($field, $old_value, $new_value) = $data;
 
 					$temp_changes[$field] = array($old_value, $new_value);
 				}
 
-				foreach ($event_data2['changes'] as $id => $data)
+				// Then new changes
+				foreach ($event_data['changes'] as $id => $data)
 				{
 					list ($field, $old_value, $new_value) = $data;
 
@@ -510,6 +513,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 					{
 						$temp_changes[$field][1] = $new_value;
 
+						// Change was reversed? Then remove it for good...
 						if ($temp_changes[$field][0] == $temp_changes[$field][1])
 							unset($temp_changes[$field]);
 					}
