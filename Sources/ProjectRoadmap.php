@@ -41,6 +41,9 @@ function ProjectRoadmapMain()
 {
 	global $context, $project, $user_info, $smcFunc, $txt;
 
+	// Canonical url for search engines
+	$context['canonical_url'] = project_get_url(array('project' => $project, 'sa' => 'roadmap'));
+	
 	$ids = array(0);
 	$context['roadmap'] = array();
 
@@ -186,6 +189,9 @@ function ProjectRoadmapVersion()
 	if (!$row)
 		fatal_lang_error('version_not_found', false);
 
+	// Canonical url for search engines
+	$context['canonical_url'] = project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version']));
+	
 	// Make release date string
 	if (!empty($row['release_date']))
 	$row['release_date'] = unserialize($row['release_date']);
