@@ -322,12 +322,7 @@ function PTMultiDropdown(issue, name, fieldName)
 
 	function setValue(id, value)
 	{
-		alert(value);
-		
-		selectedValue = id;
-		selectedItem = options[id];
-		
-		dropdownValue.innerHTML = selectedItem['name'];
+		dropdownValue.innerHTML = value;
 	}
 	
 	function dropDownHide()
@@ -351,8 +346,6 @@ function PTMultiDropdown(issue, name, fieldName)
 				else if (options[optionID]['selected'])
 					value = options[optionID]['id'];
 			}
-			
-			alert(value);
 			
 			// If none set value to 0
 			if (value == "")
@@ -384,8 +377,8 @@ function PTMultiDropdown(issue, name, fieldName)
 			
 			newOption = document.createElement('li');
 			newOption.optionID = optionID;
-			newOption.className = options[optionID]['style'];
-			newOption.innerHTML = options[optionID]['name'] + (options[optionID]['selected'] ? " (selected)" : "");
+			newOption.className = options[optionID]['style'] + (options[optionID]['selected'] ? " selected_item" : "");
+			newOption.innerHTML = options[optionID]['name'];
 
 			createEventListener(newOption);
 			newOption.addEventListener('click', dropDownItemClick, false);
@@ -422,7 +415,7 @@ function PTMultiDropdown(issue, name, fieldName)
 		
 		options[target.optionID]['selected'] = !options[target.optionID]['selected'];
 		
-		target.innerHTML = options[target.optionID]['name'] + (options[target.optionID]['selected'] ? " (selected)" : "");
+		target.className = options[target.optionID]['style'] + (options[target.optionID]['selected'] ? " selected_item" : "");
 	}
 	
 	function saveDone(oXMLDoc)

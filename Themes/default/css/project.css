@@ -346,6 +346,10 @@ table.issuetable td.lastissue
 {
 	text-decoration: none;
 }
+.dropdown ul li.selected_item
+{
+	background: #00ffff;
+}
 .dropdown ul li:hover
 {
 	background: #3399ff;

@@ -1136,7 +1136,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, mem.id_post_group,
 			p.id_project, p.member_groups, i.private_issue, IFNULL(dev.id_member, 0) AS is_developer,
-			i.subject, i.id_member AS issue_poster, i.versions
+			i.subject, i.id_reporter, i.versions
 		FROM {db_prefix}log_notify_projects AS ln
 			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
@@ -1158,7 +1158,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	{
 		if ($row['id_group'] != 1 && empty($row['is_developer']))
 		{
-			if (!empty($row['private_issue']) && $row['issue_poster'] != $row['id_member'])
+			if (!empty($row['private_issue']) && $row['id_reporter'] != $row['id_member'])
 				continue;
 
 			$p_allowed = explode(',', $row['member_groups']);

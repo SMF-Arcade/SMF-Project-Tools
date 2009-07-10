@@ -405,13 +405,27 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		}
 
 		if ($xml_data)
+		{
+			$version_text = '';
+			
+			foreach (getVersions($issueOptions['versions']) as $version)
+			{
+				if (!empty($version_text))
+					$version_text .= ', ';
+				
+				$version_text .= $version['name'];
+			}
+			
 			$context['xml_data']['updates']['children'][] = array(
 				'attributes' => array(
 					'field' => 'version',
 					'id' => $issueOptions['versions'],
 				),
-				'value' => $issueOptions['versions'],
+				'value' => !empty($version_text) ? $version_text : $txt['issue_none'],
 			);
+			
+			unset($version_text);
+		}
 	}
 
 	// Version fixed
@@ -430,13 +444,27 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		}
 
 		if ($xml_data)
+		{
+			$version_text = '';
+			
+			foreach (getVersions($issueOptions['versions_fixed']) as $version)
+			{
+				if (!empty($version_text))
+					$version_text .= ', ';
+				
+				$version_text .= $version['name'];
+			}
+			
 			$context['xml_data']['updates']['children'][] = array(
 				'attributes' => array(
 					'field' => 'version_fixed',
 					'id' => $issueOptions['versions_fixed'],
 				),
-				'value' => $issueOptions['versions_fixed'],
+				'value' => !empty($version_text) ? $version_text : $txt['issue_none'],
 			);
+			
+			unset($version_text);
+		}
 	}
 
 	// Category
