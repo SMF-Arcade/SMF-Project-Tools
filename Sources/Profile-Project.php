@@ -100,6 +100,46 @@ function projectProfileIssues($memID)
 {
 	global $smcFunc, $scripturl, $txt, $modSettings, $context, $settings, $user_info;
 
+	// Load Versions
+	$request = $smcFunc['db_query']('', '
+		SELECT id_version, id_parent, version_name, release_date, status
+		FROM {db_prefix}project_versions AS ver
+		ORDER BY id_parent, version_name',
+		array(
+		)
+	);
+
+	$context['versions'] = array();
+	$context['versions_id'] = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($row['id_parent'] == 0)
+		{
+			$context['versions'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'sub_versions' => array(),
+			);
+		}
+		else
+		{
+			if (!isset($context['versions'][$row['id_parent']]))
+				continue;
+
+			$context['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
+				'id' => $row['id_version'],
+				'name' => $row['version_name'],
+				'status' => $row['status'],
+				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
+				'released' => $row['status'] >= 4,
+			);
+		}
+
+		$context['versions_id'][$row['id_version']] = $row['id_parent'];
+	}
+	$smcFunc['db_free_result']($request);
+	
 	// Sorting methods
 	$sort_methods = array(
 		'updated' => 'i.updated',
@@ -224,8 +264,8 @@ function projectProfileIssues($memID)
 				'name' => $row['category_name'],
 				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' =>  $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
-			'versions' => explode(',', $row['versions']),
-			'versions_fixed' => explode(',', $row['versions_fixed']),
+			'versions' => getVersions(explode(',', $row['versions'])),
+			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
 			'tags' => $row['tags'],
 			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),

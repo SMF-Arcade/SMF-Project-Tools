@@ -115,11 +115,47 @@ function template_issue_list()
 					<td class="windowbg status smalltext center issue_', $issue['status']['name'], '">
 						', $issue['status']['text'], $issue['is_assigned'] ? ' (' . $issue['assigned']['link'] . ')' : '', '
 					</td>
-					<td class="windowbg version smalltext">
-						', $issue['version']['link'], '
+					<td class="windowbg version smalltext">';
+
+			if (empty($issue['versions']))
+				echo $txt['issue_none'];
+			else
+			{
+				$first = true;
+				
+				foreach ($issue['versions'] as $version)
+				{
+					if ($first)
+						$first = false;
+					else
+						echo ', ';
+						
+					echo $version['name'];
+				}
+			}
+
+			echo '
 					</td>
-					<td class="windowbg version smalltext">
-						', $issue['version_fixed']['link'], '
+					<td class="windowbg version smalltext">';
+
+			if (empty($issue['versions_fixed']))
+				echo $txt['issue_none'];
+			else
+			{
+				$first = true;
+				
+				foreach ($issue['versions_fixed'] as $version)
+				{
+					if ($first)
+						$first = false;
+					else
+						echo ', ';
+						
+					echo $version['name'];
+				}
+			}
+			
+			echo '
 					</td>
 					<td class="windowbg2 lastissue smalltext">
 						', $issue['updater']['link'], '<br />

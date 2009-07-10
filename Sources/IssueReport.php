@@ -332,7 +332,7 @@ function IssueUpdate()
 
 function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 {
-	global $context, $user_info, $smcFunc, $sourcedir;
+	global $context, $user_info, $smcFunc, $sourcedir, $txt;
 
 	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
 
