@@ -392,10 +392,17 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	// Version
 	if (isset($_REQUEST['version']))
 	{
-		if (!isset($context['versions_id'][(int) $_REQUEST['version']]))
-			$_REQUEST['version'] = 0;
+		$issueOptions['versions'] = is_array($_REQUEST['version']) ? $_REQUEST['version'] : explode(',', $_REQUEST['version']);
 
-		$issueOptions['versions'] = array((int) $_REQUEST['version']);
+		foreach ($issueOptions['versions'] as $k => $v)
+		{
+			$v = (int) $v;
+			
+			if (!isset($context['versions_id'][$v]))
+				unset($issueOptions['versions'][$k]);
+				
+			$issueOptions['versions'][$k] = $v;
+		}
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
@@ -410,18 +417,25 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	// Version fixed
 	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['version_fixed']))
 	{
-		if (!isset($context['versions_id'][(int) $_REQUEST['version_fixed']]))
-			$_REQUEST['version_fixed'] = 0;
+		$issueOptions['versions_fixed'] = is_array($_REQUEST['version_fixed']) ? $_REQUEST['version_fixed'] : explode(',', $_REQUEST['version_fixed']);
 
-		$issueOptions['version_fixed'] = (int) $_REQUEST['version_fixed'];
+		foreach ($issueOptions['versions_fixed'] as $k => $v)
+		{
+			$v = (int) $v;
+			
+			if (!isset($context['versions_id'][$v]))
+				unset($issueOptions['versions_fixed'][$k]);
+				
+			$issueOptions['versions_fixed'][$k] = $v;
+		}
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
 				'attributes' => array(
 					'field' => 'version_fixed',
-					'id' => $issueOptions['version_fixed'],
+					'id' => $issueOptions['versions_fixed'],
 				),
-				'value' => $issueOptions['version_fixed'],
+				'value' => $issueOptions['versions_fixed'],
 			);
 	}
 

@@ -10,9 +10,11 @@ function PTIssue(id_issue, saveURL)
 	
 	this.id_issue = id_issue;
 	
-	this.addChange = addChange;
 	this.addLabel = addLabel;
 	this.addDropdown = addDropdown;
+	this.addMultiDropdown = addMultiDropdown;
+	
+	this.addChange = addChange;
 	this.addCallback = addCallback;
 	this.saveChanges = saveChanges;
 	
@@ -29,7 +31,14 @@ function PTIssue(id_issue, saveURL)
 		
 		return formItems[fieldName];
 	}
+
+	function addMultiDropdown(item, fieldName)
+	{
+		formItems[fieldName] = new PTMultiDropdown(this, item, fieldName);
 		
+		return formItems[fieldName];
+	}
+	
 	function addCallback(callback)
 	{
 		i = callbacks.length;
@@ -217,6 +226,203 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 		}
 
 		dropDownHide();
+	}
+	
+	function saveDone(oXMLDoc)
+	{
+		dropdownBtn.className = "button";
+	}
+
+	function checkParent(domItem)
+	{
+		if (domItem == dropdownHandle)
+			return true;
+		else if (domItem.tagName == 'BODY')
+			return false;
+		else if (domItem.parentNode.tagName != 'BODY')
+			return checkParent(domItem.parentNode);
+		else
+			return false;
+	}
+
+	function bodyClick(evt)
+	{
+		if (handled)
+		{
+			handled = false;
+			return;
+		}
+
+		handled = false;
+
+		if (visible)
+		{
+			var target = (evt.target) ? evt.target : evt.srcElement;
+
+			if (!checkParent(target))
+			{
+				dropDownChange(evt);
+			}
+		}
+	}
+
+	function init()
+	{
+		dropdownHandle.className += " dropdown";
+		createEventListener(dropdownDL);
+		createEventListener(document);
+		dropdownDL.addEventListener('click', dropDownChange, false);
+		document.addEventListener('click', bodyClick, false);
+		dropdownBtn = document.createElement('dd');
+		dropdownBtn.className = "button";
+
+		dropdownDL.appendChild(dropdownBtn);
+
+		return true;
+	}
+
+	init();
+}
+
+function PTMultiDropdown(issue, name, fieldName)
+{
+	var optionsID = [];
+	var options = [];
+	var visible = false;
+	var dropdownHandle = document.getElementById(name);
+	var dropdownMenu = null;
+	var dropdownDL = dropdownHandle.getElementsByTagName('dl')[0];
+	var dropdownItem = dropdownDL.getElementsByTagName('dt')[0];
+	var dropdownValue = dropdownDL.getElementsByTagName('dd')[0];
+	var dropdownBtn = null;
+	var handled = true;
+	var changed = false;
+
+	this.issue = issue;
+	this.fieldName = fieldName;
+
+	this.addOption = addOption;
+	this.setValue = setValue;
+
+	function addOption(id, text, selected, style)
+	{
+		i = optionsID.length;
+		optionsID[i] = id;
+		
+		options[id] = new Array(3);
+		options[id]['id'] = id;
+		options[id]['name'] = text;
+		options[id]['selected'] = selected == 1 ? true : false;
+
+		if (style == undefined)
+			style = "";
+	
+		options[id]['style'] = style;
+	}
+
+	function setValue(id, value)
+	{
+		alert(value);
+		
+		selectedValue = id;
+		selectedItem = options[id];
+		
+		dropdownValue.innerHTML = selectedItem['name'];
+	}
+	
+	function dropDownHide()
+	{
+		dropdownHandle.removeChild(dropdownMenu);
+		visible = false;
+		dropdownHandle.className = dropdownHandle.classNameOld;
+		
+		if (changed)
+		{
+			dropdownBtn.className = "button_work";
+			
+			value = ""
+			
+			for (i = 0; i < optionsID.length; i++)
+			{
+				optionID = optionsID[i];
+				
+				if (value != "" && options[optionID]['selected'])
+					value += "," + options[optionID]['id'];
+				else if (options[optionID]['selected'])
+					value = options[optionID]['id'];
+			}
+			
+			alert(value);
+			
+			// If none set value to 0
+			if (value == "")
+				value = "0";
+
+			// Register change and add callback to update status after request is done	
+			issue.addChange(fieldName, value);
+			issue.addCallback(saveDone)
+
+			// Save changes now
+			issue.saveChanges();
+			
+			changed = false;
+		}
+	}
+
+	function dropDownShow()
+	{
+		dropdownHandle.classNameOld = dropdownHandle.className;
+		dropdownHandle.className += " dropdown_selected";
+
+		dropdownMenu = document.createElement('ul');
+
+		dropdownMenu.style.width = (dropdownHandle.clientWidth) + "px";
+
+		for (i = 0; i < optionsID.length; i++)
+		{
+			optionID = optionsID[i];
+			
+			newOption = document.createElement('li');
+			newOption.optionID = optionID;
+			newOption.className = options[optionID]['style'];
+			newOption.innerHTML = options[optionID]['name'] + (options[optionID]['selected'] ? " (selected)" : "");
+
+			createEventListener(newOption);
+			newOption.addEventListener('click', dropDownItemClick, false);
+
+			dropdownMenu.appendChild(newOption);
+		}
+
+		dropdownHandle.appendChild(dropdownMenu);
+
+		visible = true;
+	}
+
+	function dropDownChange(evt)
+	{
+		handled = true;
+
+		var target = (evt.target) ? evt.target : evt.srcElement;
+
+		if (target.tagName == 'A' && checkParent(target))
+			return;
+
+		if (visible)
+			dropDownHide();
+		else
+			dropDownShow();
+	}
+
+	function dropDownItemClick(evt)
+	{
+		handled = true;
+		changed = true;
+
+		var target = (evt.target) ? evt.target : evt.srcElement;
+		
+		options[target.optionID]['selected'] = !options[target.optionID]['selected'];
+		
+		target.innerHTML = options[target.optionID]['name'] + (options[target.optionID]['selected'] ? " (selected)" : "");
 	}
 	
 	function saveDone(oXMLDoc)

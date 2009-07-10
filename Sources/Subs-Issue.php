@@ -117,7 +117,6 @@ function loadIssue()
 		'id_event_mod' => $row['id_event_mod'],
 		'replies' => $row['replies'],
 		'private' => !empty($row['private_issue']),
-		'version_groups' => explode(',', $row['ver_member_groups']),
 	);
 
 	if (!$user_info['is_admin'] && count(array_intersect($context['current_issue']['versions'], $user_info['project_allowed_versions'])) == 0)
@@ -334,7 +333,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		if (empty($issueOptions['versions_fixed']))
 			$issueOptions['versions_fixed'] = array(0);
 			
-		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions']);
+		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions_fixed']);
 
 		$event_data['changes'][] = array(
 			'target_version', $row['versions_fixed'], $issueOptions['versions_fixed'],
@@ -616,12 +615,8 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 		);
 	}
 
-	$issue = array(
-		'id' => $id_issue,
-	);
-
 	if ($event_name == 'update_issue')
-		sendIssueNotification($issue, array(), $event_data, $event_name, $posterOptions['id']);
+		sendIssueNotification(array('id' => $id_issue, 'project' => $context['project']['id'],), array(), $event_data, $event_name, $posterOptions['id']);
 
 	if (empty($id_event))
 		return $id_event_new;

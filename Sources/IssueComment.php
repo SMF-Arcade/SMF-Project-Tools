@@ -306,7 +306,7 @@ function IssueReply2()
 
 		$commentOptions['id'] = $id_comment;
 
-		sendIssueNotification(array('id' => $issue), $commentOptions, $event_data, 'new_comment', $user_info['id']);
+		sendIssueNotification(array('id' => $issue, 'project' => $context['project']['id']), $commentOptions, $event_data, 'new_comment', $user_info['id']);
 	}
 	else
 	{

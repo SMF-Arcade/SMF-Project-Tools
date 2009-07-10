@@ -409,18 +409,17 @@ function template_issue_view_above()
 		
 		// Affected Version
 		echo '
-		var ddIssueVers = currentIssue.addDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');
-		ddIssueVers.addOption(0, "', $txt['issue_none'], '");';
+		var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');';
 
 		// Versions
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", "group");';
+		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions'][$v['id']]) ? 1 : 0 ,', "group");';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-		ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '");';
+		ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions'][$subv['id']]) ? 1 : 0 ,');';
 		}
 
 		if (!empty($context['can_issue_moderate']))
@@ -444,18 +443,17 @@ function template_issue_view_above()
 		
 			// Fixed Version
 			echo '
-		var ddIssueFixv = currentIssue.addDropdown("issue_verfix", "version_fixed", ', (int) $context['current_issue']['version_fixed']['id'], ')
-		ddIssueFixv.addOption(0, "', $txt['issue_none'], '");';
+		var ddIssueFixv = currentIssue.addMultiDropdown("issue_verfix", "version_fixed")';
 
 			// Versions
 			foreach ($context['versions'] as $v)
 			{
 				echo '
-		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", "group");';
+		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions_fixed'][$v['id']]) ? 1 : 0 ,', "group");';
 
-				foreach ($v['sub_versions'] as $subv)
-					echo '
-		ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '");';
+			foreach ($v['sub_versions'] as $subv)
+				echo '
+		ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? 1 : 0 ,');';
 			}
 
 			// Priority

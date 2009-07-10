@@ -667,7 +667,7 @@ function IssueDelete()
 	);
 
 	// Send Notifications
-	sendIssueNotification(array('id' => $context['current_issue']['id']), array(), array(), 'issue_delete', $user_info['id']);
+	sendIssueNotification(array('id' => $context['current_issue']['id'], 'project' => $context['project']['id']), array(), array(), 'issue_delete', $user_info['id']);
 
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
