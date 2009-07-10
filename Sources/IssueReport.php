@@ -48,7 +48,7 @@ function ReportIssue()
 		'title' => '',
 		'private' => !empty($_REQUEST['private']),
 		'tracker' => isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]) ? $_REQUEST['tracker'] : '',
-		'version' => isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : 0,
+		'version' => isset($_REQUEST['version']) ? (is_array($_REQUEST['version']) ? $_REQUEST['version'] : explode(',', $_REQUEST['version'])) : array(),
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
 
@@ -182,8 +182,19 @@ function ReportIssue2()
 
 	if (empty($_POST['tracker']) || !isset($context['project']['trackers'][$_POST['tracker']]))
 		$post_errors[] = 'no_issue_type';
-	if (!empty($_POST['version']) && !isset($context['versions_id'][$_POST['version']]))
-		$_POST['version'] = 0;
+	
+	if (!empty($_POST['version']))
+	{
+		$versions = getVersions(is_array($_POST['version']) ? $_POST['version'] : explode(',', $_POST['version']));
+		
+		$_POST['version'] = array();
+		
+		foreach ($versions as $ver)
+			$_POST['version'][] = $ver['id'];
+	}
+	
+	if (empty($_POST['version']))	
+		$_POST['version'] = array(0);
 
 	$_POST['guestname'] = $user_info['username'];
 	$_POST['email'] = $user_info['email'];
@@ -223,7 +234,7 @@ function ReportIssue2()
 		'status' => 1,
 		'priority' => 2,
 		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
-		'versions' => array(!empty($_POST['version']) ? (int) $_POST['version'] : 0),
+		'versions' => $_POST['version'],
 		'assignee' => 0,
 		'body' => $_POST['details'],
 		'created' => time(),

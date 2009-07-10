@@ -78,24 +78,21 @@ function template_report_issue()
 	{
 		echo '
 					<dt>', $txt['issue_version'], ':</dt>
-					<dd>
-						<select name="version" tabindex="', $context['tabindex']++, '">
-							<option value=""></option>';
+					<dd>';
 
 
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-							<option value="', $v['id'], '" style="font-weight: bold"', $context['issue']['version'] == $v['id'] ? ' selected="selected"' : '', '>', $v['name'], '</option>';
+							<input type="checkbox" id="version_', $v['id'], '" name="version[]" value="', $v['id'], '"', in_array($v['id'], $context['issue']['version'])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							<option value="', $subv['id'], '"', $context['issue']['version'] == $subv['id'] ? ' selected="selected"' : '', '>', $subv['name'], '</option>';
+							<input type="checkbox" id="version_', $subv['id'], '" name="version[]" value=="', $subv['id'], '"', in_array($subv['id'], $context['issue']['version']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 	}
 
 	echo '
-						</select>
 					</dd>';
 
 	if ($context['show_category'])
