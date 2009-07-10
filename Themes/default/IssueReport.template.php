@@ -88,7 +88,7 @@ function template_report_issue()
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value=="', $subv['id'], '"', in_array($subv['id'], $context['issue']['version']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
+							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value=="', $subv['id'], '"', in_array($subv['id'], $context['issue']['version']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 	}
 
