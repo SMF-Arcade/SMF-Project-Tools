@@ -319,11 +319,11 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		if (empty($issueOptions['versions']))
 			$issueOptions['versions'] = array(0);
 		
-		$issueOptions['versions'] = implode(',', $issueOptions['versions']);
-
 		$event_data['changes'][] = array(
 			'version', $row['versions'], $issueOptions['versions'],
 		);
+		
+		$issueOptions['versions'] = implode(',', $issueOptions['versions']);
 	}
 
 	if (isset($issueOptions['versions_fixed']) && $issueOptions['versions_fixed'] != $row['versions_fixed'])
@@ -332,12 +332,12 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		
 		if (empty($issueOptions['versions_fixed']))
 			$issueOptions['versions_fixed'] = array(0);
-			
-		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions_fixed']);
-
+	
 		$event_data['changes'][] = array(
 			'target_version', $row['versions_fixed'], $issueOptions['versions_fixed'],
 		);
+		
+		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions_fixed']);
 	}
 
 	if (isset($issueOptions['comment_first']))
