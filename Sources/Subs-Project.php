@@ -357,13 +357,7 @@ function loadProject()
 			)
 		);
 
-		$context['versions'] = array(
-			0 => array(
-				'id' => 0,
-				'name' => $txt['version_na'],
-				'sub_versions' => array(),
-			)
-		);
+		$context['versions'] = array();
 		$context['versions_id'] = array();
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
