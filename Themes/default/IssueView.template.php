@@ -315,13 +315,13 @@ function template_issue_view_above()
 						<dt>', $txt['issue_version'], '</dt>
 						<dd>';
 	
-	if (empty($context['current_issue']['version']))
+	if (empty($context['current_issue']['versions']))
 		echo $txt['issue_none'];
 	else
 	{
 		$first = true;
 		
-		foreach ($context['current_issue']['version'] as $version)
+		foreach ($context['current_issue']['versions'] as $version)
 		{
 			if ($first)
 				$first = false;
@@ -341,13 +341,13 @@ function template_issue_view_above()
 						<dt>', $txt['issue_version_fixed'], '</dt>
 						<dd>';
 						
-	if (empty($context['current_issue']['version_fixed']))
+	if (empty($context['current_issue']['versions_fixed']))
 		echo $txt['issue_none'];
 	else
 	{
 		$first = true;
 		
-		foreach ($context['current_issue']['version_fixed'] as $version)
+		foreach ($context['current_issue']['versions_fixed'] as $version)
 		{
 			if ($first)
 				$first = false;

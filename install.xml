@@ -709,6 +709,8 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		return $user_info['query_see_issue'];
 	elseif ($matches[1] === 'query_see_issue_project')
 		return $user_info['query_see_issue_project'];
+	elseif ($matches[1] === 'query_see_version_timeline')
+		return $user_info['query_see_version_timeline'];
 ]]></add>
 		</operation>
 	</file>
@@ -726,6 +728,8 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		return $user_info['query_see_issue'];
 	elseif ($matches[1] === 'query_see_issue_project')
 		return $user_info['query_see_issue_project'];
+	elseif ($matches[1] === 'query_see_version_timeline')
+		return $user_info['query_see_version_timeline'];
 ]]></add>
 		</operation>
 	</file>
