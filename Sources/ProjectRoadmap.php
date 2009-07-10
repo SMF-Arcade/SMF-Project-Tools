@@ -77,9 +77,9 @@ function ProjectRoadmapMain()
 		elseif (empty($row['release_date']['day']) && empty($row['release_date']['month']))
 			$time = array('roadmap_release_date_year', array($row['release_date']['year']));
 		elseif (empty($row['release_date']['day']))
-			$time = array('roadmap_release_date_year_month', array($txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+			$time = array('roadmap_release_date_year_month', array($txt['months'][(int) $row['release_date']['month']], $row['release_date']['year']));
 		else
-			$time = array('roadmap_release_date_year_month_day', array($row['release_date']['day'], $txt['months'][$row['release_date']['month']], $row['release_date']['year']));
+			$time = array('roadmap_release_date_year_month_day', array($row['release_date']['day'], $txt['months'][(int) $row['release_date']['month']], $row['release_date']['year']));
 
 		$context['roadmap'][$row['id_version']] = array(
 			'id' => $row['id_version'],

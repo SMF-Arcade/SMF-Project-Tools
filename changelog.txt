@@ -12,6 +12,7 @@ July 2009
  + Canonical urls for SMF 2.0 RC2
  ! Multiple changes within 2 minutes might cause data loss
  ! Fixed issue linking
+ ! Invalid dates were accepted for roadmap [Issue #270]
  
 June 2009
 --------------------------------------------------------------------------------

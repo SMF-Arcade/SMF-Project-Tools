@@ -809,11 +809,46 @@ function EditVersion2()
 
 		if (!empty($_POST['parent']))
 			$versionOptions['parent'] = $_POST['parent'];
+			
+		if (!empty($_POST['release_date'][0]))
+		{
+			$date = (int) $_POST['release_date'][0];
+			
+			// Note: This is meant to allow 0 as "not decided"
+			if ($date < 0 && $date > 31)
+				$date = 0;
+		}
+		else
+			$date = 0;
+			
+		if (!empty($_POST['release_date'][1]))
+		{
+			$month = (int) $_POST['release_date'][1];
+			
+			// Note: This is meant to allow 0 as "not decided"
+			if ($month < 0 && $month > 12)
+				$month = 0;
+		}
+		else
+			$month = 0;
+			
+		if (!empty($_POST['release_date'][2]))
+			$year = (int) $_POST['release_date'][2];
+		else
+			$year = 0;
+			
+		// Check that date is really valid
+		if (!empty($date) && !empty($month) && !empty($year) && !checkdate($month, $date, $year))
+		{
+			$date = 0;
+			$month = 0;
+			$year = 0;
+		}
 
 		$versionOptions['release_date'] = serialize(array(
-			'day' => !empty($_POST['release_date'][0]) ? $_POST['release_date'][0] : 0,
-			'month' => !empty($_POST['release_date'][1]) ? $_POST['release_date'][1] : 0,
-			'year' => !empty($_POST['release_date'][2]) ? $_POST['release_date'][2] : 0
+			'day' => $date,
+			'month' => $month,
+			'year' => $year,
 		));
 
 		$versionOptions['status'] = (int) $_POST['status'];
