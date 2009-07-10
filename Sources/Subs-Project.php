@@ -920,13 +920,51 @@ function DiffParser($text)
 	return $data;
 }
 
+function project_link_issues($data)
+{
+	global $modSettings;
+	
+	// temp:
+	return $data;
+	
+	return preg_replace_callback('/' . $modSettings['issueRegex'][0] . '/', !empty($modSettings['issueRegex'][1]) ? 'issue_link_callback' : 'issue_link_callback2', $data);
+}
+
 function issue_link_callback($data)
 {
+	global $modSettings;
+	
+	return preg_replace_callback('/' . $modSettings['issueRegex'][1] . '/', 'issue_link_callback_2', $data[0]);
+}
+
+function issue_link_callback_2($data)
+{
 	global $smcFunc, $modSettings;
+	
+	// Todo: Optimize this? And Include status etc?
+	$data[1] = (int) $data[1];
 
-	//$data[0] = preg_replace('/' . $modSettings['issueRegex'][1] . '/', '<a href="' . project_get_url(array('issue' => '\1.0')) . '">\1</a>', $data[0]);
-
-	return $data[0];
+	if (($project = cache_get_data('issue-project-' . $data[1], 120)) === null)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_project
+			FROM {db_prefix}issues
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => (int) $data[1],
+			)
+		);
+		
+		list ($project) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	
+		cache_put_data('issue-project-' . $data[1], $project, 120);
+	}
+	
+	if (!$project)
+		return $data[0];
+		
+	return '<a href="' . project_get_url(array('issue' => $data[1] . '.0'), $project) . '">' . $data[1] . '</a>';
 }
 
 // Send Notification

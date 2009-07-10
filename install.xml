@@ -592,7 +592,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 				$lastAutoPos = $pos;
 
 				if (!$no_autolink_area)
-					$data = preg_replace_callback('/' . $modSettings['issueRegex'][0] . '/', 'issue_link_callback', $data);
+					$data = project_link_issues($data);
 			}
 			]]></add>
 		</operation>
