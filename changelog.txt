@@ -13,6 +13,7 @@ July 2009
  ! Multiple changes within 2 minutes might cause data loss
  ! Fixed issue linking
  ! Invalid dates were accepted for roadmap [Issue #270]
+ ! Warned users causing undefined index warnings [Issue #269]
  
 June 2009
 --------------------------------------------------------------------------------

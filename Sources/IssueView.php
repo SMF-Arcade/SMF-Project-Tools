@@ -63,6 +63,7 @@ function IssueView()
 	$context['can_issue_move'] = projectAllowedTo('issue_move');
 	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
 	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+	$context['can_issue_warning'] = allowedTo('issue_warning');
 	
 	// URL for posting updates from ajax
 	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
