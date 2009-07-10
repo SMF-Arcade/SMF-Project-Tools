@@ -174,10 +174,10 @@ function IssueList()
 		$where[] = 'i.id_assigned = {int:search_assignee}';
 
 	if (isset($context['issue_search']['version']))
-		$where[] = '(i.id_version = {int:search_version})';
+		$where[] = '(FIND_IN_SET({int:search_version}, i.versions)';
 
 	if (isset($context['issue_search']['version_fixed']))
-		$where[] = '(i.id_version_fixed = {int:search_version_f})';
+		$where[] = '(FIND_IN_SET({int:search_version_f}, i.versions_fixed)';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
@@ -189,11 +189,10 @@ function IssueList()
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
 			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
 				AND stag.tag = {string:search_tag})' : '') . '
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 		WHERE {query_see_issue_project}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
-			AND ' . implode('
-			AND ', $where) : '') . '',
+			AND (' . implode(')
+			AND (', $where) . ')' : '') . '',
 		array(
 			'project' => $context['project']['id'],
 			'closed_status' => $context['closed_status'],
@@ -227,9 +226,8 @@ function IssueList()
 			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
-			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
-			i.id_version_fixed, IFNULL(ver2.version_name, {string:empty}) AS version_fixed_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
+			i.versions, i.versions_fixed,
 			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . '
 		FROM {db_prefix}issues AS i
@@ -242,8 +240,6 @@ function IssueList()
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
 		WHERE {query_see_issue_project}
@@ -288,16 +284,8 @@ function IssueList()
 				'name' => $row['category_name'],
 				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
-			'version' => array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
-			),
-			'version_fixed' => array(
-				'id' => $row['id_version_fixed'],
-				'name' => $row['version_fixed_name'],
-				'link' => !empty($row['version_fixed_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $row['id_version_fixed'])) . '">' . $row['version_fixed_name'] . '</a>' : ''
-			),
+			'versions' => getVersions(explode(',', $row['versions'])),
+			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
 			'tags' => $row['tags'],
 			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),

@@ -31,10 +31,9 @@ function loadIssue()
 		SELECT
 			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.id_tracker,
 			i.id_comment_first, i.id_comment_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
-			mem.id_member, mem.real_name,
-			cat.id_category, cat.category_name,
-			ver.id_version, ver.version_name, IFNULL(ver.member_groups, {string:any}) AS ver_member_groups,
-			ver2.id_version AS vidfix, ver2.version_name AS vnamefix, ' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
+			i.versions, i.versions_fixed,
+			mem.id_member, mem.real_name, cat.id_category, cat.category_name,
+			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
 			com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
 		FROM {db_prefix}issues AS i
@@ -42,8 +41,6 @@ function loadIssue()
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
 			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = i.id_project AND lmr.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
-			LEFT JOIN {db_prefix}project_versions AS ver2 ON (ver2.id_version = i.id_version_fixed)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 		WHERE i.id_issue = {int:issue}
 			AND i.id_project = {int:project}
@@ -99,14 +96,8 @@ function loadIssue()
 			'name' => $row['category_name'],
 			'link' => '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		),
-		'version' => array(
-			'id' => $row['id_version'],
-			'name' => $row['version_name'],
-		),
-		'version_fixed' => array(
-			'id' => $row['vidfix'],
-			'name' => $row['vnamefix'],
-		),
+		'versions' => getVersions(explode(',', $row['versions'])),
+		'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
 		'reporter' => &$memberContext[$row['id_reporter']],
 		'assignee' => array(
 			'id' => $row['id_member'],
@@ -129,7 +120,7 @@ function loadIssue()
 		'version_groups' => explode(',', $row['ver_member_groups']),
 	);
 
-	if ($row['ver_member_groups'] != '*' && count(array_intersect($user_info['groups'], $context['current_issue']['version_groups'])) == 0 && !$user_info['is_admin'])
+	if (!$user_info['is_admin'] && count(array_intersect($context['current_issue']['versions'], $user_info['project_allowed_versions'])) == 0)
 		$context['project_error'] = 'issue_not_found';
 	// If this is private issue are you allowed to see it?
 	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
@@ -236,8 +227,8 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_project, subject, id_version, status, id_category,
-			priority, id_tracker, id_assigned, id_version_fixed, private_issue
+			id_project, subject, status, id_category,
+			priority, id_tracker, id_assigned, private_issue, versions, versions_fixed
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -255,6 +246,10 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		'subject' => isset($issueOptions['subject']) ? $issueOptions['subject'] : $row['subject'],
 		'changes' => array(),
 	);
+	
+	// Make versions and fixed versions array
+	$row['versions'] = explode(',', $row['versions']);
+	$row['versions_fixed'] = explode(',', $row['versions_fixed']);
 
 	$issueUpdates = array();
 
@@ -318,28 +313,36 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		);
 	}
 
-	if (isset($issueOptions['version']) && $issueOptions['version'] != $row['id_version'])
+	if (isset($issueOptions['versions']) && $issueOptions['versions'] != $row['versions'])
 	{
-		$issueUpdates[] = 'id_version = {int:version}';
+		$issueUpdates[] = 'versions = {string:versions}';
+		
+		if (empty($issueOptions['versions']))
+			$issueOptions['versions'] = array(0);
+		
+		$issueOptions['versions'] = implode(',', $issueOptions['versions']);
 
 		$event_data['changes'][] = array(
-			'version', $row['id_version'], $issueOptions['version'],
+			'version', $row['versions'], $issueOptions['versions'],
 		);
 	}
 
-	if (isset($issueOptions['version_fixed']) && $issueOptions['version_fixed'] != $row['id_version_fixed'])
+	if (isset($issueOptions['versions_fixed']) && $issueOptions['versions_fixed'] != $row['versions_fixed'])
 	{
-		$issueUpdates[] = 'id_version_fixed = {int:version_fixed}';
+		$issueUpdates[] = 'versions_fixed = {string:versions_fixed}';
+		
+		if (empty($issueOptions['versions_fixed']))
+			$issueOptions['versions_fixed'] = array(0);
+			
+		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions']);
 
 		$event_data['changes'][] = array(
-			'target_version', $row['id_version_fixed'], $issueOptions['version_fixed'],
+			'target_version', $row['versions_fixed'], $issueOptions['versions_fixed'],
 		);
 	}
 
 	if (isset($issueOptions['comment_first']))
-	{
 		$issueUpdates[] = 'id_comment_first = {int:comment_first}';
-	}
 
 	if (isset($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
 	{
@@ -645,8 +648,8 @@ function deleteIssue($id_issue, $posterOptions)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_project, id_tracker, subject, id_version, status, id_category,
-			priority, id_assigned, id_version_fixed
+			id_project, id_tracker, subject, versions, status, id_category,
+			priority, id_assigned
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -705,11 +708,11 @@ function deleteIssue($id_issue, $posterOptions)
 	// Update Timeline entries to make sure uses who have no permission won't see it
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}project_timeline
-		SET id_version = {int:version}
+		SET versions = {string:versions}
 		WHERE id_issue = {int:issue}',
 		array(
 			'issue' => $id_issue,
-			'version' => $row['id_version'],
+			'versions' => $row['versions'],
 		)
 	);
 
@@ -896,8 +899,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			i.id_reporter, IFNULL(mr.real_name, {string:empty}) AS reporter,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
-			i.id_version, IFNULL(ver.version_name, {string:empty}) AS version_name,
-			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
+			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater, i.versions, i.versions_fixed,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . '
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . ($user_info['is_guest'] ? '' : '
@@ -906,7 +908,6 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			LEFT JOIN {db_prefix}members AS mr ON (mr.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)' . (empty($project) ? '
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})' : '') . '
@@ -940,11 +941,8 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 				'name' => $row['category_name'],
 				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
-			'version' => array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'link' => !empty($row['version_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'version' => $row['id_version'])) . '">' . $row['version_name'] . '</a>' : ''
-			),
+			'versions' => getVersions(explode(',', $row['versions'])),
+			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
 			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
 			'updated' => timeformat($row['updated']),
 			'created' => timeformat($row['created']),
@@ -982,6 +980,23 @@ function link_tags(&$tag, $key, $baseurl)
 		$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
 	else
 		$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
+}
+
+function getVersions($versions)
+{
+	global $context;
+	
+	$return = array();
+	
+	foreach ($versions as $ver)
+	{
+		if (!empty($context['versions_id'][$ver]))
+			$return[$ver] = $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver];
+		elseif (!empty($context['versions'][$ver]))
+			$return[$ver] = $context['versions'][$ver];
+	}
+	
+	return $return;
 }
 
 ?>

@@ -223,7 +223,7 @@ function ReportIssue2()
 		'status' => 1,
 		'priority' => 2,
 		'category' => isset($_POST['category']) ? (int) $_POST['category'] : 0,
-		'version' => !empty($_POST['version']) ? (int) $_POST['version'] : 0,
+		'versions' => array(!empty($_POST['version']) ? (int) $_POST['version'] : 0),
 		'assignee' => 0,
 		'body' => $_POST['details'],
 		'created' => time(),
@@ -328,22 +328,19 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	// Assigning
 	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['assign']))
 	{
-		if ((int) $_REQUEST['assign'] != $context['current_issue']['assignee']['id'])
-		{
-			if (!isset($context['project']['developers'][(int) $_REQUEST['assign']]))
-				$_REQUEST['assign'] = 0;
+		if (!isset($context['project']['developers'][(int) $_REQUEST['assign']]))
+			$_REQUEST['assign'] = 0;
 
-			$issueOptions['assignee'] = (int) $_REQUEST['assign'];
-			
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'assign',
-						'id' => $issueOptions['assignee'],
-					),
-					'value' => $issueOptions['assignee'],
-				);
-		}
+		$issueOptions['assignee'] = (int) $_REQUEST['assign'];
+		
+		if ($xml_data)
+			$context['xml_data']['updates']['children'][] = array(
+				'attributes' => array(
+					'field' => 'assign',
+					'id' => $issueOptions['assignee'],
+				),
+				'value' => $issueOptions['assignee'],
+			);
 	}
 
 	// Title
@@ -398,15 +395,15 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 		if (!isset($context['versions_id'][(int) $_REQUEST['version']]))
 			$_REQUEST['version'] = 0;
 
-		$issueOptions['version'] = (int) $_REQUEST['version'];
+		$issueOptions['versions'] = array((int) $_REQUEST['version']);
 
 		if ($xml_data)
 			$context['xml_data']['updates']['children'][] = array(
 				'attributes' => array(
 					'field' => 'version',
-					'id' => $issueOptions['version'],
+					'id' => $issueOptions['versions'],
 				),
-				'value' => $issueOptions['version'],
+				'value' => $issueOptions['versions'],
 			);
 	}
 

@@ -66,36 +66,72 @@ function loadProjectTools()
 	{
 		$see_project = '1 = 1';
 		$see_version = '1 = 1';
+		$see_version_issue = '1 = 1';
+		$see_version_timeline = '1 = 1';
 		$see_issue = '1 = 1';
 		$see_issue_p = '1 = 1';
 	}
 	else
 	{
-		// This is for private issues
+		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
 
+		// Version 0 can be always seen
+		$user_info['project_allowed_versions'] = array(0);
+		
+		// Get versions that can be seen
+		$request = $smcFunc['db_query']('', '
+			SELECT id_version
+			FROM {db_prefix}project_versions AS ver
+			WHERE id_project = {int:project}
+				AND (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups))'
+		);
+		
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$user_info['project_allowed_versions'][] = $row['id_version'];
+		$smcFunc['db_free_result']($request);
+		
+		// See version
+		$see_version = '(id_version IN(' . implode(',', $allowed_versions) . '))';
+		
+		// See version in issue query
+		$see_version_issue = 'FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $allowed_versions) . ', i.versions)';
+	
+		// See version in timeline query
+		$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $allowed_versions) . ', IFNULL(i.versions, tl.versions))';
+		
+		// See private issues code
 		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
+		
+		// Private issues
 		$see_private_profiles = getPrivateProfiles();
 		if (!empty($see_private_profiles))
 			$see_private = '(i.private_issue = 0 OR NOT ISNULL(dev.id_member) OR (' . $my_issue . ' OR p.id_profile IN(' . implode(', ', $see_private_profiles) . ')))';
 		else
 			$see_private = '(i.private_issue = 0 OR NOT ISNULL(dev.id_member) OR ' . $my_issue . ')';
-
-		$see_project = '(FIND_IN_SET(' . implode(', p.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', p.member_groups))';
-		$see_version = '(ISNULL(ver.member_groups) OR (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups)))';
-		$see_issue = '(' . $see_version . ' AND ' . $see_private . ')';
-		$see_issue_p = '(' . $see_version . ' AND (i.private_issue = 0 OR ' . $my_issue . '))';
+			
+		$see_issue = '((' . $see_version_issue . ') AND ' . $see_private . ')';
+		$see_issue_p = '((' . $see_version_issue . ') AND (i.private_issue = 0 OR ' . $my_issue . '))';
+		
+		unset($see_version_issue, $allowed_versions);
 	}
 	
+	// See project
 	$user_info['query_see_project'] = $see_project;
+	// See version
 	$user_info['query_see_version'] = $see_version;
+	// See version timeline
+	$user_info['query_see_version_timeline'] = $see_version_timeline;
+	
+	// Issue of any project
 	$user_info['query_see_issue'] = $see_issue;
+	
+	// See issue of current project
 	$user_info['query_see_issue_project'] = $see_issue_p;
 	
 	if (isset($projects_show) && (empty($projects_show) || !is_array($projects_show)))
 		$user_info['query_see_project'] = '0=1';
 	elseif (isset($projects_show))
 		$user_info['query_see_project'] = '(p.id_project IN(' . implode(',', $projects_show) . ') AND ' . $see_project . ')';
-		
 	
 	// Trackers
 	$context['issue_trackers'] = array();
@@ -311,8 +347,7 @@ function loadProject()
 	{
 		// Load Versions
 		$request = $smcFunc['db_query']('', '
-			SELECT
-				id_version, id_parent, version_name, release_date, status
+			SELECT id_version, id_parent, version_name, release_date, status
 			FROM {db_prefix}project_versions AS ver
 			WHERE id_project = {int:project}
 				AND {query_see_version}
@@ -322,7 +357,13 @@ function loadProject()
 			)
 		);
 
-		$context['versions'] = array();
+		$context['versions'] = array(
+			0 => array(
+				'id' => 0,
+				'name' => $txt['version_na'],
+				'sub_versions' => array(),
+			)
+		);
 		$context['versions_id'] = array();
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -358,8 +399,9 @@ function loadProject()
 
 	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
 
+	// Developers can see all issues
 	if ($context['project']['is_developer'])
-		$user_info['query_see_issue_project'] = $user_info['query_see_version'];
+		$user_info['query_see_issue_project'] = '1=1';
 			
 	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
 		$context['project_error'] = 'project_not_found';
@@ -467,19 +509,18 @@ function loadTimeline($project = 0)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			i.id_issue, i.id_tracker, i.subject, i.priority, i.status,
-			tl.id_project, tl.event, tl.event_data, tl.event_time, tl.id_version,
+			tl.id_project, tl.event, tl.event_data, tl.event_time,
 			mem.id_member, IFNULL(mem.real_name, tl.poster_name) AS user, p.id_project, p.name
 		FROM {db_prefix}project_timeline AS tl
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = tl.id_project)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 			LEFT JOIN {db_prefix}issues AS i ON (i.id_issue = tl.id_issue)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = IFNULL(i.id_version, tl.id_version))
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}' . (!empty($project) ? '
 			AND {query_see_issue_project}
-			AND tl.id_project = {int:project}' : '
-			AND {query_see_issue}') . '
+			AND tl.id_project = {int:project}' : '') . '
+			AND {query_see_version_timeline}
 		ORDER BY tl.event_time DESC
 		LIMIT 12',
 		array(
@@ -975,18 +1016,31 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 	if ($type == 'new_issue')
 		$issue['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($issue['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 
+	// Load Versions
+	$request = $smcFunc['db_query']('', '
+		SELECT id_version, member_groups
+		FROM {db_prefix}project_versions AS ver
+		WHERE id_project = {int:project}',
+		array(
+			'project' => $issue['project'],
+		)
+	);
+	
+	$versions = array();
+	
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$versions[$row['id_version']] = explode(',', $row['member_groups']);
+	$smcFunc['db_free_result']($request);
+	
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
-			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group, IFNULL(dev.id_member, 0) AS is_developer,
-			p.member_groups' . (!empty($issue['version']) ? ', ver.member_groups AS member_groups_version' : '') . '
+			ln.sent, ln.id_project, mem.id_group, mem.additional_groups, mem.id_post_group, IFNULL(dev.id_member, 0) AS is_developer, p.member_groups
 		FROM {db_prefix}log_notify_projects AS ln
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = ln.id_project)
-			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)' . (!empty($issue['version']) ? '
-			INNER JOIN {db_prefix}project_versions AS ver ON (ver.id_project = p.id_project)' : '') . '
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = ln.id_project AND dev.id_member = mem.id_member)
-		WHERE ln.id_project = {int:project}' . (!empty($issue['version']) ? '
-			AND ver.id_version = {int:version}' : '') . '
+		WHERE ln.id_project = {int:project}
 			AND mem.is_activated = {int:is_activated}
 			AND mem.id_member != {int:poster}
 		ORDER BY mem.lngfile',
@@ -997,20 +1051,18 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 			'poster' => $exclude,
 		)
 	);
-
+	
 	while ($rowmember = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($rowmember['id_group'] != 1 && empty($rowmember['is_developer']))
 		{
-			// Temp
+			// Since this is posted by current user, private users shouldn't be sent to anyone expect admins/developers
 			if (!empty($issue['private']))
 				continue;
 
 			$p_allowed = explode(',', $rowmember['member_groups']);
 
-			if (!empty($issue['version']))
-				$v_allowed = explode(',', $rowmember['member_groups_version']);
-
+			// Groups this member is part of
 			$rowmember['additional_groups'] = explode(',', $rowmember['additional_groups']);
 			$rowmember['additional_groups'][] = $rowmember['id_group'];
 			$rowmember['additional_groups'][] = $rowmember['id_post_group'];
@@ -1018,8 +1070,23 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 			// can see project?
 			if (count(array_intersect($p_allowed, $rowmember['additional_groups'])) == 0)
 				continue;
-			// what about version?
-			if (isset($v_allowed) && count(array_intersect($v_allowed, $rowmember['additional_groups'])) == 0)
+			
+			// Can see any of versions?
+			if (!empty($issue['version']) && $issue['version'] !== array(0))
+			{
+				$can_see = false;
+				
+				foreach ($issue['version'] as $ver)
+				{
+					if (isset($versions[$ver]) && count(array_intersect($versions[$ver], $rowmember['additional_groups'])) > 0)
+						$can_see = true;
+				}
+				
+			}
+			else
+				$can_see = true;
+
+			if (!$can_see)
 				continue;
 		}
 
@@ -1053,18 +1120,33 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 	if (empty($comment['body']))
 		$comment['body'] = '';
+		
+	// Load Versions
+	$request = $smcFunc['db_query']('', '
+		SELECT id_version, member_groups
+		FROM {db_prefix}project_versions AS ver
+		WHERE id_project = {int:project}',
+		array(
+			'project' => $issue['project'],
+		)
+	);
+	
+	$versions = array();
+	
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$versions[$row['id_version']] = explode(',', $row['member_groups']);
+	$smcFunc['db_free_result']($request);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, mem.id_post_group,
-			p.id_project, p.member_groups, IFNULL(ver.member_groups, {string:any}) AS member_groups_version,
-			i.private_issue, IFNULL(dev.id_member, 0) AS is_developer, i.subject
+			p.id_project, p.member_groups, i.private_issue, IFNULL(dev.id_member, 0) AS is_developer,
+			i.subject, i.id_member AS issue_poster, i.versions
 		FROM {db_prefix}log_notify_projects AS ln
 			INNER JOIN {db_prefix}issues AS i ON (i.id_issue = ln.id_issue)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-			LEFT JOIN {db_prefix}project_versions AS ver ON (ver.id_version = i.id_version)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project AND dev.id_member = mem.id_member)
 		WHERE ln.id_issue = {int:issue}
 			AND mem.is_activated = {int:is_activated}
@@ -1082,14 +1164,10 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	{
 		if ($row['id_group'] != 1 && empty($row['is_developer']))
 		{
-			// Temp
-			if (!empty($row['private_issue']))
+			if (!empty($row['private_issue']) && $row['issue_poster'] != $row['id_member'])
 				continue;
 
 			$p_allowed = explode(',', $row['member_groups']);
-
-			if ($row['member_groups_version'] != '*')
-				$v_allowed = explode(',', $row['member_groups_version']);
 
 			$row['additional_groups'] = explode(',', $row['additional_groups']);
 			$row['additional_groups'][] = $row['id_group'];
@@ -1098,8 +1176,25 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 			// can see project?
 			if (count(array_intersect($p_allowed, $row['additional_groups'])) == 0)
 				continue;
-			// what about version?
-			if (isset($v_allowed) && count(array_intersect($v_allowed, $row['additional_groups'])) == 0)
+			
+			$row['versions'] = explode(',', $row['versions']);
+			
+			// Can see any of versions?
+			if (!empty($row['versions']) && $row['versions'] !== array(0))
+			{
+				$can_see = false;
+				
+				foreach ($row['versions'] as $ver)
+				{
+					if (isset($versions[$ver]) && count(array_intersect($versions[$ver], $row['additional_groups'])) > 0)
+						$can_see = true;
+				}
+				
+			}
+			else
+				$can_see = true;
+
+			if (!$can_see)
 				continue;
 		}
 

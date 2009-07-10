@@ -101,7 +101,7 @@ function build_main($baseDir, $outputDir, xmlArray $currentBuild, $commandLineSe
 			unset($svnInfo);
 		}
 		
-		$build_info['version'] .= ' rev' .$commandLineSettings['rev'];
+		$build_info['version'] .= ' rev' . $commandLineSettings['rev'];
 	}
 	
 	// Get package info location
@@ -199,6 +199,9 @@ function build_main($baseDir, $outputDir, xmlArray $currentBuild, $commandLineSe
 	foreach ($currentBuild->set('output') as $output)
 	{
 		$filename = __filenameReplaces($output->fetch('.'), $build_info, $currentBuild);
+		
+		if (empty($commandLineSettings['rev']))
+			$filename .= '(' .date('Y_m_d_H_i_s') . ')';
 		
 		$type = strtolower($output->fetch('@type'));
 		

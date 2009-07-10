@@ -583,11 +583,9 @@ function loadVersions($project)
 
 	// Load Versions
 	$request = $smcFunc['db_query']('', '
-		SELECT
-			id_version, id_parent, version_name, release_date, status
+		SELECT id_version, id_parent, version_name, release_date, status
 		FROM {db_prefix}project_versions AS ver
 		WHERE id_project = {int:project}
-			AND {query_see_version}
 		ORDER BY id_parent',
 		array(
 			'project' => $project['id'],

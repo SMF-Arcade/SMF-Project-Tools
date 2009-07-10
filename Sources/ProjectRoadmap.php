@@ -48,8 +48,7 @@ function ProjectRoadmapMain()
 	$context['roadmap'] = array();
 
 	$request = $smcFunc['db_query']('', '
-		SELECT
-			ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date
+		SELECT ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date
 		FROM {db_prefix}project_versions AS ver
 		WHERE {query_see_version}
 			AND ver.id_project = {int:project}' . (!isset($_REQUEST['all']) ? '
@@ -159,9 +158,7 @@ function ProjectRoadmapVersion()
 	if ($_REQUEST['version'] != '0')
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT
-				ver.id_version, ver.id_parent, ver.version_name, ver.status,
-				ver.description, ver.release_date
+			SELECT ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date
 			FROM {db_prefix}project_versions AS ver
 			WHERE ({query_see_version})
 				AND ver.id_project = {int:project}

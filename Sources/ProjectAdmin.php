@@ -233,6 +233,9 @@ function ProjectsMaintenanceUpgrade()
 		array(
 			'function' => 'ptUpgrade_trackers',
 		),
+		array(
+			'function' => 'ptUpgrade_versionFields',
+		),
 	);
 
 	return $repairFunctions;

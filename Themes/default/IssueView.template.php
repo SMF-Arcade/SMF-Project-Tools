@@ -313,13 +313,52 @@ function template_issue_view_above()
 				<li id="issue_version" class="clearfix">
 					<dl class="clearfix">
 						<dt>', $txt['issue_version'], '</dt>
-						<dd>', !empty($context['current_issue']['version']['id']) ? $context['current_issue']['version']['name'] : $txt['issue_none'], '</dd>
+						<dd>';
+	
+	if (empty($context['current_issue']['version']))
+		echo $txt['issue_none'];
+	else
+	{
+		$first = true;
+		
+		foreach ($context['current_issue']['version'] as $version)
+		{
+			if ($first)
+				$first = false;
+			else
+				echo ', ';
+				
+			echo $version['name'];
+		}
+	}
+						
+	echo '
+						</dd>
 					</dl>
 				</li>
 				<li id="issue_verfix" class="clearfix">
 					<dl class="clearfix">
 						<dt>', $txt['issue_version_fixed'], '</dt>
-						<dd>', !empty($context['current_issue']['version_fixed']['id']) ? $context['current_issue']['version_fixed']['name'] : $txt['issue_none'], '</dd>
+						<dd>';
+						
+	if (empty($context['current_issue']['version_fixed']))
+		echo $txt['issue_none'];
+	else
+	{
+		$first = true;
+		
+		foreach ($context['current_issue']['version_fixed'] as $version)
+		{
+			if ($first)
+				$first = false;
+			else
+				echo ', ';
+				
+			echo $version['name'];
+		}
+	}
+						
+	echo '
 					</dl>
 				</li>
 				<li id="issue_assign" class="clearfix">

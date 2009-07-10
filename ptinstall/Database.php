@@ -390,6 +390,7 @@ $tables = array(
 				'size' => 255,
 				'default' => '',
 			),
+
 			array(
 				'name' => 'id_tracker',
 				'type' => 'int',
@@ -415,17 +416,7 @@ $tables = array(
 				'name' => 'id_updater',
 				'type' => 'int',
 				'default' => 0,
-			),
-			array(
-				'name' => 'id_version',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'id_version_fixed',
-				'type' => 'int',
-				'default' => 0,
-			),
+			),			
 			array(
 				'name' => 'id_comment_first',
 				'type' => 'int',
@@ -440,6 +431,18 @@ $tables = array(
 				'name' => 'id_event_mod',
 				'type' => 'int',
 				'default' => 0,
+			),
+			array(
+				'name' => 'versions',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '0',				
+			),
+			array(
+				'name' => 'versions_fixed',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '0',
 			),
 			array(
 				'name' => 'status',
@@ -481,6 +484,11 @@ $tables = array(
 				'name' => 'id_project',
 				'type' => 'index',
 				'columns' => array('id_project'),
+			),
+			array(
+				'name' => 'versions',
+				'type' => 'index',
+				'columns' => array('versions'),
 			),
 		),
 	),
@@ -594,12 +602,6 @@ $tables = array(
 				'unsigned' => true,
 			),
 			array(
-				'name' => 'id_version',
-				'type' => 'int',
-				'unsigned' => true,
-				'default' => 0,
-			),
-			array(
 				'name' => 'id_member',
 				'type' => 'int',
 				'unsigned' => true,
@@ -622,6 +624,12 @@ $tables = array(
 				'type' => 'varchar',
 				'size' => 60,
 				'default' => '',
+			),
+			array(
+				'name' => 'versions',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '0',
 			),
 			array(
 				'name' => 'event',

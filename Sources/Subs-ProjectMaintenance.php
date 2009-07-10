@@ -144,6 +144,47 @@ function ptUpgrade_trackers($check = false)
 	}
 }
 
+function ptUpgrade_versionFields($check = false)
+{
+	global $smcFunc;
+
+	// Is this step required to run?
+	if ($check)
+		return true;
+
+	db_extend('packages');
+
+	if (in_array('id_version', $smcFunc['db_list_columns']('issues')))
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}issues
+			SET versions = id_version'
+		);
+
+		$smcFunc['db_remove_column']('issues', 'id_version');
+	}
+	
+	if (in_array('id_version_fixed', $smcFunc['db_list_columns']('issues')))
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}issues
+			SET versions_fixed = id_version_fixed'
+		);
+
+		$smcFunc['db_remove_column']('issues', 'id_version_fixed');
+	}
+	
+	if (in_array('id_version', $smcFunc['db_list_columns']('project_timeline')))
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_timeline
+			SET versions = id_version'
+		);
+
+		$smcFunc['db_remove_column']('project_timeline', 'id_version');
+	}
+}
+
 function ptMaintenanceGeneral($check = false)
 {
 	global $smcFunc;

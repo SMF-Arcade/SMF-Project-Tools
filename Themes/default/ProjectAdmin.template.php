@@ -32,17 +32,17 @@ function template_project_admin_main()
 			if (typeof(window.projectNews) == "undefined" || typeof(window.projectNews.length) == "undefined")
 					return;
 
-				var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
+			var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
 
-				for (var i = 0; i < window.projectNews.length; i++)
-				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a href=\"" + window.projectNews[i].url + "\">" + window.projectNews[i].subject + "</a> on " + window.projectNews[i].time + "</div>";
-					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
-					str += "\n		" + window.projectNews[i].message;
-					str += "\n	</div>";
-				}
+			for (var i = 0; i < window.projectNews.length; i++)
+			{
+				str += "\n	<div style=\"padding-bottom: 2px;\"><a href=\"" + window.projectNews[i].url + "\">" + window.projectNews[i].subject + "</a> on " + window.projectNews[i].time + "</div>";
+				str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
+				str += "\n		" + window.projectNews[i].message;
+				str += "\n	</div>";
+			}
 
-				setInnerHTML(document.getElementById("project_news"), str + "</div>");
+			setInnerHTML(document.getElementById("project_news"), str + "</div>");
 		}
 
 		function setProjectVersion()
