@@ -390,7 +390,6 @@ $tables = array(
 				'size' => 255,
 				'default' => '',
 			),
-
 			array(
 				'name' => 'id_tracker',
 				'type' => 'int',

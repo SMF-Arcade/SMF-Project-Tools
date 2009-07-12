@@ -82,8 +82,7 @@ function loadProjectTools()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_version
 			FROM {db_prefix}project_versions AS ver
-			WHERE id_project = {int:project}
-				AND (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups))'
+			WHERE (FIND_IN_SET(' . implode(', ver.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', ver.member_groups))'
 		);
 		
 		while ($row = $smcFunc['db_fetch_assoc']($request))
