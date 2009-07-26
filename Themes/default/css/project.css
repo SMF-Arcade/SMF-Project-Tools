@@ -1,56 +1,6 @@
 /* ************************************* */
-/* styles from Project.template          */
+/* General styles                        */
 /* ************************************* */
-
-/* Project list */
-.projectlistframe
-{
-	margin-top: 0.4em;
-}
-.projectlistframe h3, .projectframe h3
-{
-	margin: 0;
-}
-table.projectsframe
-{
-	width: 100%;
-}
-table.projectsframe td.icon
-{
-	text-align: center;
-	padding: 0.5em;
-	width: 6%;
-}
-table.projectsframe td.info
-{
-	width: 60%;
-	padding: 0;
-}
-table.projectsframe td.info h4
-{
-	padding: 0.4em 0.4em 0 0.4em;
-	margin: 0;
-}
-table.projectsframe td.info p
-{
-	padding: 0 0.4em 0.5em 0.4em;
-	margin: 0;
-}
-table.projectsframe td.info p.developers, table.boardsframe td.info p.developers
-{
-	font-style: italic;
-}
-table.projectsframe td.stats
-{
-	width: 8%;
-	vertical-align: middle;
-	text-align: center;
-}
-table.projectsframe td.lastissue
-{
-	padding: 0.4em;
-	width: 26%;
-}
 
 /* Status colors */
 .issue_new
@@ -76,6 +26,21 @@ table.projectsframe td.lastissue
 .issue_closed
 {
 	background-color: #E8E8E8;
+}
+
+/* ************************************* */
+/* styles from Project.template          */
+/* ************************************* */
+
+/* Project list */
+#projects_table .table_list thead, #projects_table .table_list tfoot
+{
+	display: none;
+}
+
+#upshrinkHeaderIC ul.reset
+{
+	padding: 0.5em;
 }
 
 /* ************************************* */

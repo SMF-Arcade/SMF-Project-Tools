@@ -17,6 +17,7 @@ July 2009
  ! Notifications of private issues will be now sent for non-developers
  + Allowed multiple versions affected / fixed [Issue #54]
  + Updated for SMF 2.0RC2
+ ! Don't show version dropdown when no versions exists
  
 June 2009
 --------------------------------------------------------------------------------

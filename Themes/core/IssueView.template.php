@@ -407,19 +407,22 @@ function template_issue_view_above()
 			echo '
 		ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
 		
-		// Affected Version
-		echo '
-		var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');';
-
-		// Versions
-		foreach ($context['versions'] as $v)
+		if (!empty($context['versions']))
 		{
+			// Affected Version
 			echo '
-		ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions'][$v['id']]) ? 1 : 0 ,', "group");';
+			var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');';
 
-			foreach ($v['sub_versions'] as $subv)
+			// Versions
+			foreach ($context['versions'] as $v)
+			{
 				echo '
-		ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions'][$subv['id']]) ? 1 : 0 ,');';
+			ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions'][$v['id']]) ? 1 : 0 ,', "group");';
+	
+				foreach ($v['sub_versions'] as $subv)
+					echo '
+			ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions'][$subv['id']]) ? 1 : 0 ,');';
+			}
 		}
 
 		if (!empty($context['can_issue_moderate']))
@@ -440,20 +443,23 @@ function template_issue_view_above()
 			foreach ($context['assign_members'] as $mem)
 				echo '
 		ddIssueAssi.addOption(', $mem['id'], ', "', $mem['name'], '");';
-		
-			// Fixed Version
-			echo '
-		var ddIssueFixv = currentIssue.addMultiDropdown("issue_verfix", "version_fixed")';
-
-			// Versions
-			foreach ($context['versions'] as $v)
+			
+			if (!empty($context['versions']))
 			{
+				// Fixed Version
 				echo '
+		var ddIssueFixv = currentIssue.addMultiDropdown("issue_verfix", "version_fixed")';
+	
+				// Versions
+				foreach ($context['versions'] as $v)
+				{
+					echo '
 		ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions_fixed'][$v['id']]) ? 1 : 0 ,', "group");';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
+	
+				foreach ($v['sub_versions'] as $subv)
+					echo '
 		ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? 1 : 0 ,');';
+				}
 			}
 
 			// Priority

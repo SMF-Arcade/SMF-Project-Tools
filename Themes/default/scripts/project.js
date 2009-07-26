@@ -161,6 +161,9 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 
 	function dropDownShow()
 	{
+		if (optionsID.length == 0)
+			return;
+		
 		dropdownHandle.classNameOld = dropdownHandle.className;
 		dropdownHandle.className += " dropdown_selected";
 
@@ -364,6 +367,9 @@ function PTMultiDropdown(issue, name, fieldName)
 
 	function dropDownShow()
 	{
+		if (optionsID.length == 0)
+			return;
+		
 		dropdownHandle.classNameOld = dropdownHandle.className;
 		dropdownHandle.className += " dropdown_selected";
 
