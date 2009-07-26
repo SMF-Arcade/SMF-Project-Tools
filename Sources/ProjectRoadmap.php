@@ -107,7 +107,8 @@ function ProjectRoadmapMain()
 		),
 	);
 
-	// Load issue counts
+	// TODO: Fix this
+	/*// Load issue counts
 	$request = $smcFunc['db_query']('', '
 		SELECT i.id_version_fixed, i.status, COUNT(i.id_version_fixed) AS num
 		FROM {db_prefix}issues AS i
@@ -139,7 +140,7 @@ function ProjectRoadmapMain()
 
 		// Back to array
 		$context['roadmap'][$id] = $d;
-	}
+	}*/
 
 	// Hide "not set" version if it has no issues
 	/*if ($context['roadmap'][0]['issues']['total'] == 0)

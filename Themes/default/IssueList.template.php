@@ -62,9 +62,9 @@ function template_issue_list()
 	);
 
 	echo '
-		<div class="modbuttons clearfix margintop">
-			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
-			', template_button_strip($buttons, 'bottom'), '
+		<div class="pagesection">
+			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'right'), '
 		</div>
 		<div class="issuelistframe tborder">
 			<table cellspacing="1" class="bordercolor issuetable">
@@ -168,9 +168,9 @@ function template_issue_list()
 	echo '
 			</table>
 		</div>
-		<div class="modbuttons clearfix marginbottom">
-			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-			', template_button_strip($buttons, 'top'), '
+		<div class="pagesection">
+			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'right'), '
 		</div>';
 }
 

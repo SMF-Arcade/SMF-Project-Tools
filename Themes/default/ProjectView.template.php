@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4 Alpha; ProjectView
+// Version: 0.4; ProjectView
 
 function template_project_view_above()
 {
@@ -8,41 +8,19 @@ function template_project_view_above()
 	if (!empty($context['project_tabs']))
 	{
 		echo '
-	<div class="tborder">
-		<div class="titlebg headerpadding clearfix">
-			<span class="floatleft">', $context['project_tabs']['title'], '</span>
-		</div>
-	</div>
-	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
-		<tr>
-			<td class="maintab_first">&nbsp;</td>';
+	<div id="adm_submenus"><ul class="dropmenu">';
 
 			// Print out all the items in this tab.
 			foreach ($context['project_tabs']['tabs'] as $tab)
-			{
-				if (!empty($tab['is_selected']))
-				{
-					echo '
-			<td class="maintab_active_first">&nbsp;</td>
-			<td valign="top" class="maintab_active_back">
-				<a href="', $tab['href'], '">', $tab['title'], '</a>
-			</td>
-			<td class="maintab_active_last">&nbsp;</td>';
-
-					$selected_tab = $tab;
-				}
-				else
-					echo '
-			<td valign="top" class="maintab_back">
-				<a href="', $tab['href'], '">', $tab['title'], '</a>
-			</td>';
-			}
-
-			// the end of tabs
-			echo '
-			<td class="maintab_last">&nbsp;</td>
-		</tr>
-	</table><br />';
+				echo '
+				<li>
+					<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
+						<span class="firstlevel">', $tab['title'], '</span>
+					</a>
+				</li>';
+		
+		echo '
+	</ul></div>';
 	}
 }
 
@@ -56,11 +34,13 @@ function template_project_view()
 	);
 
 	echo '
-	<div id="modbuttons_top" class="modbuttons clearfix margintop">
-		', template_button_strip($project_buttons, 'bottom'), '
+	<div class="pagesection">
+		', template_button_strip($project_buttons, 'right'), '
 	</div>
 	<div class="tborder">
-		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['project']['name'], '
+		</h3>
 		<div class="projectframe_section">
 			<div class="windowbg2 middletext">
 				<p class="section_full">
@@ -82,7 +62,9 @@ function template_project_view()
 		echo '
 		<div class="issuecolumn">
 			<div class="issuelistframe tborder columnmargin_', $side ? 'right' : 'left', '">
-				<h3 class="catbg headerpadding">', $issueList['title'], '</h3>
+				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+					', $issueList['title'], '
+				</h3>
 				<table cellspacing="1" class="bordercolor issuetable">
 					<tr>';
 
@@ -169,70 +151,68 @@ function template_project_view()
 		$tWidth = $width;
 	}
 	echo '
-	</div><br />';
+	</div><br /><br />';
 
 	// Statistics etc
 	echo '
-	<div class="tborder">
-		<h3 class="catbg headerpadding">', $context['project']['name'], '</h3>
-		<div class="projectframe_section">
-			<div class="windowbg">
-				<h4 class="headerpadding titlebg">', $txt['project_statistics'], '</h4>
-				<p class="section"></p>
-				<div class="windowbg2 sectionbody middletext">
-					<table width="100%">';
+	<div style="clear:both"></div>', /* Todo: fix code above and remove this */'
+	<span class="upperframe"><span></span></span>
+	<div class="roundframe"><div class="innerframe">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['project']['name'], '
+		</h3>
+		<div id="upshrinkHeaderIC">
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $txt['project_statistics'], '
+			</h4>
+			<table width="100%">';
 
 	foreach ($context['project']['trackers'] as $type)
 		echo '
-						<tr>
-							<td width="10%">
-								<a href="', $type['link'], '" style="color: gray">', $type['tracker']['plural'], '</a><br />
-							</td>
-							<td>
-								<div class="progressbar"><div class="done" style="width: ', $type['progress'], '%"></div></div>
-							</td>
-						</tr>
-						<tr>
-							<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
-						</tr>';
+				<tr>
+					<td width="10%">
+						<a href="', $type['link'], '" style="color: gray">', $type['tracker']['plural'], '</a><br />
+					</td>
+					<td>
+						<div class="progressbar"><div class="done" style="width: ', $type['progress'], '%"></div></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
+				</tr>';
 
 	echo '
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="projectframe_section">
-			<div class="windowbg">
-				<h4 class="headerpadding titlebg">', $txt['project_timeline'], '</h4>
-				<p class="section"></p>
-				<div class="windowbg2 timeline middletext">';
+			</table>
+
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $txt['project_timeline'], '
+			</h4>';
 
 	$first = true;
 
 	foreach ($context['events'] as $date)
 	{
 		echo '
-					<h5 class="windowbg', $first ? ' first' : '' ,'">', $date['date'], '</h5>
-					<ul class="reset">';
+			<h5 class="windowbg', $first ? ' first' : '' ,'">', $date['date'], '</h5>
+			<ul class="reset">';
 
 		foreach ($date['events'] as $event)
 			echo '
-						<li>
-							', $event['time'], ' - ', $event['link'], '<br />
-							<span class="smalltext">', sprintf($txt['evt_' . (!empty($event['extra']) ? 'extra_' : '') . $event['event']], $event['member_link'], $event['extra']), '</span>
-						</li>';
+				<li>
+					', $event['time'], ' - ', $event['link'], '<br />
+					<span class="smalltext">', sprintf($txt['evt_' . (!empty($event['extra']) ? 'extra_' : '') . $event['event']], $event['member_link'], $event['extra']), '</span>
+				</li>';
 
 		echo '
-					</ul>';
+			</ul>';
 
 		$first = false;
 	}
 
 	echo '
-				</div>
-			</div>
 		</div>
-	</div>';
+	</div></div>
+	<span class="lowerframe"><span></span></span>';
 }
 
 function template_project_view_below()
