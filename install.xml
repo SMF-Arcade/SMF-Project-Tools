@@ -471,21 +471,6 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		</operation>
 	</file>
 
-	<file name="$themedir/Profile.template.php">
-		<operation>
-			<search position="before"><![CDATA[template_show_list('board_notification_list');]]></search>
-			<add><![CDATA[
-	if (!empty($modSettings['projectEnabled']))
-	{
-		echo '
-			<br />';
-
-		template_show_list('project_notification_list');
-	}
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$sourcedir/Subs.php">
 		<operation>
 			<search position="before"><![CDATA[	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);]]></search>
@@ -733,6 +718,95 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 ]]></add>
 		</operation>
 	</file>
+	
+	<file name="$sourcedir/Subs-Members.php">
+		<operation>
+			<search position="after"><![CDATA[	// Make their votes appear as guest votes - at least it keeps the totals right.]]></search>
+			<add><![CDATA[	// Make Project Tools comments guest posts
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issue_comments
+		SET id_member = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $users,
+		)
+	);
+	// Make Project Tools issues guest
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET id_reporter = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $users,
+		)
+	);	
+	// Make Project Tools issues updated by guest
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET id_updater = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $users,
+		)
+	);
+	// Make Project Tools events guests
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}project_timeline
+		SET id_member = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $users,
+		)
+	);
+	// Delete the members notifications and read logs
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_notify_projects
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_projects
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);	
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_project_mark_read
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_issues
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+	// Delete developer status
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}project_developer
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+
+]]></add>
+		</operation>
+	</file>
 
 	<file name="$sourcedir/Who.php">
 		<operation>
@@ -836,79 +910,6 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	}
 ]]></add>
 		</operation>		
-	</file>
-
-	<!-- Themes -->
-	<file name="$themedir/BoardIndex.template.php">
-		<operation>
-			<search position="before"><![CDATA[			echo '
-		<table cellspacing="1" class="bordercolor boardsframe">';]]></search>
-			<add><![CDATA[
-			template_boardindex_project($category['id'], 'first');]]></add>
-		</operation>
-
-		<operation>
-			<search position="after"><![CDATA[			echo '
-		</table>';
-		}
-		echo '
-	</div>';]]></search>
-			<add><![CDATA[
-			template_boardindex_project($category['id'], 'last');]]></add>
-		</operation>
-
-		<operation>
-			<search position="end" />
-			<add><![CDATA[
-function template_boardindex_project($category, $position)
-{
-	global $context, $settings, $options, $txt, $modSettings;
-
-	if (empty($context['boardindex_projects'][$category . '_' . $position]))
-		return;
-
-	foreach ($context['boardindex_projects'][$category . '_' . $position] as $project)
-	{
-		echo '
-		<tr>
-			<td class="windowbg icon">
-				<a href="', $project['href'], '">';
-
-			if ($project['new'])
-				echo '
-					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
-			else
-				echo '
-					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
-
-			echo '
-				</a>
-			</td>
-			<td class="windowbg2 info">
-				<h4><a href="', $project['href'], '">', $project['name'], '</a></h4>
-				<p>', $project['description'], '</p>';
-
-			if (!empty($project['developers']))
-				echo '
-				<p class="developers"><span class="smalltext">', count($project['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $project['developers']), '</span></p>';
-
-			echo '
-			</td>
-			<td class="windowbg stats smalltext">';
-
-			foreach ($project['trackers'] as $tracker)
-				echo '
-					', $tracker['open'], ' / ', $tracker['total'], ' ', $tracker['tracker']['plural'], '<br />';
-
-		echo '
-			</td>
-			<td class="windowbg2 lastissue">
-			</td>
-		</tr>';
-	}
-}
-]]></add>
-		</operation>
 	</file>
 
 	<!-- Languages -->

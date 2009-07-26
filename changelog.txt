@@ -16,6 +16,7 @@ July 2009
  ! Warned users causing undefined index warnings [Issue #269]
  ! Notifications of private issues will be now sent for non-developers
  + Allowed multiple versions affected / fixed [Issue #54]
+ + Updated for SMF 2.0RC2
  
 June 2009
 --------------------------------------------------------------------------------

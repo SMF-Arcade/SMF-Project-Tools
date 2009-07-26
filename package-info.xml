@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install for="2.0 RC1-1">
+	<install for="2.0 RC2">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -79,14 +79,18 @@
 		<database>ptinstall/install_main.php</database>
 
 		<modification format="xml" type="file">install.xml</modification>
+		<modification format="xml" type="file">curvetheme.xml</modification>
+		<modification format="xml" type="file">coretheme.xml</modification>
 
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
-	<uninstall for="2.0 RC1-1">
+	<uninstall for="2.0 RC2">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
+		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
+		<modification format="xml" type="file" reverse="true">coretheme.xml</modification>
 
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueComment.php" />

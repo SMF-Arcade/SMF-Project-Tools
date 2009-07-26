@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="modification.xsl" type="text/xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+================================================================================
+
+	Modification files can be used to modify files so that they do what
+	your package needs them to do to work properly.
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<!-- This information needs to be the same as that in the package-info.xml. -->
+	<id>Niko:SMFProject</id>
+	<version>{version}</version>
+
+	<file name="$themedir/Profile.template.php">
+		<operation>
+			<search position="before"><![CDATA[template_show_list('board_notification_list');]]></search>
+			<add><![CDATA[
+	if (!empty($modSettings['projectEnabled']))
+	{
+		echo '
+			<br />';
+
+		template_show_list('project_notification_list');
+	}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$themedir/BoardIndex.template.php">
+		<operation>
+			<search position="before"><![CDATA[		// Assuming the category hasn't been collapsed...
+		if (!$category['is_collapsed'])
+		{]]></search>
+			<add><![CDATA[
+			template_boardindex_project($category['id'], 'first');]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[		}
+		echo '
+			</tbody>
+			<tbody class="divider">
+				<tr>
+					<td colspan="4"></td>
+				</tr>
+			</tbody>';]]></search>
+			<add><![CDATA[
+			template_boardindex_project($category['id'], 'last');]]></add>
+		</operation>
+
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+function template_boardindex_project($category, $position)
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	if (empty($context['boardindex_projects'][$category . '_' . $position]))
+		return;
+
+	foreach ($context['boardindex_projects'][$category . '_' . $position] as $project)
+	{
+		echo '
+		<tr class="windowbg2">
+			<td class="icon windowbg">
+				<a href="', $project['href'], '">';
+
+			if ($project['new'])
+				echo '
+					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
+			else
+				echo '
+					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
+
+			echo '
+				</a>
+			</td>
+			<td class="info">
+				<a class="subject" href="', $project['href'], '" name="p', $project['id'], '">', $project['name'], '</a>
+				<p>', $project['description'], '</p>';
+
+			if (!empty($project['developers']))
+				echo '
+				<p class="moderators">', count($project['developers']) == 1 ? $txt['developer'] : $txt['developers'], ': ', implode(', ', $project['developers']), '</p>';
+
+			echo '
+			</td>
+			<td class="stats windowbg">';
+
+			foreach ($project['trackers'] as $tracker)
+				echo '
+					', $tracker['open'], ' / ', $tracker['total'], ' ', $tracker['tracker']['plural'], '<br />';
+
+		echo '
+			</td>
+			<td class="lastpost">
+			</td>
+		</tr>';
+	}
+}
+]]></add>
+		</operation>
+	</file>
+</modification>
