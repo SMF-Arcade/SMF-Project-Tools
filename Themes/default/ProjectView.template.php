@@ -89,7 +89,7 @@ function template_project_view()
 					<tr>
 						<td class="windowbg icon">
 							<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
-								<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['name'], '" />
+								<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 							</a>
 						</td>
 						<td class="windowbg2 info issue_', $issue['status']['name'], '">
