@@ -9,10 +9,10 @@
 		<allow-svn>1</allow-svn>
 		
 		<!-- STR version (remove this)? -->
-		<version-str>0.3.2</version-str>
+		<version-str>0.3.3</version-str>
 		
 		<!-- Internal Version -->
-		<version-int>0.3002</version-int>
+		<version-int>0.3003</version-int>
 		
 		<!-- Package-info file to parse -->
 		<package-info base="{BASEDIR}">{BASEDIR}/package-info.xml</package-info>
@@ -36,7 +36,7 @@
 		<!-- Replaces -->
 		<replaces filename="*.xml" from="{version}" to="{VERSION_INT}" />
 		<replaces filename="readme.txt" from="{version}" to="{VERSION}" />
-		<replaces filename="Sources/Subs-Project.php" from="$project_version = '0.3.2';" to="$project_version = '{VERSION}';" />
+		<replaces filename="Sources/Subs-Project.php" from="$project_version = '0.3.3';" to="$project_version = '{VERSION}';" />
 		
 		<!-- Define outputs -->
 		<output type="zip">{NAME}_{VERSION}</output>
