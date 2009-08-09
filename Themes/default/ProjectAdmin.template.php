@@ -53,7 +53,7 @@ function template_project_admin_main()
 			setInnerHTML(document.getElementById("project_latest_version"), window.projectCurrentVersion);
 		}
 	// ]]></script>
-	<script language="JavaScript" type="text/javascript" src="http://service.smfarcade.info/project/news.js?v=', urlencode($project_version), '" defer="defer"></script>';
+	<script language="JavaScript" type="text/javascript" src="http://service.smfproject.net/news.js?v=', urlencode($project_version), '" defer="defer"></script>';
 }
 
 function template_project_admin_maintenance()
