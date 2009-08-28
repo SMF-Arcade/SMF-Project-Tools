@@ -6,6 +6,7 @@ SMF Project Tools 0.4                                                          ?
 August 2009
 --------------------------------------------------------------------------------
  ! Wrong alt text for tracker images
+ ! Missing global in EditProjectProfile [Issue #286]
  
 July 2009
 --------------------------------------------------------------------------------

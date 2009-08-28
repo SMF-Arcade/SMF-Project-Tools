@@ -184,7 +184,7 @@ function ManageProjectPermissionsMain()
 
 function EditProjectProfile()
 {
-	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
+	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $settings;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_profile, profile_name
