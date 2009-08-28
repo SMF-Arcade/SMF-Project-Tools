@@ -6,6 +6,10 @@ SMF Project Tools 0.3.3                                               xx.xx.2009
 August 2009
 --------------------------------------------------------------------------------
  ! Use SMF Project.net for service url
+ ! Wrong alt text for tracker images
+ ! Missing global in EditProjectProfile [Issue #286]
+ ! Invalid links on Project Profile page [Issue #279]
+ ! Some missing strings [Issue #280]
 
 SMF Project Tools 0.3.2                                               01.08.2009
 ================================================================================

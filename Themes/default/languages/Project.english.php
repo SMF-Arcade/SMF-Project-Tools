@@ -113,6 +113,8 @@ $txt['evt_extra_new_comment'] = 'Issue updated with comment by %s (%s)';
 $txt['evt_new_attachment'] = 'New attachment added by %s';
 $txt['evt_edit_comment'] = 'Comment modified by %s';
 $txt['evt_delete_comment'] = 'Comment deleted by %s';
+$txt['evt_new_tag'] = 'Tag added by %s';
+$txt['evt_remove_tag'] = 'Tag removed by %s';
 
 // Roadmap
 $txt['open_issues'] = '%d open issues';
