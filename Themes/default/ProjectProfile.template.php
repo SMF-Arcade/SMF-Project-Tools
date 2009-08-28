@@ -15,10 +15,10 @@ function template_project_profile_main()
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td nowrap="nowrap">', $txt['profile_reported_issues'], ':</td>
-							<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member'], ';area=project;sa=reported">', $context['statistics']['reported_issues'], '</a></td>
+							<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=project;sa=reported">', $context['statistics']['reported_issues'], '</a></td>
 						</tr><tr>
 							<td nowrap="nowrap">', $txt['profile_assigned_issues'], ':</td>
-							<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member'], ';area=project;sa=assigned">', $context['statistics']['assigned_issues'], '</a></td>
+							<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=project;sa=assigned">', $context['statistics']['assigned_issues'], '</a></td>
 						</tr>
 					</table>
 				</div>
