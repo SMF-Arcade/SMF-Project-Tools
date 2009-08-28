@@ -129,6 +129,8 @@ $txt['vdelete_warning'] = 'Deleting version will remove any releases and issues 
 
 // Manage Project Permissions
 $txt['manage_project_permissions_description'] = 'Here you can create and edit projects';
+$txt['membergroups_name'] = 'Name';
+$txt['membergroups_members_top'] = 'Members';
 
 // Profile List
 $txt['header_profile'] = 'Profile';
