@@ -84,31 +84,58 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
-	<upgrade for="2.0 RC1-1, 2.0 RC1.2" from="0.3.1">
+	<upgrade for="2.0 RC1-1, 2.0 RC1.2" from="0.3002">
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		
 		<!-- These files goes to Theme directory -->
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
+		
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+	</upgrade>
+	
+	<upgrade for="2.0 RC1-1, 2.0 RC1.2" from="0.3001">
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		
+		<!-- These files goes to Theme directory -->
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
+		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
+		
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
 	</upgrade>
 	
 	<upgrade for="2.0 RC1-1, 2.0 RC1.2" from="0.3">
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
-		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 
 		<!-- These files goes to Theme directory -->
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
 		
 		<!-- Langauges -->
 		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
-
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+		
 		<modification format="xml" type="file">upgrade-0.3-0.3.1.xml</modification>
 	</upgrade>
 

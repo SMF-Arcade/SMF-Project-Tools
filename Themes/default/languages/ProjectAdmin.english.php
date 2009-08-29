@@ -1,5 +1,5 @@
 <?php
-// Version: 0.3.1; ProjectAdmin
+// Version: 0.3.3; ProjectAdmin
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
@@ -7,7 +7,7 @@
 $txt['project_tools_admin'] = 'Project Tools';
 $txt['project_tools_admin_desc'] = 'Here you can edit some settings of SMF Project Tools';
 $txt['project_latest_news'] = 'Latest News';
-$txt['project_news_unable_to_connect'] = 'Unable to connect to <a href="http://www.smfarcade.info">SMFArcade.info</a> for latest news...';
+$txt['project_news_unable_to_connect'] = 'Unable to connect to <a href="http://www.smfproject.net">SMF Project.net</a> for latest news...';
 $txt['project_version_info'] = 'Version Information';
 $txt['project_installed_version'] = 'Installed version';
 $txt['project_latest_version'] = 'Latest version';
