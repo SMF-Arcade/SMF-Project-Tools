@@ -9,6 +9,7 @@ August 2009
  ! Missing global in EditProjectProfile [Issue #286]
  ! Invalid links on Project Profile page [Issue #279]
  ! Some missing strings [Issue #280]
+ ! Unable to Edit Project Profiles when permissions for post groups disabled
  
 July 2009
 --------------------------------------------------------------------------------
