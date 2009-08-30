@@ -79,8 +79,7 @@
 		<database>ptinstall/install_main.php</database>
 
 		<modification format="xml" type="file">install.xml</modification>
-		<modification format="xml" type="file">curvetheme.xml</modification>
-		<modification format="xml" type="file">coretheme.xml</modification>
+		<modification format="xml" type="file">coretheme-default.xml</modification>
 
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
