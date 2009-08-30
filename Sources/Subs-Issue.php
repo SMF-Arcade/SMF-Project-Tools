@@ -119,7 +119,7 @@ function loadIssue()
 		'private' => !empty($row['private_issue']),
 	);
 
-	if (!$user_info['is_admin'] && count(array_intersect($context['current_issue']['versions'], $user_info['project_allowed_versions'])) == 0)
+	if (!$user_info['is_admin'] && count(array_intersect(array_keys($context['current_issue']['versions']), $user_info['project_allowed_versions'])) == 0)
 		$context['project_error'] = 'issue_not_found';
 	// If this is private issue are you allowed to see it?
 	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
