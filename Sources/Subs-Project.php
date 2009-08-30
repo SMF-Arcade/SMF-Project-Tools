@@ -90,16 +90,25 @@ function loadProjectTools()
 		$smcFunc['db_free_result']($request);
 		
 		// See version
-		$see_version = '(id_version IN(' . implode(',', $allowed_versions) . '))';
-		
+		if (!empty($user_info['project_allowed_versions']))
+			$see_version = '(id_version IN(' . implode(',', $user_info['project_allowed_versions']) . '))';
+		else
+			$see_version = '(0=1)';
+			
 		// See version in issue query
-		$see_version_issue = 'FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $allowed_versions) . ', i.versions)';
-	
+		if (!empty($user_info['project_allowed_versions']))
+			$see_version_issue = 'FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions)';
+		else
+			$see_version_issue = '(0=1)';
+			
 		// See version in timeline query
-		$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $allowed_versions) . ', IFNULL(i.versions, tl.versions))';
-		
+		if (!empty($user_info['project_allowed_versions']))
+			$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', IFNULL(i.versions, tl.versions))';
+		else
+			$see_version_timeline = '(0=1)';
+			
 		// See private issues code
-		$my_issue = $user_info['is_guest'] ? '(0 = 1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
+		$my_issue = $user_info['is_guest'] ? '(0=1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
 		
 		// Private issues
 		$see_private_profiles = getPrivateProfiles();
