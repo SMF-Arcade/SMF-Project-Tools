@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.3.3                                               xx.xx.2009
+SMF Project Tools 0.3.3                                               30.08.2009
 ================================================================================
 August 2009
 --------------------------------------------------------------------------------
@@ -10,6 +10,7 @@ August 2009
  ! Missing global in EditProjectProfile [Issue #286]
  ! Invalid links on Project Profile page [Issue #279]
  ! Some missing strings [Issue #280]
+ ! Unable to Edit Project Profiles when permissions for post groups disabled
 
 SMF Project Tools 0.3.2                                               01.08.2009
 ================================================================================
