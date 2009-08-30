@@ -97,13 +97,13 @@ function loadProjectTools()
 			
 		// See version in issue query
 		if (!empty($user_info['project_allowed_versions']))
-			$see_version_issue = 'FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions)';
+			$see_version_issue = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions))';
 		else
 			$see_version_issue = '(0=1)';
 			
 		// See version in timeline query
 		if (!empty($user_info['project_allowed_versions']))
-			$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', IFNULL(i.versions, tl.versions))';
+			$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', IFNULL(i.versions, tl.versions)))';
 		else
 			$see_version_timeline = '(0=1)';
 			
