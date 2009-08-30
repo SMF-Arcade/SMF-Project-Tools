@@ -149,11 +149,62 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
-	<uninstall for="2.0 RC1.2, 2.0 RC2">
+	<uninstall for="2.0 RC2">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
 		<modification format="xml" type="file" reverse="true">coretheme.xml</modification>
+
+		<!-- Remove these files from Sources -->
+		<remove-file name="$sourcedir/IssueComment.php" />
+		<remove-file name="$sourcedir/IssueList.php" />
+		<remove-file name="$sourcedir/IssueView.php" />
+		<remove-file name="$sourcedir/IssueReport.php" />
+		<remove-file name="$sourcedir/ManageProjects.php" />
+		<remove-file name="$sourcedir/Project.php" />
+		<remove-file name="$sourcedir/ProjectAdmin.php" />
+		<remove-file name="$sourcedir/ProjectList.php" />
+		<remove-file name="$sourcedir/ProjectPermissions.php" />
+		<remove-file name="$sourcedir/ProjectRoadmap.php" />
+		<remove-file name="$sourcedir/ProjectView.php" />
+		<remove-file name="$sourcedir/Subs-Issue.php" />
+		<remove-file name="$sourcedir/Subs-Project.php" />
+		<remove-file name="$sourcedir/Subs-ProjectAdmin.php" />
+
+		<!-- Templates -->
+		<remove-file name="$themedir/IssueList.template.php" />
+		<remove-file name="$themedir/IssueReport.template.php" />
+		<remove-file name="$themedir/IssueView.template.php" />
+		<remove-file name="$themedir/ManageProjects.template.php" />
+		<remove-file name="$themedir/PatchView.template.php" />
+		<remove-file name="$themedir/Project.template.php" />
+		<remove-file name="$themedir/ProjectAdmin.template.php" />
+		<remove-file name="$themedir/ProjectPermissions.template.php" />
+		<remove-file name="$themedir/ProjectRoadmap.template.php" />
+		<remove-file name="$themedir/ProjectView.template.php" />
+
+		<!-- CSS -->
+		<remove-file name="$themedir/css/project.css" />
+
+		<!-- Scripts -->
+		<remove-file name="$themedir/scripts/project.js" />
+
+		<!-- Images -->
+		<remove-file name="$imagesdir/bug.png" />
+		<remove-file name="$imagesdir/feature.png" />
+		<remove-file name="$imagesdir/pdropdown.gif" />
+		<remove-file name="$imagesdir/ploading.gif" />
+
+		<!-- Languages -->
+		<remove-file name="$languagedir/Project.english.php" />
+		<remove-file name="$languagedir/ProjectAdmin.english.php" />
+		<remove-file name="$languagedir/ProjectEmail.english.php" />
+	</uninstall>
+	
+	<uninstall for="2.0 RC1.2">
+		<!-- Remove code modifications -->
+		<modification format="xml" type="file" reverse="true">install.xml</modification>
+		<modification format="xml" type="file" reverse="true">coretheme-default.xml</modification>
 
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueComment.php" />
