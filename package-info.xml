@@ -22,6 +22,70 @@
 	<version>{version}</version>
 	<type>modification</type>
 
+	<install for="2.0 RC1.2">
+		<readme parsebbc="true">readme.txt</readme>
+
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
+		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Project.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+
+		<!-- These files goest to Theme directory -->
+		<require-file name="Themes/core/IssueList.template.php" destination="$themedir" />
+		<require-file name="Themes/core/IssueReport.template.php" destination="$themedir" />
+		<require-file name="Themes/core/IssueView.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ManageProjects.template.php" destination="$themedir" />
+		<require-file name="Themes/core/PatchView.template.php" destination="$themedir" />
+		<require-file name="Themes/core/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ProjectPermissions.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ProjectProfile.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ProjectRoadmap.template.php" destination="$themedir" />
+		<require-file name="Themes/core/ProjectView.template.php" destination="$themedir" />
+
+		<!-- CSS -->
+		<require-file name="Themes/core/css/project.css" destination="$themedir/css" />
+
+		<!-- Scripts -->
+		<require-file name="Themes/default/scripts/project.js" destination="$themedir/scripts" />
+
+		<!-- Images -->
+		<require-file name="Themes/core/images/bug.png" destination="$imagesdir" />
+		<require-file name="Themes/core/images/feature.png" destination="$imagesdir" />
+		<require-file name="Themes/core/images/pdropdown.gif" destination="$imagesdir" />
+		<require-file name="Themes/core/images/ploading.gif" destination="$imagesdir" />
+
+		<!-- Langauges -->
+		<require-file name="Themes/default/languages/Project.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectAdmin.english.php" destination="$languagedir" />
+		<require-file name="Themes/default/languages/ProjectEmail.english.php" destination="$languagedir" />
+		
+		<!-- Run Installer/upgrader -->
+		<code>ptinstall/Database.php</code>
+		<code>ptinstall/Subs-Install.php</code>
+		<database>ptinstall/install_main.php</database>
+
+		<modification format="xml" type="file">install.xml</modification>
+		<modification format="xml" type="file">curvetheme.xml</modification>
+		<modification format="xml" type="file">coretheme.xml</modification>
+
+		<!-- Redirect to upgrader -->
+		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
+	</install>
+	
 	<install for="2.0 RC2">
 		<readme parsebbc="true">readme.txt</readme>
 
@@ -86,7 +150,7 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 
-	<uninstall for="2.0 RC2">
+	<uninstall for="2.0 RC1.2, 2.0 RC2">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
