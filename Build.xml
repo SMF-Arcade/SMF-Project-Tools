@@ -3,7 +3,7 @@
 	<build>
 		<!-- Name for build -->
 		<name>SMF Project Tools</name>
-		<version>0.3.2</version>
+		<version>0.3.3</version>
 		
 		<!-- Allow SVN Builds? -->
 		<allow-svn>1</allow-svn>
