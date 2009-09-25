@@ -181,5 +181,6 @@ $txt['upgrade_no_tracker'] = 'There is no tracker &quot;%s&quot;, please create 
 $txt['admin_no_projects'] = 'No Projects Created';
 $txt['no_issue_types'] = 'No issue types selected';
 $txt['profile_not_found'] = 'Profile not found';
+$txt['profile_in_use'] = 'Profile is in use and can\'t be removed!';
 
 ?>

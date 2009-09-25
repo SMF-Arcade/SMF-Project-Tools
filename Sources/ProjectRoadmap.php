@@ -224,11 +224,11 @@ function ProjectRoadmapVersion()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_version, id_version_fixed, status, COUNT(*) AS num
 		FROM {db_prefix}issues AS ver
-		WHERE id_version_fixed IN({array_int:versions})
+		WHERE FIND_IN_SET(id_version_fixed, {int:versions})
 		GROUP BY id_version, id_version_fixed, status',
 		array(
 			'project' => $project,
-			'versions' => array($row['id_version']),
+			'versions' => $row['id_version'],
 		)
 	);
 

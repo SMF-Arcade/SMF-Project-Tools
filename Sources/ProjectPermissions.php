@@ -100,6 +100,44 @@ function ManageProjectPermissionsMain()
 	
 		redirectexit('action=admin;area=projectpermissions');
 	}
+	elseif (isset($_REQUEST['delete_profiles']) && !empty($_REQUEST['profiles']) && is_array($_REQUEST['profiles']))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT pr.id_profile, COUNT(p.id_project) AS num_project
+			FROM {db_prefix}project_profiles AS pr
+				LEFT JOIN {db_prefix}projects AS p ON (p.id_profile = pr.id_profile)
+			WHERE pr.id_profile IN({array_int:profiles})
+			GROUP BY pr.id_profile',
+			array(
+				'profiles' => $_REQUEST['profiles'],
+			)
+		);
+		
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if ($row['id_profile'] == 1 || $row['num_project'] != 0)
+				fatal_lang_error('profile_in_use', false);
+		}
+		$smcFunc['db_free_result']($request);
+		
+		// Delete permissions
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_permissions
+			WHERE id_profile IN({array_int:profiles})',
+			array(
+				'profiles' => $_REQUEST['profiles'],
+			)
+		);
+		
+		// and profiles
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_profiles
+			WHERE id_profile IN({array_int:profiles})',
+			array(
+				'profiles' => $_REQUEST['profiles'],
+			)
+		);
+	}
 	
 	$listOptions = array(
 		'id' => 'profiles_list',

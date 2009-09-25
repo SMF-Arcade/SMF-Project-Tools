@@ -255,25 +255,25 @@ table.issuetable td.lastissue
 	padding: 1px 2.5px;
 }
 
-.dropdown
+.project_dropdown
 {
 	cursor: pointer;
 }
 
-.dropdown:hover, .dropdown_selected
+.project_dropdown:hover, .project_dropdown_selected
 {
 	border: 1px solid black !important;
 	background: white;
 }
 
-.dropdown dd.button
+.project_dropdown dd.button
 {
 	width: 16px;
 	height: 1.6em;
 	float: right !important;
 	background: url(../images/pdropdown.gif) no-repeat center center;
 }
-.dropdown dd.button_work
+.project_dropdown dd.button_work
 {
 	width: 16px;
 	height: 1.6em;
@@ -281,7 +281,7 @@ table.issuetable td.lastissue
 	background: url(../images/ploading.gif) no-repeat center center;
 }
 
-.dropdown ul
+.project_dropdown ul
 {
 	border: 1px solid black;
 	border-top: 0;
@@ -291,31 +291,31 @@ table.issuetable td.lastissue
 	padding: 0;
 	margin-left: -1px;
 }
-.dropdown ul li
+.project_dropdown ul li
 {
 	list-style: none;
 	border: 0 !important;
 	margin: 0 !important;
 	padding: 1px 2.5px !important;
 }
-.dropdown ul li.group
+.project_dropdown ul li.group
 {
 	font-weight: bold;
 }
-.dropdown ul li a
+.project_dropdown ul li a
 {
 	color: black;
 	display: block;
 }
-.dropdown ul li a:hover
+.project_dropdown ul li a:hover
 {
 	text-decoration: none;
 }
-.dropdown ul li.selected_item
+.project_dropdown ul li.selected_item
 {
 	background: #00ffff;
 }
-.dropdown ul li:hover
+.project_dropdown ul li:hover
 {
 	background: #3399ff;
 }

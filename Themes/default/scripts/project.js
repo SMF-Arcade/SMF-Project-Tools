@@ -271,7 +271,7 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 
 	function init()
 	{
-		dropdownHandle.className += " dropdown";
+		dropdownHandle.className += " project_dropdown";
 		createEventListener(dropdownDL);
 		createEventListener(document);
 		dropdownDL.addEventListener('click', dropDownChange, false);
@@ -464,7 +464,7 @@ function PTMultiDropdown(issue, name, fieldName)
 
 	function init()
 	{
-		dropdownHandle.className += " dropdown";
+		dropdownHandle.className += " project_dropdown";
 		createEventListener(dropdownDL);
 		createEventListener(document);
 		dropdownDL.addEventListener('click', dropDownChange, false);
