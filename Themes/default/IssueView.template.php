@@ -467,7 +467,7 @@ function template_issue_view_above()
 		{
 			// Affected Version
 			echo '
-			var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version", ', (int) $context['current_issue']['version']['id'], ');';
+			var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version");';
 
 			// Versions
 			foreach ($context['versions'] as $v)
