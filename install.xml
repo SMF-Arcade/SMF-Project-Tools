@@ -737,7 +737,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
 		SET id_reporter = {int:guest_id}
-		WHERE id_member IN ({array_int:users})',
+		WHERE id_reporter IN ({array_int:users})',
 		array(
 			'guest_id' => 0,
 			'blank_email' => '',
@@ -748,7 +748,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
 		SET id_updater = {int:guest_id}
-		WHERE id_member IN ({array_int:users})',
+		WHERE id_updater IN ({array_int:users})',
 		array(
 			'guest_id' => 0,
 			'blank_email' => '',
