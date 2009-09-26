@@ -397,4 +397,156 @@ function ptMaintenanceIssues1($check = false)
 	return true;
 }
 
+// Set deleted posters as guests
+function ptMaintenanceIssues2($check = false)
+{
+	global $smcFunc, $txt;
+
+	if ($check)
+	{
+		// TODO: Write actual code
+		return true;
+	}
+	
+	$deletedMembers = array();
+
+	// Reporters
+	$request = $smcFunc['db_query']('', '
+		SELECT DISTINCT mem.id_member
+		FROM {db_prefix}issues AS i
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_reporter)
+		WHERE ISNULL(mem.id_member)');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$deletedMembers[$row['id_member']] = $row['id_member'];
+	$smcFunc['db_free_result']($request);
+	
+	// Updaters
+	$request = $smcFunc['db_query']('', '
+		SELECT DISTINCT mem.id_member
+		FROM {db_prefix}issues AS i
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_updater)
+		WHERE ISNULL(mem.id_member)');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$deletedMembers[$row['id_member']] = $row['id_member'];
+	$smcFunc['db_free_result']($request);
+	
+	// Commenters
+	$request = $smcFunc['db_query']('', '
+		SELECT DISTINCT mem.id_member
+		FROM {db_prefix}issue_comments AS com
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = com.id_member)
+		WHERE ISNULL(mem.id_member)');
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$deletedMembers[$row['id_member']] = $row['id_member'];
+	$smcFunc['db_free_result']($request);
+	
+	// Timeline
+	$request = $smcFunc['db_query']('', '
+		SELECT DISTINCT mem.id_member
+		FROM {db_prefix}project_timeline AS tl
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
+		WHERE ISNULL(mem.id_member)');
+	
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$deletedMembers[$row['id_member']] = $row['id_member'];
+	$smcFunc['db_free_result']($request);
+	
+	if (empty($deletedMembers))
+		return true;
+	
+	// Make Project Tools comments guest posts
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issue_comments
+		SET id_member = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $deletedMembers,
+		)
+	);
+	// Make Project Tools issues guest
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET id_reporter = {int:guest_id}
+		WHERE id_reporter IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $deletedMembers,
+		)
+	);	
+	// Make Project Tools issues updated by guest
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET id_updater = {int:guest_id}
+		WHERE id_updater IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $deletedMembers,
+		)
+	);
+	// Make Project Tools events guests
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}project_timeline
+		SET id_member = {int:guest_id}
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'guest_id' => 0,
+			'blank_email' => '',
+			'users' => $deletedMembers,
+		)
+	);
+	// Delete the members notifications and read logs
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_notify_projects
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_projects
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);	
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_project_mark_read
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_issues
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);
+	// Delete developer status
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}project_developer
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);
+	// Delete possible settings
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}project_developer
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $deletedMembers,
+		)
+	);
+	
+	return true;
+}
 ?>

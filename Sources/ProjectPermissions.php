@@ -243,6 +243,18 @@ function EditProjectProfile()
 		'id' => $row['id_profile'],
 		'name' => $row['profile_name'],
 	);
+	
+	// Determine the number of ungrouped members.
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}members
+		WHERE id_group = {int:regular_group}',
+		array(
+			'regular_group' => 0,
+		)
+	);
+	list ($num_members) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Fill the context variable with 'Guests' and 'Regular Members'.
 	$context['groups'] = array(
