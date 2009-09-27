@@ -320,6 +320,30 @@ $tables = array(
 				'type' => 'int',
 				'default' => 0,
 			),
+			array(
+				'name' => 'open_bug',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'closed_bug',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'open_feature',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'closed_feature',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
 		),
 		'indexes' => array(
 			array(

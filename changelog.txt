@@ -7,6 +7,7 @@ September 2009
 --------------------------------------------------------------------------------
  * Renamed dropdown class to project_dropdown to prevent conflicts [Issue #291]
  ! Allow deleting of project permission profiles [Issue #281]
+ + Log issue numbers for versions in database for speed / easy of use
  
 August 2009
 --------------------------------------------------------------------------------

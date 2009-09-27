@@ -217,6 +217,14 @@ function ProjectsMaintenanceRepair()
 			'name' => '',
 			'function' => 'ptMaintenanceIssues1',
 		),
+		array(
+			'name' => '',
+			'function' => 'ptMaintenanceIssues2',
+		),
+		array(
+			'name' => '',
+			'function' => 'ptMaintenanceIssueCounts',
+		)
 	);
 
 	return $repairFunctions;

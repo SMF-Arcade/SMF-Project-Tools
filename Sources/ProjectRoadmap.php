@@ -90,7 +90,18 @@ function ProjectRoadmapMain()
 				'open' => 0,
 				'closed' => 0,
 			),
+			'progress' => 0,
 		);
+		
+		foreach (array_keys($context['project']['trackers']) as $tracker)
+		{
+			$context['roadmap'][$row['id_version']]['open'] += $row['open_' . $tracker];
+			$context['roadmap'][$row['id_version']]['closed'] += $row['closed_' . $tracker];		
+			$context['roadmap'][$row['id_version']]['total'] += $row['open_' . $tracker] + $row['closed_' . $tracker];
+		}
+		
+		if ($context['roadmap'][$row['id_version']]['total'] > 0)
+			$context['roadmap'][$row['id_version']]['progress'] = round($context['roadmap'][$row['id_version']]['closed'] / $context['roadmap'][$row['id_version']]['total'] * 100, 2);	
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -101,46 +112,12 @@ function ProjectRoadmapMain()
 		'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => 0)),
 		'description' => $txt['version_na_desc'],
 		'release_date' => $txt['roadmap_no_release_date'],
-			'issues' => array(
-				'open' => 0,
-				'closed' => 0,
+		'issues' => array(
+			'open' => 0,
+			'closed' => 0,
 		),
+		'progress' => 0,
 	);
-
-	// TODO: Fix this
-	/*// Load issue counts
-	$request = $smcFunc['db_query']('', '
-		SELECT i.id_version_fixed, i.status, COUNT(i.id_version_fixed) AS num
-		FROM {db_prefix}issues AS i
-		WHERE i.id_version_fixed IN({array_int:versions})
-		GROUP BY i.id_version_fixed, i.status',
-		array(
-			'project' => $project,
-			'versions' => $ids,
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if (!in_array($row['status'], $context['closed_status']))
-			$context['roadmap'][$row['id_version_fixed']]['issues']['open'] += $row['num'];
-		else
-			$context['roadmap'][$row['id_version_fixed']]['issues']['closed'] += $row['num'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	foreach ($context['roadmap'] as $id => $d)
-	{
-		$d['issues']['total'] = $d['issues']['open'] + $d['issues']['closed'];
-
-		if ($d['issues']['total'] > 0)
-			$d['progress'] = round($d['issues']['closed'] / $d['issues']['total'] * 100, 2);
-		else
-			$d['progress'] = 0;
-
-		// Back to array
-		$context['roadmap'][$id] = $d;
-	}*/
 
 	// Hide "not set" version if it has no issues
 	/*if ($context['roadmap'][0]['issues']['total'] == 0)
@@ -159,7 +136,7 @@ function ProjectRoadmapVersion()
 	if ($_REQUEST['version'] != '0')
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date
+			SELECT ver.id_version, ver.id_parent, ver.version_name, ver.status, ver.description, ver.release_date, ver.' . implode(', ver.', $context['tracker_columns']) . '
 			FROM {db_prefix}project_versions AS ver
 			WHERE ({query_see_version})
 				AND ver.id_project = {int:project}
@@ -219,29 +196,13 @@ function ProjectRoadmapVersion()
 			'total' => 0,
 		),
 	);
-
-	// Load issue counts
-	$request = $smcFunc['db_query']('', '
-		SELECT id_version, id_version_fixed, status, COUNT(*) AS num
-		FROM {db_prefix}issues AS ver
-		WHERE FIND_IN_SET(id_version_fixed, {int:versions})
-		GROUP BY id_version, id_version_fixed, status',
-		array(
-			'project' => $project,
-			'versions' => $row['id_version'],
-		)
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	
+	foreach (array_keys($context['project']['trackers']) as $tracker)
 	{
-		if (!in_array($row['status'], $context['closed_status']))
-			$context['version']['issues']['open'] += $row['num'];
-		else
-			$context['version']['issues']['closed'] += $row['num'];
-
-		$context['version']['issues']['total'] += $row['num'];
+		$context['version']['issues']['open'] += $row['open_' . $tracker];
+		$context['version']['issues']['closed'] += $row['closed_' . $tracker];		
+		$context['version']['issues']['total'] += $row['open_' . $tracker] + $row['closed_' . $tracker];
 	}
-	$smcFunc['db_free_result']($request);
 
 	if (!empty($context['version']['issues']['total']))
 		$context['version']['progress'] = round($context['version']['issues']['closed'] / $context['version']['issues']['total'] * 100, 2);

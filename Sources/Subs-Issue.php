@@ -311,6 +311,9 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 			'priority', $row['priority'], $issueOptions['priority'],
 		);
 	}
+	
+	$oldVersions = array_merge($row['versions'], $row['versions_fixed']);
+	$newVersions = array();
 
 	if (isset($issueOptions['versions']) && $issueOptions['versions'] != $row['versions'])
 	{
@@ -318,13 +321,17 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		
 		if (empty($issueOptions['versions']))
 			$issueOptions['versions'] = array(0);
-		
+			
+	
+		$newVersions = array_merge($newVersions, $issueOptions['versions']);
 		$issueOptions['versions'] = implode(',', $issueOptions['versions']);
 
 		$event_data['changes'][] = array(
 			'version', implode(',', $row['versions']), $issueOptions['versions'],
 		);
 	}
+	else
+		$newVersions = array_merge($newVersions, $row['versions']);
 
 	if (isset($issueOptions['versions_fixed']) && $issueOptions['versions_fixed'] != $row['versions_fixed'])
 	{
@@ -333,12 +340,15 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		if (empty($issueOptions['versions_fixed']))
 			$issueOptions['versions_fixed'] = array(0);
 	
+		$newVersions = array_merge($newVersions, $issueOptions['versions_fixed']);
 		$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions_fixed']);
 
 		$event_data['changes'][] = array(
 			'target_version', implode(',', $row['versions_fixed']), $issueOptions['versions_fixed'],
 		);
 	}
+	else
+		$newVersions = array_merge($newVersions, $row['versions_fixed']);
 
 	if (isset($issueOptions['comment_first']))
 		$issueUpdates[] = 'id_comment_first = {int:comment_first}';
@@ -394,15 +404,16 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		))
 	);
 
+	// Update Issue Counts from project
 	$projectUpdates = array();
 
+	// Which tracker it belonged to and will belong in future?
+	if (!empty($row['id_tracker']))
+		$oldTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $oldStatus];
+	$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
+		
 	if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $row['id_tracker'] || $oldStatus != $newStatus))
 	{
-		if (!empty($row['id_tracker']))
-			$oldTracker = $context['issue_trackers'][$row['id_tracker']]['column_' . $oldStatus];
-		
-		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
-
 		if (!empty($oldStatus))
 			$projectUpdates[$row['id_project']][] = "$oldTracker = $oldTracker - 1";
 
@@ -422,6 +433,35 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 				)
 			);
 			
+	// If tracker hasn't changed remove values that doesn't need to be changed
+	if ($oldTracker == $newTracker)
+	{
+		$oldVersions = array_diff($oldVersions, $newVersions);
+		$newVersions = array_diff($newVersions, $oldVersions);
+	}
+			
+	// Update issue counts in versions
+	if (!empty($oldVersions))
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_versions
+			SET {raw:tracker} = {raw:tracker} - 1
+			WHERE id_version IN({array_int:versions})',
+			array(
+				'tracker' => $oldTracker,
+				'versions' => $oldVersions,
+			)
+		);
+	if (!empty($newVersions))
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_versions
+			SET {raw:tracker} = {raw:tracker} + 1
+			WHERE id_version IN({array_int:versions})',
+			array(
+				'tracker' => $newTracker,
+				'versions' => $newVersions,
+			)
+		);
+		
 	// Update id_project in timeline if needed
 	if ($row['id_project'] != $issueOptions['project'])
 		$smcFunc['db_query']('', '
@@ -643,7 +683,7 @@ function deleteIssue($id_issue, $posterOptions)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_project, id_tracker, subject, versions, status, id_category,
+			id_project, id_tracker, subject, versions, versions_fixed, status, id_category,
 			priority, id_assigned
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
@@ -682,6 +722,20 @@ function deleteIssue($id_issue, $posterOptions)
 			WHERE id_project = {int:project}",
 			array(
 				'project' => $row['id_project'],
+			)
+		);
+		
+	// Remove issue from versions too
+	$versions = array_merge(explode(',', $row['versions']), explode(',', $row['versions_fixed']));
+		
+	if (!empty($versions))
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}project_versions
+			SET {raw:tracker} = {raw:tracker} - 1
+			WHERE id_version IN({array_int:versions})',
+			array(
+				'tracker' => $curTracker,
+				'versions' => $versions,
 			)
 		);
 

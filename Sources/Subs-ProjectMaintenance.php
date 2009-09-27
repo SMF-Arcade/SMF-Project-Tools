@@ -372,6 +372,22 @@ function ptMaintenanceEvents3($check = false)
 	return true;
 }
 
+// Update Issue Counts
+function ptMaintenanceIssueCounts($check = false)
+{
+	global $smcFunc, $txt;
+	
+	if ($check)
+	{
+		// TODO: Write actual code
+		return true;
+	}
+	
+	// TODO: Write code to recount issues
+	
+	return true;
+}
+
 // Delete invalid issues
 function ptMaintenanceIssues1($check = false)
 {
@@ -549,4 +565,5 @@ function ptMaintenanceIssues2($check = false)
 	
 	return true;
 }
+
 ?>
