@@ -174,10 +174,10 @@ function IssueList()
 		$where[] = 'i.id_assigned = {int:search_assignee}';
 
 	if (isset($context['issue_search']['version']))
-		$where[] = '(FIND_IN_SET({int:search_version}, i.versions)';
+		$where[] = '(FIND_IN_SET({int:search_version}, i.versions))';
 
 	if (isset($context['issue_search']['version_fixed']))
-		$where[] = '(FIND_IN_SET({int:search_version_f}, i.versions_fixed)';
+		$where[] = '(FIND_IN_SET({int:search_version_f}, i.versions_fixed))';
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
