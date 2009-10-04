@@ -115,7 +115,7 @@ function ptUpgrade_trackers($check = false)
 	}
 	$smcFunc['db_free_result']($request);
 
-	if (in_array('issue_type', $smcFunc['db_list_columns']('issues')))
+	if (in_array('issue_type', $smcFunc['db_list_columns']('{db_prefix}issues')))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT DISTINCT issue_type
@@ -154,7 +154,7 @@ function ptUpgrade_versionFields($check = false)
 
 	db_extend('packages');
 
-	if (in_array('id_version', $smcFunc['db_list_columns']('issues')))
+	if (in_array('id_version', $smcFunc['db_list_columns']('{db_prefix}issues')))
 	{
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}issues
@@ -164,7 +164,7 @@ function ptUpgrade_versionFields($check = false)
 		$smcFunc['db_remove_column']('issues', 'id_version');
 	}
 	
-	if (in_array('id_version_fixed', $smcFunc['db_list_columns']('issues')))
+	if (in_array('id_version_fixed', $smcFunc['db_list_columns']('{db_prefix}issues')))
 	{
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}issues
@@ -174,7 +174,7 @@ function ptUpgrade_versionFields($check = false)
 		$smcFunc['db_remove_column']('issues', 'id_version_fixed');
 	}
 	
-	if (in_array('id_version', $smcFunc['db_list_columns']('project_timeline')))
+	if (in_array('id_version', $smcFunc['db_list_columns']('{db_prefix}project_timeline')))
 	{
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}project_timeline
