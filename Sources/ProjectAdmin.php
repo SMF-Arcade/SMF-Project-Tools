@@ -244,6 +244,16 @@ function ProjectsMaintenanceUpgrade()
 		array(
 			'function' => 'ptUpgrade_versionFields',
 		),
+		
+		// These maintenance actions are needed for proper upgrade
+		array(
+			'name' => '',
+			'function' => 'ptMaintenanceIssues2',
+		),
+		array(
+			'name' => '',
+			'function' => 'ptMaintenanceIssueCounts',
+		),
 	);
 
 	return $repairFunctions;
