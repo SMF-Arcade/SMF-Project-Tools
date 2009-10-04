@@ -20,21 +20,6 @@
 	<id>Niko:SMFProject</id>
 	<version>{version}</version>
 
-	<file name="$themes_dir/core/Profile.template.php">
-		<operation>
-			<search position="before"><![CDATA[template_show_list('board_notification_list');]]></search>
-			<add><![CDATA[
-	if (!empty($modSettings['projectEnabled']))
-	{
-		echo '
-			<br />';
-
-		template_show_list('project_notification_list');
-	}
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$themes_dir/core/BoardIndex.template.php">
 		<operation>
 			<search position="before"><![CDATA[			echo '
