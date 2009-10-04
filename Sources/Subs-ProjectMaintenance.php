@@ -428,7 +428,7 @@ function ptMaintenanceIssues2($check = false)
 
 	// Reporters
 	$request = $smcFunc['db_query']('', '
-		SELECT DISTINCT mem.id_member
+		SELECT DISTINCT i.id_reporter
 		FROM {db_prefix}issues AS i
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_reporter)
 		WHERE ISNULL(mem.id_member)');
@@ -439,7 +439,7 @@ function ptMaintenanceIssues2($check = false)
 	
 	// Updaters
 	$request = $smcFunc['db_query']('', '
-		SELECT DISTINCT mem.id_member
+		SELECT DISTINCT i.id_updater
 		FROM {db_prefix}issues AS i
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_updater)
 		WHERE ISNULL(mem.id_member)');
@@ -450,7 +450,7 @@ function ptMaintenanceIssues2($check = false)
 	
 	// Commenters
 	$request = $smcFunc['db_query']('', '
-		SELECT DISTINCT mem.id_member
+		SELECT DISTINCT com.id_member
 		FROM {db_prefix}issue_comments AS com
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = com.id_member)
 		WHERE ISNULL(mem.id_member)');
@@ -461,7 +461,7 @@ function ptMaintenanceIssues2($check = false)
 	
 	// Timeline
 	$request = $smcFunc['db_query']('', '
-		SELECT DISTINCT mem.id_member
+		SELECT DISTINCT tl.id_member
 		FROM {db_prefix}project_timeline AS tl
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = tl.id_member)
 		WHERE ISNULL(mem.id_member)');
