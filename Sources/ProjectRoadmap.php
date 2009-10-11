@@ -93,11 +93,11 @@ function ProjectRoadmapMain()
 			'progress' => 0,
 		);
 		
-		foreach (array_keys($context['project']['trackers']) as $tracker)
+		foreach ($context['project']['trackers'] as $id => $tracker)
 		{
-			$context['roadmap'][$row['id_version']]['open'] += $row['open_' . $tracker];
-			$context['roadmap'][$row['id_version']]['closed'] += $row['closed_' . $tracker];		
-			$context['roadmap'][$row['id_version']]['total'] += $row['open_' . $tracker] + $row['closed_' . $tracker];
+			$context['roadmap'][$row['id_version']]['open'] += $row['open_' . $tracker['short']];
+			$context['roadmap'][$row['id_version']]['closed'] += $row['closed_' . $tracker['short']];		
+			$context['roadmap'][$row['id_version']]['total'] += $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']];
 		}
 		
 		if ($context['roadmap'][$row['id_version']]['total'] > 0)
@@ -197,11 +197,11 @@ function ProjectRoadmapVersion()
 		),
 	);
 	
-	foreach (array_keys($context['project']['trackers']) as $tracker)
+	foreach ($context['project']['trackers'] as $tracker)
 	{
-		$context['version']['issues']['open'] += $row['open_' . $tracker];
-		$context['version']['issues']['closed'] += $row['closed_' . $tracker];		
-		$context['version']['issues']['total'] += $row['open_' . $tracker] + $row['closed_' . $tracker];
+		$context['version']['issues']['open'] += $row['open_' . $tracker['short']];
+		$context['version']['issues']['closed'] += $row['closed_' . $tracker['short']];		
+		$context['version']['issues']['total'] += $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']];
 	}
 
 	if (!empty($context['version']['issues']['total']))
