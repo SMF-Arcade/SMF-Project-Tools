@@ -31,7 +31,7 @@ function template_profiles_list()
 				</span>
 			</div>
 			<div class="headerpadding titlebg" style="text-align: right">
-				<input type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
 			</div>
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -126,7 +126,7 @@ function template_profile_permissions()
 
 	echo '
 				<div style="text-align: right">
-					<input type="submit" name="save" value="', $txt['permission_save'], '" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="save" value="', $txt['permission_save'], '" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div>

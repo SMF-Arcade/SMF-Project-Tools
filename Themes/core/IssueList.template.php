@@ -45,7 +45,7 @@ function template_issue_list()
 
 	echo '
 					</select>
-					<input type="submit" name="search" value="', $txt['issue_search_button'], '" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="search" value="', $txt['issue_search_button'], '" tabindex="', $context['tabindex']++, '" />
 				</form>
 			</div>
 		</div>

@@ -788,8 +788,8 @@ function template_issue_view_below()
 
 		echo '
 				<div style="text-align: right">
-					<input type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
-					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div><br />
@@ -828,7 +828,7 @@ function template_issue_view_below()
 			echo '
 					<li class="tag_editor">
 						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
-						<input type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
+						<input class="button_submit" type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
 					</li>';
 
 		echo '
@@ -858,7 +858,7 @@ function template_issue_view_below()
 
 		echo '
 				<div style="text-align: right">
-					<input type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div>
@@ -886,7 +886,7 @@ function template_issue_move()
 				
 				</select>
 				<div style="text-align: right">
-					<input type="submit" name="move_issue" value="', $txt['move_issue_btn'], '" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="move_issue" value="', $txt['move_issue_btn'], '" tabindex="', $context['tabindex']++, '" />
 				</div>
 			</div>
 		</div>

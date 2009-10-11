@@ -175,11 +175,11 @@ function template_edit_project()
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 	if (isset($context['project']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />
-				<input type="submit" name="delete" value="', $txt['delete_project'], '" onclick="return confirm(\'', $txt['pdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="edit" value="', $txt['edit_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="delete" value="', $txt['delete_project'], '" onclick="return confirm(\'', $txt['pdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>
@@ -204,8 +204,8 @@ function template_confirm_project_delete()
 		</tr>
 		<tr>
 			<td align="center" class="windowbg2">
-				<input type="submit" name="delete" value="', $txt['confirm_delete'], '" tabindex="', $context['tabindex']++, '" />
-				<input type="submit" name="cancel" value="', $txt['cancel_delete'], '" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="delete" value="', $txt['confirm_delete'], '" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="cancel" value="', $txt['cancel_delete'], '" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 	</table>
@@ -249,11 +249,11 @@ function template_edit_category()
 
 	if (isset($context['category']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />
-				<input type="submit" name="delete" value="', $txt['delete_category'], '" onclick="return confirm(\'', $txt['cdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="edit" value="', $txt['edit_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="delete" value="', $txt['delete_category'], '" onclick="return confirm(\'', $txt['cdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>
@@ -345,11 +345,11 @@ function template_edit_version()
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 	if (isset($context['version']['is_new']))
 		echo '
-				<input type="submit" name="add" value="', $txt['new_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="add" value="', $txt['new_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['edit_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />
-				<input type="submit" name="delete" value="', $txt['delete_version'], '" onclick="return confirm(\'', $txt['vdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
+				<input class="button_submit" type="submit" name="edit" value="', $txt['edit_version'], '" onclick="return !isEmptyText(this.form.version_name);" tabindex="', $context['tabindex']++, '" />
+				<input class="button_submit" type="submit" name="delete" value="', $txt['delete_version'], '" onclick="return confirm(\'', $txt['vdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>
 		</tr>
