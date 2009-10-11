@@ -10,14 +10,14 @@ function template_project_view_above()
 		echo '
 	<div id="adm_submenus"><ul class="dropmenu">';
 
-			// Print out all the items in this tab.
-			foreach ($context['project_tabs']['tabs'] as $tab)
-				echo '
-				<li>
-					<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
-						<span class="firstlevel">', $tab['title'], '</span>
-					</a>
-				</li>';
+		// Print out all the items in this tab.
+		foreach ($context['project_tabs']['tabs'] as $tab)
+			echo '
+		<li>
+			<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
+				<span class="firstlevel">', $tab['title'], '</span>
+			</a>
+		</li>';
 		
 		echo '
 	</ul></div>';
