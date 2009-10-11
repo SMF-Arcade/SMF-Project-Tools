@@ -270,6 +270,8 @@ function loadProject()
 		if ($smcFunc['db_num_rows']($request) == 0)
 		{
 			$context['project_error'] = 'project_not_found';
+			
+			$project = 0;
 
 			return;
 		}
