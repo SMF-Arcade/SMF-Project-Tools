@@ -34,7 +34,7 @@ function loadIssue()
 			i.versions, i.versions_fixed,
 			mem.id_member, mem.real_name, cat.id_category, cat.category_name,
 			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
-			com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
+			com.id_event, com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
 			com.poster_ip
 		FROM {db_prefix}issues AS i
 			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
@@ -78,6 +78,7 @@ function loadIssue()
 		'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
 		'details' => array(
 			'id' => $row['id_comment_first'],
+			'id_event' => $row['id_event'],
 			'time' => timeformat($row['post_time']),
 			'body' => parse_bbc($row['body']),
 			'ip' => $row['poster_ip'],
