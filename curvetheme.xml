@@ -76,10 +76,10 @@ function template_boardindex_project($category, $position)
 
 			if ($project['new'])
 				echo '
-					<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
+					<img src="', $settings['images_url'], '/on.png" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
 			else
 				echo '
-					<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
+					<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
 
 			echo '
 				</a>

@@ -37,18 +37,12 @@ function template_project_view()
 	<div class="pagesection">
 		', template_button_strip($project_buttons, 'right'), '
 	</div>
-	<div class="tborder">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $context['project']['name'], '
-		</h3>
-		<div class="projectframe_section">
-			<div class="windowbg2 middletext">
-				<p class="section_full">
-					', $context['project']['long_description'], '
-				</p>
-			</div>
-		</div>
-	</div><br />';
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		', $context['project']['name'], '
+	</h3>
+	<p class="description">
+		', $context['project']['long_description'], '
+	</p>';
 
 	$side = true;
 
@@ -61,11 +55,11 @@ function template_project_view()
 
 		echo '
 		<div class="issuecolumn">
-			<div class="issuelistframe tborder columnmargin_', $side ? 'right' : 'left', '">
+			<div class="issue_table columnmargin_', $side ? 'right' : 'left', '">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					', $issueList['title'], '
 				</h3>
-				<table cellspacing="1" class="bordercolor issuetable">
+				<table cellspacing="0" class="table_grid">
 					<tr>';
 
 		if (!empty($issueList['issues']))

@@ -66,25 +66,30 @@ function template_issue_list()
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'right'), '
 		</div>
-		<div class="issuelistframe tborder">
-			<table cellspacing="1" class="bordercolor issuetable">
-				<tr>';
+		<div class="issue_table">
+			<table cellspacing="0" class="table_grid">
+				<thead>
+					<tr>';
 
 		if (!empty($context['issues']))
 			echo '
-					<th class="catbg3 headerpadding"></th>
-					<th class="catbg3 headerpadding">', $txt['issue_title'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_replies'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_status'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_version'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_version_fixed'], '</th>
-					<th class="catbg3 headerpadding">', $txt['issue_last_update'], '</th>';
+						<th scope="col" class="smalltext first_th"></th>
+						<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
+						<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
+						<th scope="col" class="smalltext">', $txt['issue_status'], '</th>
+						<th scope="col" class="smalltext">', $txt['issue_version'], '</th>
+						<th scope="col" class="smalltext">', $txt['issue_version_fixed'], '</th>
+						<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-					<th class="catbg3 headerpadding" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>';
+						<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+						<th class="smalltext" colspan="5"><strong>', $txt['issue_no_issues'], '</strong></th>
+						<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
 
 		echo '
-				</tr>';
+					</tr>
+				</thead>
+				<tbody>';
 
 	if (!empty($context['issues']))
 	{
@@ -166,6 +171,7 @@ function template_issue_list()
 	}
 
 	echo '
+				</tbody>
 			</table>
 		</div>
 		<div class="pagesection">

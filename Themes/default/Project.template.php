@@ -37,10 +37,10 @@ function template_project_list()
 
 				if ($project['new'])
 					echo '
-							<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
+							<img src="', $settings['images_url'], '/on.png" alt="', $txt['new_issues'], '" title="', $txt['new_issues'], '" />';
 				else
 					echo '
-							<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
+							<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_issues'], '" title="', $txt['old_issues'], '" />';
 
 				echo '
 						</a>
@@ -91,7 +91,7 @@ function template_project_list()
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['project_timeline'], '
 		</h3>
-		<div id="upshrinkHeaderIC">'; // Todo: Copy style and rename?
+		<div id="upshrinkHeaderProjectTL">';
 
 	$first = true;
 

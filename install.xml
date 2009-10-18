@@ -417,7 +417,7 @@ else
 			'additional_rows' => array(
 				array(
 					'position' => 'bottom_of_list',
-					'value' => '<input type="submit" name="edit_notify_projects" value="' . $txt['notifications_update'] . '" />',
+					'value' => '<input class="button_submit" type="submit" name="edit_notify_projects" value="' . $txt['notifications_update'] . '" />',
 					'class' => 'windowbg',
 					'align' => 'right',
 				),

@@ -148,37 +148,37 @@
 {
 	margin: 0;
 }
-table.issuetable
+.issue_table table
 {
 	width: 100%;
 }
-table.issuetable td.icon
+.issue_table td.icon
 {
 	text-align: center;
 	padding: 0.5em;
 	width: 20px;
 }
-table.issuetable td.info
+.issue_table td.info
 {
 	padding: 0;
 }
-table.issuetable td.info h4
+.issue_table td.info h4
 {
 	padding: 0.4em 0.4em 0 0.4em;
 	margin: 0;
 }
-table.issuetable td.info p
+.issue_table td.info p
 {
 	padding: 0 0.4em 0.5em 0.4em;
 	margin: 0;
 }
-table.issuetable td.replies, table.issuetable td.status, table.issuetable td.version
+.issue_table td.replies, .issue_table td.status, .issue_table td.version
 {
 	width: 5%;
 	text-align: center;
 	padding: 0.4em;
 }
-table.issuetable td.lastissue
+.issue_table td.lastissue
 {
 	width: 20%;
 	padding: 0.4em;
