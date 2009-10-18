@@ -114,10 +114,7 @@ function template_report_issue()
 
 	echo '
 					<dd>
-						', template_control_richedit($context['post_box_name'], 'bbc'), '
-					</dd>
-					<dd>
-						', template_control_richedit($context['post_box_name'], 'message'), '
+						', template_control_richedit($context['post_box_name']), '
 					</dd>';
 
 	if (!empty($context['can_subscribe']))
@@ -130,8 +127,8 @@ function template_report_issue()
 
 	echo '
 					<dd class="full center">
-						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
-						', template_control_richedit($context['post_box_name'], 'buttons'), '
+						<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+						', template_control_richedit_buttons($context['post_box_name']), '
 					</dd>';
 
 	echo '
@@ -193,10 +190,7 @@ function template_issue_reply()
 						</div>
 					</dd>
 					<dd>
-						', template_control_richedit($context['post_box_name'], 'bbc'), '
-					</dd>
-					<dd>
-						', template_control_richedit($context['post_box_name'], 'message'), '
+						', template_control_richedit($context['post_box_name']), '
 					</dd>';
 
 	if (!empty($context['can_subscribe']))
@@ -209,8 +203,8 @@ function template_issue_reply()
 
 	echo '
 					<dd class="full center">
-						<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
-						', template_control_richedit($context['post_box_name'], 'buttons'), '
+						<span class="smalltext">', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
+						', template_control_richedit_buttons($context['post_box_name']), '
 					</dd>
 					<dd class="clear"></dd>
 				</dl>
