@@ -169,7 +169,7 @@ function ProjectRoadmapVersion()
 	
 	// Make release date string
 	if (!empty($row['release_date']))
-	$row['release_date'] = unserialize($row['release_date']);
+		$row['release_date'] = unserialize($row['release_date']);
 
 	$time = array();
 
@@ -199,6 +199,9 @@ function ProjectRoadmapVersion()
 	
 	foreach ($context['project']['trackers'] as $tracker)
 	{
+		if (!isset($row['open_' . $tracker['short']]))
+			continue;
+		
 		$context['version']['issues']['open'] += $row['open_' . $tracker['short']];
 		$context['version']['issues']['closed'] += $row['closed_' . $tracker['short']];		
 		$context['version']['issues']['total'] += $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']];

@@ -190,48 +190,49 @@ function template_issue_view_above()
 				</ul>
 			</div>
 			<div class="postarea">
-				<div class="keyinfo">
-					<div class="messageicon floatleft">
-						<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" style="padding: 6px 3px" />
-					</div>
-					<h5>
-						<a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $context['current_issue']['details']['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a>
-					</h5>
-					<div class="smalltext">&#171; <strong>', !empty($context['current_issue']['details']['counter']) ? $txt['reply'] . ' #' . $context['current_issue']['details']['counter'] : '', ' ', $txt['on'], ':</strong> ', $context['current_issue']['details']['time'], ' &#187;</div>
-				</div>';
+				<div class="flow_hidden">
+					<div class="keyinfo">
+						<div class="messageicon">
+							<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" style="padding: 6px 3px" />
+						</div>
+						<h5>
+							<a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $context['current_issue']['details']['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a>
+						</h5>
+						<div class="smalltext">&#171; <strong>', !empty($context['current_issue']['details']['counter']) ? $txt['reply'] . ' #' . $context['current_issue']['details']['counter'] : '', ' ', $txt['on'], ':</strong> ', $context['current_issue']['details']['time'], ' &#187;</div>
+					</div>';
 				
 	if ($context['can_comment'] || $context['current_issue']['details']['can_edit'] || $context['current_issue']['details']['can_remove'])	
 		echo '
-				<ul class="reset smalltext quickbuttons">';
+					<ul class="reset smalltext quickbuttons">';
 
 	if ($context['can_comment'])
 		echo '
-					<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $reply_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $reply_button, '</a></li>';
 
 	if ($context['current_issue']['details']['can_edit'])
 		echo '
-					<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $modify_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $modify_button, '</a></li>';
 
 	if ($context['current_issue']['details']['can_remove'])
 		echo '
-					<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
+						<li><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $remove_button, '</a></li>';
 
 	if ($context['can_comment'] || $context['current_issue']['details']['can_edit'] || $context['current_issue']['details']['can_remove'])
 		echo '
-				</ul>';
+					</ul>';
 					
 	echo '
-				<div id="com_', $context['current_issue']['details']['id'], '" class="post" style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">
-					<div class="inner">', $context['current_issue']['details']['body'], '</div>
-				</div>
-				<div id="com_', $context['current_issue']['details']['id'], '_footer" class="attachments smalltext">';
+					<div id="com_', $context['current_issue']['details']['id'], '" class="post">
+						<div class="inner">', $context['current_issue']['details']['body'], '</div>
+					</div>';
 
 	// Show attachments
 	if (!empty($context['attachments']))
 	{
 		echo '
-					<hr width="100%" size="1" class="hrcolor" />
-					<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
+					<div id="com_', $context['current_issue']['details']['id'], '_footer" class="attachments smalltext">
+						<hr width="100%" size="1" class="hrcolor" />
+						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
 
 		foreach ($context['attachments'] as $attachment)
 		{
@@ -239,19 +240,20 @@ function template_issue_view_above()
 			{
 				if ($attachment['thumbnail']['has_thumb'])
 					echo '
-						<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+							<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
 				else
 					echo '
-						<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
+							<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
 			}
 			echo '
-						<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
+							<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
 
 			echo '
-						(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+							(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
 		}
 
 		echo '
+						</div>
 					</div>';
 	}
 
@@ -562,11 +564,9 @@ function template_issue_view_main()
 		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'right'), '
 	</div>
-	<div class="tborder comments">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $txt['issue_comments'], '
-		</h3>
-		<div class="bordercolor">';
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		', $txt['issue_comments'], '
+	</h3>';
 
 	while ($event = getEvent())
 	{
@@ -574,32 +574,29 @@ function template_issue_view_main()
 		$id2 = isset($event['comment']) ? 'com_' . $event['comment']['id'] : 'evt_' . $event['id'];
 
 		echo '
-		<div class="bordercolor singlepost">';
-
-		echo '
-			<div class="windowbg', $alternate ? '' : '2', '">
-				<span class="topslice"><span></span></span>';
+		<div class="windowbg', $alternate ? '' : '2', '">
+			<span class="topslice"><span></span></span>';
 
 		// Show information about the poster of this message.
 		echo '
-				<div class="poster">
-					<h4>';
+			<div class="poster">
+				<h4>';
 		// Show online and offline buttons?
 		if (!empty($modSettings['onlineEnable']) && !$event['member']['is_guest'])
 			echo  $context['can_send_pm'] ? '<a href="' . $event['member']['online']['href'] . '" title="' . $event['member']['online']['label'] . '">' : '', '<img src="', $event['member']['online']['image_href'], '" alt="', $event['member']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';
 
 		echo $event['member']['link'], '</h4>
-					<ul class="reset smalltext" id="', $id, '_extra_info">';
+				<ul class="reset smalltext" id="', $id, '_extra_info">';
 
 		// Show the member's custom title, if they have one.
 		if (isset($event['member']['title']) && $event['member']['title'] != '')
 			echo '
-						<li class="title">', $event['member']['title'], '</li>';
+					<li class="title">', $event['member']['title'], '</li>';
 
 		// Show the member's primary group (like 'Administrator') if they have one.
 		if (isset($event['member']['group']) && $event['member']['group'] != '')
 			echo '
-						<li class="membergroup">', $event['member']['group'], '</li>';
+					<li class="membergroup">', $event['member']['group'], '</li>';
 
 		// Don't show these things for guests.
 		if (!$event['member']['is_guest'])
@@ -607,45 +604,45 @@ function template_issue_view_main()
 			// Show the post group if and only if they have no other group or the option is on, and they are in a post group.
 			if ((empty($settings['hide_post_group']) || $event['member']['group'] == '') && $event['member']['post_group'] != '')
 				echo '
-						<li class="postgroup">', $event['member']['post_group'], '</li>';
+					<li class="postgroup">', $event['member']['post_group'], '</li>';
 			echo '
-						<li class="stars">', $event['member']['group_stars'], '</li>';
+					<li class="stars">', $event['member']['group_stars'], '</li>';
 
 			// Show avatars, images, etc.?
 			if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($event['member']['avatar']['image']))
 				echo '
-						<li class="avatar" style="overflow: auto;">', $event['member']['avatar']['image'], '</li>';
+					<li class="avatar" style="overflow: auto;">', $event['member']['avatar']['image'], '</li>';
 
 			// Show how many posts they have made.
 			if (!isset($context['disabled_fields']['posts']))
 				echo '
-						<li class="postcount">', $txt['member_postcount'], ': ', $event['member']['posts'], '</li>';
+					<li class="postcount">', $txt['member_postcount'], ': ', $event['member']['posts'], '</li>';
 
 			// Is karma display enabled?  Total or +/-?
 			if ($modSettings['karmaMode'] == '1')
 				echo '
-						<li class="karma">', $modSettings['karmaLabel'], ' ', $event['member']['karma']['good'] - $event['member']['karma']['bad'], '</li>';
+					<li class="karma">', $modSettings['karmaLabel'], ' ', $event['member']['karma']['good'] - $event['member']['karma']['bad'], '</li>';
 			elseif ($modSettings['karmaMode'] == '2')
 				echo '
-						<li class="karma">', $modSettings['karmaLabel'], ' +', $event['member']['karma']['good'], '/-', $event['member']['karma']['bad'], '</li>';
+					<li class="karma">', $modSettings['karmaLabel'], ' +', $event['member']['karma']['good'], '/-', $event['member']['karma']['bad'], '</li>';
 
 			// Is this user allowed to modify this member's karma?
 			if ($event['member']['karma']['allow'])
 				echo '
-						<li class="karma_allow">
-							<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-							<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
-						</li>';
+					<li class="karma_allow">
+						<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
+						<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
+					</li>';
 
 			// Show the member's gender icon?
 			if (!empty($settings['show_gender']) && $event['member']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
 				echo '
-						<li class="gender">', $txt['gender'], ': ', $event['member']['gender']['image'], '</li>';
+					<li class="gender">', $txt['gender'], ': ', $event['member']['gender']['image'], '</li>';
 
 			// Show their personal text?
 			if (!empty($settings['show_blurb']) && $event['member']['blurb'] != '')
 				echo '
-						<li class="blurb">', $event['member']['blurb'], '</li>';
+					<li class="blurb">', $event['member']['blurb'], '</li>';
 
 			// Any custom fields to show as icons?
 			if (!empty($event['member']['custom_fields']))
@@ -659,59 +656,59 @@ function template_issue_view_main()
 					{
 						$shown = true;
 						echo '
-						<li class="im_icons">
-							<ul>';
+					<li class="im_icons">
+						<ul>';
 					}
 					echo '
-								<li>', $custom['value'], '</li>';
+							<li>', $custom['value'], '</li>';
 				}
 				if ($shown)
 					echo '
-							</ul>
-						</li>';
+						</ul>
+					</li>';
 			}
 
 			// This shows the popular messaging icons.
 			if ($event['member']['has_messenger'] && $event['member']['can_view_profile'])
 				echo '
-						<li class="im_icons">
-							<ul>
-								', !isset($context['disabled_fields']['icq']) && !empty($event['member']['icq']['link']) ? '<li>' . $event['member']['icq']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['msn']) && !empty($event['member']['msn']['link']) ? '<li>' . $event['member']['msn']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['aim']) && !empty($event['member']['aim']['link']) ? '<li>' . $event['member']['aim']['link'] . '</li>' : '', '
-								', !isset($context['disabled_fields']['yim']) && !empty($event['member']['yim']['link']) ? '<li>' . $event['member']['yim']['link'] . '</li>' : '', '
-							</ul>
-						</li>';
+					<li class="im_icons">
+						<ul>
+							', !isset($context['disabled_fields']['icq']) && !empty($event['member']['icq']['link']) ? '<li>' . $event['member']['icq']['link'] . '</li>' : '', '
+							', !isset($context['disabled_fields']['msn']) && !empty($event['member']['msn']['link']) ? '<li>' . $event['member']['msn']['link'] . '</li>' : '', '
+							', !isset($context['disabled_fields']['aim']) && !empty($event['member']['aim']['link']) ? '<li>' . $event['member']['aim']['link'] . '</li>' : '', '
+							', !isset($context['disabled_fields']['yim']) && !empty($event['member']['yim']['link']) ? '<li>' . $event['member']['yim']['link'] . '</li>' : '', '
+						</ul>
+					</li>';
 
 			// Show the profile, website, email address, and personal message buttons.
 			if ($settings['show_profile_buttons'])
 			{
 				echo '
-						<li class="profile">
-							<ul>';
+					<li class="profile">
+						<ul>';
 				// Don't show the profile button if you're not allowed to view the profile.
 				if ($event['member']['can_view_profile'])
 					echo '
-								<li><a href="', $event['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
+							<li><a href="', $event['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
 
 				// Don't show an icon if they haven't specified a website.
 				if ($event['member']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
 					echo '
-								<li><a href="', $event['member']['website']['url'], '" title="' . $event['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $event['member']['website']['title'] . '" border="0" />' : $txt['www']), '</a></li>';
+							<li><a href="', $event['member']['website']['url'], '" title="' . $event['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $event['member']['website']['title'] . '" border="0" />' : $txt['www']), '</a></li>';
 
 				// Don't show the email address if they want it hidden.
 				if (in_array($event['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-								<li><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
+							<li><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
 					echo '
-								<li><a href="', $scripturl, '?action=pm;sa=send;u=', $event['member']['id'], '" title="', $event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($event['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . ($event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']) . '" border="0" />' : ($event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']), '</a></li>';
+							<li><a href="', $scripturl, '?action=pm;sa=send;u=', $event['member']['id'], '" title="', $event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($event['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . ($event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']) . '" border="0" />' : ($event['member']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']), '</a></li>';
 				
 				echo '
-							</ul>
-						</li>';
+						</ul>
+					</li>';
 			}
 
 			// Any custom fields for standard placement?
@@ -720,24 +717,25 @@ function template_issue_view_main()
 				foreach ($event['member']['custom_fields'] as $custom)
 					if (empty($custom['placement']) || empty($custom['value']))
 						echo '
-						<li class="custom">', $custom['title'], ': ', $custom['value'], '</li>';
+					<li class="custom">', $custom['title'], ': ', $custom['value'], '</li>';
 			}
 
 			// Are we showing the warning status?
 			if (!isset($context['disabled_fields']['warning_status']) && $event['member']['warning_status'] && ($context['user']['can_mod'] || !empty($modSettings['warning_show'])))
 				echo '
-						<li class="warning">', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;area=issuewarning;u=' . $event['member']['id'] . '">' : '', '<img src="', $settings['images_url'], '/warning_', $event['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $event['member']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $event['member']['warning_status'], '">', $txt['warn_' . $event['member']['warning_status']], '</span></li>';
+					<li class="warning">', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;area=issuewarning;u=' . $event['member']['id'] . '">' : '', '<img src="', $settings['images_url'], '/warning_', $event['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $event['member']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $event['member']['warning_status'], '">', $txt['warn_' . $event['member']['warning_status']], '</span></li>';
 		}
 		// Otherwise, show the guest's email.
 		elseif (in_array($event['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 			echo '
-						<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
+					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
-					</ul>
-				</div>
-				<div class="postarea">
+				</ul>
+			</div>
+			<div class="postarea">
+				<div class="flow_hidden">
 					<div class="keyinfo">';
 					
 		if (!empty($event['title']))
@@ -773,8 +771,9 @@ function template_issue_view_main()
 					</ul>';
 
 		echo '
-					<div class="post">
-						<div class="inner" id="', $id2, '">';
+				</div>
+				<div class="post">
+					<div class="inner" id="', $id2, '">';
 
 		if ($event['is_comment'])
 			echo $event['comment']['body'];
@@ -782,23 +781,22 @@ function template_issue_view_main()
 		if (!empty($event['changes']))
 		{
 			echo '
-						<ul class="smalltext normallist">';
+					<ul class="smalltext normallist">';
 
 			foreach ($event['changes'] as $change)
 				echo '
-							<li>', $change, '</li>';
+						<li>', $change, '</li>';
 
 			echo '
-						</ul>';
+					</ul>';
 		}
 		
 		echo '	
-						</div>
-					</div>';
+					</div>
+				</div>';
 
-		// Now for the attachments, signature, ip logged, etc...
+		// Now for the signature, ip logged, etc...
 		echo '
-				</div>
 				<div class="moderatorbar">
 					<div class="smalltext modified" id="modified_', $event['id'], '">';
 
@@ -863,8 +861,8 @@ function template_issue_view_main()
 
 		echo '
 					</div>
-					<span class="botslice"><span></span></span>
 				</div>
+				<span class="botslice"><span></span></span>
 			</div>
 			<hr class="post_separator" />';
 		
@@ -872,8 +870,6 @@ function template_issue_view_main()
 	}
 
 	echo '
-		</div>
-	</div>
 	<div class="pagesection">
 		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		', template_button_strip($buttons, 'right'), '

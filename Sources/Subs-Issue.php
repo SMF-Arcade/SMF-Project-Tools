@@ -435,14 +435,14 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 			);
 			
 	// If tracker hasn't changed remove values that doesn't need to be changed
-	if ($oldTracker == $newTracker)
+	if (isset($oldTracker) && $oldTracker == $newTracker)
 	{
 		$oldVersions = array_diff($oldVersions, $newVersions);
 		$newVersions = array_diff($newVersions, $oldVersions);
 	}
 			
 	// Update issue counts in versions
-	if (!empty($oldVersions))
+	if (isset($oldTracker) && !empty($oldVersions))
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}project_versions
 			SET {raw:tracker} = {raw:tracker} - 1

@@ -8,20 +8,29 @@ function template_project_roadmap()
 	foreach ($context['roadmap'] as $version)
 	{
 		echo '
-	<h3><a href="', $version['href'], '">', $version['name'], '</a></h3>
-	<div class="smalltext">', $version['release_date'], '</div>
-	<div class="headerpadding">
-		<div class="progressbar">
-			<div style="width: ', $version['progress'], '%"></div>
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<a href="', $version['href'], '">', $version['name'], '</a>
+	</h3>
+	<div class="windowbg">
+		<span class="topslice"><span></span></span>
+		<div style="padding: 0.5em">
+			<div class="smalltext">', $version['release_date'], '</div>
+			<div class="headerpadding">
+				<div class="progressbar">
+					<div style="width: ', $version['progress'], '%"></div>
+				</div>
+				<div class="smalltext">
+					<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'status' => 'open', 'version_fixed' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
+					<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'status' => 'closed', 'version_fixed' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
+				</div>
+				<p>
+					', $version['description'], '
+				</p>
+			</div>
 		</div>
-		<div class="smalltext">
-			<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'status' => 'open', 'version_fixed' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
-			<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'status' => 'closed', 'version_fixed' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
-		</div>
-		<p>
-			', $version['description'], '
-		</p>
-	</div>';
+		<span class="botslice"><span></span></span>
+	</div>
+	<br />';
 	}
 }
 
@@ -30,14 +39,23 @@ function template_project_roadmap_version()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<h2>', $context['version']['name'], '</h2>
-	<div class="smalltext">', $context['version']['release_date'], '</div>
-	<p>
-		', $context['version']['description'], '
-	</p>
-	<div class="progressbar">
-		<div style="width: ', $context['version']['progress'], '%"></div>
-	</div>';
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		', $context['version']['name'], '
+	</h3>
+	<div class="windowbg">
+		<span class="topslice"><span></span></span>
+		<div style="padding: 0.5em">
+			<div class="smalltext">', $context['version']['release_date'], '</div>
+			<p>
+				', $context['version']['description'], '
+			</p>
+			<div class="progressbar">
+				<div style="width: ', $context['version']['progress'], '%"></div>
+			</div>
+		</div>
+		<span class="botslice"><span></span></span>
+	</div>
+	<br />';
 
 	echo '
 	<div class="issuelistframe tborder">

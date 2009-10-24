@@ -4,53 +4,75 @@
 function template_issue_list()
 {
 	global $context, $settings, $options, $txt, $modSettings;
-
+	
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var issueSearch = new smfToggle("issue_search", ', empty($options['issue_search_collapse']) ? 'false' : 'true', ');
-		issueSearch.setOptions("issue_search_collapse", "', $context['session_id'], '");
-		issueSearch.addToggleImage("search_toggle", "/upshrink.gif", "/upshrink2.gif");
-		issueSearch.addTogglePanel("search_panel");
-	// ]]></script>
-	<div class="tborder">
-		<div class="titlebg headerpadding clearfix">
-			<span class="floatleft">', $txt['issue_search'], '</span>
-			<div class="floatright">
-				<a href="#" onclick="issueSearch.toggle(); return false;"><img id="search_toggle" src="', $settings['images_url'], '/', empty($options['issue_search_collapse']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" align="bottom" style="margin: 0 1ex;" /></a>
-			</div>
-		</div>
-		<div id="search_panel" class="bordercolor"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
-			<div class="windowbg2" style="padding: 0.5em 0.7em">
-				<form action="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')), '" method="post">
-					', $txt['issue_title'], ':
-					<input type="text" name="title" value="', $context['issue_search']['title'], '" tabindex="', $context['tabindex']++, '" />
-					<select name="status">
-						<option value="all"', $context['issue_search']['status'] == 'all' ? ' selected="selected"' : '', '>', $txt['issue_search_all_issues'], '</option>
-						<option value="open"', $context['issue_search']['status'] == 'open' ? ' selected="selected"' : '', '>', $txt['issue_search_open_issues'], '</option>
-						<option value="closed"', $context['issue_search']['status'] == 'closed' ? ' selected="selected"' : '', '>', $txt['issue_search_closed_issues'], '</option>
-						<option value="" disabled="disabled">--------</option>';
+	<h3 class="catbg">
+		<span class="left"></span>
+		<span class="right"></span>
+		<span class="floatleft">', $txt['issue_search'], '</span>
+		<img id="search_toggle" class="floatright" src="', $settings['images_url'], '/collapse.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex; display: none;" />
+	</h3>
+	<div id="search_panel" class="windowbg2"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
+		<span class="topslice"><span></span></span>
+		<div style="padding: 0.5em 0.7em">
+			<form action="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')), '" method="post">
+				', $txt['issue_title'], ':
+				<input type="text" name="title" value="', $context['issue_search']['title'], '" tabindex="', $context['tabindex']++, '" />
+				<select name="status">
+					<option value="all"', $context['issue_search']['status'] == 'all' ? ' selected="selected"' : '', '>', $txt['issue_search_all_issues'], '</option>
+					<option value="open"', $context['issue_search']['status'] == 'open' ? ' selected="selected"' : '', '>', $txt['issue_search_open_issues'], '</option>
+					<option value="closed"', $context['issue_search']['status'] == 'closed' ? ' selected="selected"' : '', '>', $txt['issue_search_closed_issues'], '</option>
+					<option value="" disabled="disabled">--------</option>';
 
 	foreach ($context['issue_status'] as $status)
 		echo '
-						<option value="', $status['id'], '"', $context['issue_search']['status'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+					<option value="', $status['id'], '"', $context['issue_search']['status'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
 	echo '
-					</select>
-					<select name="type">
-						<option value="0"', empty($context['issue_search']['tracker']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
+				</select>
+				<select name="type">
+					<option value="0"', empty($context['issue_search']['tracker']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
 
 	foreach ($context['project']['trackers'] as $tracker)
 		echo '
-						<option value="', $tracker['tracker']['short'], '"', $context['issue_search']['tracker'] == $tracker['tracker']['short'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
+					<option value="', $tracker['tracker']['short'], '"', $context['issue_search']['tracker'] == $tracker['tracker']['short'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
 	echo '
-					</select>
-					<input class="button_submit" type="submit" name="search" value="', $txt['issue_search_button'], '" tabindex="', $context['tabindex']++, '" />
-				</form>
-			</div>
+				</select>
+				<input class="button_submit" type="submit" name="search" value="', $txt['issue_search_button'], '" tabindex="', $context['tabindex']++, '" />
+			</form>
 		</div>
-	</div>';
-
+		<span class="botslice"><span></span></span>
+	</div>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var oPSearchToggle = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', empty($options['issue_search_collapse']) ? 'false' : 'true', ',
+			aSwappableContainers: [
+				\'search_panel\'
+			],
+			aSwapImages: [
+				{
+					sId: \'search_toggle\',
+					srcExpanded: smf_images_url + \'/collapse.gif\',
+					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+					srcCollapsed: smf_images_url + \'/expand.gif\',
+					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+				}
+			],
+			oThemeOptions: {
+				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+				sOptionName: \'issue_search_collapse\',
+				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+				sSessionId: ', JavaScriptEscape($context['session_id']), '
+			},
+			oCookieOptions: {
+				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+				sCookieName: \'ptsearchtoggle\'
+			}
+		});
+	// ]]></script>';
+	
 	$buttons = array(
 		'reportIssue' => array(
 			'text' => 'new_issue',
