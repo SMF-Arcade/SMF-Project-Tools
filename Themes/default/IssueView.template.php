@@ -415,6 +415,7 @@ function template_issue_view_above()
 	}
 						
 	echo '
+							</dd>
 						</dl>
 					</li>
 					<li id="issue_assign" class="clearfix">
