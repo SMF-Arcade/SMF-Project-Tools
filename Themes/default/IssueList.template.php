@@ -84,9 +84,11 @@ function template_issue_list()
 	);
 
 	echo '
-		<div class="pagesection">
-			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
+		<div class="buttonlist align_right">
 			', template_button_strip($buttons, 'right'), '
+		</div>
+		<div class="middletext pagelinks">
+			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>	
 		</div>
 		<div class="issue_table">
 			<table cellspacing="0" class="table_grid">
@@ -196,9 +198,11 @@ function template_issue_list()
 				</tbody>
 			</table>
 		</div>
-		<div class="pagesection">
-			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+		<div class="buttonlist align_right">
 			', template_button_strip($buttons, 'right'), '
+		</div>
+		<div class="middletext pagelinks">
+			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 		</div>';
 }
 

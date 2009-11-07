@@ -36,8 +36,9 @@ function template_report_issue()
 	echo '
 	<form action="', project_get_url(array('sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
-			<h4 class="headerpadding titlebg">', $txt['report_issue'], '</h4>
+			<h4 class="titlebg"><span class="left"></span>', $txt['report_issue'], '</h4>
 			<div class="windowbg">
+				<span class="topslice"><span><!-- // --></span></span>
 				<dl>
 					<dd ', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
 						<div style="padding: 0px; font-weight: bold;', empty($context['post_error']['messages']) ? ' display: none;' : '', '" id="error_serious">
@@ -114,7 +115,9 @@ function template_report_issue()
 
 	echo '
 					<dd>
-						', template_control_richedit($context['post_box_name']), '
+						<div id="bbcBox_message"></div>
+						<div id="smileyBox_message"></div>
+						', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
 					</dd>';
 
 	if (!empty($context['can_subscribe']))
@@ -134,6 +137,7 @@ function template_report_issue()
 	echo '
 					<dd class="clear"></dd>
 				</dl>
+				<span class="botslice"><span><!-- // --></span></span>
 			</div>
 		</div>
 
@@ -178,8 +182,9 @@ function template_issue_reply()
 	echo '
 	<form action="', project_get_url(array('sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
-			<h4 class="headerpadding titlebg">', $txt['issue_reply'], '</h4>
+			<h4 class="titlebg"><span class="left"><!-- // --></span>', $txt['issue_reply'], '</h4>
 			<div class="windowbg">
+				<span class="topslice"><span><!-- // --></span></span>
 				<dl>
 					<dd ', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
 						<div style="padding: 0px; font-weight: bold;', empty($context['post_error']['messages']) ? ' display: none;' : '', '" id="error_serious">
@@ -190,7 +195,9 @@ function template_issue_reply()
 						</div>
 					</dd>
 					<dd>
-						', template_control_richedit($context['post_box_name']), '
+						<div id="bbcBox_message"></div>
+						<div id="smileyBox_message"></div>
+						', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
 					</dd>';
 
 	if (!empty($context['can_subscribe']))
@@ -208,6 +215,7 @@ function template_issue_reply()
 					</dd>
 					<dd class="clear"></dd>
 				</dl>
+				<span class="botslice"><span><!-- // --></span></span>
 			</div>
 		</div>';
 
@@ -215,8 +223,9 @@ function template_issue_reply()
 	{
 		echo '
 		<div class="tborder">
-			<div class="catbg headerpadding">', $txt['update_issue'], '</div>
+			<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['update_issue'], '</h3>
 			<div class="smallpadding windowbg">
+				<span class="topslice"><span><!-- // --></span></span>
 				<table width="100%">';
 
 		// Title
@@ -341,6 +350,7 @@ function template_issue_reply()
 
 		echo '
 				</table>
+				<span class="botslice"><span><!-- // --></span></span>
 			</div>
 		</div>';
 

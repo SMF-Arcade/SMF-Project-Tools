@@ -8,19 +8,26 @@ function template_project_view_above()
 	if (!empty($context['project_tabs']))
 	{
 		echo '
-	<div id="adm_submenus"><ul class="dropmenu">';
+	<div class="buttonlist align_left"><ul>';
 
 		// Print out all the items in this tab.
+		$i = 1;
+		$num_tabs = count($context['project_tabs']['tabs']);
 		foreach ($context['project_tabs']['tabs'] as $tab)
+		{
 			echo '
 		<li>
 			<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
-				<span class="firstlevel">', $tab['title'], '</span>
+				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $tab['title'], '</span>
 			</a>
 		</li>';
+			
+			$i++;
+		}
 		
 		echo '
-	</ul></div>';
+	</ul></div>
+	<br class="clear" />';
 	}
 }
 
@@ -34,7 +41,7 @@ function template_project_view()
 	);
 
 	echo '
-	<div class="pagesection">
+	<div id="modbuttons_top" class="modbuttons clearfix margintop">
 		', template_button_strip($project_buttons, 'right'), '
 	</div>
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -56,7 +63,7 @@ function template_project_view()
 		echo '
 		<div class="issuecolumn">
 			<div class="issue_table columnmargin_', $side ? 'right' : 'left', '">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="catbg"><span class="left"></span>
 					', $issueList['title'], '
 				</h3>
 				<table cellspacing="0" class="table_grid">
@@ -151,14 +158,14 @@ function template_project_view()
 		$tWidth = $width;
 	}
 	echo '
-	</div><br /><br />';
+	</div>
+	<br class="clear" />';
 
 	// Statistics etc
 	echo '
-	<div style="clear:both"></div>', /* Todo: fix code above and remove this */'
-	<span class="upperframe"><span></span></span>
+	<span class="clear upperframe"><span><!-- // --></span></span>
 	<div class="roundframe"><div class="innerframe">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			', $context['project']['name'], '
 		</h3>
 		<div id="upshrinkHeaderIC">
@@ -183,10 +190,9 @@ function template_project_view()
 
 	echo '
 			</table>
-
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg"><span class="left"></span>
 				', $txt['project_timeline'], '
-			</h4>';
+			</h3>';
 
 	$first = true;
 
