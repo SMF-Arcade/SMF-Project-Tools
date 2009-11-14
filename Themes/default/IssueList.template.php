@@ -8,7 +8,6 @@ function template_issue_list()
 	echo '
 	<h3 class="catbg">
 		<span class="left"></span>
-		<span class="right"></span>
 		<span class="floatleft">', $txt['issue_search'], '</span>
 		<img id="search_toggle" class="floatright" src="', $settings['images_url'], '/collapse.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex; display: none;" />
 	</h3>
@@ -84,11 +83,9 @@ function template_issue_list()
 	);
 
 	echo '
-		<div class="buttonlist align_right">
-			', template_button_strip($buttons, 'right'), '
-		</div>
+		', template_button_strip($buttons, 'right'), '
 		<div class="middletext pagelinks">
-			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>	
+			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '	
 		</div>
 		<div class="issue_table">
 			<table cellspacing="0" class="table_grid">
@@ -198,11 +195,9 @@ function template_issue_list()
 				</tbody>
 			</table>
 		</div>
-		<div class="buttonlist align_right">
-			', template_button_strip($buttons, 'right'), '
-		</div>
+		', template_button_strip($buttons, 'right'), '
 		<div class="middletext pagelinks">
-			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '
 		</div>';
 }
 
