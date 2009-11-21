@@ -66,6 +66,9 @@ function IssueView()
 	$context['can_issue_warning'] = allowedTo('issue_warning');
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 	
+	// Show signatures
+	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
+	
 	// URL for posting updates from ajax
 	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 	
