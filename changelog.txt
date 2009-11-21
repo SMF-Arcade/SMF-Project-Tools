@@ -6,6 +6,7 @@ SMF Project Tools 0.4                                                          ?
 November 2009
 --------------------------------------------------------------------------------
  ! Issue with permissions template [Issue #297]
+ ! Email links invalid in IssueView [Issue #271]
  
 September 2009
 --------------------------------------------------------------------------------

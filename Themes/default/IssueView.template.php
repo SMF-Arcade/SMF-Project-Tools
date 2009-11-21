@@ -154,7 +154,7 @@ function template_issue_view_above()
 				// Don't show the email address if they want it hidden.
 				if (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-							<li><a href="', $scripturl, '?action=emailuser;sa=email;msg=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
+							<li><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['current_issue']['reporter']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -183,7 +183,7 @@ function template_issue_view_above()
 		// Otherwise, show the guest's email.
 		elseif (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 			echo '
-					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;com=', $context['current_issue']['details']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
+					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['current_issue']['reporter']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
@@ -700,7 +700,7 @@ function template_issue_view_main()
 				// Don't show the email address if they want it hidden.
 				if (in_array($event['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-							<li><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
+							<li><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $event['member']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -729,7 +729,7 @@ function template_issue_view_main()
 		// Otherwise, show the guest's email.
 		elseif (in_array($event['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 			echo '
-					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;pte=', $event['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
+					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $event['member']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
