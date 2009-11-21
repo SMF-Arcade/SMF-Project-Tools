@@ -1051,7 +1051,6 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 		array(
 			'is_activated' => 1,
 			'project' => $issue['project'],
-			'version' => $issue['version'],
 			'poster' => $exclude,
 		)
 	);
@@ -1076,11 +1075,11 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 				continue;
 			
 			// Can see any of versions?
-			if (!empty($issue['version']) && $issue['version'] !== array(0))
+			if (!empty($issue['versions']) && $issue['versions'] !== array(0))
 			{
 				$can_see = false;
 				
-				foreach ($issue['version'] as $ver)
+				foreach ($issue['versions'] as $ver)
 				{
 					if (isset($versions[$ver]) && count(array_intersect($versions[$ver], $rowmember['additional_groups'])) > 0)
 						$can_see = true;

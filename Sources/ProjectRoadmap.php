@@ -89,19 +89,20 @@ function ProjectRoadmapMain()
 			'issues' => array(
 				'open' => 0,
 				'closed' => 0,
+				'total' => 0,
 			),
 			'progress' => 0,
 		);
 		
 		foreach ($context['project']['trackers'] as $id => $tracker)
 		{
-			$context['roadmap'][$row['id_version']]['open'] += $row['open_' . $tracker['short']];
-			$context['roadmap'][$row['id_version']]['closed'] += $row['closed_' . $tracker['short']];		
-			$context['roadmap'][$row['id_version']]['total'] += $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']];
+			$context['roadmap'][$row['id_version']]['issues']['open'] += $row['open_' . $tracker['short']];
+			$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['closed_' . $tracker['short']];		
+			$context['roadmap'][$row['id_version']]['issues']['total'] += $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']];
 		}
 		
-		if ($context['roadmap'][$row['id_version']]['total'] > 0)
-			$context['roadmap'][$row['id_version']]['progress'] = round($context['roadmap'][$row['id_version']]['closed'] / $context['roadmap'][$row['id_version']]['total'] * 100, 2);	
+		if ($context['roadmap'][$row['id_version']]['issues']['total'] > 0)
+			$context['roadmap'][$row['id_version']]['progress'] = round($context['roadmap'][$row['id_version']]['issues']['closed'] / $context['roadmap'][$row['id_version']]['issues']['total'] * 100, 2);	
 	}
 	$smcFunc['db_free_result']($request);
 
