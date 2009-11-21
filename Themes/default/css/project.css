@@ -370,6 +370,7 @@ ul.changes li
 #reportform dt
 {
 	float: left;
+	clear: left;
 	width: 15%;
 	font-weight: bold;
 	text-align: right;
@@ -377,9 +378,11 @@ ul.changes li
 #reportform dd
 {
 	margin-left: 16%;
+	clear: right;
 }
 #reportform dd.full
 {
+	clear: both;
 	margin-left: 0;
 	width: 100%;
 }
