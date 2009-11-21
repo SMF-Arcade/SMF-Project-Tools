@@ -165,7 +165,7 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 			return;
 		
 		dropdownHandle.classNameOld = dropdownHandle.className;
-		dropdownHandle.className += " dropdown_selected";
+		dropdownHandle.className += " project_dropdown_selected";
 
 		dropdownMenu = document.createElement('ul');
 
@@ -371,7 +371,7 @@ function PTMultiDropdown(issue, name, fieldName)
 			return;
 		
 		dropdownHandle.classNameOld = dropdownHandle.className;
-		dropdownHandle.className += " dropdown_selected";
+		dropdownHandle.className += " project_dropdown_selected";
 
 		dropdownMenu = document.createElement('ul');
 
