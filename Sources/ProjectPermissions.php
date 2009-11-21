@@ -145,7 +145,6 @@ function ManageProjectPermissionsMain()
 		'get_items' => array(
 			'function' => 'list_getProfiles',
 		),
-		'width' => '50%',
 		'columns' => array(
 			'name' => array(
 				'header' => array(

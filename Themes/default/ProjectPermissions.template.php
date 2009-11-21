@@ -11,27 +11,29 @@ function template_profiles_list()
 	<br /><br />
 	
 	<form action="', $scripturl, '?action=admin;area=projectpermissions" method="post" accept-charset="', $context['character_set'], '">
-		<div class="tborder" style="width: 50%; margin: 0 auto;">
-			<div class="headerpadding titlebg">', $txt['new_profile'], '</div>
-			<div class="smallpadding windowbg2 clearfix">
-				<span class="floatleft" style="width: 50%;"><label for="profile_name">', $txt['profile_name'], '</label></span>
-				<span class="floatleft"><input id="profile_name" name="profile_name" value="" tabindex="', $context['tabindex']++, '" /></span>
-			</div>
-			<div class="smallpadding windowbg2 clearfix">
-				<span class="floatleft" style="width: 50%;"><label for="profile_base">', $txt['profile_copy_from'], '</label></span>
-				<span class="floatleft">
-					<select id="profile_base" name="profile_base">';
+		<div style="width: 50%; margin: 0 auto;">
+			<h3 class="titlebg"><span class="left"></span>', $txt['new_profile'], '</h3>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<span class="floatleft" style="width: 50%;"><label for="profile_name">', $txt['profile_name'], '</label></span>
+					<span class="floatleft"><input id="profile_name" name="profile_name" value="" tabindex="', $context['tabindex']++, '" /></span>
+					<br class="clear" />
+					<span class="floatleft" style="width: 50%;"><label for="profile_base">', $txt['profile_copy_from'], '</label></span>
+					<span class="floatleft">
+						<select id="profile_base" name="profile_base">';
 
 	foreach ($context['profiles'] as $profile)
 		echo '
-						<option value="', $profile['id'], '">', $profile['name'], '</option>';
+							<option value="', $profile['id'], '">', $profile['name'], '</option>';
 
 	echo '
-					</select>
-				</span>
-			</div>
-			<div class="headerpadding titlebg" style="text-align: right">
-				<input class="button_submit" type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
+						</select>
+					</span>
+					<br class="clear" />
+					<input class="button_submit" type="submit" name="create" value="', $txt['profile_create'], '" tabindex="', $context['tabindex']++, '" />
+				</div>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -44,10 +46,10 @@ function template_profile_edit()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=edit" method="post" accept-charset="', $context['character_set'], '">
-		<div class="tborder">
-			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor">
-				<tr class="catbg3">
+		<h3 class="titlebg"><span class="left"></span>', sprintf($txt['edit_profile'], $context['profile']['name']), '</h3>
+		<table width="100%" class="table_grid">
+			<thead>
+				<tr class="catbg">
 					<th valign="middle">', $txt['membergroups_name'], '</th>
 					<th width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</th>
 					<th width="16%" align="center"', empty($modSettings['permission_enable_deny']) ? '' : ' class="smalltext"', '>
@@ -58,7 +60,9 @@ function template_profile_edit()
 					<th width="4%" align="center" valign="middle">
 						', $context['can_modify'] ? '<input type="checkbox" class="check" onclick="invertAll(this, this.form, \'group\');" />' : '', '
 					</th>
-				</tr>';
+				</tr>
+			</thead>
+			<tbody>';
 
 	foreach ($context['groups'] as $group)
 	{
@@ -90,8 +94,8 @@ function template_profile_edit()
 	}
 
 	echo '
-			</table>
-		</div>
+			</tbody>
+		</table>
 
 		<input type="hidden" name="profile" value="', $context['profile']['id'], '" />
 	</form>';
@@ -103,32 +107,28 @@ function template_profile_permissions()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=permissions2" method="post" accept-charset="', $context['character_set'], '">
-		<div class="tborder">
-			<div class="headerpadding titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</div>
-			<div class="headerpadding catbg3">', sprintf($txt['edit_profile_group'], $context['group']['name']), '</div>
-			<div class="windowbg2">';
+		<h3 class="titlebg"><span class="left"></span>', sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']), '</h3>';
 
 	$alternate = true;
 
 	foreach ($context['permissions'] as $id => $permission)
 	{
 		echo '
-				<div class="windowbg', $alternate ? '2' : '', ' headerpadding clearfix">
-					<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
-					<span class="floatright">
-						<input type="hidden" name="permission[', $id,']" value="0" />
-						<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" />
-					</span>
-				</div>';
+		<div class="windowbg', $alternate ? '2' : '', '">
+			<span class="floatleft"><label for="', $id, '">', $permission['text'], '</label></span>
+			<span class="floatright">
+				<input type="hidden" name="permission[', $id,']" value="0" />
+				<input type="checkbox" id="', $id, '" name="permission[', $id,']" value="1"', $permission['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" />
+			</span>
+			<br class="clear" />
+		</div>';
 
 		$alternate = !$alternate;
 	}
 
 	echo '
-				<div style="text-align: right">
-					<input class="button_submit" type="submit" name="save" value="', $txt['permission_save'], '" tabindex="', $context['tabindex']++, '" />
-				</div>
-			</div>
+		<div style="text-align: right">
+			<input class="button_submit" type="submit" name="save" value="', $txt['permission_save'], '" tabindex="', $context['tabindex']++, '" />
 		</div>
 
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

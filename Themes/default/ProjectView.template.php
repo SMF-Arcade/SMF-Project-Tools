@@ -136,14 +136,14 @@ function template_project_view()
 
 		if (!$side)
 			echo '
-	</div>';
+	</div><br class="clear" />';
 
 		$side = !$side;
 	}
 
 	if (!$side)
 		echo '
-	</div>';
+	</div><br class="clear" />';
 
 	$width = floor(100 / count($context['issue_status']));
 	$tWidth = 100 - ($width * count($context['issue_status'])) + $width;
