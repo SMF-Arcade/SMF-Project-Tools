@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; ManageProjects
+// Version: 0.5; ManageProjects
 
 function template_projects_list()
 {

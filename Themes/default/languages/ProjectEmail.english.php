@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; ProjectEmail
+// Version: 0.5; ProjectEmail
 
 $txt['emails'] = !isset($txt['emails']) ? array() : $txt['emails'];
 

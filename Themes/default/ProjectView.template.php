@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; ProjectView
+// Version: 0.5; ProjectView
 
 function template_project_view_above()
 {

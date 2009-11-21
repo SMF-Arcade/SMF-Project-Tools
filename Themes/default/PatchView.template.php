@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; PatchView
+// Version: 0.5; PatchView
 
 function template_main()
 {
