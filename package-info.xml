@@ -80,7 +80,6 @@
 
 		<modification format="xml" type="file">install.xml</modification>
 		<modification format="xml" type="file">curvetheme.xml</modification>
-		<modification format="xml" type="file">coretheme.xml</modification>
 
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
@@ -90,7 +89,6 @@
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
-		<modification format="xml" type="file" reverse="true">coretheme.xml</modification>
 
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueComment.php" />
