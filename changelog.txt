@@ -6,6 +6,7 @@ SMF Project Tools 0.5                                                        ???
 November 2009
 --------------------------------------------------------------------------------
  ! Log display name instead of username for edits [Issue #277]
+ * Compact template for events without comment
  
 SMF Project Tools 0.4                                                 21.11.2009
 ================================================================================

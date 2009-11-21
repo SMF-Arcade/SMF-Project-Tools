@@ -544,12 +544,6 @@ function template_issue_view_main()
 	if ($context['num_events'] == 0)
 		return;
 
-	$alternate = true;
-
-	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
-	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
-	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
-
 	$buttons = array(
 		'reply' => array(
 			'text' => 'reply',
@@ -568,9 +562,32 @@ function template_issue_view_main()
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>
 		', $txt['issue_comments'], '
 	</h3>';
+	
+	$alternate = true;
 
 	while ($event = getEvent())
 	{
+		if ($event['type'] == 'comment')
+			template_event_full($event, $alternate);
+		else
+			template_event_compact($event, $alternate);
+	}
+
+	echo '
+	<div class="pagesection">
+		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+		', template_button_strip($buttons, 'right'), '
+	</div><br />';
+}
+
+function template_event_full(&$event, &$alternate)
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+
+	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');
+	
 		$id = isset($event['comment']) ? 'com' . $event['comment']['id'] : 'evt' . $event['id'];
 		$id2 = isset($event['comment']) ? 'com_' . $event['comment']['id'] : 'evt_' . $event['id'];
 
@@ -867,14 +884,142 @@ function template_issue_view_main()
 			</div>
 			<hr class="post_separator" />';
 		
-		$alternate = !$alternate;
-	}
+		$alternate = !$alternate;	
+}
 
-	echo '
-	<div class="pagesection">
-		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-		', template_button_strip($buttons, 'right'), '
-	</div><br />';
+function template_event_compact(&$event, &$alternate)
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+
+	/*$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_comment_alt', 'remove_comment', 'align="middle"');*/
+	
+		$id = isset($event['comment']) ? 'com' . $event['comment']['id'] : 'evt' . $event['id'];
+		$id2 = isset($event['comment']) ? 'com_' . $event['comment']['id'] : 'evt_' . $event['id'];
+
+		echo '
+		<div class="windowbg', $alternate ? '' : '2', '">
+			<span class="topslice"><span></span></span>';
+
+		// Show information about the poster of this message.
+		echo '
+			<div class="poster">
+				<h4>';
+		// Show online and offline buttons?
+		if (!empty($modSettings['onlineEnable']) && !$event['member']['is_guest'])
+			echo  $context['can_send_pm'] ? '<a href="' . $event['member']['online']['href'] . '" title="' . $event['member']['online']['label'] . '">' : '', '<img src="', $event['member']['online']['image_href'], '" alt="', $event['member']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';
+
+		echo $event['member']['link'], '</h4>
+			</div>
+			<div class="postarea">
+				<div class="flow_hidden">
+					<div class="keyinfo">';
+					
+		if (!empty($event['title']))
+			echo '
+						<h5>', $event['title'], '</h5>';
+						
+		echo '
+						<div class="smalltext">&#171; <strong>', !empty($event['counter']) ? $txt['reply_noun'] . ' #' . $event['counter'] : '', ' ', $txt['on'], ':</strong> ', $event['time'], ' &#187;</div>
+						<div id="', $id, '_quick_mod"></div>
+					</div>
+				</div>
+				<div class="post">
+					<div class="inner" id="', $id2, '">';
+
+		if ($event['is_comment'])
+			echo $event['comment']['body'];
+
+		if (!empty($event['changes']))
+		{
+			echo '
+					<ul class="smalltext normallist">';
+
+			foreach ($event['changes'] as $change)
+				echo '
+						<li>', $change, '</li>';
+
+			echo '
+					</ul>';
+		}
+		
+		echo '	
+					</div>
+				</div>';
+
+		// Now for the signature, ip logged, etc...
+		echo '
+				<div class="moderatorbar">
+					<div class="smalltext modified" id="modified_', $event['id'], '">';
+
+		// Show "« Last Edit: Time by Person »" if this post was edited.
+		if ($settings['show_modify'] && !empty($event['comment']['modified']['name']))
+			echo '
+							&#171; <em>', $txt['last_edit'], ': ', $event['comment']['modified']['time'], ' ', $txt['by'], ' ', $event['comment']['modified']['name'], '</em> &#187;';
+
+		echo '
+					</div>
+					<div class="smalltext reportlinks">
+						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+
+		// Show the IP to this user for this post - because you can moderate?
+		if ($context['can_moderate_forum'] && !empty($event['member']['ip']))
+			echo '
+						<a href="', $scripturl, '?action=', !empty($event['member']['is_guest']) ? 'trackip' : 'profile;area=tracking;sa=ip;u='. $event['member']['id'], ';searchip=', $event['member']['ip'], '">', $event['member']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+		// Or, should we show it because this is you?
+		elseif ($event['can_see_ip'])
+			echo '
+							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $event['member']['ip'], '</a>';
+		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
+		elseif (!$context['user']['is_guest'])
+			echo '
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+		// Otherwise, you see NOTHING!
+		else
+			echo '
+							', $txt['logged'];
+
+		echo '
+						</div>';
+
+		// Are there any custom profile fields for above the signature?
+		if (!empty($event['member']['custom_fields']))
+		{
+			$shown = false;
+			foreach ($event['member']['custom_fields'] as $custom)
+			{
+				if ($custom['placement'] != 2 || empty($custom['value']))
+					continue;
+				if (empty($shown))
+				{
+					$shown = true;
+					echo '
+						<div class="custom_fields_above_signature">
+							<ul class="reset nolist>';
+				}
+				echo '
+								<li>', $custom['value'], '</li>';
+			}
+			if ($shown)
+				echo '
+							</ul>
+						</div>';
+		}
+
+		// Show the member's signature?
+		if (!empty($event['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
+			echo '
+						<div class="signature">', $event['member']['signature'], '</div>';
+
+		echo '
+					</div>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+			<hr class="post_separator" />';
+		
+		$alternate = !$alternate;	
 }
 
 function template_issue_view_below()

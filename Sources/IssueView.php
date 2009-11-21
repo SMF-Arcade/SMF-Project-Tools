@@ -387,8 +387,8 @@ function getEvent()
 		'id' => $row['id_event'],
 		'counter' => $context['counter_start'] + $counter,
 		'title' => sprintf($txt['evt_' . $row['event']], $memberContext[$row['id_member']]['link']),
-		'type' => '',
-		'is_comment' => false,
+		'type' => $row['is_comment'] ? 'comment' : $row['event'],
+		'is_comment' => $row['is_comment'],
 		'member' => &$memberContext[$row['id_member']],
 		'time' => timeformat($row['event_time']),
 		'ip' => $row['poster_ip'],
@@ -399,7 +399,6 @@ function getEvent()
 	if ($row['is_comment'])
 	{
 		$event['type'] = 'comment';
-		$event['is_comment'] = true;
 		$event['title'] = '';
 
 		censorText($row['body']);
@@ -420,6 +419,10 @@ function getEvent()
 
 		if ($first_new && empty($row['is_read']))
 			$first_new = false;
+	}
+	else
+	{
+		
 	}
 
 	$counter++;
