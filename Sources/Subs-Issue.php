@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.5                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -598,7 +598,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 			$id_project,
 			$id_issue,
 			$posterOptions['id'],
-			$posterOptions['name'],
+			$posterOptions['username'],
 			$posterOptions['email'],
 			$posterOptions['ip'],
 			$event_name,
@@ -818,7 +818,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 			$commentOptions['body'],
 			time(),
 			$posterOptions['id'],
-			$posterOptions['name'],
+			$posterOptions['username'],
 			$posterOptions['email'],
 			$posterOptions['ip']
 		),

@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.5                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -35,7 +35,7 @@ function loadProjectTools()
 		return;
 
 	// Which version this is?
-	$project_version = '0.4';
+	$project_version = '0.5';
 
 	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 	{

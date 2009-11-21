@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.5                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -278,7 +278,8 @@ function IssueReply2()
 	$posterOptions = array(
 		'id' => $user_info['id'],
 		'ip' => $user_info['ip'],
-		'name' => $_POST['guestname'],
+		'name' => $user_info['is_guest'] ? $_POST['guestname'] : $user_info['name'],
+		'username' => $user_info['username'],
 		'email' => $_POST['email'],
 	);
 	$issueOptions = array(

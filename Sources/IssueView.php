@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.5                               *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -540,6 +540,7 @@ function IssueTag()
 	$posterOptions = array(
 		'id' => $user_info['id'],
 		'name' => $user_info['name'],
+		'username' => $user_info['username'],
 		'email' => $user_info['email'],
 		'ip' => $user_info['ip'],
 	);
@@ -638,6 +639,7 @@ function IssueMove()
 		$posterOptions = array(
 			'id' => $user_info['id'],
 			'ip' => $user_info['ip'],
+			'username' => htmlspecialchars($user_info['username']),
 			'name' => htmlspecialchars($user_info['name']),
 			'email' => htmlspecialchars($user_info['email']),
 		);
@@ -667,6 +669,7 @@ function IssueDelete()
 		'id' => $user_info['id'],
 		'ip' => $user_info['ip'],
 		'name' => htmlspecialchars($user_info['name']),
+		'username' => htmlspecialchars($user_info['username']),
 		'email' => htmlspecialchars($user_info['email']),
 	);
 
