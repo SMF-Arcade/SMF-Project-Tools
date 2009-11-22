@@ -1,6 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
+SMF Project Tools 0.4.1                                                      ???
+================================================================================
+November 2009
+--------------------------------------------------------------------------------
+ ! In some cases issue not found error was shown in error [Issue #298]
+ 
 SMF Project Tools 0.4                                                 21.11.2009
 ================================================================================
 November 2009

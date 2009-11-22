@@ -84,6 +84,12 @@
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
+	
+	<upgrade for="2.0 RC2" from="0.4">
+		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+	</upgrade>
 
 	<uninstall for="2.0 RC2">
 		<!-- Remove code modifications -->
