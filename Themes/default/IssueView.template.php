@@ -37,6 +37,9 @@ function template_issue_view_above()
 function template_issue_view_main()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
+	
+	echo '
+	<div id="forumposts">';
 
 	$buttons = array(
 		'reply' => array(
@@ -47,15 +50,16 @@ function template_issue_view_main()
 			'lang' => true
 		),
 	);
+	
+	/*<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['issue_comments'], '
+		</h3>*/
 
 	echo '
 		<div class="pagesection">
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'right'), '
-		</div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $txt['issue_comments'], '
-		</h3>';
+		</div>';
 	
 	$alternate = true;
 
@@ -71,7 +75,8 @@ function template_issue_view_main()
 		<div class="pagesection">
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 			', template_button_strip($buttons, 'right'), '
-		</div><br />';
+		</div><br />
+	</div>';
 }
 
 function template_issue_view_below()
@@ -200,7 +205,8 @@ function template_issue_view_below()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-		<br class="clear" />';
+	</div>
+	<br class="clear" />';
 	
 	// Javascript for Dropdowns
 	if (!empty($context['can_issue_update']))
@@ -303,7 +309,8 @@ function template_issue_view_below()
 	
 	echo '	
 	<div id="moderationbuttons" class="clearfix" style="clear: both;">
-		', template_button_strip($mod_buttons, 'bottom'), '</div>';
+		', template_button_strip($mod_buttons, 'bottom'), '
+	</div>';
 
 	echo '
 	<div class="tborder">
