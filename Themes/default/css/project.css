@@ -187,10 +187,12 @@
 /* ************************************* */
 /* styles from IssueView.template        */
 /* ************************************* */
-#firstcomment
+#issue_comments
 {
 	width: 78%;
 }
+
+/*
 #firstcomment h3.catbg3
 {
 	padding: 0.4em;
@@ -202,12 +204,8 @@
 #firstcomment h3.catbg3 span
 {
 	padding-left: 2%;
-}
+}*/
 
-.issueinfoframe h3
-{
-	margin: 0;
-}
 #issueinfo
 {
 	width: 21%;

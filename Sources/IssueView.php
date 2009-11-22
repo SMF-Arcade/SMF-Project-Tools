@@ -171,7 +171,7 @@ function IssueView()
 	$context['start'] = $_REQUEST['start'];
 
 	$posters = array();
-	$events = array();
+	$events = array($context['current_issue']['comment_first']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_event, id_member

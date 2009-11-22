@@ -30,302 +30,68 @@ function template_issue_view_above()
 		<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
 		<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 	</h3>
-	
-	<div id="forumposts">
-		<div id="firstcomment" class="floatleft bordercolor singlepost"><div class="windowbg">
-			<span class="topslice"><span></span></span>
-			<div class="poster">
-				<h4>';
-		// Show online and offline buttons?
-		if (!empty($modSettings['onlineEnable']) && !$context['current_issue']['reporter']['is_guest'])
-			echo  $context['can_send_pm'] ? '<a href="' . $context['current_issue']['reporter']['online']['href'] . '" title="' . $context['current_issue']['reporter']['online']['label'] . '">' : '', '<img src="', $context['current_issue']['reporter']['online']['image_href'], '" alt="', $context['current_issue']['reporter']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';
+	<div id="issue_comments" class="floatleft">';
 
-		echo $context['current_issue']['reporter']['link'], '</h4>
-				<ul class="reset smalltext" id="firstcmt_extra_info">';
+}
 
-		// Show the member's custom title, if they have one.
-		if (isset($context['current_issue']['reporter']['title']) && $context['current_issue']['reporter']['title'] != '')
-			echo '
-					<li class="title">', $context['current_issue']['reporter']['title'], '</li>';
+function template_issue_view_main()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
-		// Show the member's primary group (like 'Administrator') if they have one.
-		if (isset($context['current_issue']['reporter']['group']) && $context['current_issue']['reporter']['group'] != '')
-			echo '
-					<li class="membergroup">', $context['current_issue']['reporter']['group'], '</li>';
+	$buttons = array(
+		'reply' => array(
+			'text' => 'reply',
+			'test' => 'can_comment',
+			'image' => 'reply_issue.gif',
+			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
+			'lang' => true
+		),
+	);
 
-		// Don't show these things for guests.
-		if (!$context['current_issue']['reporter']['is_guest'])
-		{
-			// Show the post group if and only if they have no other group or the option is on, and they are in a post group.
-			if ((empty($settings['hide_post_group']) || $context['current_issue']['reporter']['group'] == '') && $context['current_issue']['reporter']['post_group'] != '')
-				echo '
-					<li class="postgroup">', $context['current_issue']['reporter']['post_group'], '</li>';
-			echo '
-					<li class="stars">', $context['current_issue']['reporter']['group_stars'], '</li>';
-
-			// Show avatars, images, etc.?
-			if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($context['current_issue']['reporter']['avatar']['image']))
-				echo '
-					<li class="avatar" style="overflow: auto;">', $context['current_issue']['reporter']['avatar']['image'], '</li>';
-
-			// Show how many posts they have made.
-			if (!isset($context['disabled_fields']['posts']))
-				echo '
-					<li class="postcount">', $txt['member_postcount'], ': ', $context['current_issue']['reporter']['posts'], '</li>';
-
-			// Is karma display enabled?  Total or +/-?
-			if ($modSettings['karmaMode'] == '1')
-				echo '
-					<li class="karma">', $modSettings['karmaLabel'], ' ', $context['current_issue']['reporter']['karma']['good'] - $context['current_issue']['reporter']['karma']['bad'], '</li>';
-			elseif ($modSettings['karmaMode'] == '2')
-				echo '
-					<li class="karma">', $modSettings['karmaLabel'], ' +', $context['current_issue']['reporter']['karma']['good'], '/-', $context['current_issue']['reporter']['karma']['bad'], '</li>';
-
-			// Is this user allowed to modify this member's karma?
-			if ($context['current_issue']['reporter']['karma']['allow'])
-				echo '
-					<li class="karma_allow">
-						<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';e=', $context['current_issue']['details']['id_event'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-						<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $context['current_issue']['reporter']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';e=', $context['current_issue']['details']['id_event'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
-					</li>';
-
-			// Show the member's gender icon?
-			if (!empty($settings['show_gender']) && $context['current_issue']['reporter']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
-				echo '
-					<li class="gender">', $txt['gender'], ': ', $context['current_issue']['reporter']['gender']['image'], '</li>';
-
-			// Show their personal text?
-			if (!empty($settings['show_blurb']) && $context['current_issue']['reporter']['blurb'] != '')
-				echo '
-					<li class="blurb">', $context['current_issue']['reporter']['blurb'], '</li>';
-
-			// Any custom fields to show as icons?
-			if (!empty($context['current_issue']['reporter']['custom_fields']))
-			{
-				$shown = false;
-				foreach ($context['current_issue']['reporter']['custom_fields'] as $custom)
-				{
-					if ($custom['placement'] != 1 || empty($custom['value']))
-						continue;
-					if (empty($shown))
-					{
-						$shown = true;
-						echo '
-					<li class="im_icons">
-						<ul>';
-					}
-					echo '
-							<li>', $custom['value'], '</li>';
-				}
-				if ($shown)
-					echo '
-						</ul>
-					</li>';
-			}
-
-			// This shows the popular messaging icons.
-			if ($context['current_issue']['reporter']['has_messenger'] && $context['current_issue']['reporter']['can_view_profile'])
-				echo '
-					<li class="im_icons">
-						<ul>
-							', !isset($context['disabled_fields']['icq']) && !empty($context['current_issue']['reporter']['icq']['link']) ? '<li>' . $context['current_issue']['reporter']['icq']['link'] . '</li>' : '', '
-							', !isset($context['disabled_fields']['msn']) && !empty($context['current_issue']['reporter']['msn']['link']) ? '<li>' . $context['current_issue']['reporter']['msn']['link'] . '</li>' : '', '
-							', !isset($context['disabled_fields']['aim']) && !empty($context['current_issue']['reporter']['aim']['link']) ? '<li>' . $context['current_issue']['reporter']['aim']['link'] . '</li>' : '', '
-							', !isset($context['disabled_fields']['yim']) && !empty($context['current_issue']['reporter']['yim']['link']) ? '<li>' . $context['current_issue']['reporter']['yim']['link'] . '</li>' : '', '
-						</ul>
-					</li>';
-
-			// Show the profile, website, email address, and personal message buttons.
-			if ($settings['show_profile_buttons'])
-			{
-				echo '
-					<li class="profile">
-						<ul>';
-				// Don't show the profile button if you're not allowed to view the profile.
-				if ($context['current_issue']['reporter']['can_view_profile'])
-					echo '
-							<li><a href="', $context['current_issue']['reporter']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a></li>';
-
-				// Don't show an icon if they haven't specified a website.
-				if ($context['current_issue']['reporter']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
-					echo '
-							<li><a href="', $context['current_issue']['reporter']['website']['url'], '" title="' . $context['current_issue']['reporter']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $context['current_issue']['reporter']['website']['title'] . '" border="0" />' : $txt['www']), '</a></li>';
-
-				// Don't show the email address if they want it hidden.
-				if (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
-					echo '
-							<li><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['current_issue']['reporter']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a></li>';
-
-				// Since we know this person isn't a guest, you *can* message them.
-				if ($context['can_send_pm'])
-					echo '
-							<li><a href="', $scripturl, '?action=pm;sa=send;u=', $context['current_issue']['reporter']['id'], '" title="', $context['current_issue']['reporter']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($context['current_issue']['reporter']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . ($context['current_issue']['reporter']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']) . '" border="0" />' : ($context['current_issue']['reporter']['online']['is_online'] ? $txt['pm_online'] : $txt['pm_offline']), '</a></li>';
-				
-				echo '
-						</ul>
-					</li>';
-			}
-
-			// Any custom fields for standard placement?
-			if (!empty($context['current_issue']['reporter']['custom_fields']))
-			{
-				foreach ($context['current_issue']['reporter']['custom_fields'] as $custom)
-					if (empty($custom['placement']) || empty($custom['value']))
-						echo '
-					<li class="custom">', $custom['title'], ': ', $custom['value'], '</li>';
-			}
-
-			// Are we showing the warning status?
-			if (!isset($context['disabled_fields']['warning_status']) && $context['current_issue']['reporter']['warning_status'] && ($context['user']['can_mod'] || !empty($modSettings['warning_show'])))
-				echo '
-					<li class="warning">', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;area=issuewarning;u=' . $context['current_issue']['reporter']['id'] . '">' : '', '<img src="', $settings['images_url'], '/warning_', $context['current_issue']['reporter']['warning_status'], '.gif" alt="', $txt['user_warn_' . $context['current_issue']['reporter']['warning_status']], '" />', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $context['current_issue']['reporter']['warning_status'], '">', $txt['warn_' . $context['current_issue']['reporter']['warning_status']], '</span></li>';
-		}
-		// Otherwise, show the guest's email.
-		elseif (in_array($context['current_issue']['reporter']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
-			echo '
-					<li class="email"><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['current_issue']['reporter']['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a></li>';
-
-		// Done with the information about the poster... on to the post itself.
-		echo '
-				</ul>
-			</div>
-			<div class="postarea">
-				<div class="flow_hidden">
-					<div class="keyinfo">
-						<div class="messageicon">
-							<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" style="padding: 6px 3px" />
-						</div>
-						<h5 id="subject_', $context['current_issue']['details']['id'], '">
-							<a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0')), '#com', $context['current_issue']['details']['id'], '" rel="nofollow">', $context['current_issue']['name'], '</a>
-						</h5>
-						<div class="smalltext">&#171; <strong>', !empty($context['current_issue']['details']['counter']) ? $txt['reply'] . ' #' . $context['current_issue']['details']['counter'] : '', ' ', $txt['on'], ':</strong> ', $context['current_issue']['details']['time'], ' &#187;</div>
-					</div>';
-				
-	if ($context['can_comment'] || $context['current_issue']['details']['can_edit'] || $context['current_issue']['details']['can_remove'])	
-		echo '
-					<ul class="reset smalltext quickbuttons">';
-
-	if ($context['can_comment'])
-		echo '
-						<li class="reply_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply', 'quote' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['reply'], '</a></li>';
-
-	if ($context['current_issue']['details']['can_edit'])
-		echo '
-						<li class="modify_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'edit', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
-
-	if ($context['current_issue']['details']['can_remove'])
-		echo '
-						<li class="remove_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'removeComment', 'com' => $context['current_issue']['details']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
-
-	if ($context['can_comment'] || $context['current_issue']['details']['can_edit'] || $context['current_issue']['details']['can_remove'])
-		echo '
-					</ul>';
-					
 	echo '
-				</div>
-				<div id="com_', $context['current_issue']['details']['id'], '" class="post">
-					<div class="inner">', $context['current_issue']['details']['body'], '</div>
-				</div>';
+		<div class="pagesection">
+			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'right'), '
+		</div>
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['issue_comments'], '
+		</h3>';
+	
+	$alternate = true;
 
-	// Show attachments
-	if (!empty($context['attachments']))
+	while ($event = getEvent())
 	{
-		echo '
-				<div id="com_', $context['current_issue']['details']['id'], '_footer" class="attachments smalltext">
-					<hr width="100%" size="1" class="hrcolor" />
-					<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
-
-		foreach ($context['attachments'] as $attachment)
-		{
-			if ($attachment['is_image'])
-			{
-				if ($attachment['thumbnail']['has_thumb'])
-					echo '
-						<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
-				else
-					echo '
-						<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
-			}
-			echo '
-						<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
-
-			echo '
-						(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
-		}
-
-		echo '
-					</div>
-				</div>';
+		if ($event['type'] == 'comment')
+			template_event_full($event, $alternate);
+		else
+			template_event_compact($event, $alternate);
 	}
 
 	echo '
-			</div>
-			<div class="moderatorbar">
-				<div class="smalltext modified">';
+		<div class="pagesection">
+			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
+			', template_button_strip($buttons, 'right'), '
+		</div><br />';
+}
 
-	// Show "« Last Edit: Time by Person »" if this post was edited.
-	if ($settings['show_modify'] && !empty($context['current_issue']['details']['modified']['name']))
-		echo '
-					&#171; <em>', $txt['last_edit'], ': ', $context['current_issue']['details']['modified']['time'], ' ', $txt['by'], ' ', $context['current_issue']['details']['modified']['name'], '</em> &#187;';
+function template_issue_view_below()
+{
+	global $context, $settings, $options, $txt, $modSettings, $settings;
 
-	echo '
-				</div>
-				<div class="smalltext reportlinks">';
-	echo '
-					<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
-
-	// Show the IP to this user for this post - because you can moderate?
-	if ($context['can_moderate_forum'] && !empty($context['current_issue']['details']['ip']))
-		echo '
-					<a href="', $scripturl, '?action=trackip;searchip=', $context['current_issue']['details']['ip'], '">', $context['current_issue']['details']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
-	// Or, should we show it because this is you?
-	elseif ($context['current_issue']['details']['can_see_ip'])
-		echo '
-					<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $context['current_issue']['details']['ip'], '</a>';
-	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
-	elseif (!$context['user']['is_guest'])
-		echo '
-					<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
-	// Otherwise, you see NOTHING!
-	else
-		echo '
-					', $txt['logged'];
+	$mod_buttons = array(
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
+		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
+	);
 
 	echo '
-				</div>';
-
-	// Are there any custom profile fields for above the signature?
-	if (!empty($context['current_issue']['details']['custom_fields']))
-	{
-		$shown = false;
-		foreach ($context['current_issue']['details']['custom_fields'] as $custom)
-		{
-			if ($custom['placement'] != 2 || empty($custom['value']))
-				continue;
-			if (empty($shown))
-			{
-				$shown = true;
-				echo '
-				<div class="custom_fields_above_signature">
-					<ul class="reset nolist>';
-			}
-			echo '
-						<li>', $custom['value'], '</li>';
-		}
-		if ($shown)
-			echo '
-					</ul>
-				</div>';
-	}
+	</div>';
 	
-	echo '
-			</div>
-		<span class="botslice"><span></span></span>
-		</div></div>';
-
+	
 	// Issue Info table
 	echo '
-		<div id="issueinfo" class="windowbg floatright">
+	<div id="issueinfo" class="floatright">
+		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<h3 style="padding-left: 5px;">', $txt['issue_details'], '</h3>
 			<div class="clearfix smalltext">
@@ -534,50 +300,108 @@ function template_issue_view_above()
 		echo '
 		</script>';
 	}
-}
-
-function template_issue_view_main()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
-
-	// Print out comments
-	if ($context['num_events'] == 0)
-		return;
-
-	$buttons = array(
-		'reply' => array(
-			'text' => 'reply',
-			'test' => 'can_comment',
-			'image' => 'reply_issue.gif',
-			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
-			'lang' => true
-		),
-	);
+	
+	echo '	
+	<div id="moderationbuttons" class="clearfix" style="clear: both;">
+		', template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	echo '
-	<div class="pagesection">
-		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-		', template_button_strip($buttons, 'right'), '
-	</div>
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		', $txt['issue_comments'], '
-	</h3>';
-	
-	$alternate = true;
+	<div class="tborder">
+		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
+	</div><br />';
 
-	while ($event = getEvent())
+	if ($context['can_comment'])
 	{
-		if ($event['type'] == 'comment')
-			template_event_full($event, $alternate);
-		else
-			template_event_compact($event, $alternate);
+		echo '
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply2')), '" method="post">
+		<div class="tborder">
+			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['comment_issue'], '</h3>
+			<div class="smallpadding windowbg" style="text-align: center">
+				<span class="topslice"><span><!-- // --></span></span>
+				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
+
+		echo '
+				<div style="text-align: right; padding-right: 5px;">
+					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
+				</div>
+				<span class="botslice"><span><!-- // --></span></span>
+			</div>
+		</div><br />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+	</form><br />';
 	}
 
 	echo '
-	<div class="pagesection">
-		<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
-		', template_button_strip($buttons, 'right'), '
-	</div><br />';
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags')), '" method="post">
+		<div class="tborder">
+			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_tags'], '</h3>
+			<div class="smallpadding windowbg">';
+
+	if (!empty($context['current_tags']) || $context['can_add_tags'])
+	{
+		echo '
+				<ul class="reset clearfix tags">';
+
+		if (!empty($context['current_tags']))
+		{
+			foreach ($context['current_tags'] as $tag)
+			{
+				echo '
+					<li>', $tag['link'];
+
+				if ($context['can_remove_tags'])
+					echo '
+						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+
+					echo '
+					</li>';
+			}
+		}
+
+		if ($context['can_add_tags'])
+			echo '
+					<li class="tag_editor">
+						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
+						<input class="button_submit" type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
+					</li>';
+
+		echo '
+				</ul>';
+	}
+
+	echo '
+			</div>
+		</div><br />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+	</form><br />';
+
+	if ($context['can_issue_attach'])
+	{
+		echo '
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
+		<div class="tborder">
+			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_attach'], '</h3>
+			<div class="windowbg">
+				<span class="topslice"><span><!-- // --></span></span>
+				<p style="padding: 5px 10px 0 10px; margin: 0 0 0.5em;">
+					<input type="file" size="48" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
+
+		if (!empty($modSettings['attachmentCheckExtensions']))
+			echo '
+						', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+		echo '
+						', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
+
+		echo '
+					<input class="button_submit" type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
+				</p>
+				<span class="botslice"><span><!-- // --></span></span>
+			</div>
+		</div>
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+	</form>';
+	}
 }
 
 function template_event_full(&$event, &$alternate)
@@ -590,7 +414,7 @@ function template_event_full(&$event, &$alternate)
 	
 		$id = isset($event['comment']) ? 'com' . $event['comment']['id'] : 'evt' . $event['id'];
 		$id2 = isset($event['comment']) ? 'com_' . $event['comment']['id'] : 'evt_' . $event['id'];
-
+		
 		echo '
 		<div class="windowbg', $alternate ? '' : '2', '">
 			<span class="topslice"><span></span></span>';
@@ -1020,120 +844,6 @@ function template_event_compact(&$event, &$alternate)
 			<hr class="post_separator" />';
 		
 		$alternate = !$alternate;	
-}
-
-function template_issue_view_below()
-{
-	global $context, $settings, $options, $txt, $modSettings, $settings;
-
-	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
-		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
-		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
-	);
-
-	echo '
-	</div>
-	<div id="moderationbuttons" class="clearfix" style="clear: both;">
-		', template_button_strip($mod_buttons, 'bottom'), '</div>';
-
-	echo '
-	<div class="tborder">
-		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-	</div><br />';
-
-	if ($context['can_comment'])
-	{
-		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply2')), '" method="post">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['comment_issue'], '</h3>
-			<div class="smallpadding windowbg" style="text-align: center">
-				<span class="topslice"><span><!-- // --></span></span>
-				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
-
-		echo '
-				<div style="text-align: right; padding-right: 5px;">
-					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
-					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
-				</div>
-				<span class="botslice"><span><!-- // --></span></span>
-			</div>
-		</div><br />
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form><br />';
-	}
-
-	echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags')), '" method="post">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_tags'], '</h3>
-			<div class="smallpadding windowbg">';
-
-	if (!empty($context['current_tags']) || $context['can_add_tags'])
-	{
-		echo '
-				<ul class="reset clearfix tags">';
-
-		if (!empty($context['current_tags']))
-		{
-			foreach ($context['current_tags'] as $tag)
-			{
-				echo '
-					<li>', $tag['link'];
-
-				if ($context['can_remove_tags'])
-					echo '
-						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
-
-					echo '
-					</li>';
-			}
-		}
-
-		if ($context['can_add_tags'])
-			echo '
-					<li class="tag_editor">
-						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
-						<input class="button_submit" type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
-					</li>';
-
-		echo '
-				</ul>';
-	}
-
-	echo '
-			</div>
-		</div><br />
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form><br />';
-
-	if ($context['can_issue_attach'])
-	{
-		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_attach'], '</h3>
-			<div class="windowbg">
-				<span class="topslice"><span><!-- // --></span></span>
-				<p style="padding: 5px 10px 0 10px; margin: 0 0 0.5em;">
-					<input type="file" size="48" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
-
-		if (!empty($modSettings['attachmentCheckExtensions']))
-			echo '
-						', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
-		echo '
-						', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
-
-		echo '
-					<input class="button_submit" type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
-				</p>
-				<span class="botslice"><span><!-- // --></span></span>
-			</div>
-		</div>
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
-	}
 }
 
 function template_issue_move()
