@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.4.1                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -349,17 +349,13 @@ function getEvent()
 				{
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$old_value]))
-						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
-					elseif (!empty($context['versions'][$old_value]))
-						$old_value = $context['versions'][$old_value]['name'];
+					else
+						$old_value = getVersions(explode(',', $old_value), true);
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$new_value]))
-						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
-					elseif (!empty($context['versions'][$new_value]))
-						$new_value = $context['versions'][$new_value]['name'];
+					else
+						$new_value = getVersions(explode(',', $new_value), true);
 				}
 				elseif ($field == 'assign')
 				{

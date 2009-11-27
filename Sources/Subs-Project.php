@@ -1256,21 +1256,15 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 				}
 				elseif ($field == 'version' || $field == 'target_version')
 				{
-					// TODO: Make this work?
-					// Check if version is subversion
-					/*if (empty($old_value))
+					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$old_value]))
-						$old_value = $context['versions'][$context['versions_id'][$old_value]]['sub_versions'][$old_value]['name'];
 					else
-						$old_value = $context['versions'][$old_value]['name'];
+						$old_value = getVersions(explode(',', $old_value), true);
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (!empty($context['versions_id'][$new_value]))
-						$new_value = $context['versions'][$context['versions_id'][$new_value]]['sub_versions'][$new_value]['name'];
 					else
-						$new_value = $context['versions'][$new_value]['name'];*/
+						$new_value = getVersions(explode(',', $new_value), true);
 				}
 				elseif ($field == 'assign')
 				{

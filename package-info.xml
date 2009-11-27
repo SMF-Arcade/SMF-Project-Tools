@@ -87,8 +87,11 @@
 	
 	<upgrade for="2.0 RC2" from="0.4">
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
+		
 	</upgrade>
 
 	<uninstall for="2.0 RC2">

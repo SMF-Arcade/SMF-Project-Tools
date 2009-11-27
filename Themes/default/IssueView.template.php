@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; IssueView
+// Version: 0.4.1; IssueView
 
 function template_issue_view_above()
 {
@@ -327,47 +327,46 @@ function template_issue_view_above()
 	echo '
 		<div id="issueinfo" class="windowbg floatright">
 			<span class="topslice"><span></span></span>
-			<h3 style="padding-left: 5px;">', $txt['issue_details'], '</h3>
-			<div class="clearfix smalltext">
+			<div class="smalltext">
 				<ul class="details">
 					<li>
-						<dl class="clearfix">
+						<dl>
 							<dt>', $txt['issue_reported'], '</dt>
 							<dd>', $context['current_issue']['created'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_updated">
-						<dl class="clearfix">
+						<dl>
 							<dt>', $txt['issue_updated'], '</dt>
 							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_view_status" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_view_status">
+						<dl>
 							<dt>', $txt['issue_view_status'], '</dt>
 							<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_tracker" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_tracker">
+						<dl>
 							<dt>', $txt['issue_type'], '</dt>
 							<dd>', $context['current_issue']['tracker']['name'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_status" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_status">
+						<dl>
 							<dt>', $txt['issue_status'], '</dt>
 							<dd>', $context['current_issue']['status']['text'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_priority" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_priority">
+						<dl>
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
 						</dl>
 					</li>
-					<li id="issue_version" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_version">
+						<dl>
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>';
 	
@@ -392,8 +391,8 @@ function template_issue_view_above()
 							</dd>
 						</dl>
 					</li>
-					<li id="issue_verfix" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_verfix">
+						<dl>
 							<dt>', $txt['issue_version_fixed'], '</dt>
 							<dd>';
 						
@@ -418,14 +417,14 @@ function template_issue_view_above()
 							</dd>
 						</dl>
 					</li>
-					<li id="issue_assign" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_assign">
+						<dl>
 							<dt>', $txt['issue_assigned_to'], '</dt>
 							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_category" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_category">
+						<dl>
 							<dt>', $txt['issue_category'], '</dt>
 							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
 						</dl>
