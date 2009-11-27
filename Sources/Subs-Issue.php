@@ -1035,7 +1035,7 @@ function link_tags(&$tag, $key, $baseurl)
 		$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
 }
 
-function getVersions($versions)
+function getVersions($versions, $as_string = false)
 {
 	global $context;
 	
@@ -1044,12 +1044,12 @@ function getVersions($versions)
 	foreach ($versions as $ver)
 	{
 		if (!empty($context['versions_id'][$ver]))
-			$return[$ver] = $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver];
+			$return[$ver] = $as_string ? $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver]['name'] : $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver];
 		elseif (!empty($context['versions'][$ver]))
-			$return[$ver] = $context['versions'][$ver];
+			$return[$ver] = $as_string ? $context['versions'][$ver]['name'] : $context['versions'][$ver];
 	}
 	
-	return $return;
+	return $as_string ? implode(', ', $return) : $return;
 }
 
 ?>

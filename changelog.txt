@@ -9,6 +9,7 @@ November 2009
  * Compact template for events without comment
  ! In some cases issue not found error was shown in error [Issue #298]
  ! Reverting changes tied to comment deletes comment [Issue #300]
+ ! Issue update time not updated in some cases
  
 SMF Project Tools 0.4                                                 21.11.2009
 ================================================================================
