@@ -199,9 +199,9 @@ function template_project_view()
 	foreach ($context['events'] as $date)
 	{
 		echo '
-			<h5 class="windowbg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
+			<h4 class="windowbg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
 				', $date['date'], '
-			</h5>
+			</h4>
 			<ul class="reset">';
 
 		foreach ($date['events'] as $event)

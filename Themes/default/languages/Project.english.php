@@ -192,7 +192,7 @@ $txt['change_timeline_priority'] = 'Priority';
 $txt['change_timeline_category'] = 'Category';
 $txt['change_timeline_rename'] = 'Rename';
 $txt['change_timeline_project'] = 'Project';
-$txt['change_timeline_project'] = 'Tags';
+$txt['change_timeline_tags'] = 'Tags';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';
