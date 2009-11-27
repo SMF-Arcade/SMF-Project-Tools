@@ -580,7 +580,7 @@ function IssueTag()
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}issue_tags',
 			array('id_issue' => 'int', 'tag' => 'string-30',),
-			$tags,
+			$rows,
 			array('id_issue', 'tag')
 		);
 		
