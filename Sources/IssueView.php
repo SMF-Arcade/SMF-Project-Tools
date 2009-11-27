@@ -371,6 +371,15 @@ function getEvent()
 					elseif (loadMemberContext($new_value))
 						$new_value = $memberContext[$new_value]['link'];
 				}
+				elseif ($field == 'tags')
+				{
+					if (!empty($new_value))
+						$changes[] = sprintf($txt['change_add_tag'], implode(', ', $new_value));
+					if (!empty($old_value))
+						$changes[] = sprintf($txt['change_remove_tag'], implode(', ', $old_value));
+						
+					continue;
+				}
 
 				$changes[] = sprintf($txt['change_' . $field], $old_value, $new_value);
 			}
@@ -551,6 +560,7 @@ function IssueTag()
 	{
 		projectIsAllowedTo('issue_moderate');
 
+		$rows = array();
 		$tags = array();
 
 		foreach (explode(',', $_REQUEST['tag']) as $tag)
@@ -558,10 +568,13 @@ function IssueTag()
 			$tag = trim($tag);
 
 			if (!empty($tag))
-				$tags[] = array($context['current_issue']['id'], $smcFunc['htmlspecialchars']($tag, ENT_QUOTES));
+			{
+				$rows[] = array($context['current_issue']['id'], $smcFunc['htmlspecialchars']($tag, ENT_QUOTES));
+				$tags[] = $tag;
+			}
 		}
 
-		if (empty($tags))
+		if (empty($rows))
 			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
 		$smcFunc['db_insert']('replace',
@@ -571,14 +584,35 @@ function IssueTag()
 			array('id_issue', 'tag')
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_tag', serialize(array('tags' => $tags)), $posterOptions, $eventOptions);
+		$event_data = array(
+			'changes' => array(
+				// Format: array(tags, array removed, array added)
+				array('tags', array(), $tags),
+			),
+		);
+		
+		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 	elseif (isset($_REQUEST['tag']))
 	{
 		projectIsAllowedTo('issue_moderate');
-		$_REQUEST['tag'] = urldecode($_REQUEST['tag']);
-		
-		$tags = array($_REQUEST['tag']);
+
+		$rows = array();
+		$tags = array();
+
+		foreach (explode(',', $_REQUEST['tag']) as $tag)
+		{
+			$tag = trim($tag);
+
+			if (!empty($tag))
+			{
+				$rows[] = $smcFunc['htmlspecialchars']($tag, ENT_QUOTES);
+				$tags[] = $tag;
+			}
+		}
+
+		if (empty($rows))
+			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}issue_tags
@@ -586,11 +620,18 @@ function IssueTag()
 				AND tag IN({array_string:tag})',
 			array(
 				'issue' => $context['current_issue']['id'],
-				'tag' => $tags,
+				'tag' => $rows,
 			)
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'remove_tag', serialize(array('tags' => $tags)), $posterOptions, $eventOptions);
+		$event_data = array(
+			'changes' => array(
+				// Format: array(tags, array removed, array added)
+				array('tags', $tags, array()),
+			),
+		);
+		
+		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));

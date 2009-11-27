@@ -550,6 +550,16 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 					if (!isset($temp_changes[$field]))
 						$temp_changes[$field] = array($old_value, $new_value);
+					// Tags field has special format (array removed, array added)
+					elseif ($field == 'tags')
+					{
+						$temp_changes[$field][0] = array_diff(array_unique(array_merge($temp_changes[$field][0], $old_value)), $new_value);
+						$temp_changes[$field][1] = array_diff(array_unique(array_merge($temp_changes[$field][1], $new_value)), $old_value);
+						
+						// Change was reversed? Then remove it for good...
+						if (empty($temp_changes[$field][0]) && empty($temp_changes[$field][1]))
+							unset($temp_changes[$field]);
+					}
 					else
 					{
 						$temp_changes[$field][1] = $new_value;

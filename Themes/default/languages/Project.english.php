@@ -177,6 +177,8 @@ $txt['change_priority'] = 'Priority changed from <em>%1$s</em> to <em>%2$s</em>'
 $txt['change_category'] = 'Category changed from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_rename'] = 'Issue renamed from <em>&quot;%1$s&quot;</em> to <em>&quot;%2$s&quot;</em>';
 $txt['change_project'] = 'Issue moved from <em>%1$s</em> to <em>%2$s</em>';
+$txt['change_add_tag'] = 'Tags added: <em>%1$s</em>';
+$txt['change_remove_tag'] = 'Tags removed: <em>%1$s</em>';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
@@ -190,6 +192,7 @@ $txt['change_timeline_priority'] = 'Priority';
 $txt['change_timeline_category'] = 'Category';
 $txt['change_timeline_rename'] = 'Rename';
 $txt['change_timeline_project'] = 'Project';
+$txt['change_timeline_project'] = 'Tags';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';
