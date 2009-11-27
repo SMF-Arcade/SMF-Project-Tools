@@ -553,8 +553,21 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 					// Tags field has special format (array removed, array added)
 					elseif ($field == 'tags')
 					{
-						$temp_changes[$field][0] = array_unique(array_merge(array_diff($temp_changes[$field][0], $new_value), $old_value));
-						$temp_changes[$field][1] = array_unique(array_merge(array_diff($temp_changes[$field][1], $old_value), $new_value));
+						$rem_prev = $temp_changes[$field][0];
+						$rem_cur = $old_value;
+						
+						$add_prev = $temp_changes[$field][1];
+						$add_cur = $new_value;
+						
+						// Added tags
+						$temp_changes[$field][1] = array_merge(
+							array_diff($add_cur, $rem_prev), // Addid in current - removed in prev (reverting)
+							array_diff($add_prev, $rem_cur) // Added in prev - removed in current (reverting)
+						);
+						$temp_changes[$field][0] = array_merge(
+							array_diff($rem_prev, $add_cur), // Removed in prev - added in current
+							array_diff($rem_cur, $add_prev) // Removed in current - added in previous
+						);
 						
 						// Change was reversed? Then remove it for good...
 						if (empty($temp_changes[$field][0]) && empty($temp_changes[$field][1]))
@@ -627,8 +640,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	// Update Issues table too
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
-		SET id_event_mod = {int:event}
-			AND updated = {int:time}
+		SET id_event_mod = {int:event}, updated = {int:time}
 		WHERE id_issue = {int:issue}',
 		array(
 			'event' => $id_event_new,
