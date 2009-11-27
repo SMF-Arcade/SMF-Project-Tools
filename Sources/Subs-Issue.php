@@ -533,8 +533,6 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 			if (isset($event_data2['changes']) && isset($event_data['changes']))
 			{
-				//$new_changes = array_merge($event_data['changes'], $event_data2['changes']);
-
 				$temp_changes = array();
 
 				// Add old changes to array first
@@ -563,11 +561,11 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				}
 
 				// Changed everything back to orignal?
-				if (empty($temp_changes))
+				if (empty($temp_changes) && $event_name != 'new_comment')
 					return;
-
-				foreach ($temp_changes as $field => $data)
-					$new_changes[] = array($field, $data[0], $data[1]);
+				elseif (!empty($temp_changes))
+					foreach ($temp_changes as $field => $data)
+						$new_changes[] = array($field, $data[0], $data[1]);
 			}
 			// This is easier :P
 			elseif (isset($event_data2['changes']))
@@ -575,7 +573,10 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 			elseif (isset($event_data['changes']))
 				$new_changes = $event_data['changes'];
 
-			$event_data['changes'] = $new_changes;
+			if (!empty($new_changes))
+				$event_data['changes'] = $new_changes;
+			else
+				unset($event_data['changes']);
 		}
 
 		$smcFunc['db_free_result']($request);
@@ -617,10 +618,12 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues
 		SET id_event_mod = {int:event}
+			AND updated = {int:time}
 		WHERE id_issue = {int:issue}',
 		array(
 			'event' => $id_event_new,
 			'issue' => $id_issue,
+			'time' => $issueOptions['time'],
 		)
 	);
 

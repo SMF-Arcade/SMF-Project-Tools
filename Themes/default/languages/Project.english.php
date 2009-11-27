@@ -153,13 +153,13 @@ $txt['issue_edit'] = 'Edit';
 // Issue Details
 $txt['issue_details'] = 'Issue Details';
 $txt['issue_reported'] = 'Reported';
+$txt['issue_attachments'] = 'Attachments';
 
 // Views
 $txt['issue_view_comments'] = 'Comments';
 $txt['issue_view_changes'] = 'Changes';
 
 // Comments
-$txt['issue_comments'] = 'Comments';
 $txt['remove_comment'] = 'Remove';
 $txt['remove_comment_alt'] = 'Remove Comment';
 $txt['remove_comment_sure'] = 'Are you sure you want to remove this comment';
@@ -211,7 +211,6 @@ $txt['update_issue_save'] = 'Save';
 $txt['update_issue_comment'] = 'Save with Comment';
 
 // Attachement
-$txt['issue_attach'] = 'Add Attachments';
 $txt['allowed_types'] = 'Allowed Filetypes';
 $txt['max_size'] = 'Maximum attachment size allowed';
 $txt['add_attach'] = 'Attach';

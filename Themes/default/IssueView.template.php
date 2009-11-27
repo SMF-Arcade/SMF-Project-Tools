@@ -26,11 +26,11 @@ function template_issue_view_above()
 	// Issue Details
 	echo '
 	<a name="com', $context['current_issue']['comment_first'], '"></a>
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
-		<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
-	</h3>
-	<div id="issue_comments" class="floatleft">';
+	<div id="issue_comments" class="floatleft">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
+			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+		</h3>';
 
 }
 
@@ -51,10 +51,6 @@ function template_issue_view_main()
 		),
 	);
 	
-	/*<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $txt['issue_comments'], '
-		</h3>*/
-
 	echo '
 		<div class="pagesection">
 			<div class="align_left">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
@@ -96,49 +92,51 @@ function template_issue_view_below()
 	// Issue Info table
 	echo '
 	<div id="issueinfo" class="floatright">
+		<h3 class="catbg"><span class="left"></span>
+			', $txt['issue_details'], '
+		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<h3 style="padding-left: 5px;">', $txt['issue_details'], '</h3>
-			<div class="clearfix smalltext">
+			<div class="smalltext">
 				<ul class="details">
 					<li>
-						<dl class="clearfix">
+						<dl>
 							<dt>', $txt['issue_reported'], '</dt>
 							<dd>', $context['current_issue']['created'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_updated">
-						<dl class="clearfix">
+						<dl>
 							<dt>', $txt['issue_updated'], '</dt>
 							<dd>', $context['current_issue']['updated'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_view_status" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_view_status">
+						<dl>
 							<dt>', $txt['issue_view_status'], '</dt>
 							<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_tracker" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_tracker">
+						<dl>
 							<dt>', $txt['issue_type'], '</dt>
 							<dd>', $context['current_issue']['tracker']['name'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_status" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_status">
+						<dl>
 							<dt>', $txt['issue_status'], '</dt>
 							<dd>', $context['current_issue']['status']['text'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_priority" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_priority">
+						<dl>
 							<dt>', $txt['issue_priority'], '</dt>
 							<dd>', $txt[$context['current_issue']['priority']], '</dd>
 						</dl>
 					</li>
-					<li id="issue_version" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_version">
+						<dl>
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>';
 	
@@ -163,8 +161,8 @@ function template_issue_view_below()
 							</dd>
 						</dl>
 					</li>
-					<li id="issue_verfix" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_verfix">
+						<dl>
 							<dt>', $txt['issue_version_fixed'], '</dt>
 							<dd>';
 						
@@ -189,14 +187,14 @@ function template_issue_view_below()
 							</dd>
 						</dl>
 					</li>
-					<li id="issue_assign" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_assign">
+						<dl>
 							<dt>', $txt['issue_assigned_to'], '</dt>
 							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
-					<li id="issue_category" class="clearfix">
-						<dl class="clearfix">
+					<li id="issue_category">
+						<dl>
 							<dt>', $txt['issue_category'], '</dt>
 							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
 						</dl>
@@ -205,6 +203,113 @@ function template_issue_view_below()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
+		<br class="clear" />';
+
+	// Tags		
+	echo '
+		<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_tags'], '</h3>
+		<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags')), '" method="post">
+			<div class="windowbg">
+				<span class="topslice"><span><!-- // --></span></span>';
+
+	if (!empty($context['current_tags']) || $context['can_add_tags'])
+	{
+		echo '
+				<ul class="reset clearfix tags">';
+
+		if (!empty($context['current_tags']))
+		{
+			foreach ($context['current_tags'] as $tag)
+			{
+				echo '
+					<li>', $tag['link'];
+
+				if ($context['can_remove_tags'])
+					echo '
+						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+
+					echo '
+					</li>';
+			}
+		}
+
+		if ($context['can_add_tags'])
+			echo '
+					<li class="tag_editor">
+						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
+						<input class="button_submit" type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
+					</li>';
+
+		echo '
+				</ul>
+				<br class="clear" />';
+	}
+
+	echo '
+				<span class="botslice"><span><!-- // --></span></span>
+			</div>
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+		</form>
+		<br class="clear" />';
+
+	// Attachments
+	if (!empty($context['attachments']) || $context['can_issue_attach'])
+	{
+		echo '
+		<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_attachments'], '</h3>
+		<div class="windowbg">
+			<span class="topslice"><span><!-- // --></span></span>
+			<div class="content">';
+			
+		if (!empty($context['attachments']))
+			foreach ($context['attachments'] as $attachment)
+			{
+				if ($attachment['is_image'])
+				{
+					if ($attachment['thumbnail']['has_thumb'])
+						echo '
+					<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+					else
+						echo '
+					<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
+				}
+				echo '
+					<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
+
+				echo '
+					(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+			}
+		
+		
+		if ($context['can_issue_attach'])
+		{
+			if (!empty($context['attachments']))
+				echo '
+				<hr />';
+				
+			echo '
+				<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">		
+					<input type="file" size="32" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
+
+			if (!empty($modSettings['attachmentCheckExtensions']))
+				echo '
+						', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+			echo '
+						', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
+
+			echo '
+					<input class="button_submit" type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				</form>';
+		}
+		
+		echo '
+			</div>
+			<span class="botslice"><span><!-- // --></span></span>
+		</div>';
+	}
+	
+	echo '
 	</div>
 	<br class="clear" />';
 	
@@ -308,7 +413,7 @@ function template_issue_view_below()
 	}
 	
 	echo '	
-	<div id="moderationbuttons" class="clearfix" style="clear: both;">
+	<div id="moderationbuttons" class="clear">
 		', template_button_strip($mod_buttons, 'bottom'), '
 	</div>';
 
@@ -337,77 +442,6 @@ function template_issue_view_below()
 		</div><br />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form><br />';
-	}
-
-	echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags')), '" method="post">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_tags'], '</h3>
-			<div class="smallpadding windowbg">';
-
-	if (!empty($context['current_tags']) || $context['can_add_tags'])
-	{
-		echo '
-				<ul class="reset clearfix tags">';
-
-		if (!empty($context['current_tags']))
-		{
-			foreach ($context['current_tags'] as $tag)
-			{
-				echo '
-					<li>', $tag['link'];
-
-				if ($context['can_remove_tags'])
-					echo '
-						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
-
-					echo '
-					</li>';
-			}
-		}
-
-		if ($context['can_add_tags'])
-			echo '
-					<li class="tag_editor">
-						<input type="text" name="tag" value="" tabindex="', $context['tabindex']++, '" />
-						<input class="button_submit" type="submit" name="add_tag" value="', $txt['add_tag'], '" tabindex="', $context['tabindex']++, '" />
-					</li>';
-
-		echo '
-				</ul>';
-	}
-
-	echo '
-			</div>
-		</div><br />
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form><br />';
-
-	if ($context['can_issue_attach'])
-	{
-		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_attach'], '</h3>
-			<div class="windowbg">
-				<span class="topslice"><span><!-- // --></span></span>
-				<p style="padding: 5px 10px 0 10px; margin: 0 0 0.5em;">
-					<input type="file" size="48" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
-
-		if (!empty($modSettings['attachmentCheckExtensions']))
-			echo '
-						', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
-		echo '
-						', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], '<br />';
-
-		echo '
-					<input class="button_submit" type="submit" name="add_comment" value="', $txt['add_attach'], '" tabindex="', $context['tabindex']++, '" />
-				</p>
-				<span class="botslice"><span><!-- // --></span></span>
-			</div>
-		</div>
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
 	}
 }
 
