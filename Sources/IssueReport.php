@@ -527,6 +527,74 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 				'value' => $issueOptions['tracker'],
 			);
 	}
+	
+	if (isset($_REQUEST['last_event']))
+	{
+		require_once($sourcedir . '/IssueView.php');
+		loadTemplate('IssueView');
+		
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event, id_member
+			FROM {db_prefix}project_timeline
+			WHERE id_issue = {int:issue}
+				AND id_event > {int:last_event}',
+			array(
+				'issue' => $issue,
+				'last_event' => (int) $_REQUEST['last_event'],
+			)
+		);
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if (!empty($row['id_member']))
+				$posters[$row['id_member']] = $row['id_member'];
+			$events[] = $row['id_event'];
+		}
+		$smcFunc['db_free_result']($request);
+	
+		if (!empty($posters))
+			loadMemberData($posters);
+	
+		$context['num_events'] = count($events);
+	
+		// Load events
+		if (!empty($events))
+		{
+			$context['comment_request'] = $smcFunc['db_query']('', '
+				SELECT
+					tl.id_event, tl.id_member, tl.event, tl.event_time , tl.event_data, tl.poster_name, tl.poster_email, tl.poster_ip,
+					IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.post_time, c.edit_time, c.body, c.edit_name, c.edit_time, tl.event_data,
+					IFNULL(c.id_event_mod, {int:new_from}) < {int:new_from} AS is_read
+				FROM {db_prefix}project_timeline AS tl
+					LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
+				WHERE tl.id_event IN ({array_int:events})',
+				array(
+					'events' => $events,
+					'new_from' => $context['current_issue']['new_from'],
+				)
+			);
+		}
+		else
+			$context['comment_request'] = false;
+	
+		$context['counter_start'] = $_REQUEST['start'];
+		
+		// Get html using buffers (todo: use better method?)
+		ob_start();
+		
+		$alternate = true;
+	
+		while ($event = getEvent())
+		{
+			if ($event['type'] == 'comment')
+				template_event_full($event, $alternate);
+			else
+				template_event_compact($event, $alternate);
+		}
+			
+		$comments_html = ob_get_contents();
+		ob_end_clean();
+	}
 }
 
 function IssueUpload()

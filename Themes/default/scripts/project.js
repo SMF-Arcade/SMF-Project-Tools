@@ -1,5 +1,5 @@
 // Project Tools Dropdown
-function PTIssue(id_issue, saveURL)
+function PTIssue(id_issue, saveURL, id_last_event, element_events)
 {
 	var changes = [];
 	var callbacks = [];
@@ -9,6 +9,9 @@ function PTIssue(id_issue, saveURL)
 	var saveInProgress = false;
 	
 	this.id_issue = id_issue;
+	this.id_last_event = id_last_event;
+	
+	this.element_events = document.getElementById(element_events);
 	
 	this.addLabel = addLabel;
 	this.addDropdown = addDropdown;
@@ -63,7 +66,10 @@ function PTIssue(id_issue, saveURL)
 		
 		saveInProgress = true;
 		
+		changes[i] = "last_event=" + this.id_last_event;
+		
 		sendXMLDocument(saveURL, changes.join("&"), onSaveDone);
+		
 		changes = [];
 	}
 	
@@ -84,6 +90,11 @@ function PTIssue(id_issue, saveURL)
 				formItems[fieldName].setValue(node.getAttribute("id"), node.textContent);
 		}
 		
+		var events_html = oXMLDoc.getElementsByTagName('events_html');
+		
+		if (events_html)
+			element_events.innerHTML = events_html[0].innerHTML;
+			
 		// Reset callbacks
 		callbacks = [];
 		

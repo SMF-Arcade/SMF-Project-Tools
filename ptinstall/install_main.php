@@ -97,7 +97,34 @@ $smcFunc['db_insert']('ignore',
 	array('id_tracker')
 );
 
-// Step 6: Run general maintenance
+// Step 6: Install SMF Project Package server
+$request = $smcFunc['db_query']('', '
+	SELECT COUNT(*)
+	FROM {db_prefix}package_servers
+	WHERE name = {string:name}',
+	array(
+		'name' => 'SMF Project Tools Package Server',
+	)
+);
+
+list ($count) = $smcFunc['db_fetch_row']($request);
+$smcFunc['db_free_result']($request);
+
+if ($count == 0)
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}package_servers',
+		array(
+			'name' => 'string',
+			'url' => 'string',
+		),
+		array(
+			'SMF Project Tools Package Server',
+			'http://download.smfproject.net',
+		),
+		array()
+	);
+	
+// Step 7: Run general maintenance
 ptMaintenanceGeneral();
 
 ?>

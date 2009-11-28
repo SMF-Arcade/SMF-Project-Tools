@@ -66,6 +66,9 @@ function template_issue_view_main()
 		else
 			template_event_compact($event, $alternate);
 	}
+	
+	echo '
+		<div id="loaded_events"></div>';
 
 	echo '
 		<div class="pagesection">
@@ -311,17 +314,57 @@ function template_issue_view_below()
 	
 	echo '
 	</div>
-	<br class="clear" />';
-	
-	// Javascript for Dropdowns
-	if (!empty($context['can_issue_update']))
+	<br class="clear" />
+	<div id="moderationbuttons">
+		', template_button_strip($mod_buttons, 'bottom'), '
+	</div>
+	<div class="tborder">
+		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
+	</div><br />';
+
+	if ($context['can_comment'])
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript">
-			var currentIssue = new PTIssue(', $context['current_issue']['id'], ', "', $context['issue_xml_url'], '")
-			
-			var updateLabel = currentIssue.addLabel("issue_updated", "updated");
-			
+	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply2')), '" method="post">
+		<div class="tborder">
+			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['comment_issue'], '</h3>
+			<div class="smallpadding windowbg" style="text-align: center">
+				<span class="topslice"><span><!-- // --></span></span>
+				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
+
+		echo '
+				<div style="text-align: right; padding-right: 5px;">
+					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
+					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
+				</div>
+				<span class="botslice"><span><!-- // --></span></span>
+			</div>
+		</div><br />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+	</form><br />';
+	}
+	
+	echo '
+	<script language="JavaScript" type="text/javascript">
+		var currentIssue = new PTIssue(', $context['current_issue']['id'], ', "', $context['issue_xml_url'], '", ', $context['current_issue']['id_event_mod'], ', "loaded_events");
+		currentIssue.addLabel("issue_updated", "updated");';
+		
+	// If no permission to update, add as labels, so they get updated on ajax events
+	if (empty($context['can_issue_update']))
+	{
+		echo '
+		currentIssue.addLabel("issue_view_status", "private");
+		currentIssue.addLabel("issue_tracker", "tracker");
+		currentIssue.addLabel("issue_category", "category");
+		currentIssue.addLabel("issue_version", "version");
+		currentIssue.addLabel("issue_status", "status");
+		currentIssue.addLabel("issue_assign", "assign");
+		currentIssue.addLabel("issue_verfix", "version_fixed");
+		currentIssue.addLabel("issue_priority", "priority");';
+	}
+	else
+	{
+		echo '
 			var ddIssueViewS = currentIssue.addDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ');
 			ddIssueViewS.addOption(0, "', $txt['issue_view_status_public'], '");
 			ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");';
@@ -360,6 +403,7 @@ function template_issue_view_below()
 			ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions'][$subv['id']]) ? 1 : 0 ,');';
 			}
 		}
+
 
 		if (!empty($context['can_issue_moderate']))
 		{
@@ -405,44 +449,21 @@ function template_issue_view_below()
 			foreach ($context['issue']['priority'] as $id => $text)
 				echo '
 			ddIssuePrio.addOption(', $id, ', "', $txt[$text], '");';
-
 		}
-
-		echo '
-		</script>';
+		// If no permission, add as labels, so they get updated
+		else
+		{
+			echo '
+		currentIssue.addLabel("issue_status", "status");
+		currentIssue.addLabel("issue_assign", "assign");
+		currentIssue.addLabel("issue_verfix", "version_fixed");
+		currentIssue.addLabel("issue_priority", "priority");';
+		}
 	}
 	
-	echo '	
-	<div id="moderationbuttons" class="clear">
-		', template_button_strip($mod_buttons, 'bottom'), '
-	</div>';
 
 	echo '
-	<div class="tborder">
-		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-	</div><br />';
-
-	if ($context['can_comment'])
-	{
-		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'reply2')), '" method="post">
-		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['comment_issue'], '</h3>
-			<div class="smallpadding windowbg" style="text-align: center">
-				<span class="topslice"><span><!-- // --></span></span>
-				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
-
-		echo '
-				<div style="text-align: right; padding-right: 5px;">
-					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
-					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
-				</div>
-				<span class="botslice"><span><!-- // --></span></span>
-			</div>
-		</div><br />
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form><br />';
-	}
+	</script>';
 }
 
 function template_event_full(&$event, &$alternate)
