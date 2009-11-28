@@ -66,6 +66,7 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 		
 		saveInProgress = true;
 		
+		i = changes.length;
 		changes[i] = "last_event=" + this.id_last_event;
 		
 		sendXMLDocument(saveURL, changes.join("&"), onSaveDone);
@@ -93,7 +94,7 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 		var events_html = oXMLDoc.getElementsByTagName('events_html');
 		
 		if (events_html)
-			element_events.innerHTML = events_html[0].innerHTML;
+			element_events.innerHTML = events_html[0].textContent;
 			
 		// Reset callbacks
 		callbacks = [];
