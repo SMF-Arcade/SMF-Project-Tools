@@ -52,98 +52,37 @@ function template_project_view()
 	</p>';
 
 	$side = true;
-
-	// List of latest updated issues
-	foreach ($context['issue_list'] as $issueList)
+	
+	foreach ($context['project_blocks'] as $block)
 	{
-		if ($side)
-			echo '
-	<div class="clearfix">';
-
 		echo '
 		<div class="issuecolumn">
-			<div class="issue_table columnmargin_', $side ? 'right' : 'left', '">
+			<div class="issue_table columnmargin_', $side ? 'right' : 'left', '">';
+			
+		if (!empty($block['title']))
+			echo '
 				<h3 class="catbg"><span class="left"></span>
-					', $issueList['title'], '
-				</h3>
-				<table cellspacing="0" class="table_grid">
-					<thead>
-						<tr>';
-
-		if (!empty($issueList['issues']))
-			echo '
-							<th scope="col" class="smalltext first_th"></th>
-							<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
-							<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
-							<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
-		else
-			echo '
-							<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
-							<th class="smalltext" colspan="2"><strong>', $txt['issue_no_issues'], '</strong></th>
-							<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
-
+					',$block['title'], '
+				</h3>';
+		
+		$templateFunction = 'template_' . $block['template'];
+		
+		$block['template']($block, $block['data']);
+			
 		echo '
-						</tr>
-					</thead>
-					<tbody>';
-
-		if (!empty($issueList['issues']))
-		{
-			foreach ($issueList['issues'] as $issue)
-			{
-				echo '
-						<tr>
-							<td class="windowbg icon">
-								<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
-									<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
-								</a>
-							</td>
-							<td class="windowbg2 info issue_', $issue['status']['name'], '">
-								<h4>
-									', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
-
-				// Is this topic new? (assuming they are logged in!)
-				if ($issue['new'] && $context['user']['is_logged'])
-					echo '
-									<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
-				echo '
-								</h4>
-								<p class="smalltext">', !empty($issue['version']['link']) ? '[' . $issue['version']['link'] . '] ' : '', $issue['reporter']['link'], '</p>
-							</td>
-							<td class="windowbg replies smalltext">
-								', $issue['replies'], '
-							</td>
-							<td class="windowbg2 lastissue smalltext">
-								', $issue['updater']['link'], '<br />
-								', $issue['updated'], '
-							</td>
-						</tr>';
-			}
-
-			echo '
-						<tr class="catbg">
-							<td colspan="4" align="right" class="headerpadding smalltext">
-								<a href="', $issueList['href'], '">', $txt['issues_view_all'], '</a>
-							</td>
-						</tr>
-					</tbody>';
-		}
-
-		echo '
-				</table>
 			</div>
 		</div>';
 
 		if (!$side)
 			echo '
-	</div><br class="clear" />';
+		<br class="clear" />';
 
 		$side = !$side;
 	}
 
 	if (!$side)
 		echo '
-	</div><br class="clear" />';
+	<br class="clear" />';
 
 	$width = floor(100 / count($context['issue_status']));
 	$tWidth = 100 - ($width * count($context['issue_status'])) + $width;
@@ -169,9 +108,9 @@ function template_project_view()
 			', $context['project']['name'], '
 		</h3>
 		<div id="upshrinkHeaderIC">
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				', $txt['project_statistics'], '
-			</h4>
+			</h3>
 			<table width="100%">';
 
 	foreach ($context['project']['trackers'] as $type)
@@ -221,6 +160,78 @@ function template_project_view()
 		</div>
 	</div></div>
 	<span class="lowerframe"><span></span></span>';
+}
+
+function template_issue_list_block($block, $data)
+{
+	global $context, $txt, $settings;
+	
+	echo '
+	<table cellspacing="0" class="table_grid">
+		<thead>
+			<tr>';
+
+		if (!empty($data))
+			echo '
+				<th scope="col" class="smalltext first_th"></th>
+				<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
+				<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
+				<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
+		else
+			echo '
+				<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+				<th class="smalltext" colspan="2"><strong>', $txt['issue_no_issues'], '</strong></th>
+				<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
+
+		echo '
+			</tr>
+		</thead>
+		<tbody>';
+
+		if (!empty($data))
+		{
+			foreach ($data as $issue)
+			{
+				echo '
+			<tr>
+				<td class="windowbg icon">
+					<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+						<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
+					</a>
+				</td>
+				<td class="windowbg2 info issue_', $issue['status']['name'], '">
+					<h4>
+						', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
+
+				// Is this topic new? (assuming they are logged in!)
+				if ($issue['new'] && $context['user']['is_logged'])
+					echo '
+									<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
+				echo '
+					</h4>
+					<p class="smalltext">', !empty($issue['version']['link']) ? '[' . $issue['version']['link'] . '] ' : '', $issue['reporter']['link'], '</p>
+				</td>
+				<td class="windowbg replies smalltext">
+					', $issue['replies'], '
+				</td>
+				<td class="windowbg2 lastissue smalltext">
+					', $issue['updater']['link'], '<br />
+					', $issue['updated'], '
+				</td>
+			</tr>';
+			}
+
+			echo '
+			<tr class="catbg">
+				<td colspan="4" align="right" class="headerpadding smalltext">
+					<a href="', $block['href'], '">', $txt['issues_view_all'], '</a>
+				</td>
+			</tr>
+		</tbody>';
+	}
+	
+	echo '
+	</table>';
 }
 
 function template_project_view_below()

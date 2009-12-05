@@ -31,7 +31,9 @@ function Projects($standalone = false)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 
+	// Check that user can access Project Tools
 	isAllowedTo('project_access');
+	
 	loadProjectToolsPage();
 
 	// Admin made mistake on manual edits? (for safety reasons!!)
@@ -64,6 +66,14 @@ function Projects($standalone = false)
 		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
 		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
 	);
+	
+	// Let Modules register subactions
+	if (!empty($context['project_modules']))
+	{
+		foreach ($context['project_modules'] as $module)
+			if (method_exists($module, 'RegisterSubactions'))
+				$module->RegisterSubactions($subActions);
+	}
 
 	// Linktree
 	$context['linktree'][] = array(
@@ -111,6 +121,14 @@ function Projects($standalone = false)
 				)
 			),
 		);
+
+		// Let Modules register project tabs
+		if (!empty($context['project_modules']))
+		{
+			foreach ($context['project_modules'] as $module)
+				if (method_exists($module, 'RegisterProjectTabs'))
+					$module->RegisterProjectTabs($context['project_tabs']);
+		}
 
 		// Linktree
 		$context['linktree'][] = array(

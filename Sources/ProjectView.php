@@ -86,50 +86,34 @@ function ProjectView()
 		}
 		$smcFunc['db_free_result']($request);
 	}
-
-	$issues_num = 5;
-
-	$issue_list = array(
-		'recent_issues' => array(
-			'title' => 'recent_issues',
-			'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
-			'order' => 'i.updated DESC',
-			'where' => '1 = 1',
-			'show' => projectAllowedTo('issue_view'),
-		),
-		'my_reports' => array(
-			'title' => 'reported_by_me',
-			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'reporter' => $user_info['id'])),
-			'order' => 'i.updated DESC',
-			'where' => 'i.id_reporter = {int:current_member}',
-			'show' => projectAllowedTo('issue_report'),
-		),
-		'assigned' => array(
-			'title' => 'assigned_to_me',
-			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'assignee' => $user_info['id'])),
-			'order' => 'i.updated DESC',
-			'where' => 'i.id_assigned = {int:current_member} AND NOT (i.status IN ({array_int:closed_status}))',
-			'show' => projectAllowedTo('issue_resolve'),
-		),
-		'new_issues' => array(
-			'title' => 'new_issues',
-			'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'status' => 1,)),
-			'order' => 'i.created DESC',
-			'where' => 'i.status = 1',
-			'show' => projectAllowedTo('issue_view'),
-		),
-	);
-
-	$context['issue_list'] = array();
-
-	foreach ($issue_list as $issuel)
+	
+	$frontpage_blocks = array();
+	
+	// Let Modules register Frontpage blocks
+	if (!empty($context['project_modules']))
 	{
-		if ($issuel['show'])
-			$context['issue_list'][] = array(
-				'title' => $txt[$issuel['title']],
-				'href' => $issuel['href'],
-				'issues' => getIssueList(0, $issues_num, $issuel['order'], $issuel['where']),
+		foreach ($context['project_modules'] as $module)
+			if (method_exists($module, 'RegisterProjectFrontpageBlocks'))
+				$module->RegisterProjectFrontpageBlocks($frontpage_blocks);
+	}
+	
+	$context['project_blocks'] = array();
+	
+	// Load Frontpage Blocks
+	if (!empty($frontpage_blocks))
+	{
+		foreach ($frontpage_blocks as $id => $block)
+		{
+			if (empty($block['show']))
+				continue;
+			
+			$context['project_blocks'][$id] = array(
+				'title' => is_array($block['title']) ? vsprintf($txt[$block['title'][0]], $block['title'][1]) : $txt[$block['title'][0]],
+				'href' => isset($block['href']) ? $block['href'] : '',
+				'template' => isset($block['template']) ? $block['template'] : '',
+				'data' => call_user_func_array($block['data_function'], $block['data_parameters']),
 			);
+		}
 	}
 
 	loadTimeline($project);

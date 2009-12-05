@@ -440,11 +440,24 @@ function loadProjectToolsPage($mode = '')
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 
+		$context['project_modules'] = array();
+		
 		// If project is loaded parse BBC now for descriptions
 		if (isset($context['project']))
 		{
 			$context['project']['description'] = parse_bbc($context['project']['description']);
 			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
+			
+			$projectModules = array('general');
+			
+			foreach ($projectModules as $module)
+			{
+				loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module));
+				
+				$class_name = 'ProjectModule_' . $smcFunc['ucwords']($module);
+				
+				$context['project_modules'][$module] = new $class_name();
+			}
 		}
 
 		if (!isset($_REQUEST['xml']))
