@@ -29,6 +29,10 @@ if (!defined('SMF'))
 
 class ProjectModule_General
 {
+	function __construct()
+	{
+	}
+	
 	function RegisterProjectFrontpageBlocks(&$frontpage_blocks)
 	{
 		global $context;

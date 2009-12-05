@@ -1335,19 +1335,33 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
-if (!function_exists('JavaScriptEscape'))
+function getInstalledModules()
 {
-	function JavaScriptEscape($string)
+	global $sourcedir, $smcFunc;
+
+	$modules = array();
+	if ($dh = opendir($sourcedir))
 	{
-		return '\'' . strtr($string, array(
-			"\r" => '',
-			"\n" => '\\n',
-			'\\' => '\\\\',
-			'\'' => '\\\'',
-			'</' => '<\' + \'/',
-			'script' => 'scri\' +\'pt',
-		)) . '\'';
+		while (($file = readdir($dh)) !== false)
+		{
+			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
+			{
+				loadClassFile($file);
+				
+				$class_name = 'ProjectModule_' . $smcFunc['ucwords']($module);
+				$module = new $class_name();
+				
+				$modules[$matches[1]] = array(
+					'id' => $matches[1],
+					'name' => !empty($module->title) ? $module->title : (isset($txt['project_module_' . strtolower($matches[1])]) ? $txt['project_module_' . strtolower($matches[1])] : $smcFunc['ucwords']($matches[1])),
+					'filename' => $file,
+				);
+			}
+		}
 	}
+	closedir($dh);
+
+	return $modules;
 }
 
 ?>

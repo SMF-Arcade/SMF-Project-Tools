@@ -86,6 +86,10 @@ $txt['roadmap'] = 'Roadmap';
 $txt['project_subscribe'] = 'Subscribe';
 $txt['project_unsubscribe'] = 'Unsubscribe';
 
+// Project Default Modules
+$txt['project_module_general'] = 'General';
+$txt['project_module_roadmap'] = 'Roadmap';
+
 // Project Page - Issue lists
 $txt['recent_issues'] = 'Recently Updated';
 $txt['reported_by_me'] = 'Reported by Me';

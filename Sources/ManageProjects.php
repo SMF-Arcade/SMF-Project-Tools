@@ -214,6 +214,9 @@ function EditProject()
 			'category_position' => $project['category_position'],
 		);
 	}
+	
+	// Modules
+	$context['installed_modules'] = getInstalledModules();
 
 	// Default membergroups.
 	$context['groups'] = array(
