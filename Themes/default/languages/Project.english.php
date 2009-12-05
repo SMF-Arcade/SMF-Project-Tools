@@ -89,6 +89,7 @@ $txt['project_unsubscribe'] = 'Unsubscribe';
 // Project Default Modules
 $txt['project_module_general'] = 'General';
 $txt['project_module_roadmap'] = 'Roadmap';
+$txt['project_module_admin'] = 'Administration';
 
 // Project Page - Issue lists
 $txt['recent_issues'] = 'Recently Updated';

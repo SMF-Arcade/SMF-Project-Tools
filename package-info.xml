@@ -35,7 +35,9 @@
 		<require-file name="Sources/Project.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectList.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectModule-Admin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectModule-General.php" destination="$sourcedir" />
+		<require-file name="Sources/ProjectModule-Roadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
@@ -100,7 +102,9 @@
 		<remove-file name="$sourcedir/Project.php" />
 		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectList.php" />
+		<remove-file name="$sourcedir/ProjectModule-Admin.php" />
 		<remove-file name="$sourcedir/ProjectModule-General.php" />
+		<remove-file name="$sourcedir/ProjectModule-Roadmap.php" />
 		<remove-file name="$sourcedir/ProjectPermissions.php" />
 		<remove-file name="$sourcedir/ProjectRoadmap.php" />
 		<remove-file name="$sourcedir/ProjectView.php" />
