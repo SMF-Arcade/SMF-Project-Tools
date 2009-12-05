@@ -38,7 +38,7 @@ class ProjectModule_General
 		
 	function __register_issue_blocks(&$frontpage_blocks)
 	{
-		global $context;
+		global $context, $project, $user_info;
 		
 		$issues_num = 5;
 

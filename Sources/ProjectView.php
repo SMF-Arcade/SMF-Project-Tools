@@ -108,7 +108,7 @@ function ProjectView()
 				continue;
 			
 			$context['project_blocks'][$id] = array(
-				'title' => is_array($block['title']) ? vsprintf($txt[$block['title'][0]], $block['title'][1]) : $txt[$block['title'][0]],
+				'title' => is_array($block['title']) ? vsprintf($txt[$block['title'][0]], $block['title'][1]) : $txt[$block['title']],
 				'href' => isset($block['href']) ? $block['href'] : '',
 				'template' => isset($block['template']) ? $block['template'] : '',
 				'data' => call_user_func_array($block['data_function'], $block['data_parameters']),

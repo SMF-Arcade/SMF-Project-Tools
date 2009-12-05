@@ -66,8 +66,7 @@ function template_project_view()
 				</h3>';
 		
 		$templateFunction = 'template_' . $block['template'];
-		
-		$block['template']($block, $block['data']);
+		$templateFunction($block, $block['data']);
 			
 		echo '
 			</div>
@@ -138,9 +137,9 @@ function template_project_view()
 	foreach ($context['events'] as $date)
 	{
 		echo '
-			<h4 class="windowbg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
+			<h3 class="windowbg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
 				', $date['date'], '
-			</h4>
+			</h3>
 			<ul class="reset">';
 
 		foreach ($date['events'] as $event)
