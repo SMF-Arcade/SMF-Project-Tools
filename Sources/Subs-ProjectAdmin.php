@@ -482,7 +482,7 @@ function loadProjectAdmin($id_project)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			p.id_project, p.name, p.description, p.long_description, p.trackers, p.member_groups,
+			p.id_project, p.name, p.description, p.long_description, p.trackers, p.modules, p.member_groups,
 			p.id_category, p.cat_position, p.' . implode(', p.', $context['tracker_columns']) . ',
 			p.project_theme, p.override_theme, p.id_profile
 		FROM {db_prefix}projects AS p
@@ -508,6 +508,7 @@ function loadProjectAdmin($id_project)
 		'category' => array(),
 		'groups' => explode(',', $row['member_groups']),
 		'trackers' => array(),
+		'modules' => explode(',', $row['modules']),
 		'developers' => array(),
 		'profile' => $row['id_profile'],
 		'theme' => $row['project_theme'],

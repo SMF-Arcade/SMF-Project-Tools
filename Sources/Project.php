@@ -44,7 +44,6 @@ function Projects($standalone = false)
 		// Project
 		'list' => array('ProjectList.php', 'ProjectList'),
 		'viewProject' => array('ProjectView.php', 'ProjectView', true),
-		'roadmap' => array('ProjectRoadmap.php', 'ProjectRoadmap', true),
 		'subscribe' => array('ProjectView.php', 'ProjectSubscribe', true),
 		// Issues
 		'issues' => array('IssueList.php', 'IssueList', true),
@@ -70,9 +69,14 @@ function Projects($standalone = false)
 	// Let Modules register subactions
 	if (!empty($context['project_modules']))
 	{
-		foreach ($context['project_modules'] as $module)
+		foreach ($context['project_modules'] as $id => $module)
 			if (method_exists($module, 'RegisterSubactions'))
-				$module->RegisterSubactions($subActions);
+			{
+				$addActions = $module->RegisterSubactions();
+				
+				foreach ($addActions as $id => $data)
+					$subActions[$id] = $data + array('module' => $id);
+			}
 	}
 
 	// Linktree
@@ -109,15 +113,14 @@ function Projects($standalone = false)
 					'title' => $txt['project'],
 					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
 				),
-				'roadmap' => array(
-					'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
-					'title' => $txt['roadmap'],
-					'is_selected' => in_array($_REQUEST['sa'], array('roadmap')),
-				),
 				'issues' => array(
 					'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 					'title' => $txt['issues'],
 					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
+					'linktree' => array(
+						'name' => $txt['linktree_issues'],
+						'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+					),
 				)
 			),
 		);
@@ -127,7 +130,7 @@ function Projects($standalone = false)
 		{
 			foreach ($context['project_modules'] as $module)
 				if (method_exists($module, 'RegisterProjectTabs'))
-					$module->RegisterProjectTabs($context['project_tabs']);
+					$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 		}
 
 		// Linktree
@@ -135,17 +138,10 @@ function Projects($standalone = false)
 			'name' => strip_tags($context['project']['name']),
 			'url' => project_get_url(array('project' => $project)),
 		);
-
-		if ($context['project_tabs']['tabs']['issues']['is_selected'])
-			$context['linktree'][] = array(
-				'name' => $txt['linktree_issues'],
-				'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
-			);
-		elseif ($context['project_tabs']['tabs']['roadmap']['is_selected'])
-			$context['linktree'][] = array(
-				'name' => $txt['linktree_roadmap'],
-				'url' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
-			);
+		
+		foreach ($context['project_tabs']['tabs'] as $id => $tab)
+			if (!empty($tab['is_selected']) && !empty($tab['linktree']))
+				$context['linktree'][] = $tab['linktree'];
 
 		if (isset($context['current_issue']))
 			$context['linktree'][] = array(

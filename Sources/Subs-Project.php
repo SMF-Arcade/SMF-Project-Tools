@@ -256,7 +256,7 @@ function loadProject()
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
-				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
+				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.modules, p.member_groups,
 				p.id_event_mod, p.' . implode(', p.', $context['tracker_columns']) . ', p.project_theme
 			FROM {db_prefix}projects AS p
 			WHERE p.id_project = {int:project}
@@ -289,6 +289,7 @@ function loadProject()
 			'category' => array(),
 			'groups' => explode(',', $row['member_groups']),
 			'trackers' => array(),
+			'modules' => explode(',', $row['modules']),
 			'developers' => array(),
 			'is_developer' => false,
 			'id_event_mod' => $row['id_event_mod'],
@@ -435,7 +436,7 @@ function loadProjectToolsPage($mode = '')
 
 	if ($mode == '')
 	{
-		loadTemplate('Project', array('forum', 'project'));
+		loadTemplate('Project', array('project'));
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
@@ -448,9 +449,7 @@ function loadProjectToolsPage($mode = '')
 			$context['project']['description'] = parse_bbc($context['project']['description']);
 			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 			
-			$projectModules = array('general');
-			
-			foreach ($projectModules as $module)
+			foreach ($context['project']['modules'] as $module)
 			{
 				loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module) . '.php');
 				

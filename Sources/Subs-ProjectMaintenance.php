@@ -185,6 +185,27 @@ function ptUpgrade_versionFields($check = false)
 	}
 }
 
+function ptUpgrade_projectModules($check = false)
+{
+	global $smcFunc;
+
+	// Is this step required to run?
+	if ($check)
+		return true;
+
+	db_extend('packages');
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}projects
+		SET modules = {string:modules}
+		WHERE modules = {string:empty}',
+		array(
+			'modules' => 'general,admin',
+			'empty' => '',
+		)
+	);
+}
+
 function ptMaintenanceGeneral($check = false)
 {
 	global $smcFunc;

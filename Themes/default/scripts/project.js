@@ -91,7 +91,7 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 				formItems[fieldName].setValue(node.getAttribute("id"), node.textContent);
 		}
 		
-		var events_html = oXMLDoc.getElementsByTagName('events_html');
+		var events_html = oXMLDoc.getElementsByTagName('event');
 		
 		if (events_html)
 			element_events.innerHTML = events_html[0].textContent;

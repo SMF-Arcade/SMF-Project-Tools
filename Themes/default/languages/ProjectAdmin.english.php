@@ -29,7 +29,7 @@ $txt['setting_project_admin'] = 'Groups allowed to administrate Project Tools';
 $txt['project_maintain_done'] = 'The maintenance task \'%1$s\' was executed successfully.';
 $txt['project_maintenance_repair'] = 'Repair';
 $txt['project_maintenance_repair_info'] = 'Find and repair errors';
-$txt['project_maintenance_upgrade'] = 'Upgrade Project Tools database content for 0.4';
+$txt['project_maintenance_upgrade'] = 'Upgrade Project Tools database content for 0.5';
 $txt['project_maintain_run_now'] = 'Run';
 
 // Repair maintenance action

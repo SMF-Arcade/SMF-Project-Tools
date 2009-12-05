@@ -400,8 +400,8 @@ function IssueUpdate()
 		$comments_html = ob_get_contents();
 		ob_end_clean();
 		
-		$context['xml_data']['events_html'] = array(
-			'identifier' => 'events_html',
+		$context['xml_data']['events'] = array(
+			'identifier' => 'event',
 			'children' => array(
 				array('value' => $comments_html)
 			),		

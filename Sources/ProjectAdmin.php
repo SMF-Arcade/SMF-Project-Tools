@@ -244,7 +244,9 @@ function ProjectsMaintenanceUpgrade()
 		array(
 			'function' => 'ptUpgrade_versionFields',
 		),
-		
+		array(
+			'function' => 'ptUpgrade_projectModules',
+		),
 		// These maintenance actions are needed for proper upgrade
 		array(
 			'name' => '',
