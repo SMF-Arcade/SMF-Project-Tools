@@ -133,6 +133,12 @@ function updateProject($id_project, $projectOptions)
 		$projectOptions['trackers'] = implode(',', $projectOptions['trackers']);
 	}
 
+	if (isset($projectOptions['modules']))
+	{
+		$projectUpdates[] = 'modules = {string:modules}';
+		$projectOptions['modules'] = implode(',', $projectOptions['modules']);
+	}
+	
 	if (isset($projectOptions['member_groups']))
 	{
 		// Update versions with permission inherited

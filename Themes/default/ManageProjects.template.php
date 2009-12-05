@@ -151,9 +151,23 @@ function template_edit_project()
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
 				<br />
 			</td>
-		</tr>';
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['project_modules'], ':</b><br />
+				<span class="smalltext">', $txt['project_modules_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">';
+
+	foreach ($context['installed_modules'] as $key => $module)
+		echo '
+				<input type="checkbox" name="modules[]" value="', $key, '" id="module_', $key, '"', in_array($key, $context['project']['modules']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="module_', $key, '">', $type['name'], '</label><br />';
 
 	echo '
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'modules[]\');" tabindex="', $context['tabindex']++, '" /><br />
+				<br />
+			</td>
+		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_trackers'], ':</b><br />

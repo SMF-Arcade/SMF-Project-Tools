@@ -88,6 +88,8 @@ $txt['developer_remove'] = 'Remove';
 $txt['project_trackers'] = 'Issue Types';
 $txt['project_trackers_desc'] = 'Select issue types you want to use in this project';
 
+$txt['project_modules'] = 'Modules';
+
 $txt['project_submit'] = 'Submit';
 $txt['delete_project'] = 'Delete Project';
 $txt['pdelete_warning'] = 'Deleting project will delete permanently everything related to it, do you still to continue?';

@@ -215,7 +215,7 @@ function EditProject()
 		);
 	}
 	
-	// Modules
+	// Load Possible modules
 	$context['installed_modules'] = getInstalledModules();
 
 	// Default membergroups.
@@ -311,6 +311,9 @@ function EditProject2()
 
 	if (!empty($_POST['project']) && !$project = loadProjectAdmin($_POST['project']))
 		fatal_lang_error('project_not_found', false);
+		
+	// Load Possible modules
+	$context['installed_modules'] = getInstalledModules();
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
@@ -334,6 +337,12 @@ function EditProject2()
 				if (isset($context['issue_trackers'][$tracker]))
 					$projectOptions['trackers'][] = $tracker;
 
+		$projectOptions['modules'] = array();
+		if (!empty($_POST['modules']))
+			foreach ($_POST['modules'] as $module)
+				if (isset($context['installed_modules'][$module]))
+					$projectOptions['modules'][] = $module;
+					
 		$projectOptions['member_groups'] = array();
 		if (!empty($_POST['groups']))
 			foreach ($_POST['groups'] as $group)
