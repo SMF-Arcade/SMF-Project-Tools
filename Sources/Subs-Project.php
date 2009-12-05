@@ -452,7 +452,7 @@ function loadProjectToolsPage($mode = '')
 			
 			foreach ($projectModules as $module)
 			{
-				loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module));
+				loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module) . '.php');
 				
 				$class_name = 'ProjectModule_' . $smcFunc['ucwords']($module);
 				
