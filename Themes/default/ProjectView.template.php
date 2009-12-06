@@ -110,24 +110,28 @@ function template_project_view()
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				', $txt['project_statistics'], '
 			</h3>
-			<table width="100%">';
+			<dl class="stats">';
 
 	foreach ($context['project']['trackers'] as $type)
+	{
 		echo '
-				<tr>
-					<td width="10%">
-						<a href="', $type['link'], '" style="color: gray">', $type['tracker']['plural'], '</a><br />
-					</td>
-					<td>
-						<div class="progressbar"><div class="done" style="width: ', $type['progress'], '%"></div></div>
-					</td>
-				</tr>
-				<tr>
-					<td class="smalltext" colspan="2"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></td>
-				</tr>';
+				<dt>
+					<a href="', $type['link'], '" style="color: gray">', $type['tracker']['plural'], '</a>
+				</dt>
+				<dd class="statsbar">';
+		if (!empty($type['progress']))
+			echo '
+					<span class="left"></span>
+						<div style="width: ', $type['progress'] * 2, 'px;" class="stats_bar"></div>
+					<span class="right"></span>';
+
+		echo '
+					<span class="righttext"><span>', $txt['project_open_issues'], ' ', $type['open'], '</span> / <span>', $txt['project_closed_issues'], ' ', $type['closed'], '</span></span>
+				</dd>';
+	}
 
 	echo '
-			</table>
+			</dl>
 			<h3 class="catbg"><span class="left"></span>
 				', $txt['project_timeline'], '
 			</h3>';
@@ -137,9 +141,9 @@ function template_project_view()
 	foreach ($context['events'] as $date)
 	{
 		echo '
-			<h3 class="windowbg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
 				', $date['date'], '
-			</h3>
+			</h4>
 			<ul class="reset">';
 
 		foreach ($date['events'] as $event)
