@@ -1348,11 +1348,11 @@ function getInstalledModules()
 			{
 				loadClassFile($file);
 				
-				$class_name = 'ProjectModule_' . $smcFunc['ucwords']($module);
+				$class_name = 'ProjectModule_' . strtolower($matches[1]);
 				$module = new $class_name();
 				
-				$modules[$matches[1]] = array(
-					'id' => $matches[1],
+				$modules[strtolower($matches[1])] = array(
+					'id' => strtolower($matches[1]),
 					'name' => !empty($module->title) ? $module->title : (isset($txt['project_module_' . strtolower($matches[1])]) ? $txt['project_module_' . strtolower($matches[1])] : $smcFunc['ucwords']($matches[1])),
 					'filename' => $file,
 				);

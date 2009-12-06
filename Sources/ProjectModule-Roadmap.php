@@ -40,7 +40,7 @@ class ProjectModule_Roadmap
 	
 	function RegisterProjectTabs(&$tabs)
 	{
-		global $project, $context;
+		global $project, $context, $txt;
 		
 		$tabs['roadmap'] = array(
 			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
