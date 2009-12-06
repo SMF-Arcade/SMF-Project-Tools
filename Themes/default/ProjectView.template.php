@@ -226,7 +226,7 @@ function template_issue_list_block($block, $data)
 
 			echo '
 			<tr class="catbg">
-				<td colspan="4" align="right" class="headerpadding smalltext">
+				<td colspan="4" align="right" class="smalltext">
 					<a href="', $block['href'], '">', $txt['issues_view_all'], '</a>
 				</td>
 			</tr>
