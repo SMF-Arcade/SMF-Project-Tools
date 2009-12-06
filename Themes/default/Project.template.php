@@ -4,6 +4,9 @@
 function template_project_above()
 {
 	global $txt, $context;
+	
+	echo '
+	<a name="top"></a>';
 }
 
 function template_project_list()
