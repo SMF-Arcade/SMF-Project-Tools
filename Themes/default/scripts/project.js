@@ -8,10 +8,10 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 	
 	var saveInProgress = false;
 	
+	var loadedEvents = document.getElementById(element_events);
+	
 	this.id_issue = id_issue;
 	this.id_last_event = id_last_event;
-	
-	this.element_events = document.getElementById(element_events);
 	
 	this.addLabel = addLabel;
 	this.addDropdown = addDropdown;
@@ -94,7 +94,7 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 		var events_html = oXMLDoc.getElementsByTagName('event');
 		
 		if (events_html)
-			element_events.innerHTML = events_html[0].textContent;
+			loadedEvents.innerHTML = events_html[0].textContent;
 			
 		// Reset callbacks
 		callbacks = [];

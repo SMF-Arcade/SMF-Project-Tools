@@ -28,6 +28,52 @@ if (!defined('SMF'))
 
 */
 
+// Load Issue View variables
+function loadIssueView()
+{
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
+	
+	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	
+	$context['show_update'] = false;
+	$context['can_comment'] = projectAllowedTo('issue_comment');
+	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
+	$context['can_issue_move'] = projectAllowedTo('issue_move');
+	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
+	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+	$context['can_issue_warning'] = allowedTo('issue_warning');
+	$context['can_moderate_forum'] = allowedTo('moderate_forum');
+	$context['can_subscribe'] = !$user_info['is_guest'];
+	$context['can_send_pm'] = allowedTo('pm_send');
+	
+	// Show signatures
+	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
+	
+	// URL for posting updates from ajax
+	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
+	
+	// Tags
+	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
+	$context['can_remove_tags'] = projectAllowedTo('issue_moderate');
+
+	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
+
+	// Disabled Fields
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
+
+	if ($context['can_issue_update'])
+	{
+		$context['can_edit'] = true;
+		$context['show_update'] = true;
+	}
+
+	if (projectAllowedTo('issue_moderate'))
+	{
+		$context['can_assign'] = true;
+		$context['assign_members'] = $context['project']['developers'];
+	}
+}
+
 function IssueView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
@@ -57,44 +103,7 @@ function IssueView()
 			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 		);
 
-	$context['show_update'] = false;
-	$context['can_comment'] = projectAllowedTo('issue_comment');
-	$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-	$context['can_issue_move'] = projectAllowedTo('issue_move');
-	$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
-	$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
-	$context['can_issue_warning'] = allowedTo('issue_warning');
-	$context['can_moderate_forum'] = allowedTo('moderate_forum');
-	
-	// Show signatures
-	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
-	
-	// URL for posting updates from ajax
-	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
-	
-	// Tags
-	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
-	$context['can_remove_tags'] = projectAllowedTo('issue_moderate');
-
-	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
-
-	// Disabled Fields
-	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
-
-	if ($context['can_issue_update'])
-	{
-		$context['can_edit'] = true;
-		$context['show_update'] = true;
-	}
-
-	if (projectAllowedTo('issue_moderate'))
-	{
-		$context['can_assign'] = true;
-		$context['assign_members'] = $context['project']['developers'];
-	}
-
-	$context['can_subscribe'] = !$user_info['is_guest'];
-	$context['can_send_pm'] = allowedTo('pm_send');
+	loadIssueView();
 
 	// How many event there are?
 	$request = $smcFunc['db_query']('', '

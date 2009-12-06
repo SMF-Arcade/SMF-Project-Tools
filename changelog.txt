@@ -6,6 +6,7 @@ SMF Project Tools 0.5                                                        ???
 December 2009
 --------------------------------------------------------------------------------
  + Implemented Basic Project Module support [Issue #319]
+ + Use AJAX to load new comments and updates [Issue #302]
  
 November 2009
 --------------------------------------------------------------------------------

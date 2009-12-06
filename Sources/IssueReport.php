@@ -334,6 +334,8 @@ function IssueUpdate()
 		require_once($sourcedir . '/IssueView.php');
 		loadTemplate('IssueView');
 		
+		loadIssueView();
+		
 		$request = $smcFunc['db_query']('', '
 			SELECT id_event, id_member
 			FROM {db_prefix}project_timeline
