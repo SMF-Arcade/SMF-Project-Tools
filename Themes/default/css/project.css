@@ -148,6 +148,10 @@
 {
 	margin: 0;
 }
+.issue_table
+{
+	clear: both;
+}
 .issue_table table
 {
 	width: 100%;
@@ -191,6 +195,10 @@
 {
 	width: 78%;
 }
+#issue_comments h3
+{
+	vertical-align: middle;
+}
 
 /*
 #firstcomment h3.catbg3
@@ -199,7 +207,7 @@
 }
 #firstcomment h3.catbg3 img
 {
-	vertical-align: middle;
+	
 }
 #firstcomment h3.catbg3 span
 {

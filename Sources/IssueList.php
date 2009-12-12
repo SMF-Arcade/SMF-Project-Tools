@@ -71,7 +71,7 @@ function IssueList()
 	// Build Search info
 	$context['issue_search'] = array(
 		'title' => '',
-		'status' => 'open',
+		'status' => 'all',
 		'tag' => '',
 		'tracker' => '',
 		'version' => null,

@@ -28,7 +28,7 @@ function template_issue_view_above()
 	<a name="com', $context['current_issue']['comment_first'], '"></a>
 	<div id="issue_comments" class="floatleft">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
+			<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
 			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 		</h3>';
 
@@ -747,7 +747,7 @@ function template_event_full(&$event, &$alternate)
 					$shown = true;
 					echo '
 						<div class="custom_fields_above_signature">
-							<ul class="reset nolist>';
+							<ul class="reset nolist">';
 				}
 				echo '
 								<li>', $custom['value'], '</li>';
@@ -882,7 +882,7 @@ function template_event_compact(&$event, &$alternate)
 					$shown = true;
 					echo '
 						<div class="custom_fields_above_signature">
-							<ul class="reset nolist>';
+							<ul class="reset nolist">';
 				}
 				echo '
 								<li>', $custom['value'], '</li>';

@@ -59,7 +59,9 @@ function template_project_roadmap_version()
 
 	echo '
 	<div class="issuelistframe tborder">
-		<h3 class="catbg headerpadding">', $txt['recent_issues'], '</h3>
+		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			', $txt['recent_issues'], '
+		</h3>
 		<table cellspacing="0" class="table_grid">
 			<thead>
 				<tr>';
