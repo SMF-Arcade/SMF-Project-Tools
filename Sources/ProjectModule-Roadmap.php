@@ -78,7 +78,7 @@ class ProjectModule_Roadmap
 			FROM {db_prefix}project_versions AS ver
 			WHERE {query_see_version}
 				AND ver.id_project = {int:project}' . (!isset($_REQUEST['all']) ? '
-				AND ver.status IN ({array_int:status})' : '' ) . '
+				AND ver.status IN ({array_int:status})' : '') . '
 			ORDER BY ver.version_name DESC',
 			array(
 				'project' => $project,
