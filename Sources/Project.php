@@ -135,6 +135,7 @@ function Projects($standalone = false)
 					$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 		}
 		
+		// Sort tabs to correct order
 		uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
 		// Linktree
