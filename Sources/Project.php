@@ -40,126 +40,132 @@ function Projects($standalone = false)
 	if (isset($context['project_error']))
 		fatal_lang_error($context['project_error'], false);
 
+	// Add "Projects" to Linktree
+	$context['linktree'][] = array(
+		'name' => $txt['linktree_projects'],
+		'url' => project_get_url(),
+	);
+	
+	// Project was not selected
+	if (empty($project))
+	{
+		$subActions = array(
+			'list' => array('ProjectList.php', 'ProjectList'),
+		);
+		
+		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
+		call_user_func($subActions[$_REQUEST['sa']][1]);
+		
+		return;
+	}
+	
 	$subActions = array(
 		// Project
-		'list' => array('ProjectList.php', 'ProjectList'),
-		'viewProject' => array('ProjectView.php', 'ProjectView', true),
-		'subscribe' => array('ProjectView.php', 'ProjectSubscribe', true),
+		'main' => array('ProjectView.php', 'ProjectView'),
+		'subscribe' => array('ProjectView.php', 'ProjectSubscribe'),
 		// Issues
-		'issues' => array('IssueList.php', 'IssueList', true),
-		'viewIssue' => array('IssueView.php', 'IssueView', true),
-		'tags' => array('IssueView.php', 'IssueTag', true),
-		'update' => array('IssueReport.php', 'IssueUpdate', true),
-		'upload' => array('IssueReport.php', 'IssueUpload', true),
-		'delete' => array('IssueView.php', 'IssueDelete', true),
-		'move' => array('IssueView.php', 'IssueMove', true),
+		'issues' => array('IssueList.php', 'IssueList'),
+		'viewIssue' => array('IssueView.php', 'IssueView'),
+		'tags' => array('IssueView.php', 'IssueTag'),
+		'update' => array('IssueReport.php', 'IssueUpdate'),
+		'upload' => array('IssueReport.php', 'IssueUpload'),
+		'delete' => array('IssueView.php', 'IssueDelete'),
+		'move' => array('IssueView.php', 'IssueMove'),
 		// Reply
-		'reply' => array('IssueComment.php', 'IssueReply', true),
-		'reply2' => array('IssueComment.php', 'IssueReply2', true),
+		'reply' => array('IssueComment.php', 'IssueReply'),
+		'reply2' => array('IssueComment.php', 'IssueReply2'),
 		// Edit
-		'edit' => array('IssueComment.php', 'IssueReply', true),
-		'edit2' => array('IssueComment.php', 'IssueReply2', true),
+		'edit' => array('IssueComment.php', 'IssueReply'),
+		'edit2' => array('IssueComment.php', 'IssueReply2'),
 		// Remove comment
-		'removeComment' => array('IssueComment.php', 'IssueDeleteComment', true),
+		'removeComment' => array('IssueComment.php', 'IssueDeleteComment'),
 		// Report Issue
-		'reportIssue' => array('IssueReport.php', 'ReportIssue', true),
-		'reportIssue2' => array('IssueReport.php', 'ReportIssue2', true),
+		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
+		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
 	);
 	
 	// Let Modules register subactions
 	if (!empty($context['project_modules']))
 	{
 		foreach ($context['project_modules'] as $id => $module)
-			if (method_exists($module, 'RegisterSubactions'))
+			if (method_exists($module, 'RegisterProjectSubactions'))
 			{
-				$addActions = $module->RegisterSubactions();
+				$addActions = $module->RegisterProjectSubactions();
 				
 				foreach ($addActions as $id => $data)
 					$subActions[$id] = $data + array('module' => $id);
 			}
 	}
 
-	// Linktree
-	$context['linktree'][] = array(
-		'name' => $txt['linktree_projects'],
-		'url' => project_get_url(),
-	);
-
 	if (!isset($_REQUEST['sa']) && !empty($issue))
 		$_REQUEST['sa'] = 'viewIssue';
-	elseif (!isset($_REQUEST['sa']) && !empty($project))
-		$_REQUEST['sa'] = 'viewProject';
+	elseif (!isset($_REQUEST['sa']))
+		$_REQUEST['sa'] = 'main';
 
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 
-	if (!empty($project) && empty($subActions[$_REQUEST['sa']][2]))
-		$_REQUEST['sa'] = 'viewProject';
-	elseif (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
+	if (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
 		fatal_lang_error('project_not_found', false);
 
 	// Check permission if needed
 	if (isset($subActions[$_REQUEST['sa']][3]))
 		isAllowedTo($subActions[$_REQUEST['sa']][3]);
 
-	// Template if Project selected
-	if (!empty($project))
-	{
-		$context['project_tabs'] = array(
-			'title' => $context['project']['name'],
-			'text' => $context['project']['description'],
-			'tabs' => array(
-				'main' => array(
-					'href' => project_get_url(array('project' => $project)),
-					'title' => $txt['project'],
-					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
-					'order' => 'first',
-				),
-				'issues' => array(
-					'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
-					'title' => $txt['issues'],
-					'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
-					'linktree' => array(
-						'name' => $txt['linktree_issues'],
-						'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
-					),
-					'order' => 10,
-				)
+	$context['project_tabs'] = array(
+		'title' => $context['project']['name'],
+		'text' => $context['project']['description'],
+		'tabs' => array(
+			'main' => array(
+				'href' => project_get_url(array('project' => $project)),
+				'title' => $txt['project'],
+				'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
+				'order' => 'first',
 			),
-		);
+			'issues' => array(
+				'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+				'title' => $txt['issues'],
+				'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
+				'linktree' => array(
+					'name' => $txt['linktree_issues'],
+					'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+				),
+				'order' => 10,
+			)
+		),
+	);
 
-		// Let Modules register project tabs
-		if (!empty($context['project_modules']))
-		{
-			foreach ($context['project_modules'] as $module)
-				if (method_exists($module, 'RegisterProjectTabs'))
-					$module->RegisterProjectTabs($context['project_tabs']['tabs']);
-		}
-		
-		// Sort tabs to correct order
-		uksort($context['project_tabs']['tabs'], 'projectTabSort');
-
-		// Linktree
-		$context['linktree'][] = array(
-			'name' => strip_tags($context['project']['name']),
-			'url' => project_get_url(array('project' => $project)),
-		);
-		
-		foreach ($context['project_tabs']['tabs'] as $id => $tab)
-			if (!empty($tab['is_selected']) && !empty($tab['linktree']))
-				$context['linktree'][] = $tab['linktree'];
-
-		if (isset($context['current_issue']))
-			$context['linktree'][] = array(
-				'name' => $context['current_issue']['name'],
-				'url' => $context['current_issue']['href'],
-			);
-
-		loadTemplate('ProjectView');
-
-		if (!isset($_REQUEST['xml']))
-			$context['template_layers'][] = 'project_view';
+	// Let Modules register project tabs
+	if (!empty($context['project_modules']))
+	{
+		foreach ($context['project_modules'] as $module)
+			if (method_exists($module, 'RegisterProjectTabs'))
+				$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 	}
+	
+	// Sort tabs to correct order
+	uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
+	// Linktree
+	$context['linktree'][] = array(
+		'name' => strip_tags($context['project']['name']),
+		'url' => project_get_url(array('project' => $project)),
+	);
+	
+	foreach ($context['project_tabs']['tabs'] as $id => $tab)
+		if (!empty($tab['is_selected']) && !empty($tab['linktree']))
+			$context['linktree'][] = $tab['linktree'];
+
+	if (isset($context['current_issue']))
+		$context['linktree'][] = array(
+			'name' => $context['current_issue']['name'],
+			'url' => $context['current_issue']['href'],
+		);
+
+	loadTemplate('ProjectView');
+
+	if (!isset($_REQUEST['xml']))
+		$context['template_layers'][] = 'project_view';
+		
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
 	call_user_func($subActions[$_REQUEST['sa']][1]);
 }

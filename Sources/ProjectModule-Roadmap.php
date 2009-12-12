@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 class ProjectModule_Roadmap
 {
-	function RegisterSubactions()
+	function RegisterProjectSubactions()
 	{	
 		return array(
 			'roadmap' => array(

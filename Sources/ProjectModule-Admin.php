@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 class ProjectModule_Admin
 {
-	function RegisterSubactions()
+	function RegisterProjectSubactions()
 	{	
 		return array(
 			'admin' => array(
