@@ -127,6 +127,8 @@ function loadProjectTools()
 	$user_info['query_see_project'] = $see_project;
 	// See version
 	$user_info['query_see_version'] = $see_version;
+	// See version of issue
+	$user_info['query_see_version_issue'] = $see_version_issue;
 	// See version timeline
 	$user_info['query_see_version_timeline'] = $see_version_timeline;
 	
