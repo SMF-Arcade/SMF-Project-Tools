@@ -108,10 +108,11 @@ function Projects($standalone = false)
 			'title' => $context['project']['name'],
 			'text' => $context['project']['description'],
 			'tabs' => array(
-				array(
+				'main' => array(
 					'href' => project_get_url(array('project' => $project)),
 					'title' => $txt['project'],
 					'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
+					'order' => 'first',
 				),
 				'issues' => array(
 					'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
@@ -121,6 +122,7 @@ function Projects($standalone = false)
 						'name' => $txt['linktree_issues'],
 						'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 					),
+					'order' => 10,
 				)
 			),
 		);
@@ -132,6 +134,8 @@ function Projects($standalone = false)
 				if (method_exists($module, 'RegisterProjectTabs'))
 					$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 		}
+		
+		uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
 		// Linktree
 		$context['linktree'][] = array(
@@ -156,7 +160,7 @@ function Projects($standalone = false)
 	}
 
 	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
-	$subActions[$_REQUEST['sa']][1]();
+	call_user_func($subActions[$_REQUEST['sa']][1]);
 }
 
 ?>

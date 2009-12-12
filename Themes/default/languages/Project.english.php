@@ -6,6 +6,7 @@ global $context;
 // Linktree
 $txt['linktree_projects'] = 'Projects';
 $txt['linktree_roadmap'] = 'Roadmap';
+$txt['linktree_admin'] = 'Admin';
 $txt['linktree_issues'] = 'Issues';
 $txt['linktree_report_issue'] = 'Report Issue';
 
@@ -82,6 +83,7 @@ $txt['total_issues'] = 'Total Issues';
 // Project Page Tabs
 $txt['issues'] = 'Issues';
 $txt['roadmap'] = 'Roadmap';
+$txt['project_admin'] = 'Admin';
 
 $txt['project_subscribe'] = 'Subscribe';
 $txt['project_unsubscribe'] = 'Unsubscribe';

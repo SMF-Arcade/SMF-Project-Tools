@@ -29,6 +29,30 @@ if (!defined('SMF'))
 
 class ProjectModule_Admin
 {
+	function RegisterSubactions()
+	{	
+		return array(
+			'admin' => array(
+				'ProjectModule-Admin.php', array($this, 'ProjectAdminMain'), true
+			)
+		);
+	}
+	
+	function RegisterProjectTabs(&$tabs)
+	{
+		global $project, $context, $txt;
+		
+		$tabs['admin'] = array(
+			'href' => project_get_url(array('project' => $project, 'sa' => 'admin')),
+			'title' => $txt['project_admin'],
+			'is_selected' => in_array($_REQUEST['sa'], array('admin')),
+			'order' => 'last',
+			'linktree' => array(
+				'name' => $txt['project_admin'],
+				'url' => project_get_url(array('project' => $project, 'sa' => 'admin')),
+			),
+		);
+	}
 }
 
 ?>

@@ -1364,4 +1364,22 @@ function getInstalledModules()
 	return $modules;
 }
 
+function projectTabSort($first, $second)
+{
+	global $context;
+	
+	$orderFirst = isset($context['project_tabs']['tabs'][$first]['order']) ? $context['project_tabs']['tabs'][$first]['order'] : 1;
+	$orderSecond = isset($context['project_tabs']['tabs'][$second]['order']) ? $context['project_tabs']['tabs'][$second]['order'] : 1;
+	
+	if ($orderFirst == $orderSecond)
+		return 0;
+	
+	if ($orderFirst == 'first' || $orderSecond == 'last')
+		return -1;
+	elseif ($orderFirst == 'last' || $orderSecond == 'first')
+		return 1;
+	else
+		return $orderFirst < $orderSecond ? -1 : 1;
+}
+
 ?>
