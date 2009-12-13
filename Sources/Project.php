@@ -53,6 +53,8 @@ function Projects($standalone = false)
 			'list' => array('ProjectList.php', 'ProjectList'),
 		);
 		
+		$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
+		
 		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
 		call_user_func($subActions[$_REQUEST['sa']][1]);
 		
