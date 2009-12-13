@@ -33,7 +33,8 @@ class ProjectModule_Roadmap
 	{	
 		return array(
 			'roadmap' => array(
-				'ProjectModule-Roadmap.php', array($this, 'ProjectRoadmap'), true
+				'callback' => array($this, 'ProjectRoadmap'),
+				'tab' => 'roadmap',
 			)
 		);
 	}
@@ -45,7 +46,7 @@ class ProjectModule_Roadmap
 		$tabs['roadmap'] = array(
 			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
 			'title' => $txt['roadmap'],
-			'is_selected' => in_array($_REQUEST['sa'], array('roadmap')),
+			'is_selected' => false,
 			'linktree' => array(
 				'name' => $txt['linktree_roadmap'],
 				'url' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),

@@ -63,27 +63,86 @@ function Projects($standalone = false)
 	
 	$subActions = array(
 		// Project
-		'main' => array('ProjectView.php', 'ProjectView'),
-		'subscribe' => array('ProjectView.php', 'ProjectSubscribe'),
+		'main' => array(
+			'file' => 'ProjectView.php',
+			'callback' => 'ProjectView',
+			'tab' => 'main',
+		),
+		'subscribe' => array(
+			'file' => 'ProjectView.php',
+			'callback' => 'ProjectSubscribe',
+			'tab' => 'main',
+		),
 		// Issues
-		'issues' => array('IssueList.php', 'IssueList'),
-		'viewIssue' => array('IssueView.php', 'IssueView'),
-		'tags' => array('IssueView.php', 'IssueTag'),
-		'update' => array('IssueReport.php', 'IssueUpdate'),
-		'upload' => array('IssueReport.php', 'IssueUpload'),
-		'delete' => array('IssueView.php', 'IssueDelete'),
-		'move' => array('IssueView.php', 'IssueMove'),
+		'issues' => array(
+			'file' => 'IssueList.php',
+			'callback' => 'IssueList',
+			'tab' => 'issues',
+		),
+		'viewIssue' => array(
+			'file' => 'IssueView.php',
+			'callback' => 'IssueView',
+			'tab' => 'issues',
+		),
+		'tags' => array(
+			'file' => 'IssueView.php',
+			'callback' => 'IssueTag',
+			'tab' => 'issues',
+		),
+		'update' => array(
+			'file' => 'IssueReport.php',
+			'callback' => 'IssueUpdate',
+			'tab' => 'issues',
+		),
+		'upload' => array(
+			'file' => 'IssueReport.php',
+			'callback' => 'IssueUpload',
+			'tab' => 'issues',
+		),
+		'move' => array(
+			'file' => 'IssueView.php',
+			'callback' => 'IssueMove',
+			'tab' => 'issues',
+		),
 		// Reply
-		'reply' => array('IssueComment.php', 'IssueReply'),
-		'reply2' => array('IssueComment.php', 'IssueReply2'),
+		'reply' => array(
+			'file' => 'IssueComment.php',
+			'callback' => 'IssueReply',
+			'tab' => 'issues',
+		),
+		'reply2' => array(
+			'file' => 'IssueComment.php',
+			'callback' => 'IssueReply2',
+			'tab' => 'issues',
+		),
 		// Edit
-		'edit' => array('IssueComment.php', 'IssueReply'),
-		'edit2' => array('IssueComment.php', 'IssueReply2'),
+		'edit' => array(
+			'file' => 'IssueComment.php',
+			'callback' => 'IssueReply',
+			'tab' => 'issues',
+		),
+		'edit2' => array(
+			'file' => 'IssueComment.php',
+			'callback' => 'IssueReply2',
+			'tab' => 'issues',
+		),
 		// Remove comment
-		'removeComment' => array('IssueComment.php', 'IssueDeleteComment'),
+		'removeComment' => array(
+			'file' => 'IssueComment.php',
+			'callback' => 'IssueDeleteComment',
+			'tab' => 'issues',
+		),
 		// Report Issue
-		'reportIssue' => array('IssueReport.php', 'ReportIssue'),
-		'reportIssue2' => array('IssueReport.php', 'ReportIssue2'),
+		'reportIssue' => array(
+			'file' => 'IssueReport.php',
+			'callback' => 'ReportIssue',
+			'tab' => 'issues',
+		),
+		'reportIssue2' => array(
+			'file' => 'IssueReport.php',
+			'callback' => 'ReportIssue2',
+			'tab' => 'issues',
+		),
 	);
 	
 	// Let Modules register subactions
@@ -106,12 +165,11 @@ function Projects($standalone = false)
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 
-	if (empty($project) && !empty($subActions[$_REQUEST['sa']][2]))
-		fatal_lang_error('project_not_found', false);
-
 	// Check permission if needed
-	if (isset($subActions[$_REQUEST['sa']][3]))
-		isAllowedTo($subActions[$_REQUEST['sa']][3]);
+	if (isset($subActions[$_REQUEST['sa']]['permission']))
+		isAllowedTo($subActions[$_REQUEST['sa']]['permission']);
+	if (isset($subActions[$_REQUEST['sa']]['project_permission']))
+		projectIsAllowedTo($subActions[$_REQUEST['sa']]['project_permission']);
 
 	$context['project_tabs'] = array(
 		'title' => $context['project']['name'],
@@ -120,13 +178,13 @@ function Projects($standalone = false)
 			'main' => array(
 				'href' => project_get_url(array('project' => $project)),
 				'title' => $txt['project'],
-				'is_selected' => in_array($_REQUEST['sa'], array('viewProject')),
+				'is_selected' => false,
 				'order' => 'first',
 			),
 			'issues' => array(
 				'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
 				'title' => $txt['issues'],
-				'is_selected' => in_array($_REQUEST['sa'], array('issues', 'viewIssue', 'reportIssue', 'reportIssue2', 'reply', 'reply2', 'edit', 'edit2', 'update', 'delete')),
+				'is_selected' => false,
 				'linktree' => array(
 					'name' => $txt['linktree_issues'],
 					'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
@@ -153,9 +211,10 @@ function Projects($standalone = false)
 		'url' => project_get_url(array('project' => $project)),
 	);
 	
-	foreach ($context['project_tabs']['tabs'] as $id => $tab)
-		if (!empty($tab['is_selected']) && !empty($tab['linktree']))
-			$context['linktree'][] = $tab['linktree'];
+	if (isset($subActions[$_REQUEST['sa']]['tab']) && isset($context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]))
+		$context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]['is_selected'] = true;
+	else
+		$context['project_tabs']['tabs']['main']['is_selected'] = true;
 
 	if (isset($context['current_issue']))
 		$context['linktree'][] = array(
@@ -168,8 +227,11 @@ function Projects($standalone = false)
 	if (!isset($_REQUEST['xml']))
 		$context['template_layers'][] = 'project_view';
 		
-	require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
-	call_user_func($subActions[$_REQUEST['sa']][1]);
+	// Load Additional file if required
+	if (isset($subActions[$_REQUEST['sa']]['file']))
+		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
+		
+	call_user_func($subActions[$_REQUEST['sa']]['callback']);
 }
 
 ?>

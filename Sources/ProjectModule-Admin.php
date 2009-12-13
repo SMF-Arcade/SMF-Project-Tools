@@ -33,7 +33,9 @@ class ProjectModule_Admin
 	{	
 		return array(
 			'admin' => array(
-				'ProjectModule-Admin.php', array($this, 'ProjectAdminMain'), true
+				'callback' => array($this, 'ProjectAdminMain'),
+				'tab' => 'admin',
+				'project_permission' => 'admin',
 			)
 		);
 	}
@@ -45,8 +47,9 @@ class ProjectModule_Admin
 		$tabs['admin'] = array(
 			'href' => project_get_url(array('project' => $project, 'sa' => 'admin')),
 			'title' => $txt['project_admin'],
-			'is_selected' => in_array($_REQUEST['sa'], array('admin')),
+			'is_selected' => false,
 			'order' => 'last',
+			'project_permission' => 'admin',
 			'linktree' => array(
 				'name' => $txt['project_admin'],
 				'url' => project_get_url(array('project' => $project, 'sa' => 'admin')),
