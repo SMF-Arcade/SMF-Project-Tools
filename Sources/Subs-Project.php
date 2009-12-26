@@ -120,7 +120,7 @@ function loadProjectTools()
 		$see_issue = '((' . $see_version_issue . ') AND ' . $see_private . ')';
 		$see_issue_p = '((' . $see_version_issue . ') AND (i.private_issue = 0 OR ' . $my_issue . '))';
 		
-		unset($see_version_issue, $allowed_versions);
+		unset($allowed_versions);
 	}
 	
 	// See project
