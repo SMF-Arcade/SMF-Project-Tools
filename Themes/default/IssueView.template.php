@@ -307,7 +307,7 @@ function template_issue_view_above()
 				$shown = true;
 				echo '
 				<div class="custom_fields_above_signature">
-					<ul class="reset nolist>';
+					<ul class="reset nolist">';
 			}
 			echo '
 						<li>', $custom['value'], '</li>';
@@ -843,7 +843,7 @@ function template_issue_view_main()
 					$shown = true;
 					echo '
 						<div class="custom_fields_above_signature">
-							<ul class="reset nolist>';
+							<ul class="reset nolist">';
 				}
 				echo '
 								<li>', $custom['value'], '</li>';
