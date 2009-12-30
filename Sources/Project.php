@@ -61,6 +61,9 @@ function Projects($standalone = false)
 		return;
 	}
 	
+	// Areas are sets of subactions (registered by modules)
+	$subAreas = array();
+	
 	$subActions = array(
 		// Project
 		'main' => array(
@@ -149,6 +152,7 @@ function Projects($standalone = false)
 	if (!empty($context['project_modules']))
 	{
 		foreach ($context['project_modules'] as $id => $module)
+		{
 			if (method_exists($module, 'RegisterProjectSubactions'))
 			{
 				$addActions = $module->RegisterProjectSubactions();
@@ -156,21 +160,19 @@ function Projects($standalone = false)
 				foreach ($addActions as $id => $data)
 					$subActions[$id] = $data + array('module' => $id);
 			}
+			elseif (method_exists($module, 'RegisterProjectArea'))
+			{
+				$area = $module->RegisterProjectSubactions();
+				
+				$subAreas[$area['area']] = array(
+					'area' => $area['area'],
+					'module' => $id,
+					'tab' => !empty($area['tab']) ? $area['tab'] : $area['area'],
+				);
+			}
+		}
 	}
-
-	if (!isset($_REQUEST['sa']) && !empty($issue))
-		$_REQUEST['sa'] = 'viewIssue';
-	elseif (!isset($_REQUEST['sa']))
-		$_REQUEST['sa'] = 'main';
-
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
-
-	// Check permission if needed
-	if (isset($subActions[$_REQUEST['sa']]['permission']))
-		isAllowedTo($subActions[$_REQUEST['sa']]['permission']);
-	if (isset($subActions[$_REQUEST['sa']]['project_permission']))
-		projectIsAllowedTo($subActions[$_REQUEST['sa']]['project_permission']);
-
+	
 	$context['project_tabs'] = array(
 		'title' => $context['project']['name'],
 		'text' => $context['project']['description'],
@@ -201,24 +203,16 @@ function Projects($standalone = false)
 			if (method_exists($module, 'RegisterProjectTabs'))
 				$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 	}
-	
+
 	// Sort tabs to correct order
 	uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
-	if (!empty($subActions[$_REQUEST['sa']]['module']))
-		$context['current_project_module'] = &$context['project_modules'][$subActions[$_REQUEST['sa']]['module']];
-		
 	// Linktree
 	$context['linktree'][] = array(
 		'name' => strip_tags($context['project']['name']),
 		'url' => project_get_url(array('project' => $project)),
 	);
 	
-	if (isset($subActions[$_REQUEST['sa']]['tab']) && isset($context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]))
-		$context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]['is_selected'] = true;
-	else
-		$context['project_tabs']['tabs']['main']['is_selected'] = true;
-
 	if (isset($context['current_issue']))
 		$context['linktree'][] = array(
 			'name' => $context['current_issue']['name'],
@@ -229,17 +223,54 @@ function Projects($standalone = false)
 
 	if (!isset($_REQUEST['xml']))
 		$context['template_layers'][] = 'project_view';
-
-	// Call Initialize View function
-	if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
-		$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
 	
+	// No current area -> we have to handle this (TODO: Maybe make everyhing as a area (and compat code for older versions))
+	if (empty($_REQUEST['area']))
+	{
+		if (!isset($_REQUEST['sa']) && !empty($issue))
+			$_REQUEST['sa'] = 'viewIssue';
+		elseif (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'main';
+	
+		$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
+	
+		if (!empty($subActions[$_REQUEST['sa']]['module']))
+			$context['current_project_module'] = &$context['project_modules'][$subActions[$_REQUEST['sa']]['module']];
+	
+		// Check permission if needed
+		if (isset($subActions[$_REQUEST['sa']]['permission']))
+			isAllowedTo($subActions[$_REQUEST['sa']]['permission']);
+		if (isset($subActions[$_REQUEST['sa']]['project_permission']))
+			projectIsAllowedTo($subActions[$_REQUEST['sa']]['project_permission']);
+			
+		if (isset($subActions[$_REQUEST['sa']]['tab']) && isset($context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]))
+			$context['project_tabs']['tabs'][$subActions[$_REQUEST['sa']]['tab']]['is_selected'] = true;
+		else
+			$context['project_tabs']['tabs']['main']['is_selected'] = true;
+			
+		// Call Initialize View function
+		if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
+			$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
+			
+		// Load Additional file if required
+		if (isset($subActions[$_REQUEST['sa']]['file']))
+			require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
+			
+		call_user_func($subActions[$_REQUEST['sa']]['callback']);
+	}
+	// Registered as area main function in class does everything :)
+	else
+	{
+		$current_area = $subAreas[$_REQUEST['area']];
+		$context['current_project_module'] = &$context['project_modules'][$current_area['module']];
+	
+		if (isset($subActions[$_REQUEST['sa']]['tab']) && isset($context['project_tabs']['tabs'][$current_area['tab']]))
+			$context['project_tabs']['tabs'][$context['project_tabs']['tabs'][$current_area['tab']]]['is_selected'] = true;
+		else
+			$context['project_tabs']['tabs']['main']['is_selected'] = true;
 		
-	// Load Additional file if required
-	if (isset($subActions[$_REQUEST['sa']]['file']))
-		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
-		
-	call_user_func($subActions[$_REQUEST['sa']]['callback']);
+		$context['current_project_module']->main();
+	}
 }
 
 ?>
