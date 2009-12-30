@@ -43,14 +43,14 @@ class ProjectModule_Admin
 		global $project, $context, $txt;
 		
 		$tabs['admin'] = array(
-			'href' => project_get_url(array('project' => $project, 'sa' => 'admin')),
+			'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
 			'title' => $txt['project_admin'],
 			'is_selected' => false,
 			'order' => 'last',
 			'project_permission' => 'admin',
 			'linktree' => array(
 				'name' => $txt['project_admin'],
-				'url' => project_get_url(array('project' => $project, 'sa' => 'admin')),
+				'url' => project_get_url(array('project' => $project, 'area' => 'admin')),
 			),
 		);
 	}
@@ -87,7 +87,7 @@ class ProjectModule_Admin
 		
 		$listOptions = array(
 			'id' => 'versions_list',
-			'base_href' => project_get_url(array('project' => $project, 'sa' => 'adminVersions')),
+			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions_list')),
 			'get_items' => array(
 				'function' => 'list_getVersions',
 				'params' => array(
@@ -143,7 +143,7 @@ class ProjectModule_Admin
 				),
 			),
 			'form' => array(
-				'href' => array('project' => $project, 'sa' => 'adminVersions'),
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions_list')),
 				'include_sort' => true,
 				'include_start' => true,
 				'hidden_fields' => array(
