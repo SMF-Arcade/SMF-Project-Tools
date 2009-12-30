@@ -29,18 +29,26 @@ if (!defined('SMF'))
 
 class ProjectModule_Admin
 {
-	function RegisterProjectSubactions()
+	public $title = 'Admin';
+	public $version = '0.5';
+	
+	public function RegisterProjectSubactions()
 	{	
 		return array(
 			'admin' => array(
 				'callback' => array($this, 'ProjectAdminMain'),
 				'tab' => 'admin',
 				'project_permission' => 'admin',
-			)
+			),
+			'adminVersions' => array(
+				'callback' => array($this, 'ProjectAdminVersions'),
+				'tab' => 'admin',
+				'project_permission' => 'admin',
+			),
 		);
 	}
 	
-	function RegisterProjectTabs(&$tabs)
+	public function RegisterProjectTabs(&$tabs)
 	{
 		global $project, $context, $txt;
 		
@@ -55,6 +63,22 @@ class ProjectModule_Admin
 				'url' => project_get_url(array('project' => $project, 'sa' => 'admin')),
 			),
 		);
+	}
+	
+	// Callback before any subaction routine is called
+	public function beforeSubaction($subaction)
+	{
+		
+	}
+	
+	public function ProjectAdminMain()
+	{
+		
+	}
+	
+	public function ProjectAdminVersions()
+	{
+		
 	}
 }
 

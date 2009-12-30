@@ -205,6 +205,9 @@ function Projects($standalone = false)
 	// Sort tabs to correct order
 	uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
+	if (!empty($subActions[$_REQUEST['sa']]['module']))
+		$context['current_project_module'] = &$context['project_modules'][$subActions[$_REQUEST['sa']]['module']];
+		
 	// Linktree
 	$context['linktree'][] = array(
 		'name' => strip_tags($context['project']['name']),
@@ -226,6 +229,11 @@ function Projects($standalone = false)
 
 	if (!isset($_REQUEST['xml']))
 		$context['template_layers'][] = 'project_view';
+
+	// Call Initialize View function
+	if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
+		$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
+	
 		
 	// Load Additional file if required
 	if (isset($subActions[$_REQUEST['sa']]['file']))

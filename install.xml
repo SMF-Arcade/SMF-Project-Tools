@@ -243,6 +243,8 @@ else
 			list ($user_info['project_permissions']) = $temp;
 		else
 		{
+			$user_info['project_permissions'] = array();
+		
 			$request = $smcFunc['db_query']('', '
 				SELECT permission
 				FROM {db_prefix}project_permissions
