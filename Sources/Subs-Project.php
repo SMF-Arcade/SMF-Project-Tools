@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4.1                             *
+* Software Version:           SMF Project Tools 0.4.2                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -35,7 +35,7 @@ function loadProjectTools()
 		return;
 
 	// Which version this is?
-	$project_version = '0.4.1';
+	$project_version = '0.4.2';
 
 	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 	{
@@ -120,7 +120,7 @@ function loadProjectTools()
 		$see_issue = '((' . $see_version_issue . ') AND ' . $see_private . ')';
 		$see_issue_p = '((' . $see_version_issue . ') AND (i.private_issue = 0 OR ' . $my_issue . '))';
 		
-		unset($see_version_issue, $allowed_versions);
+		unset($allowed_versions);
 	}
 	
 	// See project
@@ -132,6 +132,8 @@ function loadProjectTools()
 	
 	// Issue of any project
 	$user_info['query_see_issue'] = $see_issue;
+	// See version of issue
+	$user_info['query_see_version_issue'] = $see_version_issue;
 	
 	// See issue of current project
 	$user_info['query_see_issue_project'] = $see_issue_p;

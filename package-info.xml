@@ -85,6 +85,11 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 	
+	<upgrade for="2.0 RC2" from="0.4001">
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<modification format="xml" type="file">update042.xml</modification>
+	</upgrade>
+	
 	<upgrade for="2.0 RC2" from="0.4">
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
@@ -92,6 +97,7 @@
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		
+		<modification format="xml" type="file">update042.xml</modification>
 	</upgrade>
 
 	<uninstall for="2.0 RC2">
