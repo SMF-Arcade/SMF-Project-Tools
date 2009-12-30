@@ -68,7 +68,11 @@ class ProjectModule_Admin
 	// Callback before any subaction routine is called
 	public function beforeSubaction($subaction)
 	{
+		global $sourcedir;
 		
+		require_once($sourcedir . '/Subs-ProjectAdmin.php');
+		
+		loadTemplate('ManageProjects');
 	}
 	
 	public function ProjectAdminMain()
@@ -78,7 +82,91 @@ class ProjectModule_Admin
 	
 	public function ProjectAdminVersions()
 	{
+		global $scripturl, $context;
 		
+		$listOptions = array(
+			'id' => 'versions_list',
+			'base_href' => project_get_url(array('project' => $project, 'sa' => 'adminVersions')),
+			'get_items' => array(
+				'function' => 'list_getVersions',
+				'params' => array(
+					$id_project,
+				),
+			),
+			'columns' => array(
+				'check' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+						'style' => 'width: 4%;',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="versions[]" value="%1$d" class="check" />',
+							'params' => array(
+								'id' => false,
+							),
+						),
+						'style' => 'text-align: center;',
+					),
+				),
+				'name' => array(
+					'header' => array(
+						'value' => $txt['header_version'],
+					),
+					'data' => array(
+						'function' => create_function('$list_item', '
+							return str_repeat(\'&nbsp;\', $list_item[\'level\'] * 5) . $list_item[\'link\'];
+						'),
+					),
+					'sort' => array(
+						'default' => 'ver.version_name',
+						'reverse' => 'ver.version_name DESC',
+					),
+				),
+				'actions' => array(
+					'header' => array(
+						'value' => $txt['new_version'],
+						'style' => 'width: 16%; text-align: right;',
+					),
+					'data' => array(
+						'function' => create_function('$list_item', '
+							global $txt, $scripturl;
+							return (empty($list_item[\'level\']) ? \'<a href="\' .  $scripturl . \'?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . ';parent=\' . $list_item[\'id\'] . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
+						'),
+						'style' => 'text-align: right;',
+					),
+					'sort' => array(
+						'default' => 'ver.version_name',
+						'reverse' => 'ver.version_name DESC',
+					),
+				),
+			),
+			'form' => array(
+				'href' => array('project' => $project, 'sa' => 'adminVersions'),
+				'include_sort' => true,
+				'include_start' => true,
+				'hidden_fields' => array(
+					$context['session_var'] => $context['session_id'],
+				),
+			),
+			'additional_rows' => array(
+				array(
+					'position' => 'bottom_of_list',
+					'value' => '
+						<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . '">
+							' . $txt['new_version_group'] . '
+						</a>',
+					'class' => 'catbg',
+					'align' => 'right',
+				),
+			),
+		);
+	
+		require_once($sourcedir . '/Subs-List.php');
+		createList($listOptions);
+	
+		// Template
+		$context['sub_template'] = 'versions_list';
 	}
 }
 
