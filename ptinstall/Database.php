@@ -363,6 +363,47 @@ $tables = array(
 			),
 		)
 	),
+	// Project Settings
+	'project_settings' => array(
+		'name' => 'project_settings',
+		'columns' => array(
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'variable',
+				'type' => 'varchar',
+				'size' => 255,
+			),
+			array(
+				'name' => 'value',
+				'type' => 'text',
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_project', 'id_member', 'variable')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+			array(
+				'name' => 'id_project_id_member',
+				'type' => 'index',
+				'columns' => array('id_project', 'id_member')
+			),
+		)
+	),
 	// Categories/modules table
 	'issue_category' => array(
 		'name' => 'issue_category',
