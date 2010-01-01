@@ -217,7 +217,7 @@ function loadProjectTools()
 // Loads current project
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings, $projects_show;
+	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings, $projects_show, $projectSettings;
 
 	if (isset($force_project))
 		$project = $force_project;
@@ -415,6 +415,26 @@ function loadProject()
 		
 	if (!empty($projects_show) && !in_array($context['project']['id'], $projects_show))
 		$context['project_error'] = 'project_not_found';
+		
+	// Load Project Settings
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, variable, value
+		FROM {db_prefix}project_settings AS ps
+		WHERE id_project = {int:project}
+			AND (id_member = {int:no_member} OR id_member = {int:current_member})
+		ORDER BY id_member',
+		array(
+			'project' => $context['project']['id'],
+			'no_member' => 0,
+			'current_member' => $user_info['id'],
+		)
+	);
+
+	$projectSettings = array();
+
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$projectSettings[$row['variable']] = $row['value'];
+	$smcFunc['db_free_result']($request);
 }
 
 function loadProjectToolsPage($mode = '')
