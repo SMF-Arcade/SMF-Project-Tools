@@ -9,10 +9,10 @@ elseif (!defined('SMF'))
 // Make sure we have access to install packages
 if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
+	
+require_once(dirname(__FILE__) . '/Database.php');
+require_once(dirname(__FILE__) . '/Subs-Install.php');
+require_once(dirname(__FILE__) . '/install_main.php');
 
-// Temporary
-die('Installing database via SSI isn\'t supported due to bugs!!');
-
-echo 'Project Tools !';
 
 ?>

@@ -808,7 +808,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	);
 	// Delete possible settings
 	$smcFunc['db_query']('', '
-		DELETE FROM {db_prefix}projects_settings
+		DELETE FROM {db_prefix}project_settings
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,

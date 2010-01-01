@@ -577,7 +577,7 @@ function ptMaintenanceIssues2($check = false)
 	);
 	// Delete possible settings
 	$smcFunc['db_query']('', '
-		DELETE FROM {db_prefix}projects_settings
+		DELETE FROM {db_prefix}project_settings
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $deletedMembers,

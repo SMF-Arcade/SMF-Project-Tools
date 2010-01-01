@@ -25,7 +25,7 @@ global $project_version, $addSettings, $permissions, $tables;
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-$project_version = '0.4';
+$project_version = '0.5';
 
 $addSettings = array(
 	'issuesPerPage' => array(25, false),
@@ -902,37 +902,6 @@ $tables = array(
 				'name' => 'id_issue',
 				'type' => 'index',
 				'columns' => array('id_issue')
-			),
-		)
-	),
-	// Settings
-	'projects_settings' => array(
-		'name' => 'projects_settings',
-		'columns' => array(
-			array(
-				'name' => 'id_member',
-				'type' => 'int',
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'variable',
-				'type' => 'varchar',
-				'size' => 30,
-			),
-			array(
-				'name' => 'value',
-				'type' => 'text',
-			),
-		),
-		'indexes' => array(
-			array(
-				'type' => 'primary',
-				'columns' => array('id_member', 'variable')
-			),
-			array(
-				'name' => 'id_member',
-				'type' => 'index',
-				'columns' => array('id_member')
 			),
 		)
 	),

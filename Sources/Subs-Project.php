@@ -435,6 +435,7 @@ function loadProject()
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$projectSettings[$row['variable']] = $row['value'];
 	$smcFunc['db_free_result']($request);
+
 }
 
 function loadProjectToolsPage($mode = '')
