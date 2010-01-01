@@ -35,7 +35,7 @@ class ProjectModule_Admin
 	
 	public function RegisterProjectArea()
 	{
-		return array('area' => 'admin');
+		return array('area' => 'admin', 'tab' => 'admin',);
 	}
 	
 	public function RegisterProjectTabs(&$tabs)
@@ -83,7 +83,7 @@ class ProjectModule_Admin
 	
 	public function ProjectAdminVersions()
 	{
-		global $scripturl, $context;
+		global $scripturl, $sourcedir, $context, $txt, $project;
 		
 		$listOptions = array(
 			'id' => 'versions_list',
@@ -91,7 +91,7 @@ class ProjectModule_Admin
 			'get_items' => array(
 				'function' => 'list_getVersions',
 				'params' => array(
-					$id_project,
+					$project,
 				),
 			),
 			'columns' => array(

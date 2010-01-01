@@ -162,7 +162,7 @@ function Projects($standalone = false)
 			}
 			elseif (method_exists($module, 'RegisterProjectArea'))
 			{
-				$area = $module->RegisterProjectSubactions();
+				$area = $module->RegisterProjectArea();
 				
 				$subAreas[$area['area']] = array(
 					'area' => $area['area'],
@@ -264,7 +264,7 @@ function Projects($standalone = false)
 		$current_area = $subAreas[$_REQUEST['area']];
 		$context['current_project_module'] = &$context['project_modules'][$current_area['module']];
 	
-		if (isset($subActions[$_REQUEST['sa']]['tab']) && isset($context['project_tabs']['tabs'][$current_area['tab']]))
+		if (isset($context['project_tabs']['tabs'][$current_area['tab']]))
 			$context['project_tabs']['tabs'][$context['project_tabs']['tabs'][$current_area['tab']]]['is_selected'] = true;
 		else
 			$context['project_tabs']['tabs']['main']['is_selected'] = true;
