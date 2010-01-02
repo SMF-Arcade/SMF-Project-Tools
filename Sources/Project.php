@@ -203,6 +203,14 @@ function Projects($standalone = false)
 			if (method_exists($module, 'RegisterProjectTabs'))
 				$module->RegisterProjectTabs($context['project_tabs']['tabs']);
 	}
+	
+	foreach ($context['project_tabs']['tabs'] as $id => $tab)
+	{
+		if (!empty($tab['permission']) && !allowedTo($tab['permission']))
+			unset($context['project_tabs']['tabs'][$id]);
+		elseif (!empty($tab['project_permission']) && !projectAllowedTo($tab['project_permission']))
+			unset($context['project_tabs']['tabs'][$id]);
+	}
 
 	// Sort tabs to correct order
 	uksort($context['project_tabs']['tabs'], 'projectTabSort');
@@ -265,10 +273,16 @@ function Projects($standalone = false)
 		$context['current_project_module'] = &$context['project_modules'][$current_area['module']];
 	
 		if (isset($context['project_tabs']['tabs'][$current_area['tab']]))
-			$context['project_tabs']['tabs'][$context['project_tabs']['tabs'][$current_area['tab']]]['is_selected'] = true;
+			$context['project_tabs']['tabs'][$current_area['tab']]['is_selected'] = true;
 		else
 			$context['project_tabs']['tabs']['main']['is_selected'] = true;
-		
+
+		// Check permission if needed
+		if (isset($current_area['permission']))
+			isAllowedTo($current_area['permission']);
+		if (isset($current_area['project_permission']))
+			projectIsAllowedTo($current_area['project_permission']);
+			
 		$context['current_project_module']->main();
 	}
 }

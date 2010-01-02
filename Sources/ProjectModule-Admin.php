@@ -35,7 +35,7 @@ class ProjectModule_Admin
 	
 	public function RegisterProjectArea()
 	{
-		return array('area' => 'admin', 'tab' => 'admin',);
+		return array('area' => 'admin', 'tab' => 'admin', 'project_permission' => 'admin');
 	}
 	
 	public function RegisterProjectTabs(&$tabs)
