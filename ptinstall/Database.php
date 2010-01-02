@@ -86,7 +86,7 @@ $tables = array(
 				'name' => 'modules',
 				'type' => 'varchar',
 				'size' => 255,
-				'default' => 'general,admin',
+				'default' => 'general,issues,admin',
 			),
 			array(
 				'name' => 'open_bug',

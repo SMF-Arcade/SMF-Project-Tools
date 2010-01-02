@@ -62,7 +62,37 @@ function Projects($standalone = false)
 	}
 	
 	// Areas are sets of subactions (registered by modules)
-	$subAreas = array();
+	$subAreas = array(
+		'main' => array(
+			'area' => 'main',
+			'module' => 'general',
+			'tab' => 'main',
+		),
+		'issues' => array(
+			'area' => 'issues',
+			'module' => 'issues',
+			'tab' => 'issues',
+		),
+	);
+	
+	$saToArea = array(
+		'main' => 'main',
+		'subscribe' => array('main', 'subscribe'),
+		// issues
+		'issues' => 'issues',
+		'viewIssue' => array('issues', 'view'),
+		'tags' => array('issues', 'tags'),
+		'update' => array('issues', 'update'),
+		'upload' => array('issues', 'upload'),
+		'move' => array('issues', 'move'),
+		'reply' => array('issues', 'reply'),
+		'reply2' => array('issues', 'reply2'),
+		'edit' => array('issues', 'edit'),
+		'edit2' => array('issues', 'edit2'),
+		'removeComment' => array('issues', 'removeComment'),
+		'reportIssue' => array('issues', 'report'),
+		'reportIssue2' => array('issues', 'report2'),
+	);
 	
 	$subActions = array(
 		// Project
