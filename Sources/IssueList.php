@@ -68,86 +68,45 @@ function IssueList()
 		'area' => 'issues'
 	);
 
-	// Build Search info
-	$context['issue_search'] = array(
-		'title' => '',
-		'status' => 'all',
-		'tag' => '',
-		'tracker' => '',
-		'version' => null,
-		'version_fixed' => null,
-		'category' => null,
-		'reporter' => null,
-		'assignee' => null,
-	);
-
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $tracker)
 		$context['possible_types'][$tracker['tracker']['short']] = &$context['issue_trackers'][$tracker['tracker']['short']];
-
-	if (!empty($_REQUEST['title']))
-	{
-		$context['issue_search']['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
-		$baseurl['tilte'] = $_REQUEST['title'];
-	}
-
-	if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
-	{
-		$context['issue_search']['tracker'] = $_REQUEST['tracker'];
-		$baseurl['tracker'] = $_REQUEST['tracker'];
-	}
-
-	if (isset($_REQUEST['category']))
-	{
-		$context['issue_search']['category'] = $_REQUEST['category'];
-		$baseurl['category'] = $_REQUEST['category'];
-	}
-
-	if (isset($_REQUEST['reporter']))
-	{
-		$context['issue_search']['reporter'] = $_REQUEST['reporter'];
-		$baseurl['reporter'] = $_REQUEST['reporter'];
-	}
-
-	if (isset($_REQUEST['assignee']))
-	{
-		$context['issue_search']['assignee'] = $_REQUEST['assignee'];
-		$baseurl['assignee'] = $_REQUEST['assignee'];
-	}
-
-	if (isset($_REQUEST['version']))
-	{
-		$_REQUEST['version'] = (int) trim($_REQUEST['version']);
-
-		$context['issue_search']['version'] = $_REQUEST['version'];
-		$baseurl['version'] = $_REQUEST['version'];
-	}
-
-	if (isset($_REQUEST['version_fixed']))
-	{
-		$_REQUEST['version_fixed'] = (int) trim($_REQUEST['version_fixed']);
-
-		$context['issue_search']['version_fixed'] = $_REQUEST['version_fixed'];
-		$baseurl['version_fixed'] = $_REQUEST['version_fixed'];
-
-		$context['issue_search']['status'] = 'all';
-	}
-
-	if (!empty($_REQUEST['status']))
-	{
-		$context['issue_search']['status'] = $_REQUEST['status'];
-		$baseurl['status'] = $_REQUEST['status'];
-	}
+		
+	// Get default filter for comparsion purposes
+	$defaultFilter = getIssuesFilter();
 	
-	$tags_url = $baseurl;
+	// Build Search info
+	$context['issue_search'] = getIssuesFilter('request');
 
-	if (!empty($_REQUEST['tag']))
-	{
-		$context['issue_search']['tag'] = $_REQUEST['tag'];
-		$baseurl['tag'] = $_REQUEST['tag'];
-	}
+	// Add filter's to url if it's non-default
+	if ($defaultFilter['title'] != $context['issue_search']['title'])
+		$baseurl['tilte'] = $context['issue_search']['title'];
 
+	if ($defaultFilter['tracker'] != $context['issue_search']['tracker'])
+		$baseurl['tracker'] = $context['issue_search']['tracker'];
+
+	if ($defaultFilter['category'] != $context['issue_search']['category'])
+		$baseurl['category'] = $context['issue_search']['category'];
+
+	if ($defaultFilter['reporter'] != $context['issue_search']['reporter'])
+		$baseurl['reporter'] = $context['issue_search']['reporter'];
+
+	if ($defaultFilter['assignee'] != $context['issue_search']['assignee'])
+		$baseurl['assignee'] = $context['issue_search']['assignee'];
+
+	if ($defaultFilter['version'] != $context['issue_search']['version'])
+		$baseurl['version'] = $context['issue_search']['version'];
+
+	if ($defaultFilter['version_fixed'] != $context['issue_search']['version_fixed'])
+		$baseurl['version_fixed'] = $context['issue_search']['version_fixed'];
+
+	if ($defaultFilter['status'] != $context['issue_search']['status'])
+		$baseurl['status'] = $context['issue_search']['status'];
+
+	if ($defaultFilter['tag'] != $context['issue_search']['tag'])
+		$baseurl['tag'] = $context['issue_search']['tag'];
+	
 	// Build where clause
 	$where = array();
 
@@ -272,7 +231,7 @@ function IssueList()
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$row['tags'] = explode(', ', $row['tags']);
-		array_walk($row['tags'], 'link_tags', $tags_url);
+		array_walk($row['tags'], 'link_tags', $baseurl);
 
 		$context['issues'][] = array(
 			'id' => $row['id_issue'],

@@ -1049,12 +1049,68 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 	return $return;
 }
 
+// Returns default filter
+function getIssuesFilter($mode = 'default', $options = array())
+{
+	$filter = array(
+		'title' => '',
+		'status' => 'all',
+		'tag' => '',
+		'tracker' => '',
+		'version' => null,
+		'version_fixed' => null,
+		'category' => null,
+		'reporter' => null,
+		'assignee' => null,
+	);
+	
+	if ($mode == 'request')
+	{
+		if (!empty($_REQUEST['title']))
+			$filter['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
+	
+		if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
+			$filter['tracker'] = $_REQUEST['tracker'];
+	
+		if (isset($_REQUEST['category']))
+			$filter['category'] = $_REQUEST['category'];
+	
+		if (isset($_REQUEST['reporter']))
+			$filter['reporter'] = $_REQUEST['reporter'];
+	
+		if (isset($_REQUEST['assignee']))
+			$filter['assignee'] = $_REQUEST['assignee'];
+	
+		if (isset($_REQUEST['version']))
+		{
+			$_REQUEST['version'] = (int) trim($_REQUEST['version']);
+			$filter['version'] = $_REQUEST['version'];
+		}
+	
+		if (isset($_REQUEST['version_fixed']))
+		{
+			$_REQUEST['version_fixed'] = (int) trim($_REQUEST['version_fixed']);
+			$filter['version_fixed'] = $_REQUEST['version_fixed'];
+		}
+	
+		if (!empty($_REQUEST['status']))
+			$filter['status'] = $_REQUEST['status'];
+			
+		if (!empty($_REQUEST['tag']))
+			$filter['tag'] = $_REQUEST['tag'];
+	}
+	
+	return $filter;
+}
+
+function createIssueList($issueListOptions)
+{
+	
+}
+
 function link_tags(&$tag, $key, $baseurl)
 {
-	if (is_array($baseurl))
-		$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
-	else
-		$tag = '<a href="' . $baseurl . ';tag=' . urlencode($tag) . '">' . $tag . '</a>';
+	$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
 }
 
 function getVersions($versions, $as_string = false)
