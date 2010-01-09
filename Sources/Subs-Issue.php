@@ -95,7 +95,7 @@ function loadIssue()
 		'category' => array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		),
 		'versions' => getVersions(explode(',', $row['versions'])),
 		'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
@@ -1014,7 +1014,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions'])),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),

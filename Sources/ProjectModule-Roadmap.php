@@ -44,12 +44,12 @@ class ProjectModule_Roadmap
 		global $project, $context, $txt;
 		
 		$tabs['roadmap'] = array(
-			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
+			'href' => project_get_url(array('project' => $project, 'area' => 'roadmap')),
 			'title' => $txt['roadmap'],
 			'is_selected' => false,
 			'linktree' => array(
 				'name' => $txt['linktree_roadmap'],
-				'url' => project_get_url(array('project' => $project, 'sa' => 'roadmap')),
+				'url' => project_get_url(array('project' => $project, 'area' => 'roadmap')),
 			),
 		);
 	}
@@ -69,7 +69,7 @@ class ProjectModule_Roadmap
 		global $context, $project, $user_info, $smcFunc, $txt;
 	
 		// Canonical url for search engines
-		$context['canonical_url'] = project_get_url(array('project' => $project, 'sa' => 'roadmap'));
+		$context['canonical_url'] = project_get_url(array('project' => $project, 'area' => 'roadmap'));
 		
 		$ids = array(0);
 		$context['roadmap'] = array();
@@ -110,7 +110,7 @@ class ProjectModule_Roadmap
 			$context['roadmap'][$row['id_version']] = array(
 				'id' => $row['id_version'],
 				'name' => $row['version_name'],
-				'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version'])),
+				'href' => project_get_url(array('project' => $project, 'area' => 'roadmap', 'version' => $row['id_version'])),
 				'description' => parse_bbc($row['description']),
 				'release_date' => vsprintf($txt[$time[0]], $time[1]),
 				'issues' => array(
@@ -137,7 +137,7 @@ class ProjectModule_Roadmap
 		$context['roadmap'][0] = array(
 			'id' => 0,
 			'name' => $txt['version_na'],
-			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => 0)),
+			'href' => project_get_url(array('project' => $project, 'area' => 'roadmap', 'version' => 0)),
 			'description' => $txt['version_na_desc'],
 			'release_date' => $txt['roadmap_no_release_date'],
 			'issues' => array(
@@ -193,7 +193,7 @@ class ProjectModule_Roadmap
 			fatal_lang_error('version_not_found', false);
 	
 		// Canonical url for search engines
-		$context['canonical_url'] = project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version']));
+		$context['canonical_url'] = project_get_url(array('project' => $project, 'area' => 'roadmap', 'version' => $row['id_version']));
 		
 		// Make release date string
 		if (!empty($row['release_date']))
@@ -213,7 +213,7 @@ class ProjectModule_Roadmap
 		$context['version'] = array(
 			'id' => $row['id_version'],
 			'name' => $row['version_name'],
-			'href' => project_get_url(array('project' => $project, 'sa' => 'roadmap', 'version' => $row['id_version'])),
+			'href' => project_get_url(array('project' => $project, 'area' => 'roadmap', 'version' => $row['id_version'])),
 			'description' => parse_bbc($row['description']),
 			'release_date' => vsprintf($txt[$time[0]], $time[1]),
 			'versions' => array(),
@@ -240,7 +240,7 @@ class ProjectModule_Roadmap
 	
 		// Load Issues
 		$context['issues'] = getIssueList(0, 10, 'i.updated DESC', 'FIND_IN_SET(i.versions, {int:version})', array('version' => (int) $context['version']['id']));
-		$context['issues_href'] = project_get_url(array('project' => $project, 'sa' => 'issues', 'version_fixed' => $context['version']['id']));
+		$context['issues_href'] = project_get_url(array('project' => $project, 'area' => 'issues', 'version_fixed' => $context['version']['id']));
 	
 		// Template
 		$context['sub_template'] = 'project_roadmap_version';

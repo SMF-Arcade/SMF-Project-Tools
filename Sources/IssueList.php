@@ -65,7 +65,7 @@ function IssueList()
 
 	$baseurl = array(
 		'project' => $context['project']['id'],
-		'sa' => 'issues'
+		'area' => 'issues'
 	);
 
 	// Build Search info
@@ -282,7 +282,7 @@ function IssueList()
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions'])),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),

@@ -93,7 +93,7 @@ function ProjectList()
 				'closed' => $row['closed_' . $tracker['short']],
 				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
 				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
-				'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
+				'link' => project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
 			);
 			unset($tracker);
 		}

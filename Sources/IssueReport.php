@@ -117,7 +117,7 @@ function ReportIssue()
 	create_control_richedit($editorOptions);
 
 	$context['post_box_name'] = $editorOptions['id'];
-	$context['destination'] = 'reportIssue2';
+	$context['destination'] = 'report2';
 
 	$context['show_version'] = !empty($context['versions']);
 	$context['show_category'] = !empty($context['project']['category']);
@@ -126,7 +126,7 @@ function ReportIssue()
 
 	$context['linktree'][] = array(
 		'name' => $txt['linktree_report_issue'],
-		'url' => project_get_url(array('project' => $project, 'sa' => 'reportIssue')),
+		'url' => project_get_url(array('project' => $project, 'area' => 'issues', 'sa' => 'report')),
 	);
 
 	// Template
@@ -261,7 +261,7 @@ function ReportIssue2()
 
 	cache_put_data('project-' . $project, null, 120);
 
-	redirectexit(project_get_url(array('project' => $project, 'sa' => 'issues')));
+	redirectexit(project_get_url(array('project' => $project, 'area' => 'issues')));
 }
 
 function IssueUpdate()

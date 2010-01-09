@@ -50,7 +50,7 @@ function loadIssueView()
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 	
 	// URL for posting updates from ajax
-	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
+	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 	
 	// Tags
 	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
@@ -100,7 +100,7 @@ function IssueView()
 		$context['current_tags'][] = array(
 			'id' => urlencode($row['tag']),
 			'tag' => $row['tag'],
-			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 		);
 
 	loadIssueView();
@@ -727,7 +727,7 @@ function IssueDelete()
 
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
-	redirectexit(project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues')));
+	redirectexit(project_get_url(array('project' => $context['project']['id'], 'area' => 'issues')));
 }
 
 ?>

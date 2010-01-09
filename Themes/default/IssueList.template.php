@@ -76,7 +76,7 @@ function template_issue_list()
 		'reportIssue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
-			'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'reportIssue')),
+			'url' => project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'sa' => 'report')),
 			'lang' => true,
 			'test' => 'can_report_issues',
 		),
@@ -119,7 +119,7 @@ function template_issue_list()
 			echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', project_get_url(array('project' => $context['project']['id'], 'sa' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+						<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
 							<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 						</a>
 					</td>

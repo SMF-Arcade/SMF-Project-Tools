@@ -167,11 +167,11 @@ function Projects($standalone = false)
 					'callback' => 'IssueDeleteComment',
 				),
 				// Report Issue
-				'reportIssue' => array(
+				'report' => array(
 					'file' => 'IssueReport.php',
 					'callback' => 'ReportIssue',
 				),
-				'reportIssue2' => array(
+				'report2' => array(
 					'file' => 'IssueReport.php',
 					'callback' => 'ReportIssue2',
 				),				
@@ -191,12 +191,12 @@ function Projects($standalone = false)
 				'order' => 'first',
 			),
 			'issues' => array(
-				'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+				'href' => project_get_url(array('project' => $project, 'area' => 'issues')),
 				'title' => $txt['issues'],
 				'is_selected' => false,
 				'linktree' => array(
 					'name' => $txt['linktree_issues'],
-					'url' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+					'url' => project_get_url(array('project' => $project, 'area' => 'issues')),
 				),
 				'order' => 10,
 			)

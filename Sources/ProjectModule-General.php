@@ -49,28 +49,28 @@ class ProjectModule_General
 		$issue_list = array(
 			'recent_issues' => array(
 				'title' => 'recent_issues',
-				'href' => project_get_url(array('project' => $project, 'sa' => 'issues')),
+				'href' => project_get_url(array('project' => $project, 'area' => 'issues')),
 				'order' => 'i.updated DESC',
 				'where' => '1 = 1',
 				'show' => projectAllowedTo('issue_view'),
 			),
 			'my_reports' => array(
 				'title' => 'reported_by_me',
-				'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'reporter' => $user_info['id'])),
+				'href' => project_get_url(array('project' => $project, 'area' => 'issues', 'reporter' => $user_info['id'])),
 				'order' => 'i.updated DESC',
 				'where' => 'i.id_reporter = {int:current_member}',
 				'show' => projectAllowedTo('issue_report'),
 			),
 			'assigned' => array(
 				'title' => 'assigned_to_me',
-				'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'assignee' => $user_info['id'])),
+				'href' => project_get_url(array('project' => $project, 'area' => 'issues', 'assignee' => $user_info['id'])),
 				'order' => 'i.updated DESC',
 				'where' => 'i.id_assigned = {int:current_member} AND NOT (i.status IN ({array_int:closed_status}))',
 				'show' => projectAllowedTo('issue_resolve'),
 			),
 			'new_issues' => array(
 				'title' => 'new_issues',
-				'href' => project_get_url(array('project' => $project, 'sa' => 'issues', 'status' => 1,)),
+				'href' => project_get_url(array('project' => $project, 'area' => 'issues', 'status' => 1,)),
 				'order' => 'i.created DESC',
 				'where' => 'i.status = 1',
 				'show' => projectAllowedTo('issue_view'),
