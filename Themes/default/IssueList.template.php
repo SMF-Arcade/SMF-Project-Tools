@@ -85,36 +85,51 @@ function template_issue_list()
 	echo '
 		', template_button_strip($buttons, 'right'), '
 		<div class="middletext pagelinks">
-			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '	
-		</div>
-		<div class="issue_table">
-			<table cellspacing="0" class="table_grid">
-				<thead>
-					<tr>';
+			', $txt['pages'], ': ', $context[$context['issue_list_id']]['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '	
+		</div>';
+		
+		template_issue_list_full($context['issue_list_id']);
+		
+	echo '
+		', template_button_strip($buttons, 'right'), '
+		<div class="middletext pagelinks">
+			', $txt['pages'], ': ', $context[$context['issue_list_id']]['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '
+		</div>';
+}
 
-		if (!empty($context['issues']))
+function template_issue_list_full($id)
+{
+	global $context, $settings;
+	
+	echo '
+	<div class="issue_table">
+		<table cellspacing="0" class="table_grid">
+			<thead>
+				<tr>';
+
+		if (!empty($context[$id]['issues']))
 			echo '
-						<th scope="col" class="smalltext first_th"></th>
-						<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
-						<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
-						<th scope="col" class="smalltext">', $txt['issue_status'], '</th>
-						<th scope="col" class="smalltext">', $txt['issue_version'], '</th>
-						<th scope="col" class="smalltext">', $txt['issue_version_fixed'], '</th>
-						<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
+					<th scope="col" class="smalltext first_th"></th>
+					<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
+					<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
+					<th scope="col" class="smalltext">', $txt['issue_status'], '</th>
+					<th scope="col" class="smalltext">', $txt['issue_version'], '</th>
+					<th scope="col" class="smalltext">', $txt['issue_version_fixed'], '</th>
+					<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-						<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
-						<th class="smalltext" colspan="5"><strong>', $txt['issue_no_issues'], '</strong></th>
-						<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
+					<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+					<th class="smalltext" colspan="5"><strong>', $txt['issue_no_issues'], '</strong></th>
+					<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
 
 		echo '
-					</tr>
-				</thead>
-				<tbody>';
+				</tr>
+			</thead>
+			<tbody>';
 
-	if (!empty($context['issues']))
+	if (!empty($context[$id]['issues']))
 	{
-		foreach ($context['issues'] as $issue)
+		foreach ($context[$id]['issues'] as $issue)
 		{
 			echo '
 				<tr>
@@ -126,12 +141,13 @@ function template_issue_list()
 					<td class="windowbg2 info">
 						<h4>
 							', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', $issue['link'], ' ';
-						// Is this topic new? (assuming they are logged in!)
+			// Is this topic new? (assuming they are logged in!)
 			if ($issue['new'] && $context['user']['is_logged'])
-					echo '
+				echo '
 							<a href="', $issue['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
 
-			echo '		</h4>
+			echo '
+						</h4>
 						<p class="floatright smalltext">', implode(' &nbsp;', $issue['tags']), '</p>
 						<p class="smalltext">', $issue['reporter']['link'], '</p>
 					</td>
@@ -192,13 +208,9 @@ function template_issue_list()
 	}
 
 	echo '
-				</tbody>
-			</table>
-		</div>
-		', template_button_strip($buttons, 'right'), '
-		<div class="middletext pagelinks">
-			', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '
-		</div>';
+			</tbody>
+		</table>
+	</div>';
 }
 
 ?>

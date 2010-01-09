@@ -63,11 +63,6 @@ function IssueList()
 		$context['sort_direction'] = $ascending ? 'up' : 'down';
 	}
 
-	$baseurl = array(
-		'project' => $context['project']['id'],
-		'area' => 'issues'
-	);
-
 	$context['possible_types'] = array();
 
 	foreach ($context['project']['trackers'] as $tracker)
@@ -76,204 +71,55 @@ function IssueList()
 	// Get default filter for comparsion purposes
 	$defaultFilter = getIssuesFilter();
 	
-	// Build Search info
-	$context['issue_search'] = getIssuesFilter('request');
-
-	// Add filter's to url if it's non-default
-	if ($defaultFilter['title'] != $context['issue_search']['title'])
-		$baseurl['tilte'] = $context['issue_search']['title'];
-
-	if ($defaultFilter['tracker'] != $context['issue_search']['tracker'])
-		$baseurl['tracker'] = $context['issue_search']['tracker'];
-
-	if ($defaultFilter['category'] != $context['issue_search']['category'])
-		$baseurl['category'] = $context['issue_search']['category'];
-
-	if ($defaultFilter['reporter'] != $context['issue_search']['reporter'])
-		$baseurl['reporter'] = $context['issue_search']['reporter'];
-
-	if ($defaultFilter['assignee'] != $context['issue_search']['assignee'])
-		$baseurl['assignee'] = $context['issue_search']['assignee'];
-
-	if ($defaultFilter['version'] != $context['issue_search']['version'])
-		$baseurl['version'] = $context['issue_search']['version'];
-
-	if ($defaultFilter['version_fixed'] != $context['issue_search']['version_fixed'])
-		$baseurl['version_fixed'] = $context['issue_search']['version_fixed'];
-
-	if ($defaultFilter['status'] != $context['issue_search']['status'])
-		$baseurl['status'] = $context['issue_search']['status'];
-
-	if ($defaultFilter['tag'] != $context['issue_search']['tag'])
-		$baseurl['tag'] = $context['issue_search']['tag'];
+	// Build Issue list options
+	$issueListOptions = array(
+		'id' => 'issue_list',
+		'base_url' => array(
+			'project' => $context['project']['id'],
+			'area' => 'issues'
+		),
+		'filter' => getIssuesFilter('request'),
+		'start' => $_REQUEST['start'],
+		'page_index' => true,
+		'sort' => $_REQUEST['sort'],
+		'ascending' => $ascending,
+	);
 	
-	// Build where clause
-	$where = array();
+	// Add filter's to url if it's non-default
+	if ($defaultFilter['title'] != $issueListOptions['filter']['title'])
+		$issueListOptions['base_url']['tilte'] = $issueListOptions['filter']['title'];
 
-	if ($context['issue_search']['status'] == 'open')
-		$where[] = 'NOT (i.status IN ({array_int:closed_status}))';
-	elseif ($context['issue_search']['status'] == 'closed')
-		$where[] = 'i.status IN ({array_int:closed_status})';
-	elseif (is_numeric($context['issue_search']['status']))
-		$where[] = 'i.status IN ({int:search_status})';
+	if ($defaultFilter['tracker'] != $issueListOptions['filter']['tracker'])
+		$issueListOptions['base_url']['tracker'] = $issueListOptions['filter']['tracker'];
 
-	if (!empty($context['issue_search']['title']))
-		$where[] = 'i.subject LIKE {string:search_title}';
+	if ($defaultFilter['category'] != $issueListOptions['filter']['category'])
+		$issueListOptions['base_url']['category'] = $issueListOptions['filter']['category'];
 
-	if (!empty($context['issue_search']['tracker']))
-		$where[] = 'i.id_tracker = {int:search_tracker}';
+	if ($defaultFilter['reporter'] != $issueListOptions['filter']['reporter'])
+		$issueListOptions['base_url']['reporter'] = $issueListOptions['filter']['reporter'];
 
-	if (isset($context['issue_search']['category']))
-		$where[] = 'i.id_category = {int:search_category}';
+	if ($defaultFilter['assignee'] != $issueListOptions['filter']['assignee'])
+		$issueListOptions['base_url']['assignee'] = $issueListOptions['filter']['assignee'];
 
-	if (isset($context['issue_search']['reporter']))
-		$where[] = 'i.id_reporter = {int:search_reporter}';
+	if ($defaultFilter['version'] != $issueListOptions['filter']['version'])
+		$issueListOptions['base_url']['version'] = $issueListOptions['filter']['version'];
 
-	if (isset($context['issue_search']['assignee']))
-		$where[] = 'i.id_assigned = {int:search_assignee}';
+	if ($defaultFilter['version_fixed'] != $issueListOptions['filter']['version_fixed'])
+		$issueListOptions['base_url']['version_fixed'] = $issueListOptions['filter']['version_fixed'];
 
-	if (isset($context['issue_search']['version']))
-		$where[] = '(FIND_IN_SET({int:search_version}, i.versions))';
+	if ($defaultFilter['status'] != $issueListOptions['filter']['status'])
+		$issueListOptions['base_url']['status'] = $issueListOptions['filter']['status'];
 
-	if (isset($context['issue_search']['version_fixed']))
-		$where[] = '(FIND_IN_SET({int:search_version_f}, i.versions_fixed))';
+	if ($defaultFilter['tag'] != $issueListOptions['filter']['tag'])
+		$issueListOptions['base_url']['tag'] = $issueListOptions['filter']['tag'];
+		
+	$context['issue_list_id'] = createIssueList($issueListOptions);
+	
+	$context['canonical_url'] = $context[$context['issue_list_id']]['canonical_url'];
 
 	$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
 	$context['can_report_issues'] = projectAllowedTo('issue_report');
-
-	// How many issues?
-	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*)
-		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
-			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
-				AND stag.tag = {string:search_tag})' : '') . '
-		WHERE {query_see_issue_project}
-			AND i.id_project = {int:project}' . (!empty($where) ? '
-			AND (' . implode(')
-			AND (', $where) . ')' : '') . '',
-		array(
-			'project' => $context['project']['id'],
-			'closed_status' => $context['closed_status'],
-			'search_status' => $context['issue_search']['status'],
-			'search_title' => '%' . $context['issue_search']['title'] . '%',
-			'search_version' => $context['issue_search']['version'],
-			'search_version_f' => $context['issue_search']['version_fixed'],
-			'search_category' => $context['issue_search']['category'],
-			'search_assignee' => $context['issue_search']['assignee'],
-			'search_reporter' => $context['issue_search']['reporter'],
-			'search_tracker' => $context['issue_search']['tracker'],
-			'search_tag' => $context['issue_search']['tag'],
-		)
-	);
-
-	list ($issueCount) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	$context['page_index'] = constructPageIndex(project_get_url($baseurl), $_REQUEST['start'], $issueCount, $context['issues_per_page']);
-
-	// Canonical url for search engines
-	if (!empty($_REQUEST['start']))
-		$context['canonical_url'] = project_get_url(array_merge($baseurl, array('start' => $_REQUEST['start'])));
-	else
-		$context['canonical_url'] = project_get_url($baseurl);
 	
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			i.id_issue, p.id_project, i.id_tracker, i.subject, i.priority,
-			i.status, i.created, i.updated, i.id_event_mod, i.replies,
-			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
-			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
-			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
-			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
-			i.versions, i.versions_fixed,
-			GROUP_CONCAT(tags.tag SEPARATOR \', \') AS tags,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . '
-		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($context['issue_search']['tag']) ? '
-			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
-				AND stag.tag = {string:search_tag})' : '') . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
-			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = p.id_project AND lmr.id_member = {int:current_member})') . '
-			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
-			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
-			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
-			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
-			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
-		WHERE {query_see_issue_project}
-			AND i.id_project = {int:project}' . (!empty($where) ? '
-			AND ' . implode('
-			AND ', $where) : '') . '
-		GROUP BY i.id_issue
-		ORDER BY ' . $_REQUEST['sort']. (!$ascending ? ' DESC' : '') . '
-		LIMIT {int:start},' . $context['issues_per_page'],
-		array(
-			'project' => $context['project']['id'],
-			'empty' => '',
-			'start' => $_REQUEST['start'],
-			'current_member' => $user_info['id'],
-			'closed_status' => $context['closed_status'],
-			'search_version' => $context['issue_search']['version'],
-			'search_version_f' => $context['issue_search']['version_fixed'],
-			'search_status' => $context['issue_search']['status'],
-			'search_title' => '%' . $context['issue_search']['title'] . '%',
-			'search_category' => $context['issue_search']['category'],
-			'search_assignee' => $context['issue_search']['assignee'],
-			'search_reporter' => $context['issue_search']['reporter'],
-			'search_tracker' => $context['issue_search']['tracker'],
-			'search_tag' => $context['issue_search']['tag'],
-		)
-	);
-
-	$context['issues'] = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$row['tags'] = explode(', ', $row['tags']);
-		array_walk($row['tags'], 'link_tags', $baseurl);
-
-		$context['issues'][] = array(
-			'id' => $row['id_issue'],
-			'name' => $row['subject'],
-			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
-			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
-			'category' => array(
-				'id' => $row['id_category'],
-				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
-			),
-			'versions' => getVersions(explode(',', $row['versions'])),
-			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
-			'tags' => $row['tags'],
-			'tracker' => &$context['issue_trackers'][$row['id_tracker']],
-			'updated' => timeformat($row['updated']),
-			'created' => timeformat($row['created']),
-			'status' => &$context['issue_status'][$row['status']],
-			'reporter' => array(
-				'id' => $row['id_reporter'],
-				'name' => $row['reporter_name'],
-				'link' => !empty($row['id_reporter']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_reporter'] . '">' . $row['reporter_name'] . '</a>' : $row['reporter_name'],
-			),
-			'is_assigned' => !empty($row['id_assigned']),
-			'assigned' => array(
-				'id' => $row['id_assigned'],
-				'name' => $row['assigned_name'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_assigned'] . '">' . $row['assigned_name'] . '</a>',
-			),
-			'updater' => array(
-				'id' => $row['id_updater'],
-				'name' => empty($row['updater']) ? $txt['issue_guest'] : $row['updater'],
-				'link' => empty($row['updater']) ? $txt['issue_guest'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_updater'] . '">' . $row['updater'] . '</a>',
-			),
-			'replies' => comma_format($row['replies']),
-			'priority' => $row['priority'],
-			'new' => $row['new_from'] <= $row['id_event_mod'],
-			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
 	// Template
 	$context['sub_template'] = 'issue_list';
 	$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
