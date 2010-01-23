@@ -1,5 +1,5 @@
 <?php
-// Version: 0.4; Project
+// Version: 0.4.2; Project
 
 function template_project_above()
 {
@@ -129,7 +129,7 @@ function template_project_below()
 	// Print out copyright and version. Removing copyright is not allowed by license
 	echo '
 	<div id="project_bottom" class="smalltext" style="text-align: center;">
-		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2009
+		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2010
 	</div>';
 }
 

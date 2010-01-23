@@ -87,6 +87,7 @@
 	
 	<upgrade for="2.0 RC2" from="0.4001">
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<modification format="xml" type="file">update042.xml</modification>
 	</upgrade>
 	

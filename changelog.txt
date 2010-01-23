@@ -1,6 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
+SMF Project Tools 0.4.2                                               06.02.2010
+================================================================================
+December 2009
+--------------------------------------------------------------------------------
+ ! Fixed Permissions issue
+ 
 SMF Project Tools 0.4.1                                               26.12.2009
 ================================================================================
 November 2009
