@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4.1                             *
+* Software Version:           SMF Project Tools 0.4.2                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -387,7 +387,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 	// Updates needed?
 	if (empty($issueUpdates))
-		return true;
+		return !$return_log ? true : $event_data;
 
 	$issueUpdates[] = 'updated = {int:time}';
 	$issueOptions['time'] = time();
