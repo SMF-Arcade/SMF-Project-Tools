@@ -557,7 +557,7 @@ function IssueUpload()
 			'name' => $_FILES['attachment']['name'][$n],
 			'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 			'size' => $_FILES['attachment']['size'][$n],
-			'approved' => !$modSettings['postmod_active'] || allowedTo('post_attachment'),
+			'approved' => true,
 		);
 
 		if (createAttachment($attachmentOptions))
