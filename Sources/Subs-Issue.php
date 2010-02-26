@@ -387,7 +387,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 
 	// Updates needed?
 	if (empty($issueUpdates))
-		return true;
+		return !$return_log ? true : $event_data;
 
 	$issueUpdates[] = 'updated = {int:time}';
 	$issueOptions['time'] = time();
