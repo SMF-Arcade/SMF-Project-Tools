@@ -455,7 +455,7 @@ function ptMaintenanceIssues2($check = false)
 		WHERE ISNULL(mem.id_member)');
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$deletedMembers[$row['id_member']] = $row['id_member'];
+		$deletedMembers[$row['id_reporter']] = $row['id_reporter'];
 	$smcFunc['db_free_result']($request);
 	
 	// Updaters
@@ -466,7 +466,7 @@ function ptMaintenanceIssues2($check = false)
 		WHERE ISNULL(mem.id_member)');
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$deletedMembers[$row['id_member']] = $row['id_member'];
+		$deletedMembers[$row['id_updater']] = $row['id_updater'];
 	$smcFunc['db_free_result']($request);
 	
 	// Commenters
