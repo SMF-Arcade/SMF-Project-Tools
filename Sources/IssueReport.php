@@ -606,7 +606,7 @@ function IssueUpload()
 		'time' => time(),
 	);
 
-	$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_attachment', serialize(array('attachments' => $attachIDs)), $posterOptions, $eventOptions);
+	$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_attachment', array('attachments' => $attachIDs), $posterOptions, $eventOptions);
 
 	$rows = array();
 
