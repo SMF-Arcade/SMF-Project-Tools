@@ -20,7 +20,7 @@ function template_project_roadmap()
 					<div style="width: ', $version['progress'], '%"></div>
 				</div>
 				<div class="smalltext">
-					<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'status' => 'open', 'version_fixed' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
+					<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'status' => 'open', 'versions' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
 					<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'status' => 'closed', 'version_fixed' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
 				</div>
 				<p>
