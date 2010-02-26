@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4                               *
+* Software Version:           SMF Project Tools 0.4.2                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -434,7 +434,7 @@ function ptMaintenanceIssues2($check = false)
 		WHERE ISNULL(mem.id_member)');
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$deletedMembers[$row['id_member']] = $row['id_member'];
+		$deletedMembers[$row['id_reporter']] = $row['id_reporter'];
 	$smcFunc['db_free_result']($request);
 	
 	// Updaters
@@ -445,7 +445,7 @@ function ptMaintenanceIssues2($check = false)
 		WHERE ISNULL(mem.id_member)');
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$deletedMembers[$row['id_member']] = $row['id_member'];
+		$deletedMembers[$row['id_updater']] = $row['id_updater'];
 	$smcFunc['db_free_result']($request);
 	
 	// Commenters
