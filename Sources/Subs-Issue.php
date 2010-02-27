@@ -858,7 +858,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		WHERE id_issue = {int:issue}',
 		array(
 			'event' => $id_event,
-			'current_user' => $user_info['id'],
+			'current_user' => $posterOptions['id'],
 			'issue' => $id_issue,
 			'time' => $time,
 			'comment' => $id_comment,
