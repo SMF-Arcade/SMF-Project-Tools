@@ -866,7 +866,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		$id_event = $event_data['id_event'];
 	// Temp
 	else
-		fatal_error('Missing id_event from createComment call');
+		trigger_error('Missing id_event from createComment call', E_FATAL_ERROR);
 
 	// !!! Is updating id_event_mod needed?
 
@@ -880,7 +880,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		WHERE id_issue = {int:issue}',
 		array(
 			'event' => $id_event,
-			'current_user' => $user_info['id'],
+			'current_user' => $posterOptions['id'],
 			'issue' => $id_issue,
 			'time' => $time,
 			'comment' => $id_comment,
