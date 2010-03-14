@@ -22,7 +22,7 @@
 	<version>{version}</version>
 	<type>modification</type>
 
-	<install for="2.0 RC2">
+	<install for="2.0 RC2, 2.0 RC3">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -85,23 +85,32 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 	
-	<upgrade for="2.0 RC2" from="0.4001">
+	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4001">
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		
 		<modification format="xml" type="file">update042.xml</modification>
 	</upgrade>
 	
-	<upgrade for="2.0 RC2" from="0.4">
+	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4">
 		<!-- These files goes to Sources directory -->
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		
 		<modification format="xml" type="file">update042.xml</modification>
 	</upgrade>
 
-	<uninstall for="2.0 RC2">
+	<uninstall for="2.0 RC2, 2.0 RC3">
 		<!-- Remove code modifications -->
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
