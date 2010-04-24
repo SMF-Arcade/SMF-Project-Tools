@@ -27,7 +27,7 @@ if (!defined('SMF'))
 	!!!
 */
 
-$moduleInformation = array(
+$extensionInformation = array(
 	'title' => 'Admin',
 	'version' => '0.5',
 	'api_version' => 1,

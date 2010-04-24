@@ -27,7 +27,7 @@ if (!defined('SMF'))
 	!!!
 */
 
-$moduleInformation = array(
+$extensionInformation = array(
 	'title' => 'Issue Tracker',
 	'version' => '0.5',
 	'api_version' => 1,

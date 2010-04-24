@@ -31,8 +31,8 @@ $addSettings = array(
 	'issuesPerPage' => array(25, false),
 	'commentsPerPage' => array(20, false),
 	'projectEnabled' => array(true, false),
+	'projectExtensions' => array('admin,general,issues,roadmap', false),
 	'projectAttachments' => array(true, false),
-	'projectModules' => array('admin,general,issues,roadmap', false),
 	'linkIssues' => array(true, false),
 );
 

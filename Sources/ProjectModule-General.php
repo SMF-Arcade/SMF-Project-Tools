@@ -27,6 +27,12 @@ if (!defined('SMF'))
 	!!!
 */
 
+$extensionInformation = array(
+	'title' => 'General',
+	'version' => '0.5',
+	'api_version' => 1,
+);
+
 register_project_feature('general', 'ProjectModule_General');
 
 class ProjectModule_General

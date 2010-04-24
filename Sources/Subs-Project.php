@@ -61,14 +61,14 @@ function loadProjectTools()
 	else
 		$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
 		
-	// Load Project Tools Modules
+	// Load Project Tools Extensions
 	$context['project_modules'] = array();
-	$context['project_modules_information'] = array();
+	$context['project_extensions'] = array();
 	
-	$modSettings['projectModules'] = !empty($modSettings['projectModules']) ? explode(',', $modSettings['projectModules']) : array('admin', 'general', 'issues', 'roadmap');
+	$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'general', 'issues', 'roadmap');
 
-	foreach ($modSettings['projectModules'] as $module)
-		loadProjectModule($module);
+	foreach ($modSettings['projectModules'] as $extension)
+		loadProjectToolsExtension($extension);
 
 	// Administrators can see all projects.
 	if ($user_info['is_admin'] || allowedTo('project_admin'))
@@ -1359,37 +1359,66 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
-function loadProjectModule($name, $active = true)
+function loadProjectToolsExtension($name, $active = true)
 {
-	global $context, $modules;
+	global $context, $modules, $extensionInformation;
 	
-	if (!isset($context['project_modules_information'][$name]))
+	if (!isset($context['project_extensions'][$name]))
 	{
 		$modules = array();
 		
 		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($name) . '.php');
-		$context['project_modules_information'][$name] = $moduleInformation;
-		$context['project_modules_information'][$name]['modules'] = $modules;
+		$context['project_extensions'][$name] = $extensionInformation;
+		$context['project_extensions'][$name]['modules'] = $modules;
 		
 		unset($modules);
 	}
 	
 	if (!$active)
-		return $context['project_modules_information'][$name];
+		return $context['project_extensions'][$name];
 	
-	foreach ($context['project_modules_information'][$name]['modules'] as $id => $module)
+	foreach ($context['project_extensions'][$name]['modules'] as $id => $module)
 		$context['project_modules'][$id] = $module;
 		
-	return $context['project_modules_information'][$name];
+	return $context['project_extensions'][$name];
 }
 
 function register_project_feature($module, $class_name)
 {
-	global $modules, $moduleInformation;
+	global $modules, $extensionInformation;
 	
 	$modules[$module] = array(
 		'class_name' => $class_name,
 	);
+}
+
+function getInstalledExtensions()
+{
+	global $sourcedir, $smcFunc;
+
+	$extensions = array();
+	if ($dh = opendir($sourcedir))
+	{
+		while (($file = readdir($dh)) !== false)
+		{
+			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
+			{
+				$extensionInformation = loadProjectToolsExtension(strtolower($matches[1]), false);
+				
+				$extensions[strtolower($matches[1])] = array(
+					'id' => strtolower($matches[1]),
+					'name' => $extensionInformation['title'],
+					'version' => $extensionInformation['version'],
+					'api_version' => $extensionInformation['api_version'],
+					'modules' => $extensionInformation['modules'],
+					'filename' => $file,
+				);
+			}
+		}
+	}
+	closedir($dh);
+
+	return $extensions;
 }
 
 function getInstalledModules()
@@ -1403,16 +1432,14 @@ function getInstalledModules()
 		{
 			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
 			{
-				$moduleInformation = loadProjectModule(strtolower($matches[1]), false);
+				$extensionInformation = loadProjectToolsExtension(strtolower($matches[1]), false);
 				
-				$modules[strtolower($matches[1])] = array(
-					'id' => strtolower($matches[1]),
-					'name' => $moduleInformation['title'],
-					'version' => $moduleInformation['version'],
-					'api_version' => $moduleInformation['api_version'],
-					'modules' => $moduleInformation['modules'],
-					'filename' => $file,
-				);
+				foreach ($extensionInformation['modules'] as $id => $module)
+					$modules[$id] = array(
+						'id' => strtolower($matches[1]),
+						'name' => $id,
+						'provided_by' => strtolower($matches[1]),
+					);
 			}
 		}
 	}
