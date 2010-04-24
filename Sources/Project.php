@@ -204,9 +204,9 @@ function Projects($standalone = false)
 	);
 
 	// Let Modules register subAreas
-	if (!empty($context['project_modules']))
+	if (!empty($context['active_project_modules']))
 	{
-		foreach ($context['project_modules'] as $id => $module)
+		foreach ($context['active_project_modules'] as $id => $module)
 		{
 			if (method_exists($module, 'RegisterProjectArea'))
 			{
@@ -224,9 +224,9 @@ function Projects($standalone = false)
 	}
 	
 	// Let Modules register subactions to areas
-	if (!empty($context['project_modules']))
+	if (!empty($context['active_project_modules']))
 	{
-		foreach ($context['project_modules'] as $id => $module)
+		foreach ($context['active_project_modules'] as $id => $module)
 		{
 			if (method_exists($module, 'RegisterProjectSubactions'))
 			{
@@ -275,7 +275,7 @@ function Projects($standalone = false)
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 	
 	$current_area = &$subAreas[$_REQUEST['area']];
-	$context['current_project_module'] = &$context['project_modules'][$current_area['module']];
+	$context['current_project_module'] = &$context['active_project_modules'][$current_area['module']];
 	
 	if (isset($context['project_tabs']['tabs'][$current_area['tab']]))
 		$context['project_tabs']['tabs'][$current_area['tab']]['is_selected'] = true;

@@ -27,10 +27,18 @@ if (!defined('SMF'))
 	!!!
 */
 
+$moduleInformation = array(
+	'title' => 'Roadmap',
+	'version' => '0.5',
+	'api_version' => 1,
+);
+
+register_project_feature('roadmap', 'ProjectModule_Roadmap');
+
 class ProjectModule_Roadmap
 {
 	function RegisterProjectSubactions()
-	{	
+	{
 		return array(
 			'roadmap' => array(
 				'callback' => array($this, 'ProjectRoadmap'),

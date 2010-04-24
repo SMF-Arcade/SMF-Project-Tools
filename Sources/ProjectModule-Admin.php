@@ -27,6 +27,14 @@ if (!defined('SMF'))
 	!!!
 */
 
+$moduleInformation = array(
+	'title' => 'Admin',
+	'version' => '0.5',
+	'api_version' => 1,
+);
+
+register_project_feature('admin', 'ProjectModule_Admin');
+
 class ProjectModule_Admin
 {
 	public $title = 'Admin';

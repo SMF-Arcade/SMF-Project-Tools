@@ -27,6 +27,8 @@ if (!defined('SMF'))
 	!!!
 */
 
+register_project_feature('general', 'ProjectModule_General');
+
 class ProjectModule_General
 {
 	function __construct()

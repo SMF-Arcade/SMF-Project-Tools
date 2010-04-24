@@ -90,9 +90,9 @@ function ProjectView()
 	$frontpage_blocks = array();
 	
 	// Let Modules register Frontpage blocks
-	if (!empty($context['project_modules']))
+	if (!empty($context['active_project_modules']))
 	{
-		foreach ($context['project_modules'] as $module)
+		foreach ($context['active_project_modules'] as $module)
 			if (method_exists($module, 'RegisterProjectFrontpageBlocks'))
 				$module->RegisterProjectFrontpageBlocks($frontpage_blocks);
 	}

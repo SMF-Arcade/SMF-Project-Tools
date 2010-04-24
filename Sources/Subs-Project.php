@@ -29,7 +29,7 @@ if (!defined('SMF'))
 
 function loadProjectTools()
 {
-	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue, $projects_show;
+	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue, $projects_show, $moduleInformation;
 
 	if (!empty($project_version))
 		return;
@@ -60,6 +60,19 @@ function loadProjectTools()
 		$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
 	else
 		$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
+		
+	// Load Project Tools Modules
+	$context['project_modules'] = array();
+	$context['project_modules_information'] = array();
+	
+	$modSettings['projectModules'] = !empty($modSettings['projectModules']) ? explode(',', $modSettings['projectModules']) : array('admin', 'general', 'issues', 'roadmap');
+
+	foreach ($modSettings['projectModules'] as $module)
+	{
+		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module) . '.php');
+		
+		$context['project_modules_information'][$module] = $moduleInformation;
+	}
 
 	// Administrators can see all projects.
 	if ($user_info['is_admin'] || allowedTo('project_admin'))
@@ -463,8 +476,6 @@ function loadProjectToolsPage($mode = '')
 
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
-
-		$context['project_modules'] = array();
 		
 		// If project is loaded parse BBC now for descriptions
 		if (isset($context['project']))
@@ -473,13 +484,7 @@ function loadProjectToolsPage($mode = '')
 			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 			
 			foreach ($context['project']['modules'] as $module)
-			{
-				loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module) . '.php');
-				
-				$class_name = 'ProjectModule_' . $smcFunc['ucwords']($module);
-				
-				$context['project_modules'][$module] = new $class_name();
-			}
+				$context['active_project_modules'][$module] = new $context['project_modules'][$module]['class_name']();
 		}
 
 		if (!isset($_REQUEST['xml']))
@@ -1360,7 +1365,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 function getInstalledModules()
 {
-	global $sourcedir, $smcFunc;
+	global $sourcedir, $smcFunc, $moduleInformation;
 
 	$modules = array();
 	if ($dh = opendir($sourcedir))
@@ -1369,14 +1374,17 @@ function getInstalledModules()
 		{
 			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
 			{
-				loadClassFile($file);
-				
-				$class_name = 'ProjectModule_' . strtolower($matches[1]);
-				$module = new $class_name();
+				if (!isset($context['project_modules_information'][strtolower($matches[1])]))
+				{
+					loadClassFile($file);
+					$context['project_modules_information'][strtolower($matches[1])] = $moduleInformation;
+				}
 				
 				$modules[strtolower($matches[1])] = array(
 					'id' => strtolower($matches[1]),
-					'name' => !empty($module->title) ? $module->title : (isset($txt['project_module_' . strtolower($matches[1])]) ? $txt['project_module_' . strtolower($matches[1])] : $smcFunc['ucwords']($matches[1])),
+					'name' => $context['project_modules_information'][strtolower($matches[1])]['title'],
+					'version' => $context['project_modules_information'][strtolower($matches[1])]['version'],
+					'api_version' => $context['project_modules_information'][strtolower($matches[1])]['api_version'],
 					'filename' => $file,
 				);
 			}
@@ -1385,6 +1393,15 @@ function getInstalledModules()
 	closedir($dh);
 
 	return $modules;
+}
+
+function register_project_feature($module, $class_name)
+{
+	global $context, $moduleInformation;
+	
+	$context['project_modules'][$module] = array(
+		'class_name' => $class_name,
+	);
 }
 
 function projectTabSort($first, $second)

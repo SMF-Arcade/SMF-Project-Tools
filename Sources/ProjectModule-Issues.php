@@ -20,6 +20,21 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*
+	!!!
+*/
+
+$moduleInformation = array(
+	'title' => 'Issue Tracker',
+	'version' => '0.5',
+	'api_version' => 1,
+);
+
+register_project_feature('issues', 'ProjectModule_Issues');
+
 class ProjectModule_Issues
 {
 	
