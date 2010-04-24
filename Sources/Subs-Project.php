@@ -68,11 +68,7 @@ function loadProjectTools()
 	$modSettings['projectModules'] = !empty($modSettings['projectModules']) ? explode(',', $modSettings['projectModules']) : array('admin', 'general', 'issues', 'roadmap');
 
 	foreach ($modSettings['projectModules'] as $module)
-	{
-		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($module) . '.php');
-		
-		$context['project_modules_information'][$module] = $moduleInformation;
-	}
+		loadProjectModule($module);
 
 	// Administrators can see all projects.
 	if ($user_info['is_admin'] || allowedTo('project_admin'))
@@ -1363,9 +1359,42 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
+function loadProjectModule($name, $active = true)
+{
+	global $context, $modules;
+	
+	if (!isset($context['project_modules_information'][$name]))
+	{
+		$modules = array();
+		
+		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($name) . '.php');
+		$context['project_modules_information'][$name] = $moduleInformation;
+		$context['project_modules_information'][$name]['modules'] = $modules;
+		
+		unset($modules);
+	}
+	
+	if (!$active)
+		return $context['project_modules_information'][$name];
+	
+	foreach ($context['project_modules_information'][$name]['modules'] as $id => $module)
+		$context['project_modules'][$id] = $module;
+		
+	return $context['project_modules_information'][$name];
+}
+
+function register_project_feature($module, $class_name)
+{
+	global $modules, $moduleInformation;
+	
+	$modules[$module] = array(
+		'class_name' => $class_name,
+	);
+}
+
 function getInstalledModules()
 {
-	global $sourcedir, $smcFunc, $moduleInformation;
+	global $sourcedir, $smcFunc;
 
 	$modules = array();
 	if ($dh = opendir($sourcedir))
@@ -1374,17 +1403,14 @@ function getInstalledModules()
 		{
 			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
 			{
-				if (!isset($context['project_modules_information'][strtolower($matches[1])]))
-				{
-					loadClassFile($file);
-					$context['project_modules_information'][strtolower($matches[1])] = $moduleInformation;
-				}
+				$moduleInformation = loadProjectModule(strtolower($matches[1]), false);
 				
 				$modules[strtolower($matches[1])] = array(
 					'id' => strtolower($matches[1]),
-					'name' => $context['project_modules_information'][strtolower($matches[1])]['title'],
-					'version' => $context['project_modules_information'][strtolower($matches[1])]['version'],
-					'api_version' => $context['project_modules_information'][strtolower($matches[1])]['api_version'],
+					'name' => $moduleInformation['title'],
+					'version' => $moduleInformation['version'],
+					'api_version' => $moduleInformation['api_version'],
+					'modules' => $moduleInformation['modules'],
 					'filename' => $file,
 				);
 			}
@@ -1393,15 +1419,6 @@ function getInstalledModules()
 	closedir($dh);
 
 	return $modules;
-}
-
-function register_project_feature($module, $class_name)
-{
-	global $context, $moduleInformation;
-	
-	$context['project_modules'][$module] = array(
-		'class_name' => $class_name,
-	);
 }
 
 function projectTabSort($first, $second)
