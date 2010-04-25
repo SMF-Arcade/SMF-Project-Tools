@@ -39,9 +39,6 @@ register_project_feature('roadmap', 'ProjectModule_Roadmap');
 
 class ProjectModule_Roadmap extends ProjectModule_Base
 {
-	// Define subactions this handles by default
-	private $subActions = array();
-	
 	function __construct()
 	{
 		$this->subActions = array(

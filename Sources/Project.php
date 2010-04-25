@@ -98,86 +98,7 @@ function Projects($standalone = false)
 	}
 	
 	// Areas are sets of subactions (registered by modules)
-	$subAreas = array(
-		'main' => array(
-			'area' => 'main',
-			'module' => 'general',
-			'tab' => 'main',
-			'subactions' => array(
-				'main' => array(
-					'file' => 'ProjectView.php',
-					'callback' => 'ProjectView',
-				),
-				'subscribe' => array(
-					'file' => 'ProjectView.php',
-					'callback' => 'ProjectSubscribe',
-				),			
-			),
-		),
-		'issues' => array(
-			'area' => 'issues',
-			'module' => 'issues',
-			'tab' => 'issues',
-			'subactions' => array(
-				'main' => array(
-					'file' => 'IssueList.php',
-					'callback' => 'IssueList',
-				),
-				'view' => array(
-					'file' => 'IssueView.php',
-					'callback' => 'IssueView',
-				),
-				'tags' => array(
-					'file' => 'IssueView.php',
-					'callback' => 'IssueTag',
-				),
-				'update' => array(
-					'file' => 'IssueReport.php',
-					'callback' => 'IssueUpdate',
-				),
-				'upload' => array(
-					'file' => 'IssueReport.php',
-					'callback' => 'IssueUpload',
-				),
-				'move' => array(
-					'file' => 'IssueView.php',
-					'callback' => 'IssueMove',
-				),
-				// Reply
-				'reply' => array(
-					'file' => 'IssueComment.php',
-					'callback' => 'IssueReply',
-				),
-				'reply2' => array(
-					'file' => 'IssueComment.php',
-					'callback' => 'IssueReply2',
-				),
-				// Edit
-				'edit' => array(
-					'file' => 'IssueComment.php',
-					'callback' => 'IssueReply',
-				),
-				'edit2' => array(
-					'file' => 'IssueComment.php',
-					'callback' => 'IssueReply2',
-				),
-				// Remove comment
-				'removeComment' => array(
-					'file' => 'IssueComment.php',
-					'callback' => 'IssueDeleteComment',
-				),
-				// Report Issue
-				'report' => array(
-					'file' => 'IssueReport.php',
-					'callback' => 'ReportIssue',
-				),
-				'report2' => array(
-					'file' => 'IssueReport.php',
-					'callback' => 'ReportIssue2',
-				),				
-			),
-		),
-	);
+	$subAreas = array();
 	
 	// Tabs
 	$context['project_tabs'] = array(
@@ -270,10 +191,9 @@ function Projects($standalone = false)
 	if (empty($_REQUEST['area']) || !isset($subAreas[$_REQUEST['area']]))
 		$_REQUEST['area'] = 'main';
 		
-	$subActions = &$subAreas[$_REQUEST['area']]['subactions'];
-	
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
-	
+	if (empty($_REQUEST['sa']))
+		$_REQUEST['sa'] = 'main';
+		
 	$current_area = &$subAreas[$_REQUEST['area']];
 	$context['current_project_module'] = &$context['active_project_modules'][$current_area['module']];
 	
@@ -288,12 +208,6 @@ function Projects($standalone = false)
 	if (isset($current_area['project_permission']))
 		projectIsAllowedTo($current_area['project_permission']);
 			
-	// Check permission to subaction?
-	if (isset($subActions[$_REQUEST['sa']]['permission']))
-		isAllowedTo($subActions[$_REQUEST['sa']]['permission']);
-	if (isset($subActions[$_REQUEST['sa']]['project_permission']))
-		projectIsAllowedTo($subActions[$_REQUEST['sa']]['project_permission']);
-			
 	// Call Initialize View function
 	if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
 		$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
@@ -301,12 +215,8 @@ function Projects($standalone = false)
 	// Load Additional file if required
 	if (isset($subActions[$_REQUEST['sa']]['file']))
 		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
-		
-	// not moved to module yet
-	if (isset($subActions[$_REQUEST['sa']]['callback']))
-		call_user_func($subActions[$_REQUEST['sa']]['callback']);
-	else
-		$context['current_project_module']->main();
+
+	$context['current_project_module']->main($_REQUEST['sa']);
 }
 
 ?>

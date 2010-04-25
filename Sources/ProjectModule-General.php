@@ -40,12 +40,12 @@ register_project_feature('general', 'ProjectModule_General');
 class ProjectModule_Base
 {
 	// Define subactions this handles by default
-	private $subActions = array();
+	public $subActions = array();
 	
 	// Default constructor
 	function __construct()
 	{
-		$this->subActions = array('main' => array('callback' => array($this, 'main')));
+		$this->subActions = array('main' => array('callback' => array($this, 'mainView')));
 	}
 	
 	public function registersubAction($sa, $data)
@@ -55,18 +55,32 @@ class ProjectModule_Base
 	
 	function beforeSubaction(&$subaction)
 	{
+		global $sourcedir;
+		
 		// Check that subaction exists, if not use "main"
 		if (!isset($this->subActions[$subaction]))
 			$subaction = 'main';
 		
 		// No main subaction? Use first then
-		if (!isset($this->subActions[$subaction]))
+		if (!isset($this->subActions[$subaction]) && count($this->subActions) > 0)
 			list ($subaction, ) = array_keys($this->subActions);
+		elseif (!isset($this->subActions[$subaction]))
+			trigger_error(__CLASS__ . ' doesn\'t contain any subaction', E_USER_ERROR);
+			
+		// Check permission to subaction?
+		if (isset($this->subActions[$subaction]['permission']))
+			isAllowedTo($this->subActions[$subaction]['permission']);
+		if (isset($this->subActions[$subaction]['project_permission']))
+			projectIsAllowedTo($this->subActions[$subaction]['project_permission']);
+		
+		// File required?
+		if (isset($this->subActions[$subaction]['file']))
+			require_once($sourcedir . '/' . $this->subActions[$subaction]['file']);
 	}
 	
-	function main($subaction)
+	final function main($subaction)
 	{
-		call_user_func($this->subActions[$subaction]);
+		call_user_func($this->subActions[$subaction]['callback']);
 	}
 }
 
@@ -74,6 +88,23 @@ class ProjectModule_General extends ProjectModule_Base
 {
 	function __construct()
 	{
+		$this->subActions = array(
+			'main' => array(
+				'file' => 'ProjectView.php',
+				'callback' => 'ProjectView',
+			),
+			'subscribe' => array(
+				'file' => 'ProjectView.php',
+				'callback' => 'ProjectSubscribe',
+			),			
+		);
+	}
+	
+	function RegisterProjectArea()
+	{
+		return array(
+			'area' => 'main', 'tab' => 'main',
+		);
 	}
 	
 	function RegisterProjectFrontpageBlocks(&$frontpage_blocks)
@@ -83,7 +114,7 @@ class ProjectModule_General extends ProjectModule_Base
 		$this->__register_issue_blocks($frontpage_blocks);
 	}
 		
-	function __register_issue_blocks(&$frontpage_blocks)
+	private function __register_issue_blocks(&$frontpage_blocks)
 	{
 		global $context, $project, $user_info;
 		

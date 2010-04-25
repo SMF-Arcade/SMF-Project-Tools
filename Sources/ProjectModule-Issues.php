@@ -39,7 +39,74 @@ register_project_feature('issues', 'ProjectModule_Issues');
 
 class ProjectModule_Issues extends ProjectModule_Base
 {
+	function __construct()
+	{
+		$this->subActions = array(
+			'main' => array(
+				'file' => 'IssueList.php',
+				'callback' => 'IssueList',
+			),
+			'view' => array(
+				'file' => 'IssueView.php',
+				'callback' => 'IssueView',
+			),
+			'tags' => array(
+				'file' => 'IssueView.php',
+				'callback' => 'IssueTag',
+			),
+			'update' => array(
+				'file' => 'IssueReport.php',
+				'callback' => 'IssueUpdate',
+			),
+			'upload' => array(
+				'file' => 'IssueReport.php',
+				'callback' => 'IssueUpload',
+			),
+			'move' => array(
+				'file' => 'IssueView.php',
+				'callback' => 'IssueMove',
+			),
+			// Reply
+			'reply' => array(
+				'file' => 'IssueComment.php',
+				'callback' => 'IssueReply',
+			),
+			'reply2' => array(
+				'file' => 'IssueComment.php',
+				'callback' => 'IssueReply2',
+			),
+			// Edit
+			'edit' => array(
+				'file' => 'IssueComment.php',
+				'callback' => 'IssueReply',
+			),
+			'edit2' => array(
+				'file' => 'IssueComment.php',
+				'callback' => 'IssueReply2',
+			),
+			// Remove comment
+			'removeComment' => array(
+				'file' => 'IssueComment.php',
+				'callback' => 'IssueDeleteComment',
+			),
+			// Report Issue
+			'report' => array(
+				'file' => 'IssueReport.php',
+				'callback' => 'ReportIssue',
+			),
+			'report2' => array(
+				'file' => 'IssueReport.php',
+				'callback' => 'ReportIssue2',
+			),
+		);	
+	}
 	
+	function RegisterProjectArea()
+	{
+		return array(
+			'area' => 'issues', 'tab' => 'issues',
+		);
+	}
 }
 
 ?>
