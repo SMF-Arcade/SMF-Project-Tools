@@ -46,6 +46,7 @@ function ProjectsAdmin()
 		'main' => array('ProjectsAdminMain'),
 		'settings' => array('ProjectsAdminSettings'),
 		'maintenance' => array('ProjectsMaintenance'),
+		'extensions' => array('ProjectsAdminExtensions'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
@@ -259,6 +260,15 @@ function ProjectsMaintenanceUpgrade()
 	);
 
 	return $repairFunctions;
+}
+
+function ProjectsAdminExtensions()
+{
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	
+	$context['installed_extensions'] = getInstalledExtensions();
+
+	$context['sub_template'] = 'project_admin_extensions';
 }
 
 ?>

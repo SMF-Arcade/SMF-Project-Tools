@@ -1394,7 +1394,7 @@ function register_project_feature($module, $class_name)
 
 function getInstalledExtensions()
 {
-	global $sourcedir, $smcFunc;
+	global $sourcedir, $smcFunc, $modSettings;
 
 	$extensions = array();
 	if ($dh = opendir($sourcedir))
@@ -1412,6 +1412,8 @@ function getInstalledExtensions()
 					'api_version' => $extensionInformation['api_version'],
 					'modules' => $extensionInformation['modules'],
 					'filename' => $file,
+					'enabled' => in_array(strtolower($matches[1]), $modSettings['projectExtensions']),
+					'can_disable' => !in_array(strtolower($matches[1]), array('admin', 'general', 'issues')),
 				);
 			}
 		}

@@ -104,6 +104,13 @@ function template_project_admin_maintenance_repair_list()
 	</table>';
 }
 
+function template_project_admin_extensions()
+{
+	global $scripturl, $context, $settings, $options, $txt, $modSettings;
+
+	print_r($context['installed_extensions']);
+}
+
 function template_project_admin_below()
 {
 	global $txt, $context, $project_version;
