@@ -479,9 +479,11 @@ function loadProjectToolsPage($mode = '')
 			$context['project']['description'] = parse_bbc($context['project']['description']);
 			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
 			
+			$context['active_project_modules'] = array();
+			
 			foreach ($context['project']['modules'] as $module)
 				$context['active_project_modules'][$module] = new $context['project_modules'][$module]['class_name']();
-		}
+			}
 
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project';

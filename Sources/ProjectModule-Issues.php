@@ -37,7 +37,7 @@ $extensionInformation = array(
 
 register_project_feature('issues', 'ProjectModule_Issues');
 
-class ProjectModule_Issues
+class ProjectModule_Issues extends ProjectModule_Base
 {
 	
 }

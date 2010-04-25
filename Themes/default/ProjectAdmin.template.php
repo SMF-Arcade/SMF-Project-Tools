@@ -80,7 +80,6 @@ function template_project_admin_maintenance()
 			', $txt['project_maintenance_repair'], '
 		</h3>
 	</div>
-	<h3 class="catbg"><span class="left"><span><!-- // --></span></span></h3>
 	<div class="windowbg2 smallpadding">
 		<span class="topslice"><span></span></span>
 			<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
@@ -127,15 +126,13 @@ function template_project_admin_extensions()
 	<table class="table_grid" cellspacing="0" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th scope="col" class="smalltext">', $txt['extension_enable'], '</th>
+				<th scope="col" class="first_th smalltext">', $txt['extension_enable'], '</th>
 				<th scope="col" class="smalltext">', $txt['extension_name'], '</th>
-				<th scope="col" class="smalltext">', $txt['extension_version'], '</th>
+				<th scope="col" class="last_th smalltext">', $txt['extension_version'], '</th>
 			</tr>
 		</thead>
 		<tbody>';
 
-	print_r($context['installed_extensions']);
-	
 	foreach ($context['installed_extensions'] as $id => $extension)
 	{
 		echo '
@@ -159,7 +156,7 @@ function template_project_admin_extensions()
 					
 		echo '
 				</td>
-				<td>', $module['version'], '(', $txt['extension_api_version'], ')
+				<td>', $extension['version'], ' (', $txt['extension_api_version'], ': ', $extension['api_version'], ')
 			</tr>';
 	}
 	

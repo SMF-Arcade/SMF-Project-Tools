@@ -37,8 +37,15 @@ $extensionInformation = array(
 
 register_project_feature('roadmap', 'ProjectModule_Roadmap');
 
-class ProjectModule_Roadmap
+class ProjectModule_Roadmap extends ProjectModule_Base
 {
+	function RegisterProjectArea()
+	{
+		return array(
+			'area' => 'roadmap',
+		);
+	}
+	
 	function RegisterProjectSubactions()
 	{
 		return array(

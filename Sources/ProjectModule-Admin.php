@@ -37,11 +37,9 @@ $extensionInformation = array(
 
 register_project_feature('admin', 'ProjectModule_Admin');
 
-class ProjectModule_Admin
+class ProjectModule_Admin extends ProjectModule_Base
 {
 	public $title = 'Admin';
-	public $version = '0.5';
-	public $api_version = 1;
 	
 	public function RegisterProjectArea()
 	{

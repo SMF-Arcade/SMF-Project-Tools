@@ -37,7 +37,11 @@ $extensionInformation = array(
 
 register_project_feature('general', 'ProjectModule_General');
 
-class ProjectModule_General
+class ProjectModule_Base
+{
+}
+
+class ProjectModule_General extends ProjectModule_Base
 {
 	function __construct()
 	{
