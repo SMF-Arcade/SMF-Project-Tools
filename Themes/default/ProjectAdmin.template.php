@@ -140,7 +140,7 @@ function template_project_admin_extensions()
 	{
 		echo '
 			<tr>
-				<td><input type="checkbox" name="extension[', $id, ']" value="1"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
+				<td><input type="checkbox" name="extension[', $id, ']" value="1"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_enable'] || !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
 				<td>', $extension['name'], ' (', $extension['filename'], ')<br />';
 				
 		if (!empty($extension['modules']))
