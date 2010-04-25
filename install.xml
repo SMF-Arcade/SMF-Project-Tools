@@ -115,6 +115,7 @@ else
 						'main' => array($txt['project_general_main']),
 						'settings' => array($txt['project_general_settings']),
 						'maintenance' => array($txt['project_general_maintenance']),
+						'extensions' => array($txt['project_general_extensions'])
 					),
 				),
 				'manageprojects' => array(

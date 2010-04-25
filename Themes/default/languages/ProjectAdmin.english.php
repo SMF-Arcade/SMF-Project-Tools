@@ -47,6 +47,14 @@ $txt['error_issue_info_event'] = 'Event #%1$d is linked to non-existing issue';
 $txt['error_missing_poster_info_event'] = 'Event #%1$d is missing poster info';
 $txt['error_unnecessary_event'] = 'Unnecessary Event #%1$d';
 
+// Extensions
+$txt['extension_enable'] = 'Enable';
+$txt['extension_name'] = 'Name';
+$txt['extension_version'] = 'Version';
+$txt['extension_api_version'] = 'Api Version';
+
+$txt['extension_modules'] = 'Provides Following Modules';
+
 // Manage Projects
 $txt['manage_projects_description'] = 'Here you can create and edit projects';
 

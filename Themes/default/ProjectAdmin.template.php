@@ -14,15 +14,23 @@ function template_project_admin_main()
 	echo '
 	<div class="tborder floatleft" style="width: 69%;">
 		<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['project_latest_news'], '</h3>
-		<div id="project_news" style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
+		<div class="windowbg2 smallpadding">
+			<span class="topslice"><span></span></span>
+			<div id="project_news" style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
 			', $txt['project_news_unable_to_connect'], '
+			</div>
+			<span class="botslice"><span></span></span>
 		</div>
 	</div>
 	<div class="tborder floatright" style="width: 30%;">
 		<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['project_version_info'], '</h3>
-		<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
-			', $txt['project_installed_version'], ': <span id="project_installed_version">', $project_version, '</span><br />
-			', $txt['project_latest_version'], ': <span id="project_latest_version">???</span>
+		<div class="windowbg2 smallpadding">
+			<span class="topslice"><span></span></span>
+			<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
+				', $txt['project_installed_version'], ': <span id="project_installed_version">', $project_version, '</span><br />
+				', $txt['project_latest_version'], ': <span id="project_latest_version">???</span>
+			</div>
+			<span class="botslice"><span></span></span>
 		</div>
 	</div>
 	<div style="clear: both"></div>
@@ -67,20 +75,21 @@ function template_project_admin_maintenance()
 	</div>';
 
 	echo '
-	<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
-		<tr class="titlebg">
-			<td>', $txt['project_maintenance_repair'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td>
-				<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
-					<p>', $txt['project_maintenance_repair_info'], '</p>
-					<p><input class="button_submit" type="submit" value="', $txt['project_maintain_run_now'], '" tabindex="', $context['tabindex']++, '" /></p>
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				</form>
-			</td>
-		</tr>
-	</table>';
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $txt['project_maintenance_repair'], '
+		</h3>
+	</div>
+	<h3 class="catbg"><span class="left"><span><!-- // --></span></span></h3>
+	<div class="windowbg2 smallpadding">
+		<span class="topslice"><span></span></span>
+			<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair" method="post" accept-charset="', $context['character_set'], '">
+				<p>', $txt['project_maintenance_repair_info'], '</p>
+				<p><input class="button_submit" type="submit" value="', $txt['project_maintain_run_now'], '" tabindex="', $context['tabindex']++, '" /></p>
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			</form>
+		<span class="botslice"><span></span></span>
+	</div>';
 }
 
 function template_project_admin_maintenance_repair_list()
@@ -88,27 +97,75 @@ function template_project_admin_maintenance_repair_list()
 	global $scripturl, $context, $settings, $options, $txt, $modSettings;
 
 	echo '
-	<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
-		<tr class="titlebg">
-			<td>', $txt['errors_list'], '</td>
-		</tr><tr>
-			<td class="windowbg">
-				<ul>
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $txt['errors_list'], '
+		</h3>
+	</div>
+	<div class="windowbg2 smallpadding">
+		<span class="topslice"><span></span></span>
+			<ul>
 					<li>', implode('</li>
 					<li>', $context['project_errors']), '</li>
 				</ul>
 				', $txt['fix_errors'], '
 				<b><a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance;activity=repair;fix;', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=projectsadmin;sa=maintenance">', $txt['no'], '</a></b>
-			</td>
-		</tr>
-	</table>';
+		<span class="botslice"><span></span></span>
+	</div>';
 }
 
 function template_project_admin_extensions()
 {
 	global $scripturl, $context, $settings, $options, $txt, $modSettings;
+	
+	echo '
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $txt['project_general_extensions'], '
+		</h3>
+	</div>
+	<table class="table_grid" cellspacing="0" width="100%">
+		<thead>
+			<tr class="catbg">
+				<th scope="col" class="smalltext">', $txt['extension_enable'], '</th>
+				<th scope="col" class="smalltext">', $txt['extension_name'], '</th>
+				<th scope="col" class="smalltext">', $txt['extension_version'], '</th>
+			</tr>
+		</thead>
+		<tbody>';
 
 	print_r($context['installed_extensions']);
+	
+	foreach ($context['installed_extensions'] as $id => $extension)
+	{
+		echo '
+			<tr>
+				<td><input type="checkbox" name="extension[', $id, ']" value="1"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
+				<td>', $extension['name'], ' (', $extension['filename'], ')<br />';
+				
+		if (!empty($extension['modules']))
+		{
+			echo '
+					', $txt['extension_modules'], ':', '
+					<ul>';
+					
+		foreach ($extension['modules'] as $module)
+			echo '<li>', $module['class_name'], '</li>';
+					
+		echo '
+					
+					</ul>';
+		}
+					
+		echo '
+				</td>
+				<td>', $module['version'], '(', $txt['extension_api_version'], ')
+			</tr>';
+	}
+	
+	echo '
+		</tbody>
+	</table>';
 }
 
 function template_project_admin_below()

@@ -1362,6 +1362,9 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 function loadProjectToolsExtension($name, $active = true)
 {
 	global $context, $modules, $extensionInformation, $smcFunc;
+	 
+	// Prevent extensionInformation from previous extension coming up
+	$extensionInformation = array();
 	
 	if (!isset($context['project_extensions'][$name]))
 	{
@@ -1413,6 +1416,7 @@ function getInstalledExtensions()
 					'modules' => $extensionInformation['modules'],
 					'filename' => $file,
 					'enabled' => in_array(strtolower($matches[1]), $modSettings['projectExtensions']),
+					'can_enable' => $extensionInformation['api_version'] === 1,
 					'can_disable' => !in_array(strtolower($matches[1]), array('admin', 'general', 'issues')),
 				);
 			}
