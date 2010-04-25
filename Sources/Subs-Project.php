@@ -1361,7 +1361,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 function loadProjectToolsExtension($name, $active = true)
 {
-	global $context, $modules, $extensionInformation;
+	global $context, $modules, $extensionInformation, $smcFunc;
 	
 	if (!isset($context['project_extensions'][$name]))
 	{
