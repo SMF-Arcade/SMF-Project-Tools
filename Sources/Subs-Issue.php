@@ -1221,7 +1221,7 @@ function createIssueList($issueListOptions)
 			AND ', $where) : '') . '
 		GROUP BY i.id_issue
 		ORDER BY ' . $issueListOptions['sort']. (!$issueListOptions['ascending'] ? ' DESC' : '') . '
-		LIMIT {int:start},' . !empty($issueListOptions['issues_per_page']) ? $issueListOptions['issues_per_page'] : $context['issues_per_page'],
+		LIMIT {int:start},' . (!empty($issueListOptions['issues_per_page']) ? $issueListOptions['issues_per_page'] : $context['issues_per_page']),
 		array(
 			'project' => $context['project']['id'],
 			'empty' => '',

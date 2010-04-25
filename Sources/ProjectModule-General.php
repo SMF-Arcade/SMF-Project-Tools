@@ -39,6 +39,35 @@ register_project_feature('general', 'ProjectModule_General');
 
 class ProjectModule_Base
 {
+	// Define subactions this handles by default
+	private $subActions = array();
+	
+	// Default constructor
+	function __construct()
+	{
+		$this->subActions = array('main' => array('callback' => array($this, 'main')));
+	}
+	
+	public function registersubAction($sa, $data)
+	{
+		$this->subActions[$sa] = $data;
+	}
+	
+	function beforeSubaction(&$subaction)
+	{
+		// Check that subaction exists, if not use "main"
+		if (!isset($this->subActions[$subaction]))
+			$subaction = 'main';
+		
+		// No main subaction? Use first then
+		if (!isset($this->subActions[$subaction]))
+			list ($subaction, ) = array_keys($this->subActions);
+	}
+	
+	function main($subaction)
+	{
+		call_user_func($this->subActions[$subaction]);
+	}
 }
 
 class ProjectModule_General extends ProjectModule_Base

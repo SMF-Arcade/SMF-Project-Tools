@@ -301,8 +301,12 @@ function Projects($standalone = false)
 	// Load Additional file if required
 	if (isset($subActions[$_REQUEST['sa']]['file']))
 		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
-			
-	call_user_func($subActions[$_REQUEST['sa']]['callback']);
+		
+	// not moved to module yet
+	if (isset($subActions[$_REQUEST['sa']]['callback']))
+		call_user_func($subActions[$_REQUEST['sa']]['callback']);
+	else
+		$context['current_project_module']->main();
 }
 
 ?>

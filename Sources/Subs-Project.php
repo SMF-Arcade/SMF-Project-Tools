@@ -65,7 +65,9 @@ function loadProjectTools()
 	$context['project_modules'] = array();
 	$context['project_extensions'] = array();
 	
-	$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'general', 'issues', 'roadmap');
+	$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'issues', 'roadmap');
+
+	loadProjectToolsExtension('general');
 
 	foreach ($modSettings['projectExtensions'] as $extension)
 		loadProjectToolsExtension($extension);
@@ -483,7 +485,7 @@ function loadProjectToolsPage($mode = '')
 			
 			foreach ($context['project']['modules'] as $module)
 				$context['active_project_modules'][$module] = new $context['project_modules'][$module]['class_name']();
-			}
+		}
 
 		if (!isset($_REQUEST['xml']))
 			$context['template_layers'][] = 'project';

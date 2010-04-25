@@ -39,20 +39,29 @@ register_project_feature('roadmap', 'ProjectModule_Roadmap');
 
 class ProjectModule_Roadmap extends ProjectModule_Base
 {
+	// Define subactions this handles by default
+	private $subActions = array();
+	
+	function __construct()
+	{
+		$this->subActions = array(
+			'main' => array(
+				'area' => 'roadmap',
+				'callback' => array($this, '__projectRoadmapMain'),
+				'tab' => 'roadmap',
+			),
+			'version' => array(
+				'area' => 'roadmap',
+				'callback' => array($this, '__projectRoadmapVersion'),
+				'tab' => 'roadmap',
+			)
+		);	
+	}
+	
 	function RegisterProjectArea()
 	{
 		return array(
-			'area' => 'roadmap',
-		);
-	}
-	
-	function RegisterProjectSubactions()
-	{
-		return array(
-			'roadmap' => array(
-				'callback' => array($this, 'ProjectRoadmap'),
-				'tab' => 'roadmap',
-			)
+			'area' => 'roadmap', 'tab' => 'roadmap',
 		);
 	}
 	
@@ -71,16 +80,14 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 		);
 	}
 	
-	function ProjectRoadmap()
+	public function beforeSubaction(&$subaction)
 	{
-		global $context, $project, $user_info, $smcFunc, $txt;
-	
-		if (!isset($_REQUEST['version']))
-			$this->__projectRoadmapMain();
-		else
-			$this->__projectRoadmapVersion();
+		parent::beforeSubaction($subaction);
+		
+		if (isset($_REQUEST['version']) && $subaction == 'main')
+			$subaction = 'version';
 	}
-	
+
 	function __projectRoadmapMain()
 	{
 		global $context, $project, $user_info, $smcFunc, $txt;
