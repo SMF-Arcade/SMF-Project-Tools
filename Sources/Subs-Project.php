@@ -67,7 +67,7 @@ function loadProjectTools()
 	
 	$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'general', 'issues', 'roadmap');
 
-	foreach ($modSettings['projectModules'] as $extension)
+	foreach ($modSettings['projectExtensions'] as $extension)
 		loadProjectToolsExtension($extension);
 
 	// Administrators can see all projects.
@@ -1375,6 +1375,7 @@ function loadProjectToolsExtension($name, $active = true)
 		$context['project_extensions'][$name]['modules'] = $modules;
 		
 		unset($modules);
+		unset($extensionInformation);
 	}
 	
 	if (!$active)
@@ -1406,17 +1407,17 @@ function getInstalledExtensions()
 		{
 			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
 			{
-				$extensionInformation = loadProjectToolsExtension(strtolower($matches[1]), false);
+				$extInfo = loadProjectToolsExtension(strtolower($matches[1]), false);
 				
 				$extensions[strtolower($matches[1])] = array(
 					'id' => strtolower($matches[1]),
-					'name' => $extensionInformation['title'],
-					'version' => $extensionInformation['version'],
-					'api_version' => $extensionInformation['api_version'],
-					'modules' => $extensionInformation['modules'],
+					'name' => $extInfo['title'],
+					'version' => $extInfo['version'],
+					'api_version' => $extInfo['api_version'],
+					'modules' => $extInfo['modules'],
 					'filename' => $file,
 					'enabled' => in_array(strtolower($matches[1]), $modSettings['projectExtensions']),
-					'can_enable' => $extensionInformation['api_version'] === 1,
+					'can_enable' => $extInfo['api_version'] === 1,
 					'can_disable' => !in_array(strtolower($matches[1]), array('admin', 'general', 'issues')),
 				);
 			}

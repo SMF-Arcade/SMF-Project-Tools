@@ -27,6 +27,8 @@ if (!defined('SMF'))
 	!!!
 */
 
+global $extensionInformation;
+
 $extensionInformation = array(
 	'title' => 'Issue Tracker',
 	'version' => '0.5',

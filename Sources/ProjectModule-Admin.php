@@ -27,6 +27,8 @@ if (!defined('SMF'))
 	!!!
 */
 
+global $extensionInformation;
+
 $extensionInformation = array(
 	'title' => 'Admin',
 	'version' => '0.5',
