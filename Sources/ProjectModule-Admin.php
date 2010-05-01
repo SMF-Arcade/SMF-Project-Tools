@@ -43,18 +43,20 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	function __construct()
 	{
+		parent::__construct();
+		
 		$this->subActions = array(
 			'main' => array(
 				'area' => 'admin',
 				'callback' => array($this, 'ProjectAdminMain'),
 				'tab' => 'admin',
 			),
-			'version' => array(
+			'versions' => array(
 				'area' => 'admin',
 				'callback' => array($this, 'ProjectAdminVersions'),
 				'tab' => 'admin',
 			)
-		);	
+		);
 	}
 	
 	public function RegisterProjectArea()
@@ -82,7 +84,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	// Callback before any subaction routine is called
 	public function beforeSubaction(&$subaction)
 	{	
-		global $sourcedir;
+		global $sourcedir, $context;
 		
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
 		
@@ -90,6 +92,24 @@ class ProjectModule_Admin extends ProjectModule_Base
 		loadTemplate('ManageProjects');
 		
 		projectIsAllowedTo('admin');
+		
+		// Tabs
+		$context['project_admin_tabs'] = array(
+			'tabs' => array(
+				'main' => array(
+					'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
+					'title' => $txt['project'],
+					'is_selected' => false,
+					'order' => 'first',
+				),
+				'versions' => array(
+					'href' => project_get_url(array('project' => $project, 'area' => 'versions')),
+					'title' => $txt['manage_versions'],
+					'is_selected' => false,
+					'order' => 10,
+				)
+			),
+		);
 
 		parent::beforeSubaction($subaction);
 	}
