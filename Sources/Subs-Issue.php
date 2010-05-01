@@ -322,7 +322,6 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 		
 		if (empty($issueOptions['versions']))
 			$issueOptions['versions'] = array(0);
-			
 	
 		$newVersions = array_merge($newVersions, $issueOptions['versions']);
 		$issueOptions['versions'] = implode(',', $issueOptions['versions']);

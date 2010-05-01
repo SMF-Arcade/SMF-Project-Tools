@@ -55,6 +55,7 @@
 		<require-file name="Themes/default/PatchView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectModule-Admin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectPermissions.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectProfile.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
@@ -122,6 +123,7 @@
 		<remove-file name="$themedir/PatchView.template.php" />
 		<remove-file name="$themedir/Project.template.php" />
 		<remove-file name="$themedir/ProjectAdmin.template.php" />
+		<remove-file name="$themedir/ProjectModule-Admin.template.php" />
 		<remove-file name="$themedir/ProjectPermissions.template.php" />
 		<remove-file name="$themedir/ProjectRoadmap.template.php" />
 		<remove-file name="$themedir/ProjectView.template.php" />

@@ -86,6 +86,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
 		
+		loadTemplate('ProjectModule-Admin');
 		loadTemplate('ManageProjects');
 		
 		projectIsAllowedTo('admin');
@@ -104,7 +105,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		
 		$listOptions = array(
 			'id' => 'versions_list',
-			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions_list')),
+			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 			'get_items' => array(
 				'function' => 'list_getVersions',
 				'params' => array(
@@ -171,7 +172,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				array(
 					'position' => 'bottom_of_list',
 					'value' => '
-						<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . '">
+						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'newVersion')) . '">
 							' . $txt['new_version_group'] . '
 						</a>',
 					'class' => 'catbg',
