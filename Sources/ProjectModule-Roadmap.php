@@ -164,13 +164,10 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 			'issues' => array(
 				'open' => 0,
 				'closed' => 0,
+				'total' => 0,
 			),
 			'progress' => 0,
 		);
-	
-		// Hide "not set" version if it has no issues
-		/*if ($context['roadmap'][0]['issues']['total'] == 0)
-			unset($context['roadmap'][0]);*/
 	
 		// Template
 		$context['page_title'] = sprintf($txt['project_roadmap_title'], $context['project']['name']);
@@ -219,6 +216,8 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 		// Make release date string
 		if (!empty($row['release_date']))
 			$row['release_date'] = unserialize($row['release_date']);
+		else
+			$row['release_date'] = array();
 	
 		$time = array();
 	

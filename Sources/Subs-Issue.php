@@ -1052,6 +1052,8 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 // Returns default filter
 function getIssuesFilter($mode = 'default', $options = array())
 {
+	global $context;
+	
 	$filter = array(
 		'title' => '',
 		'status' => 'all',

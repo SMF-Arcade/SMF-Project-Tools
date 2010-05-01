@@ -176,6 +176,7 @@ function IssueReply()
 	$editorOptions = array(
 		'form' => 'reportissue',
 		'id' => 'comment',
+		'width' => '550px',
 		'value' => $context['comment'],
 		'labels' => array(
 			'post_button' => $editing ? $txt['issue_save'] : $txt['issue_reply'],
@@ -477,6 +478,29 @@ function IssueDeleteComment()
 				'event' => $row['id_event'],
 			)
 		);
+
+	// Adjust reply count on issue
+	$request = $smcFunc['db_query']('', '
+		SELECT count(*) as total
+		FROM {db_prefix}project_timeline
+		WHERE id_issue = {int:issue} AND event = {string:event}',
+		array(
+			'issue' => $context['current_issue']['id'],
+			'event' => 'new_comment',
+		)
+	);
+	list ($num_replies) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+	
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}issues
+		SET replies = {int:replies}
+		WHERE id_issue = {int:issue}',
+		array(
+			'issue' => $context['current_issue']['id'],
+			'replies' => $num_replies,
+		)
+	);
 
 	logAction('project_remove_comment', array('comment' => $row['id_comment']));
 
