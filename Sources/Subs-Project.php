@@ -548,6 +548,10 @@ function loadTimeline($project = 0)
 	{
 		$data = unserialize($row['event_data']);
 
+		// Fix: Some events in past have had double serialised array
+		if (is_string($data))
+			$data = unserialize($data);
+			
 		$index = date('Ymd', forum_time(true, $row['event_time']));
 		$date = @getdate(forum_time(true, $row['event_time']));
 
