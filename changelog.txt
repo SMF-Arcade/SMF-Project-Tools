@@ -6,6 +6,8 @@ SMF Project Tools 0.4.3                                               xx.xx.2010
 May 2010
 --------------------------------------------------------------------------------
  ! Replies count not adjusted when removing comment (based on fix from feline)
+ ! Incorrect urls in roadmap (0.5 style)
+ ! Unable to remove notifications from profile [Issue #282]
  
 SMF Project Tools 0.4.2                                               06.03.2010
 ================================================================================

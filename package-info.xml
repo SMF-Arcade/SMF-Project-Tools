@@ -86,8 +86,11 @@
 	</install>
 	
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4002">
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
-		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />>
+		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
+		
+		<modification format="xml" type="file">update043.xml</modification>
 	</upgrade>
 	
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4001">
@@ -99,6 +102,7 @@
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		
 		<modification format="xml" type="file">update042.xml</modification>
+		<modification format="xml" type="file">update043.xml</modification>
 	</upgrade>
 	
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4">
@@ -113,6 +117,7 @@
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		
 		<modification format="xml" type="file">update042.xml</modification>
+		<modification format="xml" type="file">update043.xml</modification>
 	</upgrade>
 
 	<uninstall for="2.0 RC2, 2.0 RC3">
