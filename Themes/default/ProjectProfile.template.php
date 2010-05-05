@@ -63,7 +63,7 @@ function template_issue_list_profile()
 			echo '
 					<tr>
 						<td class="windowbg">
-							<img class="icon" src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['name'], '" />
+							<img class="icon" src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['name'], '" />
 						</td>
 						<td class="windowbg2 info">
 							<h4>

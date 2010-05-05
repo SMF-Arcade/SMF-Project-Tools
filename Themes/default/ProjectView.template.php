@@ -41,15 +41,15 @@ function template_project_view()
 	);
 
 	echo '
-	<div id="modbuttons_top" class="modbuttons clearfix margintop">
-		', template_button_strip($project_buttons, 'right'), '
-	</div>
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>
 		', $context['project']['name'], '
 	</h3>
 	<p class="description">
 		', $context['project']['long_description'], '
-	</p>';
+	</p>
+	<div id="modbuttons_top" class="modbuttons clearfix margintop">
+		', template_button_strip($project_buttons, 'right'), '
+	</div>';
 
 	$side = true;
 	
@@ -199,7 +199,7 @@ function template_issue_list_block($block, $data)
 			<tr>
 				<td class="windowbg icon">
 					<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
-						<img src="', $settings['images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
+						<img src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 					</a>
 				</td>
 				<td class="windowbg2 info issue_', $issue['status']['name'], '">
