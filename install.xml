@@ -323,6 +323,16 @@ else
 
 	<file name="$sourcedir/Profile-Modify.php">
 		<operation>
+			<search position="replace"><![CDATA[function makeNotificationChanges($memID)
+{
+	global $smcFunc;]]></search>
+			<add><![CDATA[function makeNotificationChanges($memID)
+{
+	global $modSettings, $smcFunc;]]></add>
+			
+		</operation>
+		
+		<operation>
 			<search position="after"><![CDATA[}
 
 // Save any changes to the custom profile fields...]]></search>
