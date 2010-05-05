@@ -84,7 +84,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	// Callback before any subaction routine is called
 	public function beforeSubaction(&$subaction)
 	{	
-		global $sourcedir, $context;
+		global $sourcedir, $context, $project, $txt;
 		
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
 		
