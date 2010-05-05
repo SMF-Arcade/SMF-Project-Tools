@@ -663,7 +663,7 @@ function loadTimeline($project = 0)
 				}
 				elseif ($field == 'version' || $field == 'target_version')
 				{
-					// TODO: Make this work?
+					// TODO: Make this work
 					// Check if version is subversion
 					/*if (empty($old_value))
 						$old_value = $txt['issue_none'];
@@ -679,7 +679,21 @@ function loadTimeline($project = 0)
 					else
 						$new_value = $context['versions'][$new_value]['name'];*/
 				}
+				elseif ($field == 'category')
+				{
+					// TODO: Make this work
+					/*
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$old_value]))
+						$old_value = $context['project']['category'][$old_value]['name'];
 
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$new_value]))
+						$new_value = $context['project']['category'][$new_value]['name'];*/
+				}
+				
 				$changes[] = sprintf($txt['change_timeline_' . $field], $old_value, $new_value);
 			}
 
@@ -1314,6 +1328,18 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 						$new_value = $txt['issue_none'];
 					else
 						$new_value = getVersions(explode(',', $new_value), true);
+				}
+				elseif ($field == 'category')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$old_value]))
+						$old_value = $context['project']['category'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$new_value]))
+						$new_value = $context['project']['category'][$new_value]['name'];
 				}
 				elseif ($field == 'assign')
 				{

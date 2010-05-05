@@ -1303,6 +1303,10 @@ function getVersions($versions, $as_string = false)
 {
 	global $context;
 	
+	// Versions might be comma separated list from database
+	if (!is_array($versions))
+		$versions = explode(',', $versions);
+	
 	$return = array();
 	
 	foreach ($versions as $ver)

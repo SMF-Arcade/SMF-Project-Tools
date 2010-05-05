@@ -366,6 +366,18 @@ function getEvent()
 					else
 						$new_value = getVersions(explode(',', $new_value), true);
 				}
+				elseif ($field == 'category')
+				{
+					if (empty($old_value))
+						$old_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$old_value]))
+						$old_value = $context['project']['category'][$old_value]['name'];
+
+					if (empty($new_value))
+						$new_value = $txt['issue_none'];
+					elseif (isset($context['project']['category'][$new_value]))
+						$new_value = $context['project']['category'][$new_value]['name'];
+				}
 				elseif ($field == 'assign')
 				{
 					loadMemberData(array($old_value, $new_value));
