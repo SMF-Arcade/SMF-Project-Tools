@@ -1071,7 +1071,7 @@ function getIssuesFilter($mode = 'default', $options = array())
 			$filter['title'] = $smcFunc['htmlspecialchars']($_REQUEST['title']);
 	
 		if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
-			$filter['tracker'] = $_REQUEST['tracker'];
+			$filter['tracker'] = $context['possible_types'][$_REQUEST['tracker']];
 	
 		if (isset($_REQUEST['category']))
 			$filter['category'] = $_REQUEST['category'];

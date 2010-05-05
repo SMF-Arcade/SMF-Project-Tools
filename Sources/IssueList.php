@@ -62,11 +62,6 @@ function IssueList()
 		$ascending = !isset($_REQUEST['desc']);
 		$context['sort_direction'] = $ascending ? 'up' : 'down';
 	}
-
-	$context['possible_types'] = array();
-
-	foreach ($context['project']['trackers'] as $tracker)
-		$context['possible_types'][$tracker['tracker']['short']] = &$context['issue_trackers'][$tracker['tracker']['short']];
 		
 	// Get default filter for comparsion purposes
 	$defaultFilter = getIssuesFilter();

@@ -415,6 +415,11 @@ function loadProject()
 		cache_put_data('project-version-' . $project, array($context['versions'], $context['versions_id']), 120);
 	}
 
+	$context['possible_types'] = array();
+
+	foreach ($context['project']['trackers'] as $id => $tracker)
+		$context['possible_types'][$tracker['tracker']['short']] = $id;
+		
 	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
 
 	// Developers can see all issues
