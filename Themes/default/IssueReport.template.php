@@ -34,7 +34,7 @@ function template_report_issue()
 	</div>';
 
 	echo '
-	<form action="', project_get_url(array('sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<h4 class="titlebg"><span class="left"></span>', $txt['report_issue'], '</h4>
 			<div class="windowbg">
