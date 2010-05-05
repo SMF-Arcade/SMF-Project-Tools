@@ -91,7 +91,6 @@ function template_issue_view_below()
 	echo '
 	</div>';
 	
-	
 	// Issue Info table
 	echo '
 	<div id="issueinfo" class="floatright">
@@ -652,26 +651,26 @@ function template_event_full(&$event, &$alternate)
 					</div>';
 
 	// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
-	if ($event['is_comment'] && ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove']))
+	if ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove'])
 		echo '
 					<ul class="reset smalltext quickbuttons">';
 
 	// Can they reply? Have they turned on quick reply?
-	if ($event['is_comment'] && $context['can_comment'])
+	if ($context['can_comment'])
 		echo '
 						<li class="quote_button" ><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['quote'], '</a></li>';
 
 	// Can the user modify the contents of this post?
-	if ($event['is_comment'] && $event['comment']['can_edit'])
+	if ($event['comment']['can_edit'])
 		echo '
 						<li class="modify_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
 
 	// How about... even... remove it entirely?!
-	if ($event['is_comment'] && $event['comment']['can_remove'])
+	if ($event['comment']['can_remove'])
 		echo '
 						<li class="remove_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
 
-	if ($event['is_comment'] && ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove']))
+	if ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove'])
 		echo '
 					</ul>';
 
@@ -696,42 +695,43 @@ function template_event_full(&$event, &$alternate)
 		
 	echo '	
 					</div>
-				</div>';
+				</div>
+			</div>';
 
 	// Now for the signature, ip logged, etc...
 	echo '
-				<div class="moderatorbar">
-					<div class="smalltext modified" id="modified_', $event['id'], '">';
+			<div class="moderatorbar">
+				<div class="smalltext modified" id="modified_', $event['id'], '">';
 
 	// Show "« Last Edit: Time by Person »" if this post was edited.
 	if ($settings['show_modify'] && !empty($event['comment']['modified']['name']))
 		echo '
-							&#171; <em>', $txt['last_edit'], ': ', $event['comment']['modified']['time'], ' ', $txt['by'], ' ', $event['comment']['modified']['name'], '</em> &#187;';
+						&#171; <em>', $txt['last_edit'], ': ', $event['comment']['modified']['time'], ' ', $txt['by'], ' ', $event['comment']['modified']['name'], '</em> &#187;';
 
 	echo '
-					</div>
-					<div class="smalltext reportlinks">
-						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+				</div>
+			<div class="smalltext reportlinks">
+				<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
 		// Show the IP to this user for this post - because you can moderate?
 	if ($context['can_moderate_forum'] && !empty($event['member']['ip']))
 		echo '
-						<a href="', $scripturl, '?action=', !empty($event['member']['is_guest']) ? 'trackip' : 'profile;area=tracking;sa=ip;u='. $event['member']['id'], ';searchip=', $event['member']['ip'], '">', $event['member']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+					<a href="', $scripturl, '?action=', !empty($event['member']['is_guest']) ? 'trackip' : 'profile;area=tracking;sa=ip;u='. $event['member']['id'], ';searchip=', $event['member']['ip'], '">', $event['member']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
 	// Or, should we show it because this is you?
 	elseif ($event['can_see_ip'])
 		echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $event['member']['ip'], '</a>';
+					<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $event['member']['ip'], '</a>';
 	// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
 	elseif (!$context['user']['is_guest'])
 		echo '
-						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+					<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
 		// Otherwise, you see NOTHING!
 	else
 		echo '
-							', $txt['logged'];
+					', $txt['logged'];
 
 	echo '
-					</div>';
+				</div>';
 
 	// Are there any custom profile fields for above the signature?
 	if (!empty($event['member']['custom_fields']))
@@ -745,28 +745,28 @@ function template_event_full(&$event, &$alternate)
 			{
 				$shown = true;
 				echo '
-					<div class="custom_fields_above_signature">
-						<ul class="reset nolist">';
+				<div class="custom_fields_above_signature">
+					<ul class="reset nolist">';
 			}
 			echo '
-							<li>', $custom['value'], '</li>';
+						<li>', $custom['value'], '</li>';
 		}
 		if ($shown)
 			echo '
-						</ul>
-					</div>';
+					</ul>
+				</div>';
 	}
 
 	// Show the member's signature?
 	if (!empty($event['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 		echo '
-					<div class="signature">', $event['member']['signature'], '</div>';
+				<div class="signature">', $event['member']['signature'], '</div>';
 
 	echo '
-				</div>
-				<span class="botslice"><span></span></span>
 			</div>
-			<hr class="post_separator" />';
+			<span class="botslice"><span></span></span>
+		</div>
+		<hr class="post_separator" />';
 		
 	$alternate = !$alternate;	
 }
