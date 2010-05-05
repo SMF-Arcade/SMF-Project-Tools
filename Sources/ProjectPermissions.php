@@ -575,7 +575,6 @@ function EditProfilePermissions2()
 	$allPermissions = getAllPTPermissions();
 
 	$permissions = array();
-	$delete = array();
 
 	foreach ($allPermissions as $perm => $opt)
 	{
@@ -599,18 +598,19 @@ function EditProfilePermissions2()
 			$permissions[] = array($context['profile']['id'], $context['group']['id'], $perm);
 	}
 
-	if (!empty($delete))
-		$smcFunc['db_query']('' , '
-			DELETE FROM {db_prefix}project_permissions
-			WHERE id_group = {int:group}
-				AND id_profile = {int:profile}',
-			array(
-				'permissions' => $delete,
-				'group' => $context['group']['id'],
-				'profile' => $context['profile']['id'],
-			)
-		);
+	// Delete old permissions
+	$smcFunc['db_query']('' , '
+		DELETE FROM {db_prefix}project_permissions
+		WHERE id_group = {int:group}
+			AND id_profile = {int:profile}',
+		array(
+			'permissions' => $delete,
+			'group' => $context['group']['id'],
+			'profile' => $context['profile']['id'],
+		)
+	);
 
+	// Insert new permissions
 	if (!empty($permissions))
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}project_permissions',
