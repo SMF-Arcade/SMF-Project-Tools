@@ -83,8 +83,8 @@ function IssueList()
 
 	$context['possible_types'] = array();
 
-	foreach ($context['project']['trackers'] as $tracker)
-		$context['possible_types'][$tracker['tracker']['short']] = &$context['issue_trackers'][$tracker['tracker']['short']];
+	foreach ($context['project']['trackers'] as $id => $tracker)
+		$context['possible_types'][$tracker['tracker']['short']] = $id;
 
 	if (!empty($_REQUEST['title']))
 	{
@@ -94,7 +94,7 @@ function IssueList()
 
 	if (!empty($_REQUEST['tracker']) && isset($context['possible_types'][$_REQUEST['tracker']]))
 	{
-		$context['issue_search']['tracker'] = $_REQUEST['tracker'];
+		$context['issue_search']['tracker'] = $context['possible_types'][$_REQUEST['tracker']];
 		$baseurl['tracker'] = $_REQUEST['tracker'];
 	}
 
