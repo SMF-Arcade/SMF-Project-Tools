@@ -3,10 +3,40 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.5                                                        ???
 ================================================================================
+May 2010
+--------------------------------------------------------------------------------
+ ! Replies count not adjusted when removing comment (based on fix from feline)
+ ! Use default_images_url for tracker images [Issue #134]
+ ! Go up at top should be Go down [Issue #365]
+ ! Category was shown as ID number in changes list instead of category name
+ ! Permissions wasn't removed [Issue #371]
+ ! Unable to remove notifications from profile [Issue #282]
+
+April 2010
+--------------------------------------------------------------------------------
+ + Added Basic Extensions Admin page
+ ! Query was empty error on issue list
+
+February 2010
+--------------------------------------------------------------------------------
+ ! Fixed undefined index errors on maintenance, deleted members step [Issue #360]
+ ! Better link for open issues in roadmap [Issue #359]
+ ! If post moderation was active, all attachments would be unapproved without ability to approve
+ ! updateIssue handled $return_log parameter wrong in certain case
+ ! Use posterOptions['id'] instead of $user_info['id'] in createComment
+    to make sure id_updater is correct, for example in svn post-commit scripts
+
+January 2010
+--------------------------------------------------------------------------------
+ ! Comments view was not showing details or showed incorrect
+ + Added function for getting filter (part of improving issues list)
+ + Function for creating issue lists and use it for main issues list
+
 December 2009
 --------------------------------------------------------------------------------
  + Implemented Basic Project Module support [Issue #319]
  + Use AJAX to load new comments and updates [Issue #302]
+ ! Having issue_view_private issues permission could cause errors
  + Added beforeSubaction callback for modules
  
 November 2009

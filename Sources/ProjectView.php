@@ -66,6 +66,8 @@ function ProjectView()
 			)
 		);
 		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+		
+		// If user is subscribed reset sent status
 		if ($context['is_subscribed'])
 		{
 			list ($sent) = $smcFunc['db_fetch_row']($request);

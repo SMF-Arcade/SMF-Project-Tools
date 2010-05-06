@@ -51,6 +51,22 @@ function IssueReply()
 	}
 
 	$context['destination'] = 'reply2';
+	
+	// Check if user has subscribed to issue
+	$request = $smcFunc['db_query']('', '
+		SELECT sent
+		FROM {db_prefix}log_notify_projects
+		WHERE id_project = {int:project}
+			AND id_member = {int:current_member}
+		LIMIT 1',
+		array(
+			'project' => $project,
+			'current_member' => $user_info['id'],
+		)
+	);
+	$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+	$smcFunc['db_free_result']($request);
+	
 	$context['notify'] = isset($_POST['issue_subscribe']) ? !empty($_POST['issue_subscribe']) : ($context['is_subscribed'] || !empty($options['auto_notify']));
 
 	// Editor
