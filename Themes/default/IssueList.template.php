@@ -29,7 +29,7 @@ function template_issue_list()
 
 	echo '
 				</select>
-				<select name="type">
+				<select name="tracker">
 					<option value="0"', empty($context['issue_search']['tracker']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
 
 	foreach ($context['project']['trackers'] as $tracker)
