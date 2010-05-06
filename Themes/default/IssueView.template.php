@@ -27,7 +27,7 @@ function template_issue_view_above()
 	echo '
 	<a name="com', $context['current_issue']['comment_first'], '"></a>
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" align="bottom" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
+		<img src="', $settings['images_url'], '/', $context['current_issue']['tracker']['image'], '" style="vertical-align: middle;" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
 		<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
 	</h3>
 	
