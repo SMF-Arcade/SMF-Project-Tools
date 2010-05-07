@@ -791,9 +791,12 @@ function project_get_url($params = array(), $project = null)
 			$project = $params['project'];
 		elseif (!empty($GLOBALS['project']))
 			$project = $GLOBALS['project'];
-		// Should never happen
+		// Should never happen, log in case it happens
 		else
-			fatal_error(print_r(debug_backtrace(), true));
+		{
+			log_error('Unable to detect project! Please include this in bug report: ' . print_r(debug_backtrace(), true));
+			trigger_error('Unable to detect project! See error_log for details');
+		}
 	}
 			
 	// Running in "standalone" mode WITH rewrite

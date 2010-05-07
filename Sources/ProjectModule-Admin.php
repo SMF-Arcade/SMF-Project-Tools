@@ -91,6 +91,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 		loadTemplate('ProjectModule-Admin');
 		loadTemplate('ManageProjects');
 		
+		loadLanguage('ProjectAdmin');
+		
 		projectIsAllowedTo('admin');
 		
 		// Tabs
@@ -121,13 +123,21 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminVersions()
 	{
+		if (empty($_REQUEST['version']))
+			$this->ProjectAdminVersionsList();
+		else
+			$this->ProjectAdminVersionEdit();
+	}
+	
+	public function ProjectAdminVersionsList()
+	{	
 		global $scripturl, $sourcedir, $context, $txt, $project;
 		
 		$listOptions = array(
 			'id' => 'versions_list',
 			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 			'get_items' => array(
-				'function' => 'list_getVersions',
+				'function' => 'list_getVersions2',
 				'params' => array(
 					$project,
 				),
@@ -170,7 +180,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 					'data' => array(
 						'function' => create_function('$list_item', '
 							global $txt, $scripturl;
-							return (empty($list_item[\'level\']) ? \'<a href="\' .  $scripturl . \'?action=admin;area=manageprojects;section=versions;sa=new;project=' . $id_project . ';parent=\' . $list_item[\'id\'] . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
+							return (empty($list_item[\'level\']) ? \'<a href="\' .  project_get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 						'),
 						'style' => 'text-align: right;',
 					),
@@ -192,7 +202,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				array(
 					'position' => 'bottom_of_list',
 					'value' => '
-						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'newVersion')) . '">
+						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions', 'version' => 'new')) . '">
 							' . $txt['new_version_group'] . '
 						</a>',
 					'class' => 'catbg',
