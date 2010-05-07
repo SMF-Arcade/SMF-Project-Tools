@@ -435,7 +435,7 @@ function loadProject()
 	// Load Project Settings
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, variable, value
-		FROM {db_prefix}project_settings AS ps
+		FROM {db_prefix}project_settings
 		WHERE id_project = {int:project}
 			AND (id_member = {int:no_member} OR id_member = {int:current_member})
 		ORDER BY id_member',
@@ -452,6 +452,36 @@ function loadProject()
 		$projectSettings[$row['variable']] = $row['value'];
 	$smcFunc['db_free_result']($request);
 
+}
+
+// Updates settings of project
+function updateProjectSettings($settings, $force_project = 0)
+{
+	global $projectSettings, $project, $smcFunc;
+	
+	if ($force_project === 0)
+		$force_project = $project;
+		
+	$rows = array();
+	
+	foreach ($settings as $variable => $value)
+	{
+		$rows[] = array($force_project, $variable, $value);
+		
+		if ($force_project == $project)
+			$projectSettings[$variable] = $value;
+	}
+	
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}project_settings',
+		array(
+			'id_project' => 'int',
+			'variable' => 'varchar-255',
+			'value' => 'string',
+		),
+		$rows,
+		array('id_project', 'variable')
+	);
 }
 
 function loadProjectToolsPage($mode = '')
