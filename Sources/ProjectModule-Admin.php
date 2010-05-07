@@ -95,6 +95,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		
 		projectIsAllowedTo('admin');
 		
+		// Template layers for Admin pages
+		$context['template_layers'][] = 'ProjectModuleAdmin';
+		
 		// Tabs
 		$context['project_admin_tabs'] = array(
 			'tabs' => array(
