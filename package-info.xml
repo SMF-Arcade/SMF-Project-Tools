@@ -40,7 +40,6 @@
 		<require-file name="Sources/ProjectModule-Issues.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectModule-Roadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectRoadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
