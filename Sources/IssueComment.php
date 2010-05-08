@@ -53,19 +53,24 @@ function IssueReply()
 	$context['destination'] = 'reply2';
 	
 	// Check if user has subscribed to issue
-	$request = $smcFunc['db_query']('', '
-		SELECT sent
-		FROM {db_prefix}log_notify_projects
-		WHERE id_project = {int:project}
-			AND id_member = {int:current_member}
-		LIMIT 1',
-		array(
-			'project' => $project,
-			'current_member' => $user_info['id'],
-		)
-	);
-	$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
-	$smcFunc['db_free_result']($request);
+	if ($user_info['is_logged'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT sent
+			FROM {db_prefix}log_notify_projects
+			WHERE id_project = {int:project}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'project' => $project,
+				'current_member' => $user_info['id'],
+			)
+		);
+		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+		$smcFunc['db_free_result']($request);
+	}
+	else
+		$context['is_subscribed'] = false;
 	
 	$context['notify'] = isset($_POST['issue_subscribe']) ? !empty($_POST['issue_subscribe']) : ($context['is_subscribed'] || !empty($options['auto_notify']));
 
@@ -213,7 +218,7 @@ function IssueReply()
 
 function IssueReply2()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $project;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
@@ -285,6 +290,26 @@ function IssueReply2()
 
 		return IssueReply();
 	}
+	
+	// Check if user has subscribed to issue
+	if ($user_info['is_logged'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT sent
+			FROM {db_prefix}log_notify_projects
+			WHERE id_project = {int:project}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'project' => $project,
+				'current_member' => $user_info['id'],
+			)
+		);
+		$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+		$smcFunc['db_free_result']($request);
+	}
+	else
+		$context['is_subscribed'] = false;	
 
 	$_POST['guestname'] = $user_info['username'];
 	$_POST['email'] = $user_info['email'];
