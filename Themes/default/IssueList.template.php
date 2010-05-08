@@ -99,7 +99,7 @@ function template_issue_list()
 
 function template_issue_list_full($id)
 {
-	global $context, $settings;
+	global $context, $settings, $txt;
 	
 	echo '
 	<div class="issue_table">
