@@ -604,7 +604,6 @@ function EditProfilePermissions2()
 		WHERE id_group = {int:group}
 			AND id_profile = {int:profile}',
 		array(
-			'permissions' => $delete,
 			'group' => $context['group']['id'],
 			'profile' => $context['profile']['id'],
 		)
