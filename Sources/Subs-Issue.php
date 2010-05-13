@@ -1119,7 +1119,7 @@ function createIssueList($issueListOptions)
 		
 	if (!isset($issueListOptions['sort']))
 		$issueListOptions['sort'] = 'i.updated DESC';
-	if (isset($issueListOptions['ascending']))
+	if (!isset($issueListOptions['ascending']))
 		$issueListOptions['ascending'] = true;
 	
 	// Build where clause
@@ -1258,7 +1258,7 @@ function createIssueList($issueListOptions)
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions'])),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
@@ -1291,7 +1291,7 @@ function createIssueList($issueListOptions)
 	}
 	$smcFunc['db_free_result']($request);
 	
-	return $id;
+	return $key;
 }
 
 function link_tags(&$tag, $key, $baseurl)

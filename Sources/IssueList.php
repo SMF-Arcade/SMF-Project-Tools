@@ -79,6 +79,7 @@ function IssueList()
 		'sort' => $_REQUEST['sort'],
 		'ascending' => $ascending,
 	);
+	$context['issue_search'] = $issueListOptions['filter'];
 	
 	// Add filter's to url if it's non-default
 	if ($defaultFilter['title'] != $issueListOptions['filter']['title'])
