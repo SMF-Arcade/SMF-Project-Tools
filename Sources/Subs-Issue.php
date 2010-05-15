@@ -1106,7 +1106,7 @@ function getIssuesFilter($mode = 'default', $options = array())
 
 function createIssueList($issueListOptions)
 {
-	global $smcFunc, $context, $user_info, $scripturl;
+	global $smcFunc, $context, $user_info, $scripturl, $txt;
 	
 	assert(isset($issueListOptions['id']));
 	
