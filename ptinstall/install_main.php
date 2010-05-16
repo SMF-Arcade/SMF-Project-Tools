@@ -20,6 +20,13 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+/**
+ * Main installer. Used in package-info.xml and install.php standalone installer
+ *
+ * @package installer
+ * @since 0.1
+ */
+
 global $txt, $smcFunc, $db_prefix, $modSettings;
 global $project_version, $addSettings, $permissions, $tables, $sourcedir;
 

@@ -20,9 +20,26 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+/**
+ * Helper functions for installer
+ *
+ * @package installer
+ * @version 0.5
+ * @since 0.1
+ */
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/**
+ * Creates tables based on array
+ *
+ * @param array $tables Array containing descriptions for tables
+ * @param array $columnRename Array containing column renames
+ * @return array Log of changes
+ *
+ * @since 0.1
+ */
 function doTables($tables, $columnRename = array())
 {
 	global $smcFunc, $db_prefix, $db_type, $db_show_debug;
@@ -198,6 +215,14 @@ function doTables($tables, $columnRename = array())
 	return $log;
 }
 
+/**
+ * Add settings based on array
+ *
+ * @param array $addSettings Array of settings to add
+ * @return void
+ *
+ * @since 0.1
+ */
 function doSettings($addSettings)
 {
 	global $smcFunc, $modSettings;
@@ -216,6 +241,14 @@ function doSettings($addSettings)
 		updateSettings($update);
 }
 
+/**
+ * Add permissions based on array
+ *
+ * @param array $permissions Permissions to add
+ * @return void
+ *
+ * @since 0.1
+ */
 function doPermission($permissions)
 {
 	global $smcFunc;
@@ -256,6 +289,14 @@ function doPermission($permissions)
 	);
 }
 
+/**
+ * Enables or disabled core features.
+ *
+ * @param array $permissions Permissions to add
+ * @return boolean Returns true on success
+ *
+ * @since 0.1
+ */
 function updateAdminFeatures($item, $enabled = false)
 {
 	global $modSettings;

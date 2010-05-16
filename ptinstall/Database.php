@@ -20,6 +20,13 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+/**
+ * This script contains database description
+ *
+ * @package installer
+ * @since 0.1
+ */
+
 global $project_version, $addSettings, $permissions, $tables;
 
 if (!defined('SMF'))

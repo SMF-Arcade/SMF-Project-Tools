@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This script is standalone installer for SMF Project Tools
+ *
+ * @package installer
+ * @since 0.1
+ */
+
 // If SSI.php is in the same place as this file, and SMF isn't defined, this is being run standalone.
 if (file_exists(dirname(dirname(__FILE__)) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(dirname(__FILE__)) . '/SSI.php');
