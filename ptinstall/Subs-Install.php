@@ -272,7 +272,8 @@ function doPermission($permissions)
 /**
  * Enables or disabled core features.
  *
- * @param array $permissions Permissions to add
+ * @param string $item Feature
+ * @param boolean $enabled Whatever to enable or disable feature
  * @return boolean Returns true on success
  *
  * @since 0.1

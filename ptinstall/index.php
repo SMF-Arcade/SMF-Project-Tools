@@ -1,9 +1,10 @@
 <?php
-
 /**
  * This script is standalone installer for SMF Project Tools
  *
  * @package installer
+ * @version 0.5
+ * @license htttp://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
 
