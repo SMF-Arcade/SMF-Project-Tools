@@ -908,6 +908,7 @@ $tables = array(
 		),
 		'indexes' => array(
 			array(
+				'name' => 'id_issue',
 				'type' => 'index',
 				'columns' => array('id_issue')
 			),
@@ -948,6 +949,7 @@ $tables = array(
 				'columns' => array('id_issue', 'id_attach')
 			),
 			array(
+				'name' => 'id_issue',
 				'type' => 'index',
 				'columns' => array('id_issue')
 			),
