@@ -96,8 +96,19 @@ class ProjectModule_General extends ProjectModule_Base
 			'subscribe' => array(
 				'file' => 'ProjectView.php',
 				'callback' => 'ProjectSubscribe',
-			),			
+			),
+			'markasread' => array(
+				'callback' => array($this, 'MarkRead')
+			)
 		);
+	}
+	
+	
+	function MarkRead()
+	{
+		global $project;
+		
+		markProjectsRead($project, isset($_REQUEST['unread']));
 	}
 	
 	function RegisterProjectArea()
