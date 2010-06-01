@@ -1,4 +1,11 @@
 <?php
+/**
+ * Build system
+ *
+ * @package build
+ * @version 1.0.2
+ * @license http://download.smfproject.net/license.php New-BSD
+ */
 
 // Version of this file
 $build_version = '1.0.2';
@@ -255,10 +262,8 @@ class BuildLog
 	private $log = array();
 	
 	function __construct()
-	{
-		global $build_version;
-		
-		$this->addMessage('Build log started (Niko\'s Build system %1$s)', array($build_version));
+	{		
+		$this->addMessage('Build log started!');
 	}
 	
 	function addMessage($message, $vars = array())
