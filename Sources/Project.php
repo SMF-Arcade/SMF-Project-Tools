@@ -111,16 +111,6 @@ function Projects($standalone = false)
 				'is_selected' => false,
 				'order' => 'first',
 			),
-			'issues' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'issues')),
-				'title' => $txt['issues'],
-				'is_selected' => false,
-				'linktree' => array(
-					'name' => $txt['linktree_issues'],
-					'url' => project_get_url(array('project' => $project, 'area' => 'issues')),
-				),
-				'order' => 10,
-			)
 		),
 	);
 
@@ -144,21 +134,6 @@ function Projects($standalone = false)
 		}
 	}
 	
-	// Let Modules register subactions to areas
-	if (!empty($context['active_project_modules']))
-	{
-		foreach ($context['active_project_modules'] as $id => $module)
-		{
-			if (method_exists($module, 'RegisterProjectSubactions'))
-			{
-				$addActions = $module->RegisterProjectSubactions(array_keys($subAreas));
-				
-				foreach ($addActions as $id => $data)
-					$subAreas[$data['area']]['subactions'][$id] = $data + array('module' => $id);
-			}
-		}
-	}
-
 	// Remove tabs which user has no permission to see 
 	foreach ($context['project_tabs']['tabs'] as $id => $tab)
 	{

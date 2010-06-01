@@ -6,6 +6,7 @@ SMF Project Tools 0.5                                                        ???
 June 2010
 --------------------------------------------------------------------------------
  ! Searching by title crashed because of missing global [Issue #397]
+ ! Moved some Issue Tracker related to code to Issue Tracker module
  
 May 2010
 --------------------------------------------------------------------------------
