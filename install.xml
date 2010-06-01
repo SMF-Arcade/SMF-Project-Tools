@@ -487,6 +487,11 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 
 	<file name="$sourcedir/Subs.php">
 		<operation>
+			<search position="before"><![CDATA[$context['allow_admin'] = allowedTo(array(]]></search>
+			<add><![CDATA['project_admin', ]]></add>
+		</operation>
+		
+		<operation>
 			<search position="before"><![CDATA[	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);]]></search>
 			<add><![CDATA[	$context['allow_project'] = !empty($modSettings['projectEnabled']) && allowedTo('project_access');]]></add>
 		</operation>
