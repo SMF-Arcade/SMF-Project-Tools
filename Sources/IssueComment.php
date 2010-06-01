@@ -1,6 +1,6 @@
 <?php
 /**
- * Hanles commenting issue and editing comments
+ * Handles commenting issue and editing comments
  *
  * @package issuetracker
  * @version 0.5
@@ -8,6 +8,9 @@
  * @since 0.1
  */
 
+/**
+ * Display Reply or Edit Reply page
+ */
 function IssueReply()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options;
@@ -204,6 +207,9 @@ function IssueReply()
 	loadTemplate('IssueReport');
 }
 
+/**
+ * Add new reply or save edit
+ */
 function IssueReply2()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $project;
@@ -426,6 +432,9 @@ function IssueReply2()
 	redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_event)) . '#com' . $id_comment);
 }
 
+/**
+ * Delete Comment
+ */
 function IssueDeleteComment()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;

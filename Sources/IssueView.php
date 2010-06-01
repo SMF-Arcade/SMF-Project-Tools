@@ -11,12 +11,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
-	View and Edit issue
-
-*/
-
-// Load Issue View variables
+/**
+ * Loads variables for issue view page
+ */
 function loadIssueView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
@@ -62,6 +59,9 @@ function loadIssueView()
 	}
 }
 
+/**
+ * Displays Issue View page
+ */
 function IssueView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
@@ -255,6 +255,9 @@ function IssueView()
 	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
 }
 
+/**
+ * Callback for getting next event from template. Done this way to save memory.
+ */
 function getEvent()
 {
 	global $context, $smcFunc, $user_info, $txt, $modSettings, $memberContext;
@@ -444,6 +447,11 @@ function getEvent()
 	return $event;
 }
 
+/**
+ * Loads data for attachments
+ *
+ * @todo Move Issue Attachments to module
+ */
 function loadAttachmentData()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $issue;
@@ -545,6 +553,11 @@ function loadAttachmentData()
 	$context['attachments'] = &$attachmentData;
 }
 
+/**
+ * Adds or removes tags from Issue
+ *
+ * @todo Move tagging to own module? If not move to IssueReport.php
+ */
 function IssueTag()
 {
 	global $context, $user_info, $smcFunc;
@@ -646,6 +659,11 @@ function IssueTag()
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
 }
 
+/**
+ * Display page to move issue to another project
+ *
+ * @todo Merge to Updating Issue?
+ */
 function IssueMove()
 {
 	global $context, $project, $user_info, $smcFunc;
@@ -703,6 +721,12 @@ function IssueMove()
 	$context['sub_template'] = 'issue_move';
 }
 
+/**
+ * Takes request to delete issue
+ *
+ * @see deleteIssue
+ * @todo Move to IssueReport.php?
+ */
 function IssueDelete()
 {
 	global $context, $user_info, $smcFunc;

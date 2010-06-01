@@ -12,18 +12,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	Report Issue / Edit issue
-
-	void ReportIssue()
-		- Shows report form
-
-	void ReportIssue2()
-		- Validates
-		- Shows form again if theres errors
-		- Calls createIssue which handles rest
-
-*/
-
+/**
+ * Displayis Issue Report form
+ */
 function ReportIssue()
 {
 	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project, $options;
@@ -125,6 +116,10 @@ function ReportIssue()
 	$context['page_title'] = sprintf($txt['project_report_issue'], $context['project']['name']);
 }
 
+/**
+ * Validates posted issue and add it to database if everything is ok.
+ * Calls ReportIsssue if previewing or form had errors
+ */
 function ReportIssue2()
 {
 	global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project;
@@ -253,6 +248,9 @@ function ReportIssue2()
 	redirectexit(project_get_url(array('project' => $project, 'area' => 'issues')));
 }
 
+/**
+ * Handles ajax calls to update issue
+ */
 function IssueUpdate()
 {
 	global $context, $user_info, $smcFunc, $issue, $sourcedir;
@@ -404,6 +402,9 @@ function IssueUpdate()
 	$context['sub_template'] = 'generic_xml';
 }
 
+/**
+ * Helper function for getting parameters for update function
+ */
 function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 {
 	global $context, $user_info, $smcFunc, $sourcedir, $txt;
@@ -601,6 +602,11 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	}
 }
 
+/**
+ * Takes file uploads
+ *
+ * @todo Move Issue Attachments to module
+ */
 function IssueUpload()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;

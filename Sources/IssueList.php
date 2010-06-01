@@ -11,11 +11,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
-	Issue List / Search
-
-*/
-
+/**
+ * Displays main issue list page
+ */
 function IssueList()
 {
 	global $project, $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt, $board;
