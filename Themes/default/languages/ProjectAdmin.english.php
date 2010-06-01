@@ -97,6 +97,7 @@ $txt['project_trackers'] = 'Issue Types';
 $txt['project_trackers_desc'] = 'Select issue types you want to use in this project';
 
 $txt['project_modules'] = 'Modules';
+$txt['project_modules_desc'] = 'Select modules which are going to be available for this project';
 
 $txt['project_submit'] = 'Submit';
 $txt['delete_project'] = 'Delete Project';
