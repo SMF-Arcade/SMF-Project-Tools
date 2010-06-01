@@ -250,7 +250,7 @@ function template_issue_reply()
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value=="', $subv['id'], '"', isset($context['current_issue']['versions'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
+							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value="', $subv['id'], '"', isset($context['current_issue']['versions'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 
 		echo '
@@ -322,7 +322,7 @@ function template_issue_reply()
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_fixed_', $subv['id'], '" name="version_fixed[]" value=="', $subv['id'], '"', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
+							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_fixed_', $subv['id'], '" name="version_fixed[]" value="', $subv['id'], '"', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 		
 		echo '

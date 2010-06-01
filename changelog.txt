@@ -7,6 +7,7 @@ June 2010
 --------------------------------------------------------------------------------
  ! Searching by title crashed because of missing global [Issue #397]
  ! Moved some Issue Tracker related to code to Issue Tracker module
+ ! Subversions lost on non-quick reply
  
 May 2010
 --------------------------------------------------------------------------------
