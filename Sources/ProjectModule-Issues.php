@@ -98,6 +98,8 @@ class ProjectModule_Issues extends ProjectModule_Base
 	
 	function RegisterProjectTabs(&$tabs)
 	{
+		global $txt, $project;
+
 		$tabs['issues'] = array(
 			'href' => project_get_url(array('project' => $project, 'area' => 'issues')),
 			'title' => $txt['issues'],

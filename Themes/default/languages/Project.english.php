@@ -89,7 +89,6 @@ $txt['project_subscribe'] = 'Subscribe';
 $txt['project_unsubscribe'] = 'Unsubscribe';
 $txt['project_mark_read'] = 'Mark Project as Read';
 
-
 // Project Default Modules
 $txt['project_module_general'] = 'General';
 $txt['project_module_roadmap'] = 'Roadmap';

@@ -38,7 +38,7 @@ function template_project_view()
 	$project_buttons = array(
 		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
 		'reportIssue' => array('test' => 'can_report_issues', 'text' => 'new_issue', 'image' => 'new_issue.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'sa' => 'report')),),
-		'markRead' => array('text' => $txt['project_mark_read'], 'image' => 'mark_project_read.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'markasread')))
+		'markRead' => array('text' => 'project_mark_read', 'image' => 'mark_project_read.gif', 'lang' => true, 'url' => project_get_url(array('project' => $context['project']['id'], 'sa' => 'markasread')))
 	);
 
 	echo '
