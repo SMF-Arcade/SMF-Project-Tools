@@ -79,10 +79,13 @@ function Projects($standalone = false)
 			unset($_REQUEST['sa']);
 		}
 	}
-	elseif (!isset($_REQUEST['sa']) && !empty($issue))
+	
+	if ((!isset($_REQUEST['area']) || !isset($_REQUEST['sa'])) && !empty($issue))
 	{
 		$_REQUEST['area'] = 'issues';
-		$_REQUEST['sa'] = 'view';
+		
+		if (!isset($_REQUEST['sa']))
+			$_REQUEST['sa'] = 'view';
 	}
 	
 	// Areas are sets of subactions (registered by modules)

@@ -96,7 +96,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 					'order' => 'first',
 				),
 				'versions' => array(
-					'href' => project_get_url(array('project' => $project, 'area' => 'versions')),
+					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 					'title' => $txt['manage_versions'],
 					'is_selected' => false,
 					'order' => 10,
