@@ -4,7 +4,7 @@
  *
  * @package core
  * @version 0.5
- * @license htttp://download.smfproject.net/license.php New-BSD
+ * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.5
  */
 
@@ -97,6 +97,8 @@ class ProjectModule_General extends ProjectModule_Base
 		global $project;
 		
 		markProjectsRead($project, isset($_REQUEST['unread']));
+		
+		redirectexit(project_get_url('project' => $project));
 	}
 	
 	function RegisterProjectArea()

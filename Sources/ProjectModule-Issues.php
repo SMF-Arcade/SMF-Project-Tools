@@ -4,7 +4,7 @@
  *
  * @package issuetracker
  * @version 0.5
- * @license htttp://download.smfproject.net/license.php New-BSD
+ * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.5
  */
 
@@ -49,6 +49,10 @@ class ProjectModule_Issues extends ProjectModule_Base
 			'upload' => array(
 				'file' => 'IssueReport.php',
 				'callback' => 'IssueUpload',
+			),
+			'delete' => array(
+				'file' => 'IssueView.php',
+				'callback' => 'IssueDelete',
 			),
 			'move' => array(
 				'file' => 'IssueView.php',

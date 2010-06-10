@@ -4,7 +4,7 @@
  *
  * @package issuetracker
  * @version 0.5
- * @license htttp://download.smfproject.net/license.php New-BSD
+ * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
 
@@ -44,7 +44,7 @@ function IssueReply()
 	$context['destination'] = 'reply2';
 	
 	// Check if user has subscribed to issue
-	if ($user_info['is_logged'])
+	if (!$user_info['is_guest'])
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT sent
@@ -286,7 +286,7 @@ function IssueReply2()
 	}
 	
 	// Check if user has subscribed to issue
-	if ($user_info['is_logged'])
+	if (!$user_info['is_guest'])
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT sent

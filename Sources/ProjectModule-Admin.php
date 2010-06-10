@@ -4,7 +4,7 @@
  *
  * @package project-admin
  * @version 0.5
- * @license htttp://download.smfproject.net/license.php New-BSD
+ * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.5
  */
 

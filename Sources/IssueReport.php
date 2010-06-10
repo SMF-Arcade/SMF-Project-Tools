@@ -4,7 +4,7 @@
  *
  * @package issuetracker
  * @version 0.5
- * @license htttp://download.smfproject.net/license.php New-BSD
+ * @license http://download.smfproject.net/license.php New-BSD
  * @todo Move updating to its own file 
  * @since 0.1
  */
