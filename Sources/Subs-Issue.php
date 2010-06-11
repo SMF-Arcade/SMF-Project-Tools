@@ -677,13 +677,14 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 			array(
 				'current_project' => $id_project,
 				'current_member' => $user_info['id'],
-			);
+			)
+		);
 			
 		list ($num_unread_issues) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 		
 		// Mark project read if there's only one unread issue
-		if ($num_unread_issues =< 1)
+		if ($num_unread_issues <= 1)
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}log_projects',
 				array(
