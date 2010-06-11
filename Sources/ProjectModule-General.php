@@ -98,7 +98,7 @@ class ProjectModule_General extends ProjectModule_Base
 		
 		markProjectsRead($project, isset($_REQUEST['unread']));
 		
-		redirectexit(project_get_url('project' => $project));
+		redirectexit(project_get_url(array('project' => $project)));
 	}
 	
 	function RegisterProjectArea()
