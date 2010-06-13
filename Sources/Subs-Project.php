@@ -431,6 +431,18 @@ function loadProjectToolsPage($mode = '')
 
 		$context['issue_status'][$id] = $status;
 	}
+	
+	// Apply translated names to bug and feature trackers
+	foreach ($context['issue_trackers'] as $id => $tracker)
+	{
+		if (!isset($txt['issue_type_' . $tracker['short']]) || !isset($txt['issue_type_plural_' . $tracker['short']]))
+			continue;
+		
+		$tracker['name'] = $txt['issue_type_' . $tracker['short']];
+		$tracker['plural'] = $txt['issue_type_plural_' . $tracker['short']];
+		
+		$context['issue_trackers'][$id] = $tracker;
+	}
 
 	$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
 	$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;

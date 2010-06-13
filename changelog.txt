@@ -1,13 +1,19 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started April 6, 2007.
 
-SMF Project Tools 0.4.3                                               xx.xx.2010
+SMF Project Tools 0.4.3                                               13.06.2010
 ================================================================================
+June 2010
+--------------------------------------------------------------------------------
+ ! Tracker names were untranslatable [Issue #389]
+ 
 May 2010
 --------------------------------------------------------------------------------
  ! Replies count not adjusted when removing comment (based on fix from feline)
  ! Incorrect urls in roadmap (0.5 style)
  ! Unable to remove notifications from profile [Issue #282]
+ ! Bug image not aligned properly [Issue #337]
+ ! IP was not shown for deleted members
  
 SMF Project Tools 0.4.2                                               06.03.2010
 ================================================================================
