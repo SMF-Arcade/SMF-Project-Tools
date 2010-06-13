@@ -432,7 +432,7 @@ function loadProjectToolsPage($mode = '')
 		$context['issue_status'][$id] = $status;
 	}
 	
-	// Apply translated names to bug and feature trackers
+	// Apply translated names to trackers
 	foreach ($context['issue_trackers'] as $id => $tracker)
 	{
 		if (!isset($txt['issue_type_' . $tracker['short']]) || !isset($txt['issue_type_plural_' . $tracker['short']]))
