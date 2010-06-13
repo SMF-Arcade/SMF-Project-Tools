@@ -306,7 +306,7 @@ function loadProject()
 			$tracker = &$context['issue_trackers'][$id];
 			$context['project']['trackers'][$id] = array(
 				'id' => $id,
-				'tracker' => $tracker,
+				'tracker' => &$context['issue_trackers'][$id],
 				'short' => $tracker['short'],
 				'open' => $row['open_' . $tracker['short']],
 				'closed' => $row['closed_' . $tracker['short']],
