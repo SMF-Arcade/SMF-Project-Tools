@@ -1169,7 +1169,7 @@ function createIssueList($issueListOptions)
 		$where[] = 'i.id_assigned = {int:search_assignee}';
 
 	if (isset($issueListOptions['filter']['version']))
-		$where[] = '(FIND_IN_SET({int:search_version}, i.versions))';
+		$where[] = '(FIND_IN_SET({int:search_version}, i.versions) OR FIND_IN_SET({int:search_version}, i.versions_fixed))';
 
 	if (isset($issueListOptions['filter']['version_fixed']))
 		$where[] = '(FIND_IN_SET({int:search_version_f}, i.versions_fixed))';
