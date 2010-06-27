@@ -507,7 +507,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		</operation>
 
 		<operation>
-			<search position="after"><![CDATA[|action=profile;u=\d+)'),]]></search>
+			<search position="after"><![CDATA[|action=profile;u=\d+]]></search>
 			<add><![CDATA[|(action=projects)?(sa=viewIssue;)?(;)?issue=(\d+)(\.com(\d+))?(#com(\d+))?]]></add>
 		</operation>
 
