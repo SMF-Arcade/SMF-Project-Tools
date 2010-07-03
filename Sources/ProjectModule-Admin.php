@@ -116,6 +116,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 	{
 		if (empty($_REQUEST['version']))
 			$this->ProjectAdminVersionsList();
+		elseif (isset($_POST['save']))
+			$this->ProjectAdminVersionEdit2();
 		else
 			$this->ProjectAdminVersionEdit();
 	}
@@ -182,7 +184,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				),
 			),
 			'form' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions_list')),
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 				'include_sort' => true,
 				'include_start' => true,
 				'hidden_fields' => array(
@@ -207,6 +209,191 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 		// Template
 		$context['sub_template'] = 'versions_list';
+	}
+	
+	public function ProjectAdminVersionsEdit()
+	{	
+		global $scripturl, $sourcedir, $context, $txt, $project;
+
+		if ($_REQUEST['version'] == 'new')
+		{
+			$member_groups = array('-1', '0');
+	
+			$context['version'] = array(
+				'is_new' => true,
+				'id' => 0,
+				'project' => $context['project']['id'],
+				'name' => '',
+				'description' => '',
+				'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
+				'status' => 0,
+				'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
+				'permission_inherit' => true,
+			);
+		}
+		else
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT
+					v.id_version, v.id_project, v.id_parent, v.version_name,
+					v.status, v.member_groups, v.description, v.release_date, v.permission_inherit
+				FROM {db_prefix}project_versions AS v
+				WHERE id_version = {int:version}',
+				array(
+					'version' => $_REQUEST['version']
+				)
+			);
+	
+			if ($smcFunc['db_num_rows']($request) == 0)
+				fatal_lang_error('version_not_found', false);
+	
+			$row = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
+	
+			$member_groups = explode(',', $row['member_groups']);
+	
+			$context['version'] = array(
+				'id' => $row['id_version'],
+				'project' => $row['id_project'],
+				'name' => htmlspecialchars($row['version_name']),
+				'description' => htmlspecialchars($row['description']),
+				'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
+				'status' => $row['status'],
+				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
+				'permission_inherit' => !empty($row['permission_inherit']),
+			);
+		}
+	
+		// Default membergroups.
+		$context['groups'] = array(
+			-1 => array(
+				'id' => '-1',
+				'name' => $txt['guests'],
+				'checked' => in_array('-1', $member_groups),
+				'is_post_group' => false,
+			),
+			0 => array(
+				'id' => '0',
+				'name' => $txt['regular_members'],
+				'checked' => in_array('0', $member_groups),
+				'is_post_group' => false,
+			)
+		);
+	
+		// Load membergroups.
+		$request = $smcFunc['db_query']('', '
+			SELECT group_name, id_group, min_posts
+			FROM {db_prefix}membergroups
+			WHERE id_group > 3 OR id_group = 2
+			ORDER BY min_posts, id_group != 2, group_name');
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if ($_REQUEST['sa'] == 'new' && $row['min_posts'] == -1)
+				$member_groups[] = $row['id_group'];
+	
+			$context['groups'][(int) $row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => trim($row['group_name']),
+				'checked' => in_array($row['id_group'], $member_groups),
+				'is_post_group' => $row['min_posts'] != -1,
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	
+		// Template
+		$context['sub_template'] = 'edit_version';
+	}
+	
+	public function ProjectAdminVersionsEdit2()
+	{	
+		global $scripturl, $sourcedir, $context, $txt, $project;
+		
+		checkSession();
+	
+		$_POST['version'] = (int) $_POST['version'];
+	
+		if (isset($_POST['edit']) || isset($_POST['add']))
+		{
+			$versionOptions = array();
+	
+			$versionOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['version_name']);
+			$versionOptions['description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
+	
+			if (!empty($_POST['parent']))
+				$versionOptions['parent'] = $_POST['parent'];
+				
+			if (!empty($_POST['release_date'][0]))
+			{
+				$date = (int) $_POST['release_date'][0];
+				
+				// Note: This is meant to allow 0 as "not decided"
+				if ($date < 0 && $date > 31)
+					$date = 0;
+			}
+			else
+				$date = 0;
+				
+			if (!empty($_POST['release_date'][1]))
+			{
+				$month = (int) $_POST['release_date'][1];
+				
+				// Note: This is meant to allow 0 as "not decided"
+				if ($month < 0 && $month > 12)
+					$month = 0;
+			}
+			else
+				$month = 0;
+				
+			if (!empty($_POST['release_date'][2]))
+				$year = (int) $_POST['release_date'][2];
+			else
+				$year = 0;
+				
+			// Check that date is really valid
+			if (!empty($date) && !empty($month) && !empty($year) && !checkdate($month, $date, $year))
+			{
+				$date = 0;
+				$month = 0;
+				$year = 0;
+			}
+	
+			$versionOptions['release_date'] = serialize(array(
+				'day' => $date,
+				'month' => $month,
+				'year' => $year,
+			));
+	
+			$versionOptions['status'] = (int) $_POST['status'];
+	
+			if ($versionOptions['status'] < 0 || $versionOptions['status'] > 6)
+				$versionOptions['status'] = 0;
+	
+			$versionOptions['member_groups'] = array();
+			if (!empty($_POST['groups']))
+				foreach ($_POST['groups'] as $group)
+					$versionOptions['member_groups'][] = $group;
+					
+			$versionOptions['permission_inherit'] = !empty($_POST['permission_inherit']);
+	
+			if (isset($_POST['add']))
+				createVersion($project, $versionOptions);
+			else
+				updateVersion($project, $_POST['version'], $versionOptions);
+		}
+		elseif (isset($_POST['delete']))
+		{
+			// Todo: Add confmation
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_versions
+				WHERE id_version = {int:version}',
+				array(
+					'version' => $_POST['version']
+				)
+			);
+		}
+	
+		redirectexit(project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
 	}
 }
 
