@@ -126,8 +126,6 @@ else
 					'permission' => array('project_admin'),
 					'subsections' => array(
 						'list' => array($txt['modify_projects']),
-						'versions' => array($txt['manage_versions']),
-						'categories' => array($txt['manage_project_category']),
 						'new' => array($txt['new_project']),
 					),
 				),

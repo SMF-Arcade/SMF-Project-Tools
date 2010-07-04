@@ -25,51 +25,12 @@ function ManageProjects()
 
 	$context['page_title'] = $txt['manage_projects'];
 
-	$sections = array(
-		// Projects
-		'project' => array(
-			'id' => 'project',
-			'template' => 'ManageProjects',
-			'subActions' => array(
-				'list' => array('ManageProjectsList', 'list'),
-				'new' => array('EditProject', 'new'),
-				'edit' => array('EditProject', 'list'),
-				'edit2' => array('EditProject2', 'list'),
-			),
-		),
-		// Versions
-		/*'versions' => array(
-			'id' => 'versions',
-			'template' => 'ManageProjects',
-			'subActions' => array(
-				'list' => array('ManageVersionsList'),
-				'new' => array('EditVersion'),
-				'edit' => array('EditVersion'),
-				'edit2' => array('EditVersion2'),
-			),
-		),*/
-		// Categories
-		'categories' => array(
-			'id' => 'categories',
-			'template' => 'ManageProjects',
-			'subActions' => array(
-				'list' =>  array('ManageCategoriesList'),
-				'new' => array('EditCategory'),
-				'edit' => array('EditCategory'),
-				'edit2' => array('EditCategory2'),
-			),
-		),
+	$subActions = array(
+		'list' => array('ManageProjectsList', 'list'),
+		'new' => array('EditProject', 'new'),
+		'edit' => array('EditProject', 'list'),
+		'edit2' => array('EditProject2', 'list'),
 	);
-
-	$section = 'project';
-
-	if (isset($_REQUEST['sa']) && isset($sections[$_REQUEST['sa']]))
-		$section = $_REQUEST['sa'];
-	elseif (isset($_REQUEST['section']) && isset($sections[$_REQUEST['section']]))
-		$section = $_REQUEST['section'];
-
-	$section = $sections[$section];
-	$subActions = $section['subActions'];
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
@@ -77,14 +38,9 @@ function ManageProjects()
 		$context[$context['admin_menu_name']]['current_subsection'] = $subActions[$_REQUEST['sa']][1];
 	else
 		$context[$context['admin_menu_name']]['current_subsection'] = $section['id'];
-
-	// Load file if needed
-	if (!empty($section['file']))
-		require_once($sourcedir . '/' . $section['file']);
-
+		
 	// Load template if needed
-	if (!empty($section['template']))
-		loadTemplate($section['template']);
+	loadTemplate('ManageProjects');
 
 	// Call action
 	$subActions[$_REQUEST['sa']][0]();
@@ -381,209 +337,6 @@ function EditProject2()
 	}
 
 	redirectexit('action=admin;area=manageprojects');
-}
-
-function ManageCategories()
-{
-	global $context, $sourcedir, $user_info, $txt;
-
-	require_once($sourcedir . '/Project.php');
-
-	isAllowedTo('project_admin');
-	loadProjectToolsPage('admin');
-
-	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_category'];
-	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_project_category_description'];
-
-	$context['page_title'] = $txt['manage_project_category'];
-
-	$subActions = array(
-		'list' => array('ManageCategoriesList'),
-		'new' => array('EditCategory'),
-		'edit' => array('EditCategory'),
-		'edit2' => array('EditCategory2'),
-	);
-
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
-
-	if (isset($subActions[$_REQUEST['sa']][1]))
-		$context[$context['admin_menu_name']]['current_subsection'] = $subActions[$_REQUEST['sa']][1];
-
-	loadTemplate('ManageProjects');
-
-	// Call action
-	$subActions[$_REQUEST['sa']][0]();
-}
-
-function ManageCategoriesList()
-{
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
-
-	list ($id_project, $projectsHtml) = loadAdminProjects();
-
-	$listOptions = array(
-		'id' => 'categories_list',
-		'base_href' => $scripturl . '?action=admin;area=manageprojects;section=categories',
-		'get_items' => array(
-			'function' => 'list_getCategories',
-			'params' => array(
-				$id_project,
-			),
-		),
-		'columns' => array(
-			'check' => array(
-				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
-					'style' => 'width: 4%;',
-				),
-				'data' => array(
-					'sprintf' => array(
-						'format' => '<input type="checkbox" name="categories[]" value="%1$d" class="check" />',
-						'params' => array(
-							'id' => false,
-						),
-					),
-					'style' => 'text-align: center;',
-				),
-			),
-			'name' => array(
-				'header' => array(
-					'value' => $txt['header_category'],
-				),
-				'data' => array(
-					'db' => 'link',
-				),
-				'sort' => array(
-					'default' => 'cat.category_name',
-					'reverse' => 'cat.category_name DESC',
-				),
-			),
-		),
-		'form' => array(
-			'href' => $scripturl . '?action=admin;area=manageprojects;section=categories',
-			'include_sort' => true,
-			'include_start' => true,
-			'hidden_fields' => array(
-				$context['session_var'] => $context['session_id'],
-			),
-		),
-		'additional_rows' => array(
-			array(
-				'position' => 'top_of_list',
-				'value' => '
-					<select name="project">' . $projectsHtml . '</select>
-					<input type="submit" name="go" value="' . $txt['go'] . '" />',
-				'class' => 'catbg',
-				'align' => 'right',
-			),
-			array(
-				'position' => 'bottom_of_list',
-				'value' => '
-					<a href="' . $scripturl . '?action=admin;area=manageprojects;section=categories;sa=new;project=' . $id_project . '">
-						' . $txt['new_category'] . '
-					</a>',
-				'class' => 'catbg',
-				'align' => 'right',
-			),
-		),
-	);
-
-	require_once($sourcedir . '/Subs-List.php');
-	createList($listOptions);
-
-	// Template
-	$context['sub_template'] = 'categories_list';
-}
-
-function EditCategory()
-{
-	global $context, $smcFunc, $sourcedir, $user_info, $txt;
-
-	if ($_REQUEST['sa'] == 'new')
-	{
-		$context['category'] = array(
-			'is_new' => true,
-			'id' => 0,
-			'project' => (int) $_REQUEST['project'],
-			'name' => '',
-		);
-	}
-	else
-	{
-		if (empty($_REQUEST['category']) || !is_numeric($_REQUEST['category']))
-			fatal_lang_error('category_not_found');
-
-		$request = $smcFunc['db_query']('', '
-			SELECT id_category, id_project, category_name
-			FROM {db_prefix}issue_category
-			WHERE id_category = {int:category}',
-			array(
-				'category' => $_REQUEST['category']
-			)
-		);
-		$row = $smcFunc['db_fetch_assoc']($request);
-		$smcFunc['db_free_result']($request);
-
-		if (!$row)
-			fatal_lang_error('category_not_found');
-
-		$context['category'] = array(
-			'id' => $row['id_category'],
-			'project' => $row['id_project'],
-			'name' => htmlspecialchars($row['category_name']),
-		);
-
-		unset($row);
-	}
-
-	if (!isset($_REQUEST['delete']))
-	{
-		$context['sub_template'] = 'edit_category';
-
-		if (!empty($context['category']['is_new']))
-			$context['page_title'] = $txt['new_category'];
-		else
-			$context['page_title'] = $txt['edit_category'];
-	}
-	else
-	{
-		$context['sub_template'] = 'confirm_category_delete';
-		$context['page_title'] = $txt['confirm_category_delete'];
-	}
-}
-
-function EditCategory2()
-{
-	global $context, $smcFunc, $sourcedir, $user_info, $txt;
-
-	checkSession();
-
-	$_POST['category'] = (int) $_POST['category'];
-	$_POST['project'] = (int) $_POST['project'];
-
-	if (isset($_POST['edit']) || isset($_POST['add']))
-	{
-		$categoryOptions = array();
-
-		$categoryOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['category_name']);
-
-		if (isset($_POST['add']))
-			createPTCategory($_POST['project'], $categoryOptions);
-		else
-			updatePTCategory($_POST['project'], $_POST['category'], $categoryOptions);
-	}
-	elseif (isset($_POST['delete']))
-	{
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}issue_category
-			WHERE id_category = {int:category}',
-			array(
-				'category' => $_POST['category']
-			)
-		);
-	}
-
-	redirectexit('action=admin;area=manageprojects;section=categories');
 }
 
 ?>

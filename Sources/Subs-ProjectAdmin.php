@@ -667,7 +667,7 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 		$categories[] = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=categories;sa=edit;category=' . $row['id_category'] . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -675,64 +675,8 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 	return $categories;
 }
 
-function list_getVersions($start, $items_per_page, $sort, $project)
-{
-	global $smcFunc, $scripturl;
-
-	$request = $smcFunc['db_query']('', '
-		SELECT ver.id_version, ver.version_name, ver.id_parent
-		FROM {db_prefix}project_versions AS ver
-		WHERE ver.id_project = {int:project}
-		ORDER BY ver.id_parent, ver.version_name',
-		array(
-			'project' => $project
-		)
-	);
-
-	$versionsTemp = array();
-	$children = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if (empty($row['id_parent']))
-		{
-			$versionsTemp[] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
-				'level' => 0,
-			);
-		}
-		else
-		{
-			if (!isset($children[$row['id_parent']]))
-				$children[$row['id_parent']] = array();
-
-			$children[$row['id_parent']][] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;section=versions;sa=edit;version=' . $row['id_version'] . '">' . $row['version_name'] . '</a>',
-				'level' => 1,
-			);
-		}
-	}
-	$smcFunc['db_free_result']($request);
-
-	$versions = array();
-
-	foreach ($versionsTemp as $ver)
-	{
-		$versions[] = $ver;
-
-		if (isset($children[$ver['id']]))
-			$versions = array_merge($versions, $children[$ver['id']]);
-	}
-
-	return $versions;
-}
-
 // Temp until everything is moved to project  admin
-function list_getVersions2($start, $items_per_page, $sort, $project)
+function list_getVersions($start, $items_per_page, $sort, $project)
 {
 	global $smcFunc, $scripturl;
 

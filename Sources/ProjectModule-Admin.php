@@ -77,7 +77,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
 		
 		loadTemplate('ProjectModule-Admin');
-		loadTemplate('ManageProjects');
 		
 		loadLanguage('ProjectAdmin');
 		
@@ -100,7 +99,13 @@ class ProjectModule_Admin extends ProjectModule_Base
 					'title' => $txt['manage_versions'],
 					'is_selected' => false,
 					'order' => 10,
-				)
+				),
+				'category' => array(
+					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+					'title' => $txt['manage_project_category'],
+					'is_selected' => false,
+					'order' => 10,
+				),
 			),
 		);
 
@@ -130,7 +135,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 			'id' => 'versions_list',
 			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 			'get_items' => array(
-				'function' => 'list_getVersions2',
+				'function' => 'list_getVersions',
 				'params' => array(
 					$project,
 				),
@@ -222,7 +227,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 			$context['version'] = array(
 				'is_new' => true,
 				'id' => 0,
-				'project' => $context['project']['id'],
 				'name' => '',
 				'description' => '',
 				'parent' => !empty($_REQUEST['parent']) && isset($context['versions_id'][$_REQUEST['parent']]) ? $_REQUEST['parent'] : 0,
@@ -238,9 +242,11 @@ class ProjectModule_Admin extends ProjectModule_Base
 					v.id_version, v.id_project, v.id_parent, v.version_name,
 					v.status, v.member_groups, v.description, v.release_date, v.permission_inherit
 				FROM {db_prefix}project_versions AS v
-				WHERE id_version = {int:version}',
+				WHERE id_version = {int:version}
+					AND id_project = {int:project}',
 				array(
-					'version' => $_REQUEST['version']
+					'version' => (int) $_REQUEST['version'],
+					'project' => $project,
 				)
 			);
 	
@@ -254,7 +260,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 			$context['version'] = array(
 				'id' => $row['id_version'],
-				'project' => $row['id_project'],
 				'name' => htmlspecialchars($row['version_name']),
 				'description' => htmlspecialchars($row['description']),
 				'parent' => isset($context['versions_id'][$row['id_parent']]) ? $row['id_parent'] : 0,
@@ -386,14 +391,185 @@ class ProjectModule_Admin extends ProjectModule_Base
 			// Todo: Add confmation
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}project_versions
-				WHERE id_version = {int:version}',
+				WHERE id_version = {int:version}
+					AND id_project = {int:project}',
 				array(
-					'version' => $_POST['version']
+					'version' => $_POST['version'],
+					'project' => $project,
 				)
 			);
 		}
 	
 		redirectexit(project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
+	}
+	
+	public function ProjectAdminCategory()
+	{
+		if (empty($_REQUEST['category']))
+			$this->ProjectAdminCategoryList();
+		elseif (isset($_POST['save']))
+			$this->ProjectAdminCategoryEdit2();
+		else
+			$this->ProjectAdminCategoryEdit();
+	}
+	
+	public function ProjectAdminCateoryList()
+	{
+		global $scripturl, $sourcedir, $context, $txt, $project;
+
+		$listOptions = array(
+			'id' => 'categories_list',
+			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+			'get_items' => array(
+				'function' => 'list_getCategories',
+				'params' => array(
+					$project,
+				),
+			),
+			'columns' => array(
+				'check' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+						'style' => 'width: 4%;',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="categories[]" value="%1$d" class="check" />',
+							'params' => array(
+								'id' => false,
+							),
+						),
+						'style' => 'text-align: center;',
+					),
+				),
+				'name' => array(
+					'header' => array(
+						'value' => $txt['header_category'],
+					),
+					'data' => array(
+						'db' => 'link',
+					),
+					'sort' => array(
+						'default' => 'cat.category_name',
+						'reverse' => 'cat.category_name DESC',
+					),
+				),
+			),
+			'form' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+				'include_sort' => true,
+				'include_start' => true,
+				'hidden_fields' => array(
+					$context['session_var'] => $context['session_id'],
+				),
+			),
+			'additional_rows' => array(
+				array(
+					'position' => 'bottom_of_list',
+					'value' => '
+						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => 'new')) . '">
+							' . $txt['new_category'] . '
+						</a>',
+					'class' => 'catbg',
+					'align' => 'right',
+				),
+			),
+		);
+	
+		require_once($sourcedir . '/Subs-List.php');
+		createList($listOptions);
+	
+		// Template
+		$context['sub_template'] = 'categories_list';
+	}
+	
+	function ProjectAdminCategoryEdit()
+	{
+		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
+	
+		if ($_REQUEST['category'] == 'new')
+		{
+			$context['category'] = array(
+				'is_new' => true,
+				'id' => 0,
+				'name' => '',
+			);
+		}
+		else
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_category, id_project, category_name
+				FROM {db_prefix}issue_category
+				WHERE id_category = {int:category}
+					AND id_project = {int:project}',
+				array(
+					'category' => (int) $_REQUEST['category'],
+					'project' => $project,
+				)
+			);
+			$row = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
+	
+			if (!$row)
+				fatal_lang_error('category_not_found');
+	
+			$context['category'] = array(
+				'id' => $row['id_category'],
+				'name' => htmlspecialchars($row['category_name']),
+			);
+	
+			unset($row);
+		}
+	
+		if (!isset($_REQUEST['delete']))
+		{
+			$context['sub_template'] = 'edit_category';
+	
+			if (!empty($context['category']['is_new']))
+				$context['page_title'] = $txt['new_category'];
+			else
+				$context['page_title'] = $txt['edit_category'];
+		}
+		else
+		{
+			$context['sub_template'] = 'confirm_category_delete';
+			$context['page_title'] = $txt['confirm_category_delete'];
+		}
+	}
+	
+	function ProjectAdminCategoryEdit2()
+	{
+		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
+	
+		checkSession();
+	
+		$_POST['category'] = (int) $_POST['category'];
+	
+		if (isset($_POST['edit']) || isset($_POST['add']))
+		{
+			$categoryOptions = array();
+	
+			$categoryOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['category_name']);
+	
+			if (isset($_POST['add']))
+				createPTCategory($project, $categoryOptions);
+			else
+				updatePTCategory($project, $_POST['category'], $categoryOptions);
+		}
+		elseif (isset($_POST['delete']))
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}issue_category
+				WHERE id_category = {int:category}
+					AND id_project = {int:project}',
+				array(
+					'category' => $_POST['category'],
+					'project' => $project,
+				)
+			);
+		}
+	
+		redirectexit('action=admin;area=manageprojects;section=categories');
 	}
 }
 
