@@ -120,14 +120,14 @@ class ProjectModule_Admin extends ProjectModule_Base
 	public function ProjectAdminVersions()
 	{
 		if (empty($_REQUEST['version']))
-			$this->ProjectAdminVersionsList();
+			$this->ProjectAdminVersionList();
 		elseif (isset($_POST['save']))
 			$this->ProjectAdminVersionEdit2();
 		else
 			$this->ProjectAdminVersionEdit();
 	}
 	
-	public function ProjectAdminVersionsList()
+	public function ProjectAdminVersionList()
 	{	
 		global $scripturl, $sourcedir, $context, $txt, $project;
 		
@@ -216,7 +216,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['sub_template'] = 'versions_list';
 	}
 	
-	public function ProjectAdminVersionsEdit()
+	public function ProjectAdminVersionEdit()
 	{	
 		global $scripturl, $sourcedir, $context, $txt, $project;
 
@@ -310,7 +310,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['sub_template'] = 'edit_version';
 	}
 	
-	public function ProjectAdminVersionsEdit2()
+	public function ProjectAdminVersionEdit2()
 	{	
 		global $scripturl, $sourcedir, $context, $txt, $project;
 		
