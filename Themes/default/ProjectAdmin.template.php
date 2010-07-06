@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ProjectRoadmap
+/**
+ * Template for ProjectAdmin.php
+ *
+ * @package admin
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ProjectAdmin.php
+ */
 
 function template_project_admin_above()
 {

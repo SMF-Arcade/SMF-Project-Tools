@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ProjectPermissions
+/**
+ * Template for ProjectPermissions.php
+ *
+ * @package admin
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ProjectPermissions.php
+ */
 
 function template_profiles_list()
 {

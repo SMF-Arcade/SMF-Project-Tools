@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ManageProjects
+/**
+ * Template for ManageProjects.php
+ *
+ * @package admin
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ManageProjects.php
+ */
 
 function template_projects_list()
 {

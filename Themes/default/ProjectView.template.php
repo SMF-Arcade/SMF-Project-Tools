@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ProjectView
+/**
+ * Template for ProjectView.php
+ *
+ * @package admin
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ProjectView.php
+ */
 
 function template_project_view_above()
 {

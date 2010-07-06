@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; IssueReport
+/**
+ * Template for IssueReport.php
+ *
+ * @package issuetracker
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see IssueReport.php
+ */
 
 function template_report_issue()
 {

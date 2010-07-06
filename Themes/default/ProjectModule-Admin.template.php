@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ProjectModule-Admin
+/**
+ * Template for ProjectModule-Admin.php
+ *
+ * @package project-admin
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ProjectModule-Admin.php
+ */
 
 function template_ProjectModuleAdmin_above()
 {

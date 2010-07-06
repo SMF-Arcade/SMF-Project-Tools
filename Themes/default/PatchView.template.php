@@ -1,5 +1,12 @@
 <?php
-// Version: 0.5; PatchView
+/**
+ * Template for highlighted patch file
+ *
+ * @package issuetracker
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ */
 
 function template_main()
 {

@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; IssueList
+/**
+ * Template for IssueList.php
+ *
+ * @package issuetracker
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see IssueList.php
+ */
 
 function template_issue_list()
 {

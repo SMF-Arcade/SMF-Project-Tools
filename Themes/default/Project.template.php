@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; Project
+/**
+ * Template for Project.php
+ *
+ * @package core
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see Project.php
+ */
 
 function template_project_above()
 {

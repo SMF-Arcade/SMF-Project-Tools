@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; IssueView
+/**
+ * Template for IssueView.php
+ *
+ * @package issuetracker
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see IssueView.php
+ */
 
 function template_issue_view_above()
 {

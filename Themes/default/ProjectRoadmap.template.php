@@ -1,5 +1,13 @@
 <?php
-// Version: 0.5; ProjectRoadmap
+/**
+ * Template for ProjecModule-Roadmap.php
+ *
+ * @package roadmap
+ * @version 0.5
+ * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.1
+ * @see ProjectModule-Roadmap.php
+ */
 
 function template_project_roadmap()
 {
