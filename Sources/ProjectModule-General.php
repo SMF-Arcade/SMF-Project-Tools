@@ -25,6 +25,11 @@ $extensionInformation = array(
 
 register_project_feature('general', 'ProjectModule_General');
 
+/*
+ * Base class for project modules
+ *
+ * @todo Move this to it's own file
+ */
 class ProjectModule_Base
 {
 	// Define subactions this handles by default
@@ -72,6 +77,11 @@ class ProjectModule_Base
 	}
 }
 
+/*
+ * Project View
+ *
+ * @todo Move this to it's own file?
+ */
 class ProjectModule_General extends ProjectModule_Base
 {
 	function __construct()

@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Handles loading all required data of project tools
+ */
 function loadProjectTools()
 {
 	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $project_version, $settings, $issue, $projects_show, $moduleInformation;
@@ -213,7 +212,9 @@ function loadProjectTools()
 	);
 }
 
-// Loads current project
+/*
+ * Load Current project
+ */
 function loadProject()
 {
 	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings, $projects_show, $projectSettings;
@@ -442,7 +443,9 @@ function loadProject()
 
 }
 
-// Updates settings of project
+/*
+ * Updates project settings
+ */
 function updateProjectSettings($settings, $force_project = 0)
 {
 	global $projectSettings, $project, $smcFunc;
@@ -472,6 +475,9 @@ function updateProjectSettings($settings, $force_project = 0)
 	);
 }
 
+/*
+ * Loads data for spefific page
+ */
 function loadProjectToolsPage($mode = '')
 {
 	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $settings;
@@ -555,7 +561,9 @@ function loadProjectToolsPage($mode = '')
 	}
 }
 
-// TODO: Cache this
+/*
+ * Returns list of profiles where viewing private issues is allowed
+ */
 function getPrivateProfiles()
 {
 	global $smcFunc, $user_info;
@@ -579,7 +587,9 @@ function getPrivateProfiles()
 	return $profiles;
 }
 
-// Load Timeline
+/*
+ * Loads timeline
+ */
 function loadTimeline($project = 0)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -743,6 +753,9 @@ function loadTimeline($project = 0)
 	$smcFunc['db_free_result']($request);
 }
 
+/*
+ * Marks spefific projects read
+ */
 function markProjectsRead($projects, $unread = false)
 {
 	global $smcFunc, $modSettings, $user_info;
@@ -809,7 +822,11 @@ function markProjectsRead($projects, $unread = false)
 	);
 }
 
-// Function to generate urls
+/*
+ * Generates url for project tools pages
+ * @param array $params Array of GET parametrs
+ * @param int $project 
+ */
 function project_get_url($params = array(), $project = null)
 {
 	global $scripturl, $modSettings;
@@ -927,7 +944,9 @@ function project_get_url($params = array(), $project = null)
 	}
 }
 
-// Can I do that?
+/*
+ * Checks whatever permission is allowed in current project
+ */
 function projectAllowedTo($permission)
 {
 	global $context, $user_info, $project;
@@ -945,6 +964,9 @@ function projectAllowedTo($permission)
 	return false;
 }
 
+/*
+ * Checks if permission is allowed in curernt project and shows error page if not
+ */
 function projectIsAllowedTo($permission)
 {
 	global $context, $project, $txt, $user_info;
@@ -964,6 +986,9 @@ function projectIsAllowedTo($permission)
 	}
 }
 
+/*
+ * Parses Diff text
+ */
 function DiffParser($text)
 {
 	$text = explode("\n", str_replace(array("\r\n", "\r"), "\n", $text));
@@ -1061,6 +1086,11 @@ function DiffParser($text)
 	return $data;
 }
 
+/*
+ * broken function related to issue linking
+ *
+ * @todo Fix ME
+ */
 function project_link_issues($data)
 {
 	global $modSettings;
@@ -1071,6 +1101,11 @@ function project_link_issues($data)
 	return preg_replace_callback('/' . $modSettings['issueRegex'][0] . '/', !empty($modSettings['issueRegex'][1]) ? 'issue_link_callback' : 'issue_link_callback2', $data);
 }
 
+/*
+ * broken function related to issue linking
+ *
+ * @todo Fix ME
+ */
 function issue_link_callback($data)
 {
 	global $modSettings;
@@ -1078,6 +1113,11 @@ function issue_link_callback($data)
 	return preg_replace_callback('/' . $modSettings['issueRegex'][1] . '/', 'issue_link_callback_2', $data[0]);
 }
 
+/*
+ * broken function related to issue linking
+ *
+ * @todo Fix ME
+ */
 function issue_link_callback_2($data)
 {
 	global $smcFunc, $modSettings;
@@ -1108,7 +1148,9 @@ function issue_link_callback_2($data)
 	return '<a href="' . project_get_url(array('issue' => $data[1] . '.0'), $project) . '">' . $data[1] . '</a>';
 }
 
-// Send Notification
+/*
+ * Sends notification for new issues
+ */
 function sendProjectNotification($issue, $type, $exclude = 0)
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language;
@@ -1208,6 +1250,9 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 	}
 }
 
+/*
+ * Sends notification for updated issues
+ */
 function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
 {
 	global $smcFunc, $context, $sourcedir, $modSettings, $user_info, $language, $txt, $memberContext;
@@ -1427,6 +1472,9 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
+/*
+ * Lodas project tools extension
+ */
 function loadProjectToolsExtension($name, $active = true)
 {
 	global $context, $modules, $extensionInformation, $smcFunc;
@@ -1455,6 +1503,9 @@ function loadProjectToolsExtension($name, $active = true)
 	return $context['project_extensions'][$name];
 }
 
+/*
+ * Handles modules registering new features 
+ */
 function register_project_feature($module, $class_name)
 {
 	global $modules, $extensionInformation;
@@ -1464,6 +1515,10 @@ function register_project_feature($module, $class_name)
 	);
 }
 
+/*
+ * Returns list of installed extensions
+ * @return array List of extensions
+ */
 function getInstalledExtensions()
 {
 	global $sourcedir, $smcFunc, $modSettings;
@@ -1496,6 +1551,9 @@ function getInstalledExtensions()
 	return $extensions;
 }
 
+/*
+ * Gets list of installed modules
+ */
 function getInstalledModules()
 {
 	global $sourcedir, $smcFunc;

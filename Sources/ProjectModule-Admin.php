@@ -25,6 +25,9 @@ $extensionInformation = array(
 
 register_project_feature('admin', 'ProjectModule_Admin');
 
+/*
+ * Project Module Admin
+ */
 class ProjectModule_Admin extends ProjectModule_Base
 {
 	public $title = 'Admin';

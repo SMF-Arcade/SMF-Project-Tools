@@ -11,6 +11,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/*
+ * Maintenance function for adding id_project to log_issues
+ */
 function ptUpgrade_log_issues($check = false)
 {
 	global $smcFunc;
@@ -45,6 +48,9 @@ function ptUpgrade_log_issues($check = false)
 	$smcFunc['db_free_result']($request);
 }
 
+/*
+ * Maintenance function for uprading tracker columns
+ */
 function ptUpgrade_trackers($check = false)
 {
 	global $smcFunc;
@@ -132,6 +138,9 @@ function ptUpgrade_trackers($check = false)
 	}
 }
 
+/*
+ * Maintenance function for upgrading version fields
+ */
 function ptUpgrade_versionFields($check = false)
 {
 	global $smcFunc;
@@ -173,6 +182,9 @@ function ptUpgrade_versionFields($check = false)
 	}
 }
 
+/*
+ * Maintenance function for upgrading project modules
+ */
 function ptUpgrade_projectModules($check = false)
 {
 	global $smcFunc;
@@ -194,6 +206,9 @@ function ptUpgrade_projectModules($check = false)
 	);
 }
 
+/*
+ * Maintenance function for generic maintenance
+ */
 function ptMaintenanceGeneral($check = false)
 {
 	global $smcFunc;
@@ -215,7 +230,9 @@ function ptMaintenanceGeneral($check = false)
 	return true;
 }
 
-// Comments not linked to events
+/*
+ * Maintenance function for comments not linked to events
+ */
 function ptMaintenanceEvents1($check = false)
 {
 	global $smcFunc;
@@ -288,7 +305,9 @@ function ptMaintenanceEvents1($check = false)
 	return true;
 }
 
-// Events without poster info
+/*
+ * Maintenance function for events without poster info
+ */
 function ptMaintenanceEvents2($check = false)
 {
 	global $smcFunc;
@@ -336,7 +355,9 @@ function ptMaintenanceEvents2($check = false)
 	return true;
 }
 
-// Unnecessary events
+/*
+ * Maintenance function for unnecassary events
+ */
 function ptMaintenanceEvents3($check = false)
 {
 	global $smcFunc, $txt;
@@ -381,7 +402,11 @@ function ptMaintenanceEvents3($check = false)
 	return true;
 }
 
-// Update Issue Counts
+/*
+ * Maintenance function for updating issue counts
+ *
+ * @todo Write code for this function
+ */
 function ptMaintenanceIssueCounts($check = false)
 {
 	global $smcFunc, $txt;
@@ -397,7 +422,11 @@ function ptMaintenanceIssueCounts($check = false)
 	return true;
 }
 
-// Delete invalid issues
+/*
+ * Maintenance function for deleting invalid issues
+ *
+ * @todo Check function needs to be written
+ */
 function ptMaintenanceIssues1($check = false)
 {
 	global $smcFunc, $txt;
@@ -422,7 +451,11 @@ function ptMaintenanceIssues1($check = false)
 	return true;
 }
 
-// Set deleted posters as guests
+/*
+ * Maintenance function for setting deleted posters as guests
+ *
+ * @todo Write check code
+ */
 function ptMaintenanceIssues2($check = false)
 {
 	global $smcFunc, $txt;

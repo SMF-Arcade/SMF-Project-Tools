@@ -8,6 +8,9 @@
  * @since 0.1
  */
 
+/*
+ * Manage Project Permissions page
+ */
 function ManageProjectPermissions()
 {
 	global $context, $sourcedir, $user_info, $txt;
@@ -42,6 +45,9 @@ function ManageProjectPermissions()
 	$subActions[$_REQUEST['sa']][0]();
 }
 
+/*
+ * Profiles management
+ */
 function ManageProjectPermissionsMain()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt;
@@ -207,6 +213,9 @@ function ManageProjectPermissionsMain()
 	$context['sub_template'] = 'profiles_list';
 }
 
+/*
+ * Edit Profile page
+ */
 function EditProjectProfile()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $settings;
@@ -407,6 +416,9 @@ function EditProjectProfile()
 	$context['sub_template'] = 'profile_edit';
 }
 
+/*
+ * Function to load profile data
+ */
 function PTloadProfile()
 {
 	global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
@@ -490,6 +502,9 @@ function PTloadProfile()
 		fatal_lang_error('profile_group_not_found', false);
 }
 
+/*
+ * Edit permissions of profile page
+ */
 function EditProfilePermissions()
 {
 	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
@@ -552,6 +567,9 @@ function EditProfilePermissions()
 	$context['sub_template'] = 'profile_permissions';
 }
 
+/*
+ * Save project profile permissions
+ */
 function EditProfilePermissions2()
 {
 	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
@@ -615,6 +633,9 @@ function EditProfilePermissions2()
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }
 
+/*
+ * Updates inherited groups permissions 
+ */
 function updatePTChildPermissions($parents, $profile)
 {
 	global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;

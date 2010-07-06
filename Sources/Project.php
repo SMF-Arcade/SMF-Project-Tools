@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Main Project Tools functions, handles calling correct module and action
+ */
 function Projects($standalone = false)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;

@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Project profile
+ */
 function projectProfile($memID)
 {
 	global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
@@ -41,6 +40,9 @@ function projectProfile($memID)
 	$subActions[$_REQUEST['sa']][0]($memID);
 }
 
+/*
+ * General stats
+ */
 function projectProfileMain($memID)
 {
 	global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
@@ -84,6 +86,11 @@ function projectProfileMain($memID)
 	$context['sub_template'] = 'project_profile_main';
 }
 
+/*
+ * Issues list
+ *
+ * @todo Use createIssueList
+ */
 function projectProfileIssues($memID)
 {
 	global $smcFunc, $scripturl, $txt, $modSettings, $context, $settings, $user_info;

@@ -25,6 +25,9 @@ $extensionInformation = array(
 
 register_project_feature('issues', 'ProjectModule_Issues');
 
+/*
+ * Project Module Issues
+ */
 class ProjectModule_Issues extends ProjectModule_Base
 {
 	function __construct()

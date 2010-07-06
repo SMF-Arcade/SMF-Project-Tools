@@ -11,57 +11,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function loadAdminProjects()
-{
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
-
-	$request = $smcFunc['db_query']('', '
-		SELECT p.id_project, p.name, p.description
-		FROM {db_prefix}projects AS p
-		ORDER BY p.name');
-
-	$context['projects'] = array();
-	$projects = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['projects'][$row['id_project']] = array(
-			'id' => $row['id_project'],
-			'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
-			'name' => $row['name'],
-			'description' => $row['description'],
-			'versions' => array(),
-			'categories' => array(),
-		);
-
-		$projects[] = $row['id_project'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	if (empty($projects))
-		fatal_lang_error('admin_no_projects', false);
-
-	// Current project
-	if (isset($_REQUEST['project']) && in_array($_REQUEST['project'], $projects))
-		$id_project = (int) $_REQUEST['project'];
-	elseif (isset($_SESSION['admin_project']) && in_array($_SESSION['admin_project'], $projects))
-		$id_project = $_SESSION['admin_project'];
-	else
-		$id_project = $projects[0];
-
-	$_SESSION['admin_project'] = $id_project;
-
-	$projectsHtml = '';
-
-	foreach ($context['projects'] as $project)
-	{
-		$projectsHtml .= '
-		<option value="' . $project['id'] . '"' . ($project['id'] == $id_project ? ' selected="selected"' : '') . '>' . $project['name']. '</option>';
-	}
-
-	return array($id_project, $projectsHtml);
-}
-
+/*
+ * Inserts new project to database
+ */
 function createProject($projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -101,6 +53,9 @@ function createProject($projectOptions)
 	return $id_project;
 }
 
+/*
+ * Updats project in database
+ */
 function updateProject($id_project, $projectOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -235,6 +190,9 @@ function updateProject($id_project, $projectOptions)
 	return true;
 }
 
+/*
+ * Inserts new version to project
+ */
 function createVersion($id_project, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -299,6 +257,9 @@ function createVersion($id_project, $versionOptions)
 	return $id_version;
 }
 
+/*
+ * Updates vesion
+ */
 function updateVersion($id_project, $id_version, $versionOptions)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -423,6 +384,9 @@ function updateVersion($id_project, $id_version, $versionOptions)
 	return true;
 }
 
+/*
+ * Creates new category for project
+ */
 function createPTCategory($id_project, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -440,6 +404,9 @@ function createPTCategory($id_project, $categoryOptions)
 	return true;
 }
 
+/*
+ * Updates category
+ */
 function updatePTCategory($id_project, $id_category, $categoryOptions)
 {
 	global $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
@@ -470,6 +437,9 @@ function updatePTCategory($id_project, $id_category, $categoryOptions)
 	return true;
 }
 
+/*
+ * Loads project data for admin pages
+ */
 function loadProjectAdmin($id_project)
 {
 	global $context, $smcFunc, $user_info, $txt, $user_info;
@@ -572,55 +542,9 @@ function loadProjectAdmin($id_project)
 	return $project;
 }
 
-function loadVersions($project)
-{
-	global $context, $smcFunc, $user_info, $txt;
-
-	// Load Versions
-	$request = $smcFunc['db_query']('', '
-		SELECT id_version, id_parent, version_name, release_date, status
-		FROM {db_prefix}project_versions AS ver
-		WHERE id_project = {int:project}
-		ORDER BY id_parent',
-		array(
-			'project' => $project['id'],
-		)
-	);
-
-	$versions = array();
-	$version_ids = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($row['id_parent'] == 0)
-		{
-			$versions[$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'sub_versions' => array(),
-			);
-		}
-		else
-		{
-			if (!isset($versions[$row['id_parent']]))
-				continue;
-
-			$versions[$row['id_parent']]['sub_versions'][$row['id_version']] = array(
-				'id' => $row['id_version'],
-				'name' => $row['version_name'],
-				'status' => $row['status'],
-				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
-				'released' => $row['status'] >= 4,
-			);
-		}
-
-		$version_ids[$row['id_version']] = $row['id_parent'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	return array($versions, $version_ids);
-}
-
+/*
+ * Returns list of projects for createList
+ */
 function list_getProjects($start, $items_per_page, $sort)
 {
 	global $smcFunc, $scripturl;
@@ -646,6 +570,9 @@ function list_getProjects($start, $items_per_page, $sort)
 	return $projects;
 }
 
+/*
+ * Returns list of categories for createList
+ */
 function list_getCategories($start, $items_per_page, $sort, $project)
 {
 	global $smcFunc, $scripturl;
@@ -675,7 +602,9 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 	return $categories;
 }
 
-// Temp until everything is moved to project  admin
+/*
+ * Returns list of versions for createList
+ */
 function list_getVersions($start, $items_per_page, $sort, $project)
 {
 	global $smcFunc, $scripturl;
@@ -732,6 +661,9 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 	return $versions;
 }
 
+/*
+ * Returns list of permission profiles for createList
+ */
 function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 {
 	global $smcFunc, $scripturl;
@@ -760,6 +692,9 @@ function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 	return $profiles;
 }
 
+/*
+ * Returns list of all possible permissions
+ */
 function getAllPTPermissions()
 {
 	// List of all possible permissions

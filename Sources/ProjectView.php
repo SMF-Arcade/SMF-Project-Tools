@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Main project page
+ */
 function ProjectView()
 {
 	global $context, $modSettings, $smcFunc, $sourcedir, $user_info, $txt, $project;
@@ -113,6 +112,9 @@ function ProjectView()
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
 }
 
+/*
+ * Subscribe to project
+ */
 function ProjectSubscribe()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
@@ -171,6 +173,11 @@ function ProjectSubscribe()
 	redirectexit(project_get_url(array('project' => $project)));
 }
 
+/*
+ * Subscribe to issue
+ *
+ * @todo Move to IssueTracker modules
+ */
 function ProjectSubscribeIssue()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;

@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Main admin function
+ */
 function ProjectsAdmin()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt;
@@ -45,6 +44,9 @@ function ProjectsAdmin()
 	$subActions[$_REQUEST['sa']][0]();
 }
 
+/*
+ * Information view
+ */
 function ProjectsAdminMain()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -52,6 +54,9 @@ function ProjectsAdminMain()
 	$context['sub_template'] = 'project_admin_main';
 }
 
+/*
+ * Project Tools settings page
+ */
 function ProjectsAdminSettings($return_config = false)
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -87,6 +92,9 @@ function ProjectsAdminSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
+/*
+ * Maintenance
+ */
 function ProjectsMaintenance()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
@@ -155,6 +163,9 @@ function ProjectsMaintenance()
 	}
 }
 
+/*
+ * function to handle pausing maintenancr action
+ */
 function pauseProjectMaintenance($force)
 {
 	global $context, $txt, $time_start;
@@ -181,6 +192,9 @@ function pauseProjectMaintenance($force)
 	obExit();
 }
 
+/*
+ * Repair maintenance
+ */
 function ProjectsMaintenanceRepair()
 {
 	global $txt;
@@ -219,6 +233,9 @@ function ProjectsMaintenanceRepair()
 	return $repairFunctions;
 }
 
+/*
+ * Upgrade maintenance
+ */
 function ProjectsMaintenanceUpgrade()
 {
 	global $txt;
@@ -250,6 +267,9 @@ function ProjectsMaintenanceUpgrade()
 	return $repairFunctions;
 }
 
+/*
+ * Installed extensions page
+ */
 function ProjectsAdminExtensions()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;

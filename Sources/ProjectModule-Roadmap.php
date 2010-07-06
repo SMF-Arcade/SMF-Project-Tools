@@ -25,6 +25,9 @@ $extensionInformation = array(
 
 register_project_feature('roadmap', 'ProjectModule_Roadmap');
 
+/*
+ * Roadmap Module
+ */
 class ProjectModule_Roadmap extends ProjectModule_Base
 {
 	function __construct()

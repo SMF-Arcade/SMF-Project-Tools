@@ -12,9 +12,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
-	!!!
-*/
-
+ * Projects list
+ */
 function ProjectList()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
