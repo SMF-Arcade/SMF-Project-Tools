@@ -16,7 +16,7 @@ if (!defined('SMF'))
  */
 function IssueList()
 {
-	global $project, $context, $smcFunc, $sourcedir, $user_info, $txt, $board;
+	global $context, $txt;
 
 	projectIsAllowedTo('issue_view');
 

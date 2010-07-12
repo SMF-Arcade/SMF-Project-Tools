@@ -46,7 +46,12 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'area' => 'admin',
 				'callback' => array($this, 'ProjectAdminVersions'),
 				'tab' => 'admin',
-			)
+			),
+			'category' => array(
+				'area' => 'admin',
+				'callback' => array($this, 'ProjectAdminCategory'),
+				'tab' => 'admin',
+			),
 		);
 	}
 	
@@ -88,25 +93,29 @@ class ProjectModule_Admin extends ProjectModule_Base
 		// Template layers for Admin pages
 		$context['template_layers'][] = 'ProjectModuleAdmin';
 		
+		// Check that subaction exists, if not use "main"
+		if (!isset($this->subActions[$subaction]))
+			$subaction = 'main';
+		
 		// Tabs
 		$context['project_admin_tabs'] = array(
 			'tabs' => array(
 				'main' => array(
 					'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
 					'title' => $txt['project'],
-					'is_selected' => false,
+					'is_selected' => $subaction == 'main',
 					'order' => 'first',
 				),
 				'versions' => array(
 					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 					'title' => $txt['manage_versions'],
-					'is_selected' => false,
+					'is_selected' => $subaction == 'versions',
 					'order' => 10,
 				),
 				'category' => array(
 					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
 					'title' => $txt['manage_project_category'],
-					'is_selected' => false,
+					'is_selected' => $subaction == 'category',
 					'order' => 10,
 				),
 			),
