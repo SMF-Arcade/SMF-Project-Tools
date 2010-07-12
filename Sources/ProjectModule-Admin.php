@@ -34,6 +34,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	function __construct()
 	{
+		global $txt, $project;
+		
 		parent::__construct();
 		
 		$this->subActions = array(
