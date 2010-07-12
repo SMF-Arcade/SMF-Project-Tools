@@ -32,10 +32,19 @@ register_project_feature('general', 'ProjectModule_General');
  */
 class ProjectModule_Base
 {
-	// Define subactions this handles by default
+	/**
+	 * Defines subactions handled by this module
+	 */
 	public $subActions = array();
 	
-	// Default constructor
+	/**
+	 * Defines sub tabs of module
+	 */
+	public $subTabs = array();
+	
+	/**
+	 * Default constructor
+	 */
 	function __construct()
 	{
 		$this->subActions = array('main' => array('callback' => array($this, 'mainView')));

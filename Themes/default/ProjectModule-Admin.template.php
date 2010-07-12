@@ -16,7 +16,7 @@ function template_ProjectModuleAdmin_above()
 	if (!empty($context['project_admin_tabs']))
 	{
 		echo '
-	<div class="buttonlist align_left"><ul>';
+	<div class="dropmenu"><ul>';
 
 		// Print out all the items in this tab.
 		$i = 1;

@@ -53,6 +53,28 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'tab' => 'admin',
 			),
 		);
+		
+		$this->subTabs = array(
+			'main' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
+				'title' => $txt['project'],
+				'is_selected' => false,
+				'order' => 'first',
+			),
+			'versions' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
+				'title' => $txt['manage_versions'],
+				'is_selected' => false,
+				'order' => 10,
+			),
+			'category' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+				'title' => $txt['manage_project_category'],
+				'is_selected' => false,
+				'order' => 10,
+			),
+		);
+
 	}
 	
 	public function RegisterProjectArea()
@@ -70,6 +92,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 			'is_selected' => false,
 			'order' => 'last',
 			'project_permission' => 'admin',
+			'sub_buttons' => $this->subTabs,
 			'linktree' => array(
 				'name' => $txt['project_admin'],
 				'url' => project_get_url(array('project' => $project, 'area' => 'admin')),
@@ -99,27 +122,10 @@ class ProjectModule_Admin extends ProjectModule_Base
 		
 		// Tabs
 		$context['project_admin_tabs'] = array(
-			'tabs' => array(
-				'main' => array(
-					'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
-					'title' => $txt['project'],
-					'is_selected' => $subaction == 'main',
-					'order' => 'first',
-				),
-				'versions' => array(
-					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
-					'title' => $txt['manage_versions'],
-					'is_selected' => $subaction == 'versions',
-					'order' => 10,
-				),
-				'category' => array(
-					'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
-					'title' => $txt['manage_project_category'],
-					'is_selected' => $subaction == 'category',
-					'order' => 10,
-				),
-			),
+			'tabs' => $this->subTabs,
 		);
+		
+		$context['project_admin_tabs']['tabs'][$subaction]['is_selected'] = true;
 
 		parent::beforeSubaction($subaction);
 	}

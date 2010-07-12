@@ -16,18 +16,38 @@ function template_project_view_above()
 	if (!empty($context['project_tabs']))
 	{
 		echo '
-	<div class="buttonlist align_left"><ul>';
+	<div><ul class="dropmenu">';
 
 		// Print out all the items in this tab.
 		$i = 1;
 		$num_tabs = count($context['project_tabs']['tabs']);
+		
 		foreach ($context['project_tabs']['tabs'] as $tab)
 		{
 			echo '
 		<li>
 			<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
 				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $tab['title'], '</span>
-			</a>
+			</a>';
+			
+			if (!empty($button['sub_buttons']))
+			{
+				echo '
+			<ul>';
+			
+				foreach ($button['sub_buttons'] as $childbutton)
+					echo '
+				<li>
+					<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
+						<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
+					</a>
+				</li>';
+					
+				echo '
+			</ul>';
+			}
+			
+			echo '
 		</li>';
 			
 			$i++;
