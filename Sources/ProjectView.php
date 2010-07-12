@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Main project page
  */
 function ProjectView()
@@ -112,7 +112,7 @@ function ProjectView()
 	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
 }
 
-/*
+/**
  * Subscribe to project
  */
 function ProjectSubscribe()
@@ -173,7 +173,7 @@ function ProjectSubscribe()
 	redirectexit(project_get_url(array('project' => $project)));
 }
 
-/*
+/**
  * Subscribe to issue
  *
  * @todo Move to IssueTracker modules

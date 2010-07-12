@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Projects list
  */
 function ProjectList()

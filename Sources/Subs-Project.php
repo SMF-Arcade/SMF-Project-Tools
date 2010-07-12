@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Handles loading all required data of project tools
  */
 function loadProjectTools()
@@ -212,12 +212,12 @@ function loadProjectTools()
 	);
 }
 
-/*
+/**
  * Load Current project
  */
 function loadProject()
 {
-	global $context, $smcFunc, $scripturl, $user_info, $user_info, $force_project, $project, $issue, $modSettings, $projects_show, $projectSettings;
+	global $context, $smcFunc, $user_info, $force_project, $project, $issue, $modSettings, $projects_show, $projectSettings;
 
 	if (isset($force_project))
 		$project = $force_project;
@@ -443,7 +443,7 @@ function loadProject()
 
 }
 
-/*
+/**
  * Updates project settings
  */
 function updateProjectSettings($settings, $force_project = 0)
@@ -475,7 +475,7 @@ function updateProjectSettings($settings, $force_project = 0)
 	);
 }
 
-/*
+/**
  * Loads data for spefific page
  */
 function loadProjectToolsPage($mode = '')
@@ -561,7 +561,7 @@ function loadProjectToolsPage($mode = '')
 	}
 }
 
-/*
+/**
  * Returns list of profiles where viewing private issues is allowed
  */
 function getPrivateProfiles()
@@ -587,7 +587,7 @@ function getPrivateProfiles()
 	return $profiles;
 }
 
-/*
+/**
  * Loads timeline
  */
 function loadTimeline($project = 0)
@@ -722,7 +722,7 @@ function loadTimeline($project = 0)
 				elseif ($field == 'category')
 				{
 					// TODO: Make this work
-					/*
+					/**
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
 					elseif (isset($context['project']['category'][$old_value]))
@@ -753,7 +753,7 @@ function loadTimeline($project = 0)
 	$smcFunc['db_free_result']($request);
 }
 
-/*
+/**
  * Marks spefific projects read
  */
 function markProjectsRead($projects, $unread = false)
@@ -822,7 +822,7 @@ function markProjectsRead($projects, $unread = false)
 	);
 }
 
-/*
+/**
  * Generates url for project tools pages
  * @param array $params Array of GET parametrs
  * @param int $project 
@@ -944,7 +944,7 @@ function project_get_url($params = array(), $project = null)
 	}
 }
 
-/*
+/**
  * Checks whatever permission is allowed in current project
  */
 function projectAllowedTo($permission)
@@ -964,7 +964,7 @@ function projectAllowedTo($permission)
 	return false;
 }
 
-/*
+/**
  * Checks if permission is allowed in curernt project and shows error page if not
  */
 function projectIsAllowedTo($permission)
@@ -986,7 +986,7 @@ function projectIsAllowedTo($permission)
 	}
 }
 
-/*
+/**
  * Parses Diff text
  */
 function DiffParser($text)
@@ -1086,7 +1086,7 @@ function DiffParser($text)
 	return $data;
 }
 
-/*
+/**
  * broken function related to issue linking
  *
  * @todo Fix ME
@@ -1101,7 +1101,7 @@ function project_link_issues($data)
 	return preg_replace_callback('/' . $modSettings['issueRegex'][0] . '/', !empty($modSettings['issueRegex'][1]) ? 'issue_link_callback' : 'issue_link_callback2', $data);
 }
 
-/*
+/**
  * broken function related to issue linking
  *
  * @todo Fix ME
@@ -1113,7 +1113,7 @@ function issue_link_callback($data)
 	return preg_replace_callback('/' . $modSettings['issueRegex'][1] . '/', 'issue_link_callback_2', $data[0]);
 }
 
-/*
+/**
  * broken function related to issue linking
  *
  * @todo Fix ME
@@ -1148,7 +1148,7 @@ function issue_link_callback_2($data)
 	return '<a href="' . project_get_url(array('issue' => $data[1] . '.0'), $project) . '">' . $data[1] . '</a>';
 }
 
-/*
+/**
  * Sends notification for new issues
  */
 function sendProjectNotification($issue, $type, $exclude = 0)
@@ -1250,7 +1250,7 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 	}
 }
 
-/*
+/**
  * Sends notification for updated issues
  */
 function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 0)
@@ -1472,7 +1472,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 	loadLanguage('Project');
 }
 
-/*
+/**
  * Lodas project tools extension
  */
 function loadProjectToolsExtension($name, $active = true)
@@ -1503,7 +1503,7 @@ function loadProjectToolsExtension($name, $active = true)
 	return $context['project_extensions'][$name];
 }
 
-/*
+/**
  * Handles modules registering new features 
  */
 function register_project_feature($module, $class_name)
@@ -1515,7 +1515,7 @@ function register_project_feature($module, $class_name)
 	);
 }
 
-/*
+/**
  * Returns list of installed extensions
  * @return array List of extensions
  */
@@ -1551,7 +1551,7 @@ function getInstalledExtensions()
 	return $extensions;
 }
 
-/*
+/**
  * Gets list of installed modules
  */
 function getInstalledModules()

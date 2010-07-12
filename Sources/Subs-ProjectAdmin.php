@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Inserts new project to database
  */
 function createProject($projectOptions)
@@ -53,7 +53,7 @@ function createProject($projectOptions)
 	return $id_project;
 }
 
-/*
+/**
  * Updats project in database
  */
 function updateProject($id_project, $projectOptions)
@@ -190,7 +190,7 @@ function updateProject($id_project, $projectOptions)
 	return true;
 }
 
-/*
+/**
  * Inserts new version to project
  */
 function createVersion($id_project, $versionOptions)
@@ -257,7 +257,7 @@ function createVersion($id_project, $versionOptions)
 	return $id_version;
 }
 
-/*
+/**
  * Updates vesion
  */
 function updateVersion($id_project, $id_version, $versionOptions)
@@ -384,7 +384,7 @@ function updateVersion($id_project, $id_version, $versionOptions)
 	return true;
 }
 
-/*
+/**
  * Creates new category for project
  */
 function createPTCategory($id_project, $categoryOptions)
@@ -404,7 +404,7 @@ function createPTCategory($id_project, $categoryOptions)
 	return true;
 }
 
-/*
+/**
  * Updates category
  */
 function updatePTCategory($id_project, $id_category, $categoryOptions)
@@ -437,7 +437,7 @@ function updatePTCategory($id_project, $id_category, $categoryOptions)
 	return true;
 }
 
-/*
+/**
  * Loads project data for admin pages
  */
 function loadProjectAdmin($id_project)
@@ -542,7 +542,7 @@ function loadProjectAdmin($id_project)
 	return $project;
 }
 
-/*
+/**
  * Returns list of projects for createList
  */
 function list_getProjects($start, $items_per_page, $sort)
@@ -570,12 +570,12 @@ function list_getProjects($start, $items_per_page, $sort)
 	return $projects;
 }
 
-/*
+/**
  * Returns list of categories for createList
  */
 function list_getCategories($start, $items_per_page, $sort, $project)
 {
-	global $smcFunc, $scripturl;
+	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT cat.id_category, cat.category_name
@@ -602,12 +602,12 @@ function list_getCategories($start, $items_per_page, $sort, $project)
 	return $categories;
 }
 
-/*
+/**
  * Returns list of versions for createList
  */
 function list_getVersions($start, $items_per_page, $sort, $project)
 {
-	global $smcFunc, $scripturl;
+	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT ver.id_version, ver.version_name, ver.id_parent
@@ -661,12 +661,12 @@ function list_getVersions($start, $items_per_page, $sort, $project)
 	return $versions;
 }
 
-/*
+/**
  * Returns list of permission profiles for createList
  */
 function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 {
-	global $smcFunc, $scripturl;
+	global $smcFunc;
 
 	$profiles = array();
 
@@ -692,7 +692,7 @@ function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 	return $profiles;
 }
 
-/*
+/**
  * Returns list of all possible permissions
  */
 function getAllPTPermissions()

@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Maintenance function for adding id_project to log_issues
  */
 function ptUpgrade_log_issues($check = false)
@@ -48,7 +48,7 @@ function ptUpgrade_log_issues($check = false)
 	$smcFunc['db_free_result']($request);
 }
 
-/*
+/**
  * Maintenance function for uprading tracker columns
  */
 function ptUpgrade_trackers($check = false)
@@ -138,7 +138,7 @@ function ptUpgrade_trackers($check = false)
 	}
 }
 
-/*
+/**
  * Maintenance function for upgrading version fields
  */
 function ptUpgrade_versionFields($check = false)
@@ -182,7 +182,7 @@ function ptUpgrade_versionFields($check = false)
 	}
 }
 
-/*
+/**
  * Maintenance function for upgrading project modules
  */
 function ptUpgrade_projectModules($check = false)
@@ -206,7 +206,7 @@ function ptUpgrade_projectModules($check = false)
 	);
 }
 
-/*
+/**
  * Maintenance function for generic maintenance
  */
 function ptMaintenanceGeneral($check = false)
@@ -230,7 +230,7 @@ function ptMaintenanceGeneral($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for comments not linked to events
  */
 function ptMaintenanceEvents1($check = false)
@@ -305,7 +305,7 @@ function ptMaintenanceEvents1($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for events without poster info
  */
 function ptMaintenanceEvents2($check = false)
@@ -355,7 +355,7 @@ function ptMaintenanceEvents2($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for unnecassary events
  */
 function ptMaintenanceEvents3($check = false)
@@ -402,7 +402,7 @@ function ptMaintenanceEvents3($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for updating issue counts
  *
  * @todo Write code for this function
@@ -422,7 +422,7 @@ function ptMaintenanceIssueCounts($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for deleting invalid issues
  *
  * @todo Check function needs to be written
@@ -451,7 +451,7 @@ function ptMaintenanceIssues1($check = false)
 	return true;
 }
 
-/*
+/**
  * Maintenance function for setting deleted posters as guests
  *
  * @todo Write check code

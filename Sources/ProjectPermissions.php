@@ -8,7 +8,7 @@
  * @since 0.1
  */
 
-/*
+/**
  * Manage Project Permissions page
  */
 function ManageProjectPermissions()
@@ -45,7 +45,7 @@ function ManageProjectPermissions()
 	$subActions[$_REQUEST['sa']][0]();
 }
 
-/*
+/**
  * Profiles management
  */
 function ManageProjectPermissionsMain()
@@ -213,7 +213,7 @@ function ManageProjectPermissionsMain()
 	$context['sub_template'] = 'profiles_list';
 }
 
-/*
+/**
  * Edit Profile page
  */
 function EditProjectProfile()
@@ -416,7 +416,7 @@ function EditProjectProfile()
 	$context['sub_template'] = 'profile_edit';
 }
 
-/*
+/**
  * Function to load profile data
  */
 function PTloadProfile()
@@ -502,7 +502,7 @@ function PTloadProfile()
 		fatal_lang_error('profile_group_not_found', false);
 }
 
-/*
+/**
  * Edit permissions of profile page
  */
 function EditProfilePermissions()
@@ -567,7 +567,7 @@ function EditProfilePermissions()
 	$context['sub_template'] = 'profile_permissions';
 }
 
-/*
+/**
  * Save project profile permissions
  */
 function EditProfilePermissions2()
@@ -633,7 +633,7 @@ function EditProfilePermissions2()
 	redirectexit('action=admin;area=projectpermissions;sa=edit;profile=' . $context['profile']['id']);
 }
 
-/*
+/**
  * Updates inherited groups permissions 
  */
 function updatePTChildPermissions($parents, $profile)

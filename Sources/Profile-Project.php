@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Project profile
  */
 function projectProfile($memID)
@@ -40,7 +40,7 @@ function projectProfile($memID)
 	$subActions[$_REQUEST['sa']][0]($memID);
 }
 
-/*
+/**
  * General stats
  */
 function projectProfileMain($memID)
@@ -86,7 +86,7 @@ function projectProfileMain($memID)
 	$context['sub_template'] = 'project_profile_main';
 }
 
-/*
+/**
  * Issues list
  *
  * @todo Use createIssueList

@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
 	!!!
 */
 
@@ -25,7 +25,7 @@ $extensionInformation = array(
 
 register_project_feature('admin', 'ProjectModule_Admin');
 
-/*
+/**
  * Project Module Admin
  */
 class ProjectModule_Admin extends ProjectModule_Base
@@ -132,7 +132,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminVersionList()
 	{	
-		global $scripturl, $sourcedir, $context, $txt, $project;
+		global $sourcedir, $context, $txt, $project;
 		
 		$listOptions = array(
 			'id' => 'versions_list',
@@ -180,7 +180,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 					),
 					'data' => array(
 						'function' => create_function('$list_item', '
-							global $txt, $scripturl;
+							global $txt;
 							return (empty($list_item[\'level\']) ? \'<a href="\' .  project_get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 						'),
 						'style' => 'text-align: right;',
@@ -221,7 +221,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminVersionEdit()
 	{	
-		global $scripturl, $sourcedir, $context, $txt, $project;
+		global $smcFunc, $sourcedir, $context, $txt, $project;
 
 		if ($_REQUEST['version'] == 'new')
 		{
@@ -315,7 +315,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminVersionEdit2()
 	{	
-		global $scripturl, $sourcedir, $context, $txt, $project;
+		global $sourcedir, $context, $txt, $project;
 		
 		checkSession();
 	
@@ -418,7 +418,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminCateoryList()
 	{
-		global $scripturl, $sourcedir, $context, $txt, $project;
+		global $sourcedir, $context, $txt, $project;
 
 		$listOptions = array(
 			'id' => 'categories_list',

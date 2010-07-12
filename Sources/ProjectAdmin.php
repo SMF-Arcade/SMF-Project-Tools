@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*
+/**
  * Main admin function
  */
 function ProjectsAdmin()
@@ -44,7 +44,7 @@ function ProjectsAdmin()
 	$subActions[$_REQUEST['sa']][0]();
 }
 
-/*
+/**
  * Information view
  */
 function ProjectsAdminMain()
@@ -54,7 +54,7 @@ function ProjectsAdminMain()
 	$context['sub_template'] = 'project_admin_main';
 }
 
-/*
+/**
  * Project Tools settings page
  */
 function ProjectsAdminSettings($return_config = false)
@@ -92,7 +92,7 @@ function ProjectsAdminSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
-/*
+/**
  * Maintenance
  */
 function ProjectsMaintenance()
@@ -163,7 +163,7 @@ function ProjectsMaintenance()
 	}
 }
 
-/*
+/**
  * function to handle pausing maintenancr action
  */
 function pauseProjectMaintenance($force)
@@ -192,7 +192,7 @@ function pauseProjectMaintenance($force)
 	obExit();
 }
 
-/*
+/**
  * Repair maintenance
  */
 function ProjectsMaintenanceRepair()
@@ -233,7 +233,7 @@ function ProjectsMaintenanceRepair()
 	return $repairFunctions;
 }
 
-/*
+/**
  * Upgrade maintenance
  */
 function ProjectsMaintenanceUpgrade()
@@ -267,7 +267,7 @@ function ProjectsMaintenanceUpgrade()
 	return $repairFunctions;
 }
 
-/*
+/**
  * Installed extensions page
  */
 function ProjectsAdminExtensions()

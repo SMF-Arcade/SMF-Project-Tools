@@ -8,7 +8,7 @@
  * @since 0.1
  */
 
-/*
+/**
  * Load issue based on global variable $issue
  */
 function loadIssue()
@@ -153,7 +153,7 @@ function loadIssue()
 	}
 }
 
-/*
+/**
  * Inserts new issue to database
  * @param array $issueOptions
  * @param array &$posterOptions
@@ -215,7 +215,7 @@ function createIssue($issueOptions, &$posterOptions)
 	return $id_issue;
 }
 
-/*
+/**
  * Updates issue in database
  * @param int $id_issue ID of issue to update
  * @param array $issueOptions
@@ -487,7 +487,7 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 	return true;
 }
 
-/*
+/**
  * Creates event in timeline
  * @param int $id_issue ID of issue
  * @param int $id_project ID of project issue is in
@@ -745,7 +745,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	return $id_event_new;
 }
 
-/*
+/**
  * Delete issue from database
  * @param int $id_issue ID of issue
  * @param array $posterOptions posterOptions for user deleting issue
@@ -860,7 +860,7 @@ function deleteIssue($id_issue, $posterOptions, $log_delete = true)
 	return $id_event;
 }
 
-/*
+/**
  * Insert comment into database
  * @param int $id_project ID of project
  * @param int $id_issue ID of issue
@@ -985,7 +985,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	return $id_comment;
 }
 
-/*
+/**
  * Modifies comment in database
  * @param int $id_comment
  * @param int $id_issue
@@ -1033,7 +1033,7 @@ function modifyComment($id_comment, $id_issue, $commentOptions, $posterOptions)
 	return true;
 }
 
-/*
+/**
  * Creates issue list for current project. Will be replaced in 0.6
  * @param int $start Offset to start from
  * @param int $num_issues Number ofissues per page
@@ -1130,7 +1130,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 	return $return;
 }
 
-/*
+/**
  * Creates filter for createIssueList
  * @param string $mode Default to get default filter. Reguest to get filter based on reguest parametrs
  * @param array $options
@@ -1191,7 +1191,7 @@ function getIssuesFilter($mode = 'default', $options = array())
 	return $filter;
 }
 
-/*
+/**
  * Creates issue list
  * @param array $issueListOptions
  * @retrun string Key Used for issue list in context array
@@ -1386,7 +1386,7 @@ function createIssueList($issueListOptions)
 	return $key;
 }
 
-/*
+/**
  * Links tag of arrays. Used in array walk
  */
 function link_tags(&$tag, $key, $baseurl)
@@ -1394,7 +1394,7 @@ function link_tags(&$tag, $key, $baseurl)
 	$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
 }
 
-/*
+/**
  * Creates list of versions from array of ids
  * @param array $versions array of version ids
  * @param boolean $as_string return as comma separated string instead of array
