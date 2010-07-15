@@ -90,6 +90,7 @@ function ProjectList()
 	loadTimeline();
 
 	// Template
+	loadTemplate('ProjectList');
 	$context['sub_template'] = 'project_list';
 	$context['page_title'] = sprintf($txt['project_list_title'], $context['forum_name']);
 }

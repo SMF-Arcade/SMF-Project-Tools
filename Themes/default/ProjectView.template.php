@@ -9,56 +9,6 @@
  * @see ProjectView.php
  */
 
-function template_project_view_above()
-{
-	global $context, $settings, $options, $txt, $modSettings;
-
-	if (!empty($context['project_tabs']))
-	{
-		echo '
-	<div><ul class="dropmenu">';
-
-		// Print out all the items in this tab.
-		$i = 1;
-		$num_tabs = count($context['project_tabs']['tabs']);
-		
-		foreach ($context['project_tabs']['tabs'] as $button)
-		{
-			echo '
-		<li>
-			<a href="', $button['href'], '" class="', !empty($button['is_selected']) ? 'active ' : '', 'firstlevel">
-				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $button['title'], '</span>
-			</a>';
-			
-			if (!empty($button['sub_buttons']))
-			{
-				echo '
-			<ul>';
-			
-				foreach ($button['sub_buttons'] as $childbutton)
-					echo '
-				<li>
-					<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
-						<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
-					</a>
-				</li>';
-					
-				echo '
-			</ul>';
-			}
-			
-			echo '
-		</li>';
-			
-			$i++;
-		}
-		
-		echo '
-	</ul></div>
-	<br class="clear" />';
-	}
-}
-
 function template_project_view()
 {
 	global $context, $settings, $options, $txt, $modSettings;
@@ -264,12 +214,6 @@ function template_issue_list_block($block, $data)
 	
 	echo '
 	</table>';
-}
-
-function template_project_view_below()
-{
-	global $context, $settings, $options, $txt, $modSettings;
-
 }
 
 ?>

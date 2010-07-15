@@ -6,6 +6,8 @@ SMF Project Tools 0.5                                                        ???
 July 2010
 --------------------------------------------------------------------------------
  ! Project admin didn't highlight selected tab
+ * Merged project and project_view layers
+ * Own file for project list template
  
 June 2010
 --------------------------------------------------------------------------------

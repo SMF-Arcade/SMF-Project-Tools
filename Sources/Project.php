@@ -147,11 +147,6 @@ function Projects($standalone = false)
 			'name' => $context['current_issue']['name'],
 			'url' => $context['current_issue']['href'],
 		);
-
-	loadTemplate('ProjectView');
-
-	if (!isset($_REQUEST['xml']))
-		$context['template_layers'][] = 'project_view';
 		
 	if (empty($_REQUEST['area']) || !isset($subAreas[$_REQUEST['area']]))
 		$_REQUEST['area'] = 'main';
