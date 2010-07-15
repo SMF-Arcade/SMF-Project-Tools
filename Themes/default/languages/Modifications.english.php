@@ -33,8 +33,6 @@ $txt['project_general_extensions'] = 'Extensions';
 $txt['manage_projects'] = 'Projects';
 $txt['modify_projects'] = 'Modify Projects';
 $txt['new_project'] = 'New Project';
-$txt['manage_versions'] = 'Versions';
-$txt['manage_project_category'] = 'Categories';
 
 $txt['manage_project_permissions'] = 'Permissions';
 $txt['project_permissions'] = 'Permissions';

@@ -93,12 +93,13 @@ function Projects($standalone = false)
 	// Tabs
 	$context['project_tabs'] = array(
 		'title' => $context['project']['name'],
-		'text' => $context['project']['description'],
+		'description' => $context['project']['description'],
 		'tabs' => array(
 			'main' => array(
 				'href' => project_get_url(array('project' => $project)),
 				'title' => $txt['project'],
 				'is_selected' => false,
+				'hide_linktree' => true,
 				'order' => 'first',
 			),
 		),
@@ -136,18 +137,6 @@ function Projects($standalone = false)
 	// Sort tabs to correct order
 	uksort($context['project_tabs']['tabs'], 'projectTabSort');
 
-	// Linktree
-	$context['linktree'][] = array(
-		'name' => strip_tags($context['project']['name']),
-		'url' => project_get_url(array('project' => $project)),
-	);
-	
-	if (isset($context['current_issue']))
-		$context['linktree'][] = array(
-			'name' => $context['current_issue']['name'],
-			'url' => $context['current_issue']['href'],
-		);
-		
 	if (empty($_REQUEST['area']) || !isset($subAreas[$_REQUEST['area']]))
 		$_REQUEST['area'] = 'main';
 		
@@ -161,21 +150,42 @@ function Projects($standalone = false)
 		$context['project_tabs']['tabs'][$current_area['tab']]['is_selected'] = true;
 	else
 		$context['project_tabs']['tabs']['main']['is_selected'] = true;
-
+		
 	// Can access this area?
 	if (isset($current_area['permission']))
 		isAllowedTo($current_area['permission']);
 	if (isset($current_area['project_permission']))
 		projectIsAllowedTo($current_area['project_permission']);
-			
+		
 	// Call Initialize View function
 	if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
 		$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
-			
-	// Load Additional file if required
-	if (isset($subActions[$_REQUEST['sa']]['file']))
-		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']]['file']);
-
+		
+	// Linktree
+	$context['linktree'][] = array(
+		'name' => strip_tags($context['project']['name']),
+		'url' => project_get_url(array('project' => $project)),
+	);
+	
+	if (empty($context['project_tabs']['tabs'][$current_area['tab']]['hide_linktree']))
+		$context['linktree'][] = array(
+			'name' => $context['project_tabs']['tabs'][$current_area['tab']]['title'],
+			'url' => $context['project_tabs']['tabs'][$current_area['tab']]['href'],
+		);
+		
+	if (isset($context['current_project_module']->subTabs[$_REQUEST['sa']]))
+	{
+		$context['current_project_module']->subTabs[$_REQUEST['sa']]['is_selected'] = true;
+		
+		if (empty($context['current_project_module']->subTabs[$_REQUEST['sa']]['hide_linktree']))
+			$context['linktree'][] = array(
+				'name' => $context['project_tabs']['tabs'][$current_area['tab']]['title'],
+				'url' => $context['project_tabs']['tabs'][$current_area['tab']]['href'],
+			);
+		
+		$context['project_sub_tabs'] = $context['current_project_module']->subTabs;
+	}
+	
 	$context['current_project_module']->main($_REQUEST['sa']);
 }
 

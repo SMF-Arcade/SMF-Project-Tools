@@ -20,12 +20,6 @@ function template_project_view()
 	);
 
 	echo '
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		', $context['project']['name'], '
-	</h3>
-	<p class="description">
-		', $context['project']['long_description'], '
-	</p>
 	<div id="modbuttons_top" class="modbuttons clearfix margintop">
 		', template_button_strip($project_buttons, 'right'), '
 	</div>';

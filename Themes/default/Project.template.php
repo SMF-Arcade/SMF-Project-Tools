@@ -59,7 +59,38 @@ function template_project_above()
 		
 		echo '
 	</ul></div>
+	<br class="clear" />
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		', $context['project_tabs']['title'], '
+	</h3>
+	<p class="description">
+		', $context['project_tabs']['description'], '
+	</p>';
+	
+		if (isset($context['project_sub_tabs']))
+		{
+			echo '
+	<div class="dropmenu"><ul>';
+	
+			// Print out all the items in this tab.
+			$i = 1;
+			$num_tabs = count($context['project_sub_tabs']);
+			foreach ($context['project_sub_tabs'] as $tab)
+			{
+				echo '
+		<li>
+			<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
+				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $tab['title'], '</span>
+			</a>
+		</li>';
+				
+				$i++;
+			}
+			
+			echo '
+	</ul></div>
 	<br class="clear" />';
+		}	
 	}
 }
 

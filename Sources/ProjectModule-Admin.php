@@ -110,41 +110,34 @@ class ProjectModule_Admin extends ProjectModule_Base
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
 		
 		loadTemplate('ProjectModule-Admin');
-		
 		loadLanguage('ProjectAdmin');
-		
-		projectIsAllowedTo('admin');
-		
-		// Template layers for Admin pages
-		$context['template_layers'][] = 'ProjectModuleAdmin';
 		
 		// Check that subaction exists, if not use "main"
 		if (!isset($this->subActions[$subaction]))
 			$subaction = 'main';
-		
-		// Tabs
-		$context['project_admin_tabs'] = array(
-			'tabs' => $this->subTabs,
-		);
-		
-		$context['project_admin_tabs']['tabs'][$subaction]['is_selected'] = true;
 
 		parent::beforeSubaction($subaction);
 	}
 	
 	public function ProjectAdminMain()
 	{
+		global $context, $txt;
 		
+		$context['page_title'] = $txt['title_project_admin'];
 	}
 	
 	public function ProjectAdminVersions()
 	{
+		global $context, $txt;
+		
 		if (empty($_REQUEST['version']))
 			$this->ProjectAdminVersionList();
-		elseif (isset($_POST['save']))
+		elseif (isset($_REQUEST['save']))
 			$this->ProjectAdminVersionEdit2();
 		else
 			$this->ProjectAdminVersionEdit();
+			
+		$context['project_tabs']['description'] = $txt['project_admin_versions_description'];
 	}
 	
 	public function ProjectAdminVersionList()
@@ -233,6 +226,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		createList($listOptions);
 	
 		// Template
+		$context['page_title'] = sprintf($txt['title_versions_list'], $context['project']['name']);
 		$context['sub_template'] = 'versions_list';
 	}
 	
@@ -254,6 +248,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'release_date' => array('day' => 0, 'month' => 0, 'year' => 0),
 				'permission_inherit' => true,
 			);
+			
+			$context['page_title'] = sprintf($txt['title_versions_new'], $context['project']['name']);
 		}
 		else
 		{
@@ -287,6 +283,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array('day' => 0, 'month' => 0, 'year' => 0),
 				'permission_inherit' => !empty($row['permission_inherit']),
 			);
+			
+			$context['page_title'] = sprintf($txt['title_versions_edit'], $context['project']['name'], htmlspecialchars($row['version_name']));
 		}
 	
 		// Default membergroups.
@@ -427,13 +425,15 @@ class ProjectModule_Admin extends ProjectModule_Base
 	{
 		if (empty($_REQUEST['category']))
 			$this->ProjectAdminCategoryList();
-		elseif (isset($_POST['save']))
+		elseif (isset($_REQUEST['save']))
 			$this->ProjectAdminCategoryEdit2();
 		else
 			$this->ProjectAdminCategoryEdit();
+			
+		$context['project_tabs']['description'] = $txt['project_admin_category_description'];
 	}
 	
-	public function ProjectAdminCateoryList()
+	public function ProjectAdminCategoryList()
 	{
 		global $sourcedir, $context, $txt, $project;
 
@@ -500,6 +500,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		createList($listOptions);
 	
 		// Template
+		$context['page_title'] = sprintf($txt['title_category_list'], $context['project']['name']);
 		$context['sub_template'] = 'categories_list';
 	}
 	
@@ -514,6 +515,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'id' => 0,
 				'name' => '',
 			);
+			
+			$context['page_title'] = sprintf($txt['title_category_new'], $context['project']['name']);
 		}
 		else
 		{
@@ -537,6 +540,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'id' => $row['id_category'],
 				'name' => htmlspecialchars($row['category_name']),
 			);
+			
+			$context['page_title'] = sprintf($txt['title_category_edit'], $context['project']['name'], htmlspecialchars($row['category_name']));
 	
 			unset($row);
 		}

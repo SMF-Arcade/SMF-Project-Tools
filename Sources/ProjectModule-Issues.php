@@ -166,6 +166,19 @@ class ProjectModule_Issues extends ProjectModule_Base
 				'show' => $information['show'],
 			);
 	}
+	
+	function main($subaction)
+	{
+		global $context;
+		
+		if (isset($context['current_issue']))
+			$context['linktree'][] = array(
+				'name' => $context['current_issue']['name'],
+				'url' => $context['current_issue']['href'],
+			);
+			
+		call_user_func($this->subActions[$subaction]['callback']);
+	}
 }
 
 ?>
