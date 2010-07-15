@@ -22,12 +22,12 @@ function template_project_view_above()
 		$i = 1;
 		$num_tabs = count($context['project_tabs']['tabs']);
 		
-		foreach ($context['project_tabs']['tabs'] as $tab)
+		foreach ($context['project_tabs']['tabs'] as $button)
 		{
 			echo '
 		<li>
-			<a href="', $tab['href'], '" class="', !empty($tab['is_selected']) ? 'active ' : '', 'firstlevel">
-				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $tab['title'], '</span>
+			<a href="', $button['href'], '" class="', !empty($button['is_selected']) ? 'active ' : '', 'firstlevel">
+				<span class="firstlevel', $i == $num_tabs ? ' last' : '', '">', $button['title'], '</span>
 			</a>';
 			
 			if (!empty($button['sub_buttons']))
