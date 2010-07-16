@@ -55,7 +55,7 @@ class ProjectModule_Base
 		$this->subActions[$sa] = $data;
 	}
 	
-	function beforeSubaction(&$subaction)
+	public function beforeSubaction(&$subaction)
 	{
 		global $sourcedir;
 		
@@ -80,7 +80,7 @@ class ProjectModule_Base
 			require_once($sourcedir . '/' . $this->subActions[$subaction]['file']);
 	}
 	
-	final function main($subaction)
+	public function main($subaction)
 	{
 		call_user_func($this->subActions[$subaction]['callback']);
 	}
