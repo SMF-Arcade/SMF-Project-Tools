@@ -111,10 +111,6 @@ class ProjectModule_Issues extends ProjectModule_Base
 			'href' => project_get_url(array('project' => $project, 'area' => 'issues')),
 			'title' => $txt['issues'],
 			'is_selected' => false,
-			'linktree' => array(
-				'name' => $txt['linktree_issues'],
-				'url' => project_get_url(array('project' => $project, 'area' => 'issues')),
-			),
 			'order' => 10,
 		);
 	}

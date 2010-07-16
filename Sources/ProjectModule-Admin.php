@@ -55,28 +55,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'tab' => 'admin',
 			),
 		);
-		
-		$this->subTabs = array(
-			'main' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
-				'title' => $txt['project'],
-				'is_selected' => false,
-				'order' => 'first',
-			),
-			'versions' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
-				'title' => $txt['manage_versions'],
-				'is_selected' => false,
-				'order' => 10,
-			),
-			'category' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
-				'title' => $txt['manage_project_category'],
-				'is_selected' => false,
-				'order' => 10,
-			),
-		);
-
 	}
 	
 	public function RegisterProjectArea()
@@ -95,10 +73,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 			'order' => 'last',
 			'project_permission' => 'admin',
 			'sub_buttons' => $this->subTabs,
-			'linktree' => array(
-				'name' => $txt['project_admin'],
-				'url' => project_get_url(array('project' => $project, 'area' => 'admin')),
-			),
 		);
 	}
 	
@@ -111,6 +85,28 @@ class ProjectModule_Admin extends ProjectModule_Base
 		
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
+		
+		$this->subTabs = array(
+			'main' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
+				'title' => $txt['project'],
+				'is_selected' => false,
+				'order' => 'first',
+				'hide_linktree' => true,
+			),
+			'versions' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
+				'title' => $txt['manage_versions'],
+				'is_selected' => false,
+				'order' => 10,
+			),
+			'category' => array(
+				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+				'title' => $txt['manage_project_category'],
+				'is_selected' => false,
+				'order' => 10,
+			),
+		);
 		
 		// Check that subaction exists, if not use "main"
 		if (!isset($this->subActions[$subaction]))
@@ -130,7 +126,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	{
 		global $context, $txt;
 		
-		if (empty($_REQUEST['version']))
+		if (!isset($_REQUEST['version']))
 			$this->ProjectAdminVersionList();
 		elseif (isset($_REQUEST['save']))
 			$this->ProjectAdminVersionEdit2();
@@ -423,7 +419,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminCategory()
 	{
-		if (empty($_REQUEST['category']))
+		if (!isset($_REQUEST['category']))
 			$this->ProjectAdminCategoryList();
 		elseif (isset($_REQUEST['save']))
 			$this->ProjectAdminCategoryEdit2();

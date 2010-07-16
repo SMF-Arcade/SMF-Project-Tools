@@ -131,7 +131,7 @@ function template_categories_list()
 
 function template_edit_category()
 {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings, $project;
 
 	echo '
 <form action="', project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'save')), '" method="post" accept-charset="', $context['character_set'], '">

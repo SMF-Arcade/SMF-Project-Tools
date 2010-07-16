@@ -179,8 +179,8 @@ function Projects($standalone = false)
 		
 		if (empty($context['current_project_module']->subTabs[$_REQUEST['sa']]['hide_linktree']))
 			$context['linktree'][] = array(
-				'name' => $context['project_tabs']['tabs'][$current_area['tab']]['title'],
-				'url' => $context['project_tabs']['tabs'][$current_area['tab']]['href'],
+				'name' => $context['current_project_module']->subTabs[$_REQUEST['sa']]['title'],
+				'url' => $context['current_project_module']->subTabs[$_REQUEST['sa']]['href'],
 			);
 		
 		$context['project_sub_tabs'] = $context['current_project_module']->subTabs;

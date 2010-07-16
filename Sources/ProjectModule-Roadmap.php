@@ -61,10 +61,6 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 			'href' => project_get_url(array('project' => $project, 'area' => 'roadmap')),
 			'title' => $txt['roadmap'],
 			'is_selected' => false,
-			'linktree' => array(
-				'name' => $txt['linktree_roadmap'],
-				'url' => project_get_url(array('project' => $project, 'area' => 'roadmap')),
-			),
 		);
 	}
 	
