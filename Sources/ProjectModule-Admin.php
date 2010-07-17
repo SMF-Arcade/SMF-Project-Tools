@@ -107,10 +107,6 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'order' => 10,
 			),
 		);
-		
-		// Check that subaction exists, if not use "main"
-		if (!isset($this->subActions[$subaction]))
-			$subaction = 'main';
 
 		parent::beforeSubaction($subaction);
 	}
