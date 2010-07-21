@@ -13,7 +13,7 @@
  */
 function IssueReply()
 {
-	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options;
+	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options, $project;
 
 	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
