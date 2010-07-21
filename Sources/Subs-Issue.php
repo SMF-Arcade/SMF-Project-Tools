@@ -1391,7 +1391,11 @@ function createIssueList($issueListOptions)
  */
 function link_tags(&$tag, $key, $baseurl)
 {
-	$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
+	if (is_array($baseurl))
+		$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
+	else
+		$tag = '<a href="' . $baseurl . (strpos($baseurl,'?') !== false ? ';' : '?') . 'tag=' . urlencode($tag) . '">' . $tag . '</a>';
+	
 }
 
 /**
