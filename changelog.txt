@@ -8,6 +8,7 @@ July 2010
  ! Project admin didn't highlight selected tab
  * Merged project and project_view layers
  * Own file for project list template
+ + Post banning user now affects Project Tools
  
 June 2010
 --------------------------------------------------------------------------------

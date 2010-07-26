@@ -482,6 +482,23 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 }]]></add>
 		</operation>
 	</file>
+	
+	<file name="$sourcedir/Security.php">
+		<operation>
+			<search position="before"><![CDATA[$user_info['permissions'] = array_diff($user_info['permissions'], $denied_permissions);]]></search>
+			<add><![CDATA[
+
+		if (!empty($modSettings['projectEnabled']) && !empty($user_info['project_permissions']) && empty($modSettings['projectNoPostbanCheck']))
+		{
+			$pt_denied_permissions = array(
+				'issue_report', 'issue_update', 'issue_attach', 'issue_moderate',
+				'issue_comment', 'edit_comment', 'delete_comment'
+			);
+			$user_info['project_permissions'] = array_diff($user_info['project_permissions'], $pt_denied_permissions);
+		}
+]]></add>
+		</operation>
+	</file>
 
 	<file name="$sourcedir/Subs.php">
 		<operation>
