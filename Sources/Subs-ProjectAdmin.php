@@ -666,7 +666,7 @@ function list_getVersions($start, $items_per_page, $sort, $project)
  */
 function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
 {
-	global $smcFunc;
+	global $smcFunc, $scripturl;
 
 	$profiles = array();
 
