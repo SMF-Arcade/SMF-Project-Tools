@@ -149,15 +149,15 @@ function template_issue_list_block($block, $data)
 
 		if (!empty($data))
 			echo '
-				<th scope="col" class="smalltext first_th"></th>
-				<th scope="col" class="smalltext">', $txt['issue_title'], '</th>
-				<th scope="col" class="smalltext">', $txt['issue_replies'], '</th>
-				<th scope="col" class="smalltext last_th">', $txt['issue_last_update'], '</th>';
+				<th scope="col" class="first_th"></th>
+				<th scope="col">', $txt['issue_title'], '</th>
+				<th scope="col">', $txt['issue_replies'], '</th>
+				<th scope="col" class="last_th">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-				<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+				<th scope="col" class="first_th" width="8%">&nbsp;</th>
 				<th class="smalltext" colspan="2"><strong>', $txt['issue_no_issues'], '</strong></th>
-				<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
+				<th scope="col" class="last_th" width="8%">&nbsp;</th>';
 
 		echo '
 			</tr>

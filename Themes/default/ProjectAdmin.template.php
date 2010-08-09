@@ -134,9 +134,9 @@ function template_project_admin_extensions()
 	<table class="table_grid" cellspacing="0" width="100%">
 		<thead>
 			<tr class="catbg">
-				<th scope="col" class="first_th smalltext">', $txt['extension_enable'], '</th>
-				<th scope="col" class="smalltext">', $txt['extension_name'], '</th>
-				<th scope="col" class="last_th smalltext">', $txt['extension_version'], '</th>
+				<th scope="col" class="first_th">', $txt['extension_enable'], '</th>
+				<th scope="col">', $txt['extension_name'], '</th>
+				<th scope="col" class="last_th">', $txt['extension_version'], '</th>
 			</tr>
 		</thead>
 		<tbody>';

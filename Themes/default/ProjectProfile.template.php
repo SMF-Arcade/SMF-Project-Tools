@@ -49,15 +49,17 @@ function template_issue_list_profile()
 
 		if (!empty($context['issues']))
 			echo '
-					<th scope="col" class="smalltext headerpadding"></th>
-					<th scope="col" class="smalltext headerpadding">', $txt['issue_title'], '</th>
-					<th scope="col" class="smalltext headerpadding">', $txt['issue_status'], '</th>
-					<th scope="col" class="smalltext headerpadding">', $txt['issue_version'], '</th>
-					<th scope="col" class="smalltext headerpadding">', $txt['issue_version_fixed'], '</th>
-					<th scope="col" class="smalltext headerpadding">', $txt['issue_last_update'], '</th>';
+					<th scope="col" class="first_th"></th>
+					<th scope="col">', $txt['issue_title'], '</th>
+					<th scope="col">', $txt['issue_status'], '</th>
+					<th scope="col">', $txt['issue_version'], '</th>
+					<th scope="col">', $txt['issue_version_fixed'], '</th>
+					<th scope="col" class="last_th">', $txt['issue_last_update'], '</th>';
 		else
 			echo '
-					<th scope="col" class="smalltext headerpadding" colspan="5"><strong>', $txt['issue_no_issues'], '</strong></th>';
+					<th scope="col" class="first_th" width="8%">&nbsp;</th>
+					<th class="smalltext" colspan="4"><strong>', $txt['issue_no_issues'], '</strong></th>
+					<th scope="col" class="last_th" width="8%">&nbsp;</th>';
 
 		echo '
 				</tr>
