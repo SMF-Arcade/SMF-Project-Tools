@@ -34,9 +34,11 @@ function template_project_view()
 			
 		if (!empty($block['title']))
 			echo '
-				<h3 class="catbg"><span class="left"></span>
-					', $block['title'], '
-				</h3>';
+				<div class="cat_bar">
+					<h3 class="catbg">
+						', $block['title'], '
+					</h3>
+				</div>';
 		
 		$templateFunction = 'template_' . $block['template'];
 		$templateFunction($block, $block['data']);
@@ -76,9 +78,11 @@ function template_project_view()
 	echo '
 	<span class="clear upperframe"><span><!-- // --></span></span>
 	<div class="roundframe"><div class="innerframe">
-		<h3 class="catbg"><span class="left"></span>
-			', $context['project']['name'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $context['project']['name'], '
+			</h3>
+		</div>
 		<div id="upshrinkHeaderIC">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				', $txt['project_statistics'], '
@@ -105,9 +109,11 @@ function template_project_view()
 
 	echo '
 			</dl>
-			<h3 class="catbg"><span class="left"></span>
-				', $txt['project_timeline'], '
-			</h3>';
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['project_timeline'], '
+				</h3>
+			</div>';
 
 	$first = true;
 

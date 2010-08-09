@@ -16,9 +16,11 @@ function template_project_roadmap()
 	foreach ($context['roadmap'] as $version)
 	{
 		echo '
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		<a href="', $version['href'], '">', $version['name'], '</a>
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<a href="', $version['href'], '">', $version['name'], '</a>
+		</h3>
+	</div>
 	<div class="windowbg">
 		<span class="topslice"><span></span></span>
 		<div style="padding: 0.5em">
@@ -47,9 +49,11 @@ function template_project_roadmap_version()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		', $context['version']['name'], '
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $context['version']['name'], '
+		</h3>
+	</div>
 	<div class="windowbg">
 		<span class="topslice"><span></span></span>
 		<div style="padding: 0.5em">

@@ -231,7 +231,11 @@ function template_issue_reply()
 	{
 		echo '
 		<div class="tborder">
-			<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['update_issue'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['update_issue'], '
+				</h3>
+			</div>
 			<div class="smallpadding windowbg">
 				<span class="topslice"><span><!-- // --></span></span>
 				<table width="100%">';

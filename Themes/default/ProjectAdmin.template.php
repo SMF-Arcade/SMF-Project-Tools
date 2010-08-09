@@ -21,7 +21,11 @@ function template_project_admin_main()
 
 	echo '
 	<div class="tborder floatleft" style="width: 69%;">
-		<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['project_latest_news'], '</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['project_latest_news'], '
+			</h3>
+		</div>
 		<div class="windowbg2 smallpadding">
 			<span class="topslice"><span></span></span>
 			<div id="project_news" style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
@@ -31,7 +35,11 @@ function template_project_admin_main()
 		</div>
 	</div>
 	<div class="tborder floatright" style="width: 30%;">
-		<h3 class="catbg"><span class="left"><span><!-- // --></span></span>', $txt['project_version_info'], '</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['project_version_info'], '
+			</h3>
+		</div>
 		<div class="windowbg2 smallpadding">
 			<span class="topslice"><span></span></span>
 			<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">

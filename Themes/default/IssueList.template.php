@@ -14,11 +14,12 @@ function template_issue_list()
 	global $context, $settings, $options, $txt, $modSettings;
 	
 	echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		<span class="floatleft">', $txt['issue_search'], '</span>
-		<img id="search_toggle" class="floatright" src="', $settings['images_url'], '/collapse.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex; display: none;" />
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<span class="floatleft">', $txt['issue_search'], '</span>
+			<img id="search_toggle" class="floatright" src="', $settings['images_url'], '/collapse.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex; display: none;" />
+		</h3>
+	</div>
 	<div id="search_panel" class="windowbg2"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
 		<span class="topslice"><span></span></span>
 		<div style="padding: 0.5em 0.7em">

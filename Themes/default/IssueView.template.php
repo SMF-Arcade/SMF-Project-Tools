@@ -35,11 +35,12 @@ function template_issue_view_above()
 	echo '
 	<a name="com', $context['current_issue']['comment_first'], '"></a>
 	<div id="issue_comments" class="floatleft">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<img src="', $settings['default_images_url'], '/', $context['current_issue']['tracker']['image'], '" style="vertical-align: middle;" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
-			<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
-		</h3>';
-
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<img src="', $settings['default_images_url'], '/', $context['current_issue']['tracker']['image'], '" style="vertical-align: middle;" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
+				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+			</h3>
+		</div>';
 }
 
 function template_issue_view_main()
@@ -102,9 +103,11 @@ function template_issue_view_below()
 	// Issue Info table
 	echo '
 	<div id="issueinfo" class="floatright">
-		<h3 class="catbg"><span class="left"></span>
-			', $txt['issue_details'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['issue_details'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="smalltext">
@@ -217,7 +220,11 @@ function template_issue_view_below()
 
 	// Tags		
 	echo '
-		<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_tags'], '</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['issue_tags'], '
+			</h3>
+		</div>
 		<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
 			<div class="windowbg">
 				<span class="topslice"><span><!-- // --></span></span>';
@@ -266,7 +273,11 @@ function template_issue_view_below()
 	if (!empty($context['attachments']) || $context['can_issue_attach'])
 	{
 		echo '
-		<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['issue_attachments'], '</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['issue_attachments'], '
+			</h3>
+		</div>
 		<div class="windowbg">
 			<span class="topslice"><span><!-- // --></span></span>
 			<div class="content">';
@@ -334,7 +345,11 @@ function template_issue_view_below()
 		echo '
 	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues',  'sa' => 'reply2')), '" method="post">
 		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['comment_issue'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['comment_issue'], '
+				</h3>
+			</div>
 			<div class="smallpadding windowbg" style="text-align: center">
 				<span class="topslice"><span><!-- // --></span></span>
 				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
@@ -854,7 +869,11 @@ function template_issue_move()
 	echo '
 	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
-			<h3 class="catbg"><span class="left"><!-- // --></span>', $txt['move_issue'], '</h3>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $txt['move_issue'], '
+				</h3>
+			</div>
 			<div class="smallpadding windowbg">
 				', $txt['project_to'], ' <select id="project_to" name="project_to">';
 	

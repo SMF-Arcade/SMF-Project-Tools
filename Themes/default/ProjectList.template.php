@@ -16,11 +16,11 @@ function template_project_list()
 	if (!empty($context['projects']))
 	{
 		echo '
-	<h3 class="catbg">
-		<span class="left"></span>
-		<span class="right"></span>
-		', $txt['project'], '
-	</h3>
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $txt['project'], '
+		</h3>
+	</div>
 	<div id="projects_table">
 		<table class="table_list">
 			<thead>
@@ -91,9 +91,11 @@ function template_project_list()
 	<br /><br />
 	<span class="upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $txt['project_timeline'], '
-		</h3>
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['project_timeline'], '
+			</h3>
+		</div>
 		<div id="upshrinkHeaderProjectTL">';
 
 	$first = true;

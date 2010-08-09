@@ -64,9 +64,11 @@ function template_project_above()
 		echo '
 	</ul></div>
 	<br class="clear" />
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+	<div class="cat_bar">
+		<h3 class="catbg">
 		', $context['project_tabs']['title'], '
-	</h3>
+		</h3>
+	</div>
 	<p class="description">
 		', $context['project_tabs']['description'], '
 	</p>';
