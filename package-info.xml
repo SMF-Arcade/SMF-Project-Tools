@@ -84,9 +84,14 @@
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
+
+	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4004">
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+	</upgrade>
 	
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4002">
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Themes/default/ProjectRoadmap.template.php" destination="$themedir" />
 		
@@ -95,6 +100,7 @@
 	
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.4001">
 		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />

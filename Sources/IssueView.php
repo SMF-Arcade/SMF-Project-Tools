@@ -4,7 +4,7 @@
 ***********************************************************************************
 * SMF Project Tools                                                               *
 * =============================================================================== *
-* Software Version:           SMF Project Tools 0.4.1                             *
+* Software Version:           SMF Project Tools 0.4.4                             *
 * Software by:                Niko Pahajoki (http://www.madjoki.com)              *
 * Copyright 2007-2009 by:     Niko Pahajoki (http://www.madjoki.com)              *
 * Support, News, Updates at:  http://www.madjoki.com                              *
@@ -163,7 +163,7 @@ function IssueView()
 	}
 
 	// Page Index
-	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events, $context['comments_per_page'], true);
+	$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events - 1, $context['comments_per_page'], true);
 
 	// Canonical url for search engines
 	$context['canonical_url'] = project_get_url(array('issue' => $issue . '.' . $_REQUEST['start']));
