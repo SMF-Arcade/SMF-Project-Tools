@@ -14,7 +14,7 @@ function template_project_profile_main()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<span class="clear upperframe"><span><!-- // --></span></span>
+	<span class="clear upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
 	<h3 class="titlebg"><span class="left"><span></span></span>
 		<img class="icon" src="', $settings['images_url'], '/stats_info.gif" width="20" height="20" alt="" /> ', $txt['project_stats'], '
@@ -31,7 +31,7 @@ function template_project_profile_main()
 		</table>
 	</div>
 	</div></div>
-	<span class="lowerframe"><span><!-- // --></span></span>';
+	<span class="lowerframe"><span></span></span>';
 }
 
 function template_issue_list_profile()
@@ -40,7 +40,7 @@ function template_issue_list_profile()
 
 	echo '
 		<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
-		<span class="clear upperframe"><span><!-- // --></span></span>
+		<span class="clear upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">
 		<div class="tborder topic_table">
 			<table class="table_grid" cellspacing="0">
@@ -145,7 +145,7 @@ function template_issue_list_profile()
 		</table>
 	</div>
 	</div></div>
-	<span class="lowerframe"><span><!-- // --></span></span>
+	<span class="lowerframe"><span></span></span>
 	<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><b>' . $txt['go_up'] . '</b></a>' : '', '</div>
 	<br class="clear" />';
 }

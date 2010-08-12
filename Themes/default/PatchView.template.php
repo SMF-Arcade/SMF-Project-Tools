@@ -16,8 +16,10 @@ function template_main()
 	{
 		echo '
 	<div class="tborder patch">
-		<h3 class="titlebg headerpadding">', $file['name_before'], '</h3>
-			<div class="windowbg">';
+		<div class="title_bar">
+			<h3 class="titlebg">', $file['name_before'], '</h3>
+		</div>
+		<div class="windowbg">';
 
 		$section = false;
 

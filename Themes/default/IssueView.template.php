@@ -227,7 +227,7 @@ function template_issue_view_below()
 		</div>
 		<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
 			<div class="windowbg">
-				<span class="topslice"><span><!-- // --></span></span>';
+				<span class="topslice"><span></span></span>';
 
 	if (!empty($context['current_tags']) || $context['can_add_tags'])
 	{
@@ -263,7 +263,7 @@ function template_issue_view_below()
 	}
 
 	echo '
-				<span class="botslice"><span><!-- // --></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
@@ -279,7 +279,7 @@ function template_issue_view_below()
 			</h3>
 		</div>
 		<div class="windowbg">
-			<span class="topslice"><span><!-- // --></span></span>
+			<span class="topslice"><span></span></span>
 			<div class="content">';
 			
 		if (!empty($context['attachments']))
@@ -326,19 +326,14 @@ function template_issue_view_below()
 		
 		echo '
 			</div>
-			<span class="botslice"><span><!-- // --></span></span>
+			<span class="botslice"><span></span></span>
 		</div>';
 	}
 	
 	echo '
 	</div>
 	<br class="clear" />
-	<div id="moderationbuttons">
-		', template_button_strip($mod_buttons, 'bottom'), '
-	</div>
-	<div class="tborder">
-		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '">&nbsp;</div>
-	</div><br />';
+	<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	if ($context['can_comment'])
 	{
@@ -351,7 +346,7 @@ function template_issue_view_below()
 				</h3>
 			</div>
 			<div class="smallpadding windowbg" style="text-align: center">
-				<span class="topslice"><span><!-- // --></span></span>
+				<span class="topslice"><span></span></span>
 				<textarea id="comment" name="comment" rows="7" cols="75" tabindex="', $context['tabindex']++, '"></textarea>';
 
 		echo '
@@ -359,7 +354,7 @@ function template_issue_view_below()
 					<input class="button_submit" type="submit" name="post" value="', $txt['add_comment'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" />
 					<input class="button_submit" type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" />
 				</div>
-				<span class="botslice"><span><!-- // --></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div><br />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

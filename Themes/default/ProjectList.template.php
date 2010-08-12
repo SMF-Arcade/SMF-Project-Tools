@@ -103,9 +103,9 @@ function template_project_list()
 	foreach ($context['events'] as $date)
 	{
 		echo '
-					<h4 class="titlebg"><span class="left"></span><span class="right"></span>
-						', $date['date'], '
-					</h4>
+					<div class="title_bar">
+						<h4 class="titlebg">', $date['date'], '</h4>
+					</div>
 					<ul class="reset">';
 
 		foreach ($date['events'] as $event)

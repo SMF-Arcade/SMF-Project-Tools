@@ -20,7 +20,9 @@ function template_profiles_list()
 	
 	<form action="', $scripturl, '?action=admin;area=projectpermissions" method="post" accept-charset="', $context['character_set'], '">
 		<div style="width: 50%; margin: 0 auto;">
-			<h3 class="titlebg"><span class="left"></span>', $txt['new_profile'], '</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">', $txt['new_profile'], '</h3>
+			</div>
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<div class="content">
@@ -54,7 +56,9 @@ function template_profile_edit()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=edit" method="post" accept-charset="', $context['character_set'], '">
-		<h3 class="titlebg"><span class="left"></span>', sprintf($txt['edit_profile'], $context['profile']['name']), '</h3>
+		<div class="title_bar">
+			<h3 class="titlebg">', sprintf($txt['edit_profile'], $context['profile']['name']), '</h3>
+		</div>
 		<table width="100%" class="table_grid">
 			<thead>
 				<tr class="catbg">
@@ -115,7 +119,11 @@ function template_profile_permissions()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=projectpermissions;sa=permissions2" method="post" accept-charset="', $context['character_set'], '">
-		<h3 class="titlebg"><span class="left"></span>', sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']), '</h3>';
+		<div class="title_bar">
+			<h3 class="titlebg">
+				', sprintf($txt['title_edit_profile_group'], $context['profile']['name'], $context['group']['name']), '
+			</h3>
+		</div>';
 
 	$alternate = true;
 

@@ -76,7 +76,7 @@ function template_project_view()
 
 	// Statistics etc
 	echo '
-	<span class="clear upperframe"><span><!-- // --></span></span>
+	<span class="clear upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
 		<div class="cat_bar">
 			<h3 class="catbg">
@@ -84,9 +84,11 @@ function template_project_view()
 			</h3>
 		</div>
 		<div id="upshrinkHeaderIC">
-			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
-				', $txt['project_statistics'], '
-			</h3>
+			<div class="title_bar">
+				<h3 class="titlebg">
+					', $txt['project_statistics'], '
+				</h3>
+			</div>
 			<dl class="stats">';
 
 	foreach ($context['project']['trackers'] as $type)
@@ -120,9 +122,11 @@ function template_project_view()
 	foreach ($context['events'] as $date)
 	{
 		echo '
-			<h4 class="titlebg', $first ? ' first' : '' ,'"><span class="left"></span><span class="right"></span>
-				', $date['date'], '
-			</h4>
+			<div class="title_bar">
+				<h4 class="titlebg', $first ? ' first' : '' ,'">
+					', $date['date'], '
+				</h4>
+			</div>
 			<ul class="reset">';
 
 		foreach ($date['events'] as $event)

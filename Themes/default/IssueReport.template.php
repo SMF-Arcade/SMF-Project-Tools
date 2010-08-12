@@ -44,9 +44,11 @@ function template_report_issue()
 	echo '
 	<form action="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
-			<h4 class="titlebg"><span class="left"></span>', $txt['report_issue'], '</h4>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['report_issue'], '</h4>
+			</div>
 			<div class="windowbg">
-				<span class="topslice"><span><!-- // --></span></span>
+				<span class="topslice"><span></span></span>
 				<dl>
 					<dd ', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
 						<div style="padding: 0px; font-weight: bold;', empty($context['post_error']['messages']) ? ' display: none;' : '', '" id="error_serious">
@@ -145,7 +147,7 @@ function template_report_issue()
 	echo '
 					<dd class="clear"></dd>
 				</dl>
-				<span class="botslice"><span><!-- // --></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div>
 
@@ -190,9 +192,11 @@ function template_issue_reply()
 	echo '
 	<form action="', project_get_url(array('area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
-			<h4 class="titlebg"><span class="left"><!-- // --></span>', $txt['issue_reply'], '</h4>
+			<div class="title_bar">
+				<h4 class="titlebg">', $txt['issue_reply'], '</h4>
+			</div>
 			<div class="windowbg">
-				<span class="topslice"><span><!-- // --></span></span>
+				<span class="topslice"><span></span></span>
 				<dl>
 					<dd ', empty($context['post_error']['messages']) ? ' style="display: none"' : '', ' id="errors">
 						<div style="padding: 0px; font-weight: bold;', empty($context['post_error']['messages']) ? ' display: none;' : '', '" id="error_serious">
@@ -223,7 +227,7 @@ function template_issue_reply()
 					</dd>
 					<dd class="clear"></dd>
 				</dl>
-				<span class="botslice"><span><!-- // --></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
 
@@ -237,7 +241,7 @@ function template_issue_reply()
 				</h3>
 			</div>
 			<div class="smallpadding windowbg">
-				<span class="topslice"><span><!-- // --></span></span>
+				<span class="topslice"><span></span></span>
 				<table width="100%">';
 
 		// Title
@@ -362,7 +366,7 @@ function template_issue_reply()
 
 		echo '
 				</table>
-				<span class="botslice"><span><!-- // --></span></span>
+				<span class="botslice"><span></span></span>
 			</div>
 		</div>';
 
