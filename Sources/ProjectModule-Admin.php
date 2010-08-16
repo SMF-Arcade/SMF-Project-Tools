@@ -182,7 +182,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 					),
 					'data' => array(
 						'function' => create_function('$list_item', '
-							global $txt;
+							global $txt, $project;
 							return (empty($list_item[\'level\']) ? \'<a href="\' .  project_get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 						'),
 						'style' => 'text-align: right;',
@@ -415,6 +415,8 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminCategory()
 	{
+		global $txt;
+		
 		if (!isset($_REQUEST['category']))
 			$this->ProjectAdminCategoryList();
 		elseif (isset($_REQUEST['save']))
