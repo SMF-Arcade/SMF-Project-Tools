@@ -1554,7 +1554,7 @@ function getInstalledExtensions()
 /**
  * Gets list of installed modules
  */
-function getInstalledModules()
+function project_getInstalledModules()
 {
 	global $sourcedir, $smcFunc;
 

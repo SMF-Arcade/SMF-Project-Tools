@@ -160,7 +160,7 @@ function EditProject()
 	}
 	
 	// Load Possible modules
-	$context['installed_modules'] = getInstalledModules();
+	$context['installed_modules'] = project_getInstalledModules();
 
 	// Default membergroups.
 	$context['groups'] = array(
@@ -257,7 +257,7 @@ function EditProject2()
 		fatal_lang_error('project_not_found', false);
 		
 	// Load Possible modules
-	$context['installed_modules'] = getInstalledModules();
+	$context['installed_modules'] = project_getInstalledModules();
 
 	if (isset($_POST['edit']) || isset($_POST['add']))
 	{
