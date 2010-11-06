@@ -18,10 +18,13 @@ function Projects($standalone = false)
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 
+	loadProjectToolsPage();
+
 	// Check that user can access Project Tools
 	isAllowedTo('project_access');
-	
-	loadProjectToolsPage();
+
+	if (isset($context['project_error']))
+		fatal_lang_error($context['project_error'], false);
 
 	// Admin made mistake on manual edits? (for safety reasons!!)
 	if (isset($context['project_error']))

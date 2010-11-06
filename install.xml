@@ -58,9 +58,6 @@
 			$_REQUEST['action'] = 'projects';
 			$_GET['action'] = 'projects';
 		}
-
-		if (isset($context['project_error']))
-			fatal_lang_error($context['project_error'], false);
 	}]]></add>
 		</operation>
 

@@ -482,8 +482,7 @@ function loadProjectToolsPage($mode = '')
 {
 	global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $settings;
 
-	if (loadLanguage('Project') == false)
-		loadLanguage('Project', 'english');
+	loadLanguage('Project');
 
 	// Load status texts
 	foreach ($context['issue_status'] as $id => $status)
@@ -551,9 +550,7 @@ function loadProjectToolsPage($mode = '')
 		$user_info['query_see_project'] = '1 = 1';
 		$user_info['query_see_version'] = '1 = 1';
 
-		if (loadLanguage('ProjectAdmin') == false)
-			loadLanguage('ProjectAdmin', 'english');
-
+		loadLanguage('ProjectAdmin');
 		loadTemplate('ProjectAdmin',  array('project'));
 
 		if (!isset($_REQUEST['xml']))
