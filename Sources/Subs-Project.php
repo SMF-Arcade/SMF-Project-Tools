@@ -1474,20 +1474,20 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
  */
 function loadProjectToolsExtension($name, $active = true)
 {
-	global $context, $modules, $extensionInformation, $smcFunc;
+	global $context, $projectModules, $extensionInformation, $smcFunc;
 	 
 	// Prevent extensionInformation from previous extension coming up
 	$extensionInformation = array();
 	
 	if (!isset($context['project_extensions'][$name]))
 	{
-		$modules = array();
+		$projectModules = array();
 		
 		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($name) . '.php');
 		$context['project_extensions'][$name] = $extensionInformation;
-		$context['project_extensions'][$name]['modules'] = $modules;
+		$context['project_extensions'][$name]['modules'] = $projectModules;
 		
-		unset($modules);
+		unset($projectModules);
 		unset($extensionInformation);
 	}
 	
@@ -1505,9 +1505,9 @@ function loadProjectToolsExtension($name, $active = true)
  */
 function register_project_feature($module, $class_name)
 {
-	global $modules, $extensionInformation;
+	global $projectModules, $extensionInformation;
 	
-	$modules[$module] = array(
+	$projectModules[$module] = array(
 		'class_name' => $class_name,
 	);
 }
