@@ -30,6 +30,9 @@ register_project_feature('issues', 'ProjectModule_Issues');
  */
 class ProjectModule_Issues extends ProjectModule_Base
 {
+	/**
+	 *
+	 */
 	function __construct()
 	{
 		$this->subActions = array(
@@ -95,14 +98,20 @@ class ProjectModule_Issues extends ProjectModule_Base
 			),
 		);	
 	}
-	
+
+	/**
+	 *
+	 */
 	function RegisterProjectArea()
 	{
 		return array(
 			'area' => 'issues', 'tab' => 'issues',
 		);
 	}
-	
+
+	/**
+	 *
+	 */
 	function RegisterProjectTabs(&$tabs)
 	{
 		global $txt, $project;
@@ -114,7 +123,10 @@ class ProjectModule_Issues extends ProjectModule_Base
 			'order' => 10,
 		);
 	}
-	
+
+	/**
+	 *
+	 */
 	function RegisterProjectFrontpageBlocks(&$frontpage_blocks)
 	{
 		global $context, $project, $user_info;
@@ -162,7 +174,10 @@ class ProjectModule_Issues extends ProjectModule_Base
 				'show' => $information['show'],
 			);
 	}
-	
+
+	/**
+	 *
+	 */
 	function main($subaction)
 	{
 		global $context;
