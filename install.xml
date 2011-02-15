@@ -64,7 +64,7 @@
 		<operation>
 			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
 			<add><![CDATA[
-		'projects' => array('Project.php', 'Projects'),]]></add>
+		'projects' => array('Project.php', array('ProjectTools', 'Projects')),]]></add>
 		</operation>
 	</file>
 
@@ -808,7 +808,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		<operation>
 			<search position="before"><![CDATA[		'mods' => array(]]></search>
 			<add><![CDATA[
-				'SMF Project Tools &copy; 2007-2010<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
+				'SMF Project Tools &copy; 2007-2011<br /><span class="smalltext">Uses <a href="http://www.famfamfam.com/lab/icons/silk/" rel="nofollow">FamFamFam Silk</a> icons licensed under Creative Commons Attribution 2.5 License</span>',]]></add>
 		</operation>
 		
 		<operation>
