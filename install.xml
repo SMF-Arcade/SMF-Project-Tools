@@ -60,12 +60,6 @@
 		}
 	}]]></add>
 		</operation>
-
-		<operation>
-			<search position="before"><![CDATA[		'im' => array('PersonalMessage.php', 'MessageMain'),]]></search>
-			<add><![CDATA[
-		'projects' => array('Project.php', array('ProjectTools', 'Projects')),]]></add>
-		</operation>
 	</file>
 
 	<file name="$boarddir/SSI.php">

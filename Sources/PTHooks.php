@@ -48,7 +48,24 @@ class ProjectTools_Hooks
 	}
 	
 	/**
+	 * SMF Hook integrate_actions
 	 *
+	 * Adds actions in $actionArray of index.php
+	 */
+	public static function actions(&$actionArray)
+	{
+		global $modSettings;
+		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
+		$actionArray['projects'] = array('Project.php', array('ProjectTools', 'Projects'));
+	}
+	
+	/**
+	 * SMF Hook integrate_admin_areas
+	 *
+	 * Adds Project Tools group in admin.
 	 */
 	public static function admin_areas(&$admin_areas)
 	{
