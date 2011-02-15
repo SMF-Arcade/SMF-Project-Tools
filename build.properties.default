@@ -1,0 +1,2 @@
+doc_output = ${user.home}/public_html/docs/multismf-trunk/
+build_output = ${user.home}/public_html/builds/multismf-trunk/
