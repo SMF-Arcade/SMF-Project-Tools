@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="SMFProject" default="dist">
-    <property name="package"  value="${phing.project.name}" override="true" />
+    <property name="package" value="${phing.project.name}" override="true" />
 	<property name="version" value="0.6" override="yes" />
     <property name="builddir" value="./temp" override="true" />
 	<property name="docdir" value="./temp" override="true" />
