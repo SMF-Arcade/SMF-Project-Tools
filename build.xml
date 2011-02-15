@@ -34,19 +34,30 @@
     </target>
 	
     <target name="build" depends="prepare">
-		<copy todir="${builddir}" >
-			<fileset dir="./multismf">
+		<copy todir="${builddir}/ptinstall" >
+			<fileset dir="./ptinstall/">
 				<include name="**" />
-		  </fileset>
+			</fileset>
 		</copy>
 		
-		<mkdir dir="${builddir}/extra" />
-		<mkdir dir="${builddir}/extra/site_base" />
-		<copy todir="${builddir}/extra/site_base" >
-			<fileset dir="./site_base">
+		<copy todir="${builddir}/Sources" >
+			<fileset dir="./Sources/">
 				<include name="**" />
-		  </fileset>
-		</copy>		
+			</fileset>
+		</copy>
+
+		<copy todir="${builddir}/Themes" >
+			<fileset dir="./Themes/">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${builddir}" >
+			<fileset dir="./">
+				<include name="*" />
+				<exclude name="build.*" />
+			</fileset>
+		</copy>	
     </target>
 
     <target name="dist" depends="build">
