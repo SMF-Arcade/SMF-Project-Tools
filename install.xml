@@ -96,49 +96,6 @@ else
 	<!-- Source files -->
 	<file name="$sourcedir/Admin.php">
 		<operation>
-			<search position="after"><![CDATA[		'layout' => array(
-			'title' => $txt['layout_controls'],]]></search>
-			<add><![CDATA[		'project' => array(
-			'title' => $txt['project_tools'],
-			'permission' => array('project_admin'),
-			'areas' => array(
-				'projectsadmin' => array(
-					'label' => $txt['project_general'],
-					'file' => 'ProjectAdmin.php',
-					'function' => 'ProjectsAdmin',
-					'enabled' => !empty($modSettings['projectEnabled']),
-					'permission' => array('project_admin'),
-					'subsections' => array(
-						'main' => array($txt['project_general_main']),
-						'settings' => array($txt['project_general_settings']),
-						'maintenance' => array($txt['project_general_maintenance']),
-						'extensions' => array($txt['project_general_extensions'])
-					),
-				),
-				'manageprojects' => array(
-					'label' => $txt['manage_projects'],
-					'file' => 'ManageProjects.php',
-					'function' => 'ManageProjects',
-					'enabled' => !empty($modSettings['projectEnabled']),
-					'permission' => array('project_admin'),
-					'subsections' => array(
-						'list' => array($txt['modify_projects']),
-						'new' => array($txt['new_project']),
-					),
-				),
-				'projectpermissions' => array(
-					'label' => $txt['manage_project_permissions'],
-					'file' => 'ProjectPermissions.php',
-					'function' => 'ManageProjectPermissions',
-					'enabled' => !empty($modSettings['projectEnabled']),
-					'permission' => array('project_admin'),
-					'subsections' => array(),
-				),
-			),
-		),]]></add>
-		</operation>
-
-		<operation>
 			<search position="before"><![CDATA[	$language_files = array(]]></search>
 			<add><![CDATA[
 	'ProjectAdmin', ]]></add>

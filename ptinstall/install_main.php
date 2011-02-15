@@ -3,7 +3,7 @@
  * Main installer. Used in package-info.xml and install.php standalone installer
  *
  * @package installer
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -114,5 +114,14 @@ if ($count == 0)
 	
 // Step 7: Run general maintenance
 ptMaintenanceGeneral();
+
+// Step 8: Hooks
+add_integration_function('integrate_pre_include', '$sourcedir/PTHooks.php');
+//add_integration_function('integrate_actions', 'Arcade_actions');
+//add_integration_function('integrate_core_features', 'Arcade_core_features');
+//add_integration_function('integrate_load_permissions', 'Arcade_load_permissions');
+//add_integration_function('integrate_profile_areas', 'Arcade_profile_areas');
+//add_integration_function('integrate_menu_buttons', 'Arcade_menu_buttons');
+//add_integration_function('integrate_admin_areas', 'Arcade_admin_areas');
 
 ?>
