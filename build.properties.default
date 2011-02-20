@@ -1,2 +1,3 @@
-doc_output = ${user.home}/public_html/docs/multismf-trunk/
-build_output = ${user.home}/public_html/builds/multismf-trunk/
+doc_output = ${user.home}/public_html/docs/${repository}/${branch}/
+build_output = ${user.home}/public_html/builds/${repository}/${branch}/
+ftp.dir=/svnbuilds/${repository}/${branch}/
