@@ -10,6 +10,7 @@
 	<property name="docdir" value="./temp" override="true" />
 	
 	<property file="./build.properties.default" />
+	<property file="${user.home}/build/build.properties" override="true" />
 	<property file="./build.properties" override="true" />
 	
     <target name="svnrev">
