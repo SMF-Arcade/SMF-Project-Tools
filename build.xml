@@ -97,4 +97,18 @@
             </fileset>
 		</phpdoc>
     </target>
+	
+	<target name="ftp-svn" depends="svn">
+		<ftpdeploy 
+			host="${ftp.host}" 
+			port="${ftp.port}"
+			username="${ftp.username}"
+			password="${ftp.password}"
+			dir="${ftp.dir}" 
+			mode="binary">
+			<fileset dir="${build_output}">
+				<include name="${package}-${version}-rev${svn.lastrevision}.tar.gz" />
+			</fileset>
+		</ftpdeploy>
+	</target>
 </project>
