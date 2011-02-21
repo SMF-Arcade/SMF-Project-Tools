@@ -130,7 +130,7 @@ else
 
 		// Make sure this attachment is on this issue.
 		$request = $smcFunc['db_query']('', '
-			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved, i.id_reporter
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}issues AS i ON (i.id_issue = a.id_issue)
 			WHERE a.id_attach = {int:attach}
