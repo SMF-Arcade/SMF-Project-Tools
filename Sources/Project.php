@@ -17,6 +17,11 @@ if (!defined('SMF'))
 class ProjectTools
 {
 	/**
+	 *
+	 */
+	
+	
+	/**
 	 * Main Project Tools functions, handles calling correct module and action
 	 */
 	static function Projects($standalone = false)
