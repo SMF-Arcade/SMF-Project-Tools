@@ -23,11 +23,21 @@ function template_edit_project()
 	echo '
 <form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="project" value="', $context['project']['id'], '" />
+	
+	<div class="cat_bar">
+		<h3 class="catbg">', isset($context['project']['is_new']) ? $txt['new_project'] : $txt['edit_project'], '</h3>
+	</div>
+	<div class="windowbg2">
+		<span class="topslice"><span></span></span>
+		<div class="content">
+			<dl class="settings">
+			
+			</dl>
+		</div>
+		<span class="botslice"><span></span></span>
+	</div>
 
 	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">
-		<tr class="titlebg">
-			<td colspan="2">', isset($context['project']['is_new']) ? $txt['new_project'] : $txt['edit_project'], '</td>
-		</tr>
 		<tr class="windowbg2">
 			<td>
 				<b>', $txt['project_name'], ':</b>

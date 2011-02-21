@@ -24,6 +24,8 @@
 
 	<install for="2.0 RC5">
 		<readme parsebbc="true">readme.txt</readme>
+		
+		<require-dir name="Sources/Madjoki" destination="sourcedir" />
 
 		<!-- These files goes to Sources directory -->
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
@@ -44,7 +46,7 @@
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
-		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />-->
 
 		<!-- These files goes to default Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
