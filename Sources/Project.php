@@ -19,48 +19,27 @@ class ProjectTools
 	/**
 	 *
 	 */
-	
-	
-	/**
-	 * Main Project Tools functions, handles calling correct module and action
-	 */
-	static function Projects($standalone = false)
+	static function ProjectMain()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
-	
-		loadProjectToolsPage();
-	
-		// Check that user can access Project Tools
-		isAllowedTo('project_access');
-	
-		if (isset($context['project_error']))
-			fatal_lang_error($context['project_error'], false);
-	
-		// Admin made mistake on manual edits? (for safety reasons!!)
-		if (isset($context['project_error']))
-			fatal_lang_error($context['project_error'], false);
-	
-		// Add "Projects" to Linktree
-		$context['linktree'][] = array(
-			'name' => $txt['linktree_projects'],
-			'url' => project_get_url(),
+		
+		$subActions = array(
+			'list' => array('ProjectList.php', 'ProjectList'),
 		);
 		
-		// Project was not selected
-		if (empty($project))
-		{
-			$subActions = array(
-				'list' => array('ProjectList.php', 'ProjectList'),
-			);
-			
-			$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
-			
-			require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
-			call_user_func($subActions[$_REQUEST['sa']][1]);
-			
-			return;
-		}
+		$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 		
+		require_once($sourcedir . '/' . $subActions[$_REQUEST['sa']][0]);
+		call_user_func($subActions[$_REQUEST['sa']][1]);
+		
+		return;		
+	}
+	
+	/**
+	 *
+	 */
+	static function fix_url()
+	{
 		// Array for fixing old < 0.5 urls
 		$saToArea = array(
 			'main' => 'main',
@@ -99,6 +78,38 @@ class ProjectTools
 			if (!isset($_REQUEST['sa']))
 				$_REQUEST['sa'] = 'view';
 		}
+	}
+	
+	/**
+	 * Main Project Tools functions, handles calling correct module and action
+	 */
+	static function Projects($standalone = false)
+	{
+		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
+	
+		loadProjectToolsPage();
+	
+		// Check that user can access Project Tools
+		isAllowedTo('project_access');
+	
+		if (isset($context['project_error']))
+			fatal_lang_error($context['project_error'], false);
+	
+		// Admin made mistake on manual edits? (for safety reasons!!)
+		if (isset($context['project_error']))
+			fatal_lang_error($context['project_error'], false);
+	
+		// Add "Projects" to Linktree
+		$context['linktree'][] = array(
+			'name' => $txt['linktree_projects'],
+			'url' => project_get_url(),
+		);
+		
+		// Project was not selected
+		if (empty($project))
+			self::ProjectMain();
+		
+		self::fix_url();
 		
 		// Areas are sets of subactions (registered by modules)
 		$subAreas = array();

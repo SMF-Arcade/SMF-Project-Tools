@@ -104,7 +104,7 @@ function template_project_below()
 	echo '
 	<a name="bot"></a>
 	<div id="project_bottom" class="smalltext" style="text-align: center;">
-		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2010
+		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2011
 	</div>';
 }
 
