@@ -355,8 +355,22 @@ function loadProject()
 
 		cache_put_data('project-' . $project, $context['project'], 120);
 	}
+	
+	//
+	if (!empty($modSettings['cache_enable']))
+	{
+		$cache_groups = $user_info['groups'];
+		asort($cache_groups);
+		$cache_groups = implode(',', $cache_groups);
+		// If it's a spider then cache it different.
+		if ($user_info['possibly_robot'])
+			$cache_groups .= '-spider';
+			
+		if (($temp = cache_get_data('project_versions:' . $project . ':' . $cache_groups, 240)) != null && time() - 240 > $modSettings['settings_updated'])
+			list ($this->versions, $this->versions_id) = $temp;
+	}
 
-	if ((list ($context['versions'], $context['versions_id']) = cache_get_data('project-version-' . $project, 120)) === null)
+	if (empty($context['versions']))
 	{
 		// Load Versions
 		$request = $smcFunc['db_query']('', '
@@ -401,7 +415,8 @@ function loadProject()
 		}
 		$smcFunc['db_free_result']($request);
 
-		cache_put_data('project-version-' . $project, array($context['versions'], $context['versions_id']), 120);
+		if (!empty($modSettings['cache_enable']))
+			cache_put_data('project_versions:' . $project . ':' . $cache_groups, array($context['versions'], $context['versions_id']), 240);
 	}
 
 	$context['possible_types'] = array();

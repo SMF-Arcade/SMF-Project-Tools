@@ -19,7 +19,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Niko:SMFProject</id>
 	<name>SMF Project Tools</name>
-	<version>{version}</version>
+	<version>0.501</version>
 	<type>modification</type>
 
 	<install for="2.0 RC4, 2.0 RC5">
@@ -92,6 +92,18 @@
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
+	
+	<upgrade for="2.0 RC2, 2.0 RC3" from="0.5">
+		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
+		
+		<modification format="xml" type="file">upgrade-0.501.xml</modification>
+	</upgrade>
 
 	<uninstall>
 		<!-- Remove code modifications -->
