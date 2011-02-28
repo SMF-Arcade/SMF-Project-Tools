@@ -621,7 +621,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
 	elseif ($matches[1] === 'query_see_issue_project')
-		return $user_info['query_see_issue_project'];
+		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
 ]]></add>
@@ -640,7 +640,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
 	elseif ($matches[1] === 'query_see_issue_project')
-		return $user_info['query_see_issue_project'];
+		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
 ]]></add>
@@ -659,7 +659,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
 	elseif ($matches[1] === 'query_see_issue_project')
-		return $user_info['query_see_issue_project'];
+		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
 ]]></add>

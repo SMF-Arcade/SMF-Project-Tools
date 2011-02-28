@@ -83,7 +83,7 @@ class ProjectTools_Permissions
 			);
 	
 			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$user_info['project_permissions'][$row['permission']] = true;	
+				$this->permissions[$row['permission']] = true;	
 			$smcFunc['db_free_result']($request);
 	
 			// User can see private issues

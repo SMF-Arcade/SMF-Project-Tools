@@ -67,7 +67,6 @@ function loadProjectTools()
 		$see_version_issue = '1 = 1';
 		$see_version_timeline = '1 = 1';
 		$see_issue = '1 = 1';
-		$see_issue_p = '1 = 1';
 	}
 	else
 	{
@@ -116,9 +115,6 @@ function loadProjectTools()
 			$see_private = '(i.private_issue = 0 OR NOT ISNULL(dev.id_member) OR ' . $my_issue . ')';
 			
 		$see_issue = '((' . $see_version_issue . ') AND ' . $see_private . ')';
-		$see_issue_p = '((' . $see_version_issue . ') AND (i.private_issue = 0 OR ' . $my_issue . '))';
-		
-		unset($allowed_versions);
 	}
 	
 	// See project
@@ -132,9 +128,6 @@ function loadProjectTools()
 	
 	// Issue of any project
 	$user_info['query_see_issue'] = $see_issue;
-	
-	// See issue of current project
-	$user_info['query_see_issue_project'] = $see_issue_p;
 	
 	if (isset($projects_show) && (empty($projects_show) || !is_array($projects_show)))
 		$user_info['query_see_project'] = '0=1';
@@ -254,193 +247,31 @@ function loadProject()
 	// For Who's online
 	$_GET['project'] = $project;
 
-	if (($context['project'] = cache_get_data('project-' . $project, 120)) === null)
+	$cp = ProjectTools_Project::getCurrent();
+	
+	if (!$cp)
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT
-				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.modules, p.member_groups,
-				p.id_event_mod, p.' . implode(', p.', $context['tracker_columns']) . ', p.project_theme
-			FROM {db_prefix}projects AS p
-			WHERE p.id_project = {int:project}
-			LIMIT 1',
-			array(
-				'project' => $project,
-				'current_member' => $user_info['id'],
-			)
-		);
+		$context['project_error'] = 'project_not_found';
+		
+		$project = null;
 
-		if ($smcFunc['db_num_rows']($request) == 0)
-		{
-			$context['project_error'] = 'project_not_found';
-			
-			$project = 0;
-
-			return;
-		}
-
-		$row = $smcFunc['db_fetch_assoc']($request);
-		$smcFunc['db_free_result']($request);
-
-		$context['project'] = array(
-			'id' => $row['id_project'],
-			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
-			'href' => project_get_url(array('project' => $row['id_project'])),
-			'name' => $row['name'],
-			'description' => $row['description'],
-			'long_description' => $row['long_description'],
-			'category' => array(),
-			'groups' => explode(',', $row['member_groups']),
-			'trackers' => array(),
-			'modules' => explode(',', $row['modules']),
-			'developers' => array(),
-			'is_developer' => false,
-			'id_event_mod' => $row['id_event_mod'],
-			'profile' => $row['id_profile'],
-			'theme' => $row['project_theme'],
-			'override_theme' => !empty($row['override_theme']),
-		);
-
-		$trackers = explode(',', $row['trackers']);
-
-		foreach ($trackers as $id)
-		{
-			$tracker = &$context['issue_trackers'][$id];
-			$context['project']['trackers'][$id] = array(
-				'id' => $id,
-				'tracker' => &$context['issue_trackers'][$id],
-				'short' => $tracker['short'],
-				'open' => $row['open_' . $tracker['short']],
-				'closed' => $row['closed_' . $tracker['short']],
-				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
-				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
-				'link' => project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
-			);
-			unset($tracker);
-		}
-
-		// Developers
-		$request = $smcFunc['db_query']('', '
-			SELECT mem.id_member, mem.real_name
-			FROM {db_prefix}project_developer AS dev
-				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $project,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project']['developers'][$row['id_member']] = array(
-				'id' => $row['id_member'],
-				'name' => $row['real_name'],
-			);
-		$smcFunc['db_free_result']($request);
-
-		// Category
-		$request = $smcFunc['db_query']('', '
-			SELECT id_category, category_name
-			FROM {db_prefix}issue_category AS cat
-			WHERE id_project = {int:project}',
-			array(
-				'project' => $project,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['project']['category'][$row['id_category']] = array(
-				'id' => $row['id_category'],
-				'name' => $row['category_name']
-			);
-		$smcFunc['db_free_result']($request);
-
-		cache_put_data('project-' . $project, $context['project'], 120);
-	}
-
-	if ((list ($context['versions'], $context['versions_id']) = cache_get_data('project-version-' . $project, 120)) === null)
-	{
-		// Load Versions
-		$request = $smcFunc['db_query']('', '
-			SELECT id_version, id_parent, version_name, release_date, status
-			FROM {db_prefix}project_versions AS ver
-			WHERE id_project = {int:project}
-				AND {query_see_version}
-			ORDER BY id_parent, version_name',
-			array(
-				'project' => $context['project']['id'],
-			)
-		);
-
-		$context['versions'] = array();
-		$context['versions_id'] = array();
-
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			if ($row['id_parent'] == 0)
-			{
-				$context['versions'][$row['id_version']] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-					'sub_versions' => array(),
-				);
-			}
-			else
-			{
-				if (!isset($context['versions'][$row['id_parent']]))
-					continue;
-
-				$context['versions'][$row['id_parent']]['sub_versions'][$row['id_version']] = array(
-					'id' => $row['id_version'],
-					'name' => $row['version_name'],
-					'status' => $row['status'],
-					'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
-					'released' => $row['status'] >= 4,
-				);
-			}
-
-			$context['versions_id'][$row['id_version']] = $row['id_parent'];
-		}
-		$smcFunc['db_free_result']($request);
-
-		cache_put_data('project-version-' . $project, array($context['versions'], $context['versions_id']), 120);
+		return;
 	}
 
 	$context['possible_types'] = array();
 
-	foreach ($context['project']['trackers'] as $id => $tracker)
+	foreach ($cp->trackers as $id => $tracker)
 		$context['possible_types'][$tracker['tracker']['short']] = $id;
 		
-	$context['project']['is_developer'] = isset($context['project']['developers'][$user_info['id']]);
-
 	// Developers can see all issues
-	if ($context['project']['is_developer'])
+	if ($cp->isDeveloper())
 		$user_info['query_see_issue_project'] = '1=1';
 			
-	if (count(array_intersect($user_info['groups'], $context['project']['groups'])) == 0 && !$user_info['is_admin'])
+	if (count(array_intersect($user_info['groups'], $cp->groups)) == 0 && !$user_info['is_admin'])
 		$context['project_error'] = 'project_not_found';
 		
-	if (!empty($projects_show) && !in_array($context['project']['id'], $projects_show))
+	if (!empty($projects_show) && !in_array($cp->id, $projects_show))
 		$context['project_error'] = 'project_not_found';
-		
-	// Load Project Settings
-	$request = $smcFunc['db_query']('', '
-		SELECT id_member, variable, value
-		FROM {db_prefix}project_settings
-		WHERE id_project = {int:project}
-			AND (id_member = {int:no_member} OR id_member = {int:current_member})
-		ORDER BY id_member',
-		array(
-			'project' => $context['project']['id'],
-			'no_member' => 0,
-			'current_member' => $user_info['id'],
-		)
-	);
-
-	$projectSettings = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$projectSettings[$row['variable']] = $row['value'];
-	$smcFunc['db_free_result']($request);
-
 }
 
 /**
@@ -946,19 +777,12 @@ function project_get_url($params = array(), $project = null)
  */
 function projectAllowedTo($permission)
 {
-	global $context, $user_info, $project;
-
-	if (empty($project))
-		fatal_error('projectAllowedTo(): Project not loaded');
-
-	// Admins and developers can do anything
-	if (allowedTo('project_admin') || $context['project']['is_developer'])
-		return true;
-
-	if (isset($user_info['project_permissions'][$permission]) && $user_info['project_permissions'][$permission])
-		return true;
-
-	return false;
+	global $context, $user_info;
+	
+	if (!ProjectTools_Project::getCurrent())
+		trigger_error('projectAllowedTo(): Project not loaded', E_FATAL_ERROR);
+		
+	return ProjectTools_Project::getCurrent()->allowedTo($permission);
 }
 
 /**
@@ -966,10 +790,7 @@ function projectAllowedTo($permission)
  */
 function projectIsAllowedTo($permission)
 {
-	global $context, $project, $txt, $user_info;
-
-	if ($project === null)
-		fatal_error('projectAllowed(): Project not loaded');
+	global $context, $txt, $user_info;
 
 	if (!projectAllowedTo($permission))
 	{

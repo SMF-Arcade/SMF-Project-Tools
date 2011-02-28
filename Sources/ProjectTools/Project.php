@@ -9,6 +9,8 @@
 
 /**
  *
+ * @todo Cache queries
+ * @todo fix version load
  */
 class ProjectTools_Project
 {
@@ -30,6 +32,22 @@ class ProjectTools_Project
 	}
 	
 	/**
+	 * Returns current project
+	 * 
+	 * @return ProjectTools_Project 
+	 */
+	static function getCurrent()
+	{
+		global $project;
+			
+		if (isset($project))
+			return self::getProject($project);
+		
+		return false;
+	}
+		
+	
+	/**
 	 * Project ID
 	 * 
 	 * @var boolean|int ID Of Project. False if not found
@@ -45,13 +63,93 @@ class ProjectTools_Project
 	 * Name of project
 	 */
 	public $name;
+
+	/**
+	 *
+	 */
+	public $link;
+	
+	/**
+	 *
+	 */
+	public $href;
+	
+	/**
+	 *
+	 */
+	public $description;
+
+	/**
+	 *
+	 */
+	public $long_description;
+
+	/**
+	 *
+	 */
+	public $theme;
+	
+	/**
+	 *
+	 */
+	public $override_theme = false;
+	
+	/**
+	 *
+	 */
+	public $categories = array();
+
+	/**
+	 *
+	 */
+	public $groups = array();
+
+	/**
+	 *
+	 */
+	public $trackers = array();
+
+	/**
+	 *
+	 */
+	public $modules = array();
+	
+	/**
+	 *
+	 */
+	public $developers = array();
+	
+	/**
+	 *
+	 */
+	public $id_event_mod;
+	
+	/**
+	 *
+	 */
+	public $settings = array();
+	
+	/**
+	 *
+	 */
+	public $versions = array();
+	
+	/**
+	 *
+	 */
+	public $versions_id = array();
+	
+	/**
+	 *
+	 */
+	private $queries = array();
 	
 	/**
 	 *
 	 */
 	public function __construct($id)
 	{
-		global $smcFunc, $context;
+		global $smcFunc, $context, $modSettings, $user_info;
 		
 		$request = $smcFunc['db_query']('', '
 			SELECT
@@ -70,12 +168,246 @@ class ProjectTools_Project
 		if (!$row)
 		{
 			$this->id = false;
+			
+			return;
 		}
 		
 		$this->id = $row['id_project'];
 		$this->name = $row['name'];
 		
+		// TODO: Parsebbc?
+		$this->description = $row['description'];
+		$this->long_description = $row['long_description'];
+		
+		$this->link = project_get_url(array('project' => $row['id_project']));
+		$this->href = '<a href="' . $this->link . '">' . $row['name'] . '</a>';
+		
+		$this->theme = $row['project_theme'];
+		$this->override_theme = !empty($row['override_theme']);
+		
+		$this->groups = explode(',', $row['member_groups']);
+		
+		$this->modules = explode(',', $row['modules']);
+		
+		$this->id_event_mod = $row['id_event_mod'];
+		
 		$this->permissions = ProjectTools_Permissions::getProfile($row['id_profile']);
+		
+		//
+		$this->_loadCategories();
+		$this->_loadDevelopers();
+		$this->_loadTrackers($row, explode(',', $row['trackers']));
+		$this->_loadSettings();
+		
+		$this->_setupQueries();
+		
+		//
+		if (!empty($modSettings['cache_enable']))
+		{
+			$cache_groups = $user_info['groups'];
+			asort($cache_groups);
+			$cache_groups = implode(',', $cache_groups);
+			// If it's a spider then cache it different.
+			if ($user_info['possibly_robot'])
+				$cache_groups .= '-spider';
+				
+			if (($temp = cache_get_data('project_versions:' . $this->id . ':' . $cache_groups, 240)) != null && time() - 240 > $modSettings['settings_updated'])
+				list ($this->versions, $this->versions_id) = $temp;
+		}
+		
+		// Load versions
+		if (!empty($this->versions))
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_version, id_parent, version_name, release_date, status
+				FROM {db_prefix}project_versions AS ver
+				WHERE id_project = {int:project}
+					AND {query_see_version}
+				ORDER BY id_parent, version_name',
+				array(
+					'project' => $this->id,
+				)
+			);
+	
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				if ($row['id_parent'] == 0)
+				{
+					$this->versions[$row['id_version']] = array(
+						'id' => $row['id_version'],
+						'name' => $row['version_name'],
+						'sub_versions' => array(),
+					);
+				}
+				else
+				{
+					if (!isset($this->versions['versions'][$row['id_parent']]))
+						continue;
+	
+					$this->versions[$row['id_parent']]['sub_versions'][$row['id_version']] = array(
+						'id' => $row['id_version'],
+						'name' => $row['version_name'],
+						'status' => $row['status'],
+						'release_date' => !empty($row['release_date']) ? unserialize($row['release_date']) : array(),
+						'released' => $row['status'] >= 4,
+					);
+				}
+	
+				$this->versions_id[$row['id_version']] = $row['id_parent'];
+			}
+			$smcFunc['db_free_result']($request);
+	
+			cache_put_data('project_versions-' . $this->id . ':' . $cache_groups, array($this->versions, $this->versions_id), 240);
+		}
+	}
+	
+	/**
+	 *
+	 */
+	private function _loadDevelopers()
+	{
+		global $smcFunc;
+		
+		// Developers
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name
+			FROM {db_prefix}project_developer AS dev
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $this->id,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$this->developers[$row['id_member']] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+			);
+		$smcFunc['db_free_result']($request);
+	}
+	
+	/**
+	 *
+	 */
+	private function _loadTrackers($row, $trackers)
+	{
+		global $context;
+		
+		foreach ($trackers as $id)
+		{
+			$tracker = &$context['issue_trackers'][$id];
+			$this->trackers[$id] = array(
+				'id' => $id,
+				'tracker' => &$context['issue_trackers'][$id],
+				'short' => $tracker['short'],
+				'open' => $row['open_' . $tracker['short']],
+				'closed' => $row['closed_' . $tracker['short']],
+				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
+				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
+				'link' => project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
+			);
+			unset($tracker);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private function _loadCategories()
+	{
+		global $smcFunc;
+		
+		// Category
+		$request = $smcFunc['db_query']('', '
+			SELECT id_category, category_name
+			FROM {db_prefix}issue_category AS cat
+			WHERE id_project = {int:project}',
+			array(
+				'project' => $this->id,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$this->categories[$row['id_category']] = array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name']
+			);
+		$smcFunc['db_free_result']($request);
+	}
+	
+	/**
+	 *
+	 */
+	private function _loadSettings()
+	{
+		global $smcFunc, $user_info;
+		
+		// Load Project Settings
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, variable, value
+			FROM {db_prefix}project_settings
+			WHERE id_project = {int:project}
+				AND (id_member = {int:no_member} OR id_member = {int:current_member})
+			ORDER BY id_member',
+			array(
+				'project' => $this->id,
+				'no_member' => 0,
+				'current_member' => $user_info['id'],
+			)
+		);
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$this->settings[$row['variable']] = $row['value'];
+		$smcFunc['db_free_result']($request);
+	}
+	
+	/**
+	 *
+	 */
+	private function _setupQueries()
+	{
+		global $user_info;
+		
+		if ($this->isDeveloper() || allowedTo('project_admin') || $this->permissions->allowedTo('view_issue_private'))
+		{
+			$this->queries['see_issue_private'] = '1=1';
+			$this->queries['see_issue'] = '1=1';
+		}
+		else
+		{
+			
+			if ($user_info['is_guest'])
+				$this->queries['query_see_issue_private'] = '0=1';
+			else
+				$this->queries['query_see_issue_private'] = 'i.id_reporter = ' . $user_info['id'];
+				
+			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $this->versions_id) . ', i.versions) AND ' . $this->queries['query_see_issue_private'] . ')';
+		}
+	}
+	
+	/**
+	 *
+	 */
+	public function getQuery($query)
+	{
+		if (isset($this->queries[$query]))
+			return $this->queries[$query];
+		
+		trigger_error('ProjectTools: Unknown query limiter (' . $query . ')', E_FATAL_ERROR);
+	}
+	
+	/**
+	 *
+	 */
+	function isDeveloper($id_member = null)
+	{
+		global $user_info;
+		
+		if ($id_member === null)
+			$id_member = $user_info['id'];
+		
+		return isset($this->developers[$id_member]);
 	}
 	
 	/**
