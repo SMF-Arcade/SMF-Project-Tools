@@ -116,7 +116,7 @@ if ($count == 0)
 ptMaintenanceGeneral();
 
 // Step 8: Hooks
-add_integration_function('integrate_pre_include', '$sourcedir/PTHooks.php');
+add_integration_function('integrate_pre_include', '$sourcedir/ProjectTools/Hooks.php');
 add_integration_function('integrate_actions', 'ProjectTools_Hooks::actions');
 add_integration_function('integrate_admin_areas', 'ProjectTools_Hooks::admin_areas');
 

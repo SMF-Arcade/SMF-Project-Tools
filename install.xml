@@ -182,48 +182,6 @@ else
 		$id_theme = (int) $modSettings['project_force_theme'];
 ]]></add>
 		</operation>
-		
-		<!-- Load Permissions -->
-		<operation>
-			<search position="after"><![CDATA[	// Banned?  Watch, don't touch..]]></search>
-			<add><![CDATA[
-	// Project Tools
-	global $project, $context;
-	
-	if (!empty($modSettings['projectEnabled']) && !empty($project) && empty($context['project']['is_developer']))
-	{
-		if (!empty($modSettings['cache_enable']) && ($temp = cache_get_data('project_permissions:' . $cache_groups . ':' . $project, 240)) != null && time() - 240 > $modSettings['settings_updated'])
-			list ($user_info['project_permissions']) = $temp;
-		else
-		{
-			$user_info['project_permissions'] = array();
-		
-			$request = $smcFunc['db_query']('', '
-				SELECT permission
-				FROM {db_prefix}project_permissions
-				WHERE id_group IN({array_int:groups})
-					AND id_profile = {int:profile}',
-				array(
-					'profile' => $context['project']['profile'],
-					'groups' => $user_info['groups'],
-				)
-			);
-	
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$user_info['project_permissions'][$row['permission']] = true;	
-			$smcFunc['db_free_result']($request);
-		}
-
-		// User can see private issues
-		if (!empty($user_info['project_permissions']['issue_view_private']))
-			$user_info['query_see_issue_project'] = $user_info['query_see_version_issue'];
-		
-		if (!empty($modSettings['cache_enable']))
-			cache_put_data('project_permissions:' . $cache_groups . ':' . $project, array($user_info['project_permissions'], null), 240);			
-	}
-
-]]></add>
-		</operation>
 	</file>
 
 	<file name="$sourcedir/ManagePermissions.php">
@@ -444,6 +402,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 
 		if (!empty($modSettings['projectEnabled']) && !empty($user_info['project_permissions']) && empty($modSettings['projectNoPostbanCheck']))
 		{
+			// TODO FIX THIS
 			$pt_denied_permissions = array(
 				'issue_report', 'issue_update', 'issue_attach', 'issue_moderate',
 				'issue_comment', 'edit_comment', 'delete_comment'
