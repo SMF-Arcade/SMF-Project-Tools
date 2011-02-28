@@ -41,7 +41,7 @@ function template_issue_list()
 				<select name="tracker">
 					<option value="0"', empty($context['issue_search']['tracker']) ? ' selected="selected"' : '', '>', $txt['issue_search_all_types'], '</option>';
 
-	foreach ($context['project']['trackers'] as $tracker)
+	foreach (ProjectTools_Project::getCurrent()->trackers as $tracker)
 		echo '
 					<option value="', $tracker['tracker']['short'], '"', $context['issue_search']['tracker'] == $tracker['tracker']['short'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
@@ -85,7 +85,7 @@ function template_issue_list()
 		'reportIssue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
-			'url' => project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'sa' => 'report')),
+			'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => 'report')),
 			'lang' => true,
 			'test' => 'can_report_issues',
 		),
@@ -143,7 +143,7 @@ function template_issue_list_full($id)
 			echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+						<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
 							<img src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 						</a>
 					</td>

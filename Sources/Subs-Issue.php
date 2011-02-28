@@ -1257,7 +1257,7 @@ function createIssueList($issueListOptions)
 			AND (' . implode(')
 			AND (', $where) . ')' : '') . '',
 		array(
-			'project' => $context['project']['id'],
+			'project' => ProjectTools_Project::getCurrent()->id,
 			'closed_status' => $context['closed_status'],
 			'search_status' => $issueListOptions['filter']['status'],
 			'search_title' => '%' . $issueListOptions['filter']['title'] . '%',

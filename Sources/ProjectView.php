@@ -110,7 +110,7 @@ function ProjectView()
 	// Template
 	loadTemplate('ProjectView');
 	$context['sub_template'] = 'project_view';
-	$context['page_title'] = sprintf($txt['project_title'], $context['project']['name']);
+	$context['page_title'] = sprintf($txt['project_title'], ProjectTools_Project::getCurrent()->name);
 }
 
 /**

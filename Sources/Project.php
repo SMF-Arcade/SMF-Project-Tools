@@ -116,8 +116,8 @@ class ProjectTools
 		
 		// Tabs
 		$context['project_tabs'] = array(
-			'title' => $context['project']['name'],
-			'description' => $context['project']['description'],
+			'title' => ProjectTools_Project::getCurrent()->name,
+			'description' => ProjectTools_Project::getCurrent()->description,
 			'tabs' => array(
 				'main' => array(
 					'href' => project_get_url(array('project' => $project)),
@@ -187,7 +187,7 @@ class ProjectTools
 			
 		// Linktree
 		$context['linktree'][] = array(
-			'name' => strip_tags($context['project']['name']),
+			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
 			'url' => project_get_url(array('project' => $project)),
 		);
 		

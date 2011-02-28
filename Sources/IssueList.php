@@ -56,7 +56,7 @@ function IssueList()
 	$issueListOptions = array(
 		'id' => 'issue_list',
 		'base_url' => array(
-			'project' => $context['project']['id'],
+			'project' => ProjectTools_Project::getCurrent()->id,
 			'area' => 'issues'
 		),
 		'filter' => getIssuesFilter('request'),
@@ -104,7 +104,7 @@ function IssueList()
 	
 	// Template
 	$context['sub_template'] = 'issue_list';
-	$context['page_title'] = sprintf($txt['project_title_issues'], $context['project']['name']);
+	$context['page_title'] = sprintf($txt['project_title_issues'], ProjectTools_Project::getCurrent()->name);
 
 	loadTemplate('IssueList');
 }

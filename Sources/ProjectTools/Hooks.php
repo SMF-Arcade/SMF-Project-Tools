@@ -1,6 +1,6 @@
 <?php
 /**
- * Hooks for SMF Project Hooks
+ * Hooks for SMF Project
  *
  * @package core
  * @version 0.6

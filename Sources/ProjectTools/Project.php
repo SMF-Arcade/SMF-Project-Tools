@@ -442,6 +442,33 @@ class ProjectTools_Project
 			trigger_error('Hacking attempt...', E_USER_ERROR);
 		}
 	}
+	
+	/**
+	 * Updates project settings
+	 */
+	function updateSettings($settings)
+	{
+		global $projectSettings, $project, $smcFunc;
+			
+		$rows = array();
+		
+		foreach ($settings as $variable => $value)
+		{
+			$rows[] = array($this->id, $variable, $value);
+			$this->settings[$variable] = $value;
+		}
+		
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}project_settings',
+			array(
+				'id_project' => 'int',
+				'variable' => 'varchar-255',
+				'value' => 'string',
+			),
+			$rows,
+			array('id_project', 'variable')
+		);
+	}
 }
 
 ?>

@@ -275,38 +275,6 @@ function loadProject()
 }
 
 /**
- * Updates project settings
- */
-function updateProjectSettings($settings, $force_project = 0)
-{
-	global $projectSettings, $project, $smcFunc;
-	
-	if ($force_project === 0)
-		$force_project = $project;
-		
-	$rows = array();
-	
-	foreach ($settings as $variable => $value)
-	{
-		$rows[] = array($force_project, $variable, $value);
-		
-		if ($force_project == $project)
-			$projectSettings[$variable] = $value;
-	}
-	
-	$smcFunc['db_insert']('replace',
-		'{db_prefix}project_settings',
-		array(
-			'id_project' => 'int',
-			'variable' => 'varchar-255',
-			'value' => 'string',
-		),
-		$rows,
-		array('id_project', 'variable')
-	);
-}
-
-/**
  * Loads data for spefific page
  */
 function loadProjectToolsPage($mode = '')
@@ -347,14 +315,14 @@ function loadProjectToolsPage($mode = '')
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 		
 		// If project is loaded parse BBC now for descriptions
-		if (isset($context['project']))
+		if (ProjectTools_Project::getCurrent())
 		{
-			$context['project']['description'] = parse_bbc($context['project']['description']);
-			$context['project']['long_description'] = parse_bbc($context['project']['long_description']);
+			//$context['project']['description'] = parse_bbc(ProjectTools_Project::getCurrent()->description);
+			//$context['project']['long_description'] = parse_bbc(ProjectTools_Project::getCurrent()->long_description);
 			
 			$context['active_project_modules'] = array();
 			
-			foreach ($context['project']['modules'] as $module)
+			foreach (ProjectTools_Project::getCurrent()->modules as $module)
 				$context['active_project_modules'][$module] = new $context['project_modules'][$module]['class_name']();
 		}
 

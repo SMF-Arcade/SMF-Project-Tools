@@ -38,7 +38,7 @@ function IssueReply()
 	if (projectAllowedTo('issue_moderate'))
 	{
 		$context['can_assign'] = true;
-		$context['assign_members'] = &$context['project']['developers'];
+		$context['assign_members'] = &ProjectTools_Project::getCurrent()->developers;
 	}
 
 	$context['destination'] = 'reply2';
@@ -202,7 +202,7 @@ function IssueReply()
 
 	// Template
 	$context['sub_template'] = 'issue_reply';
-	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, $context['current_issue']['id'], $context['current_issue']['name']);
 
 	loadTemplate('IssueReport');
 }
@@ -237,7 +237,7 @@ function IssueReply2()
 	if (projectAllowedTo('issue_moderate'))
 	{
 		$context['can_assign'] = true;
-		$context['assign_members'] = &$context['project']['developers'];
+		$context['assign_members'] = &ProjectTools_Project::getCurrent()->developers;
 	}
 
 	if (!empty($_REQUEST['comment_mode']) && isset($_REQUEST['comment']))
