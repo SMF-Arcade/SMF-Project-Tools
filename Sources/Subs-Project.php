@@ -317,8 +317,8 @@ function loadProjectToolsPage($mode = '')
 		// If project is loaded parse BBC now for descriptions
 		if (ProjectTools_Project::getCurrent())
 		{
-			//$context['project']['description'] = parse_bbc(ProjectTools_Project::getCurrent()->description);
-			//$context['project']['long_description'] = parse_bbc(ProjectTools_Project::getCurrent()->long_description);
+			//ProjectTools_Project::getCurrent()->description = parse_bbc(ProjectTools_Project::getCurrent()->description);
+			//ProjectTools_Project::getCurrent()->long_description = parse_bbc(ProjectTools_Project::getCurrent()->long_description);
 			
 			$context['active_project_modules'] = array();
 			
@@ -521,13 +521,13 @@ function loadTimeline($project = 0)
 					/**
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$old_value]))
-						$old_value = $context['project']['category'][$old_value]['name'];
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$old_value]))
+						$old_value = ProjectTools_Project::getCurrent()->category'][$old_value]['name;
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$new_value]))
-						$new_value = $context['project']['category'][$new_value]['name'];*/
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$new_value]))
+						$new_value = ProjectTools_Project::getCurrent()->category'][$new_value]['name;*/
 				}
 				
 				$changes[] = sprintf($txt['change_timeline_' . $field], $old_value, $new_value);
@@ -1197,13 +1197,13 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 				{
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$old_value]))
-						$old_value = $context['project']['category'][$old_value]['name'];
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$old_value]))
+						$old_value = ProjectTools_Project::getCurrent()->category'][$old_value]['name;
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$new_value]))
-						$new_value = $context['project']['category'][$new_value]['name'];
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$new_value]))
+						$new_value = ProjectTools_Project::getCurrent()->category'][$new_value]['name;
 				}
 				elseif ($field == 'assign')
 				{

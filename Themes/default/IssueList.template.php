@@ -23,7 +23,7 @@ function template_issue_list()
 	<div id="search_panel" class="windowbg2"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
 		<span class="topslice"><span></span></span>
 		<div style="padding: 0.5em 0.7em">
-			<form action="', project_get_url(array('project' => $context['project']['id'], 'area' => 'issues')), '" method="post">
+			<form action="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')), '" method="post">
 				', $txt['issue_title'], ':
 				<input type="text" name="title" value="', $context['issue_search']['title'], '" tabindex="', $context['tabindex']++, '" />
 				<select name="status">

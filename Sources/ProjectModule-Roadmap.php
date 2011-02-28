@@ -129,7 +129,7 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 				'progress' => 0,
 			);
 			
-			foreach ($context['project']['trackers'] as $id => $tracker)
+			foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			{
 				$context['roadmap'][$row['id_version']]['issues']['open'] += $row['open_' . $tracker['short']];
 				$context['roadmap'][$row['id_version']]['issues']['closed'] += $row['closed_' . $tracker['short']];		
@@ -157,7 +157,7 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 		);
 	
 		// Template
-		$context['page_title'] = sprintf($txt['project_roadmap_title'], $context['project']['name']);
+		$context['page_title'] = sprintf($txt['project_roadmap_title'], ProjectTools_Project::getCurrent()->name);
 		$context['sub_template'] = 'project_roadmap';
 		loadTemplate('ProjectRoadmap');
 	}
@@ -232,7 +232,7 @@ class ProjectModule_Roadmap extends ProjectModule_Base
 			),
 		);
 		
-		foreach ($context['project']['trackers'] as $tracker)
+		foreach (ProjectTools_Project::getCurrent()->trackers as $tracker)
 		{
 			if (!isset($row['open_' . $tracker['short']]))
 				continue;

@@ -390,7 +390,7 @@ function template_issue_view_below()
 		echo '
 			var ddIssueType = currentIssue.addDropdown("issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");';
 		
-		foreach ($context['project']['trackers'] as $id => $tracker)
+		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			echo '
 			ddIssueType.addOption(', $id, ', "', $tracker['tracker']['name'], '");';
 		
@@ -399,7 +399,7 @@ function template_issue_view_below()
 			var ddIssueCate = currentIssue.addDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');
 			ddIssueCate.addOption(0, "', $txt['issue_none'], '");';
 
-		foreach ($context['project']['category'] as $c)
+		foreach (ProjectTools_Project::getCurrent()->category as $c)
 			echo '
 			ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
 		

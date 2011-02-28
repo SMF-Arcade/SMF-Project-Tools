@@ -27,7 +27,7 @@ function ReportIssue()
 	$context['issue'] = array(
 		'title' => '',
 		'private' => !empty($_REQUEST['private']),
-		'tracker' => isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]) ? $_REQUEST['tracker'] : '',
+		'tracker' => isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers'][$_REQUEST['tracker]) ? $_REQUEST['tracker'] : '',
 		'version' => isset($_REQUEST['version']) ? (is_array($_REQUEST['version']) ? $_REQUEST['version'] : explode(',', $_REQUEST['version'])) : array(),
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
@@ -100,7 +100,7 @@ function ReportIssue()
 	$context['destination'] = 'report2';
 
 	$context['show_version'] = !empty($context['versions']);
-	$context['show_category'] = !empty($context['project']['category']);
+	$context['show_category'] = !empty(ProjectTools_Project::getCurrent()->category);
 
 	checkSubmitOnce('register');
 
@@ -113,7 +113,7 @@ function ReportIssue()
 	loadTemplate('IssueReport');
 
 	$context['sub_template'] = 'report_issue';
-	$context['page_title'] = sprintf($txt['project_report_issue'], $context['project']['name']);
+	$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);
 }
 
 /**
@@ -161,10 +161,10 @@ function ReportIssue2()
 			$post_errors[] = 'no_details';
 	}
 
-	if (count($context['project']['trackers']) == 1)
-		list ($_POST['tracker']) = array_keys($context['project']['trackers']);
+	if (count(ProjectTools_Project::getCurrent()->trackers) == 1)
+		list ($_POST['tracker']) = array_keys(ProjectTools_Project::getCurrent()->trackers);
 
-	if (empty($_POST['tracker']) || !isset($context['project']['trackers'][$_POST['tracker']]))
+	if (empty($_POST['tracker']) || !isset(ProjectTools_Project::getCurrent()->trackers'][$_POST['tracker]))
 		$post_errors[] = 'no_issue_type';
 	
 	if (!empty($_POST['version']))
@@ -414,7 +414,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	// Assigning
 	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['assign']))
 	{
-		if (!isset($context['project']['developers'][(int) $_REQUEST['assign']]))
+		if (!isset(ProjectTools_Project::getCurrent()->developers[(int) $_REQUEST['assign']]))
 			$_REQUEST['assign'] = 0;
 
 		$issueOptions['assignee'] = (int) $_REQUEST['assign'];
@@ -556,7 +556,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	// Category
 	if (isset($_REQUEST['category']))
 	{
-		if (!isset($context['project']['category'][(int) $_REQUEST['category']]))
+		if (!isset(ProjectTools_Project::getCurrent()->category[(int) $_REQUEST['category']]))
 			$_REQUEST['category'] = 0;
 
 		$issueOptions['category'] = (int) $_REQUEST['category'];
@@ -587,7 +587,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			);
 	}
 
-	if (isset($_REQUEST['tracker']) && isset($context['project']['trackers'][$_REQUEST['tracker']]))
+	if (isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers'][$_REQUEST['tracker]))
 	{
 		$issueOptions['tracker'] = $_REQUEST['tracker'];
 
@@ -687,7 +687,7 @@ function IssueUpload()
 		'time' => time(),
 	);
 
-	$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'new_attachment', array('attachments' => $attachIDs), $posterOptions, $eventOptions);
+	$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'new_attachment', array('attachments' => $attachIDs), $posterOptions, $eventOptions);
 
 	$rows = array();
 

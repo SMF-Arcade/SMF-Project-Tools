@@ -418,7 +418,7 @@ class ProjectTools_Project
 		global $context, $user_info, $project;
 
 		// Admins and developers can do anything
-		if (allowedTo('project_admin')/* || $context['project']['is_developer']*/)
+		if (allowedTo('project_admin')/* || ProjectTools_Project::getCurrent()->is_developer*/)
 			return true;
 	
 		return $this->permissions->allowedTo($permission);

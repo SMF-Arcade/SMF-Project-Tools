@@ -339,11 +339,11 @@ function IssueReply2()
 		$commentOptions = array(
 			'body' => $_POST['comment'],
 		);
-		$id_comment = createComment($context['project']['id'], $issue, $commentOptions, $posterOptions, $event_data);
+		$id_comment = createComment(ProjectTools_Project::getCurrent()->id, $issue, $commentOptions, $posterOptions, $event_data);
 
 		$commentOptions['id'] = $id_comment;
 
-		sendIssueNotification(array('id' => $issue, 'project' => $context['project']['id']), $commentOptions, $event_data, 'new_comment', $user_info['id']);
+		sendIssueNotification(array('id' => $issue, 'project' => ProjectTools_Project::getCurrent()->id), $commentOptions, $event_data, 'new_comment', $user_info['id']);
 	}
 	else
 	{

@@ -233,7 +233,7 @@ function EditProject()
 	{
 		$context['sub_template'] = 'edit_project';
 
-		if (!empty($context['project']['is_new']))
+		if (!empty(ProjectTools_Project::getCurrent()->is_new))
 			$context['page_title'] = $txt['new_project'];
 		else
 			$context['page_title'] = $txt['edit_project'];

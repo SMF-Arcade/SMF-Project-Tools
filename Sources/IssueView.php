@@ -55,7 +55,7 @@ function loadIssueView()
 	if (projectAllowedTo('issue_moderate'))
 	{
 		$context['can_assign'] = true;
-		$context['assign_members'] = $context['project']['developers'];
+		$context['assign_members'] = ProjectTools_Project::getCurrent()->developers;
 	}
 }
 
@@ -88,7 +88,7 @@ function IssueView()
 		$context['current_tags'][] = array(
 			'id' => urlencode($row['tag']),
 			'tag' => $row['tag'],
-			'link' => '<a href="' . project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 		);
 
 	loadIssueView();
@@ -252,7 +252,7 @@ function IssueView()
 	loadTemplate('IssueView');
 	$context['template_layers'][] = 'issue_view';
 	$context['sub_template'] = 'issue_view_main';
-	$context['page_title'] = sprintf($txt['project_view_issue'], $context['project']['name'], $context['current_issue']['id'], $context['current_issue']['name']);
+	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, $context['current_issue']['id'], $context['current_issue']['name']);
 }
 
 /**
@@ -361,13 +361,13 @@ function getEvent()
 				{
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$old_value]))
-						$old_value = $context['project']['category'][$old_value]['name'];
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$old_value]))
+						$old_value = ProjectTools_Project::getCurrent()->category'][$old_value]['name;
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (isset($context['project']['category'][$new_value]))
-						$new_value = $context['project']['category'][$new_value]['name'];
+					elseif (isset(ProjectTools_Project::getCurrent()->category[$new_value]))
+						$new_value = ProjectTools_Project::getCurrent()->category'][$new_value]['name;
 				}
 				elseif ($field == 'assign')
 				{
@@ -613,7 +613,7 @@ function IssueTag()
 			),
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'update_issue', $event_data, $posterOptions, $eventOptions);
+		$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 	elseif (isset($_REQUEST['tag']))
 	{
@@ -653,7 +653,7 @@ function IssueTag()
 			),
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], $context['project']['id'], 'update_issue', $event_data, $posterOptions, $eventOptions);
+		$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 
 	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
@@ -747,11 +747,11 @@ function IssueDelete()
 	);
 
 	// Send Notifications
-	sendIssueNotification(array('id' => $context['current_issue']['id'], 'project' => $context['project']['id']), array(), array(), 'issue_delete', $user_info['id']);
+	sendIssueNotification(array('id' => $context['current_issue']['id'], 'project' => ProjectTools_Project::getCurrent()->id), array(), array(), 'issue_delete', $user_info['id']);
 
 	deleteIssue($context['current_issue']['id'], $posterOptions);
 
-	redirectexit(project_get_url(array('project' => $context['project']['id'], 'area' => 'issues')));
+	redirectexit(project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')));
 }
 
 ?>

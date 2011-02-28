@@ -114,7 +114,7 @@ function loadIssue()
 	if (!$user_info['is_admin'] && !empty($context['current_issue']['versions']) && count(array_intersect(array_keys($context['current_issue']['versions']), $user_info['project_allowed_versions'])) == 0)
 		$context['project_error'] = 'issue_not_found';
 	// If this is private issue are you allowed to see it?
-	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !$context['project']['is_developer'] && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
+	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !ProjectTools_Project::getCurrent()->is_developer && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
 		$context['project_error'] = 'issue_not_found';
 
 	if (!$user_info['is_guest'])
@@ -727,7 +727,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 	}
 
 	if ($event_name == 'update_issue')
-		sendIssueNotification(array('id' => $id_issue, 'project' => $context['project']['id'],), array(), $event_data, $event_name, $posterOptions['id']);
+		sendIssueNotification(array('id' => $id_issue, 'project' => ProjectTools_Project::getCurrent()->id,), array(), $event_data, $event_name, $posterOptions['id']);
 
 	if (empty($id_event))
 		return $id_event_new;
@@ -1316,7 +1316,7 @@ function createIssueList($issueListOptions)
 		ORDER BY ' . $issueListOptions['sort']. (!$issueListOptions['ascending'] ? ' DESC' : '') . '
 		LIMIT {int:start},' . (!empty($issueListOptions['issues_per_page']) ? $issueListOptions['issues_per_page'] : $context['issues_per_page']),
 		array(
-			'project' => $context['project']['id'],
+			'project' => ProjectTools_Project::getCurrent()->id,
 			'empty' => '',
 			'start' => $context[$key]['start'],
 			'current_member' => $user_info['id'],
@@ -1350,7 +1350,7 @@ function createIssueList($issueListOptions)
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $context['project']['id'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions'])),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),

@@ -22,10 +22,10 @@ function template_edit_project()
 
 	echo '
 <form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
-	<input type="hidden" name="project" value="', $context['project']['id'], '" />
+	<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
 	
 	<div class="cat_bar">
-		<h3 class="catbg">', isset($context['project']['is_new']) ? $txt['new_project'] : $txt['edit_project'], '</h3>
+		<h3 class="catbg">', isset(ProjectTools_Project::getCurrent()->is_new) ? $txt['new_project'] : $txt['edit_project'], '</h3>
 	</div>
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
@@ -43,7 +43,7 @@ function template_edit_project()
 				<b>', $txt['project_name'], ':</b>
 			</td>
 			<td valign="top" align="left">
-				<input type="text" name="project_name" value="', $context['project']['name'], '" size="30" tabindex="', $context['tabindex']++, '" />
+				<input type="text" name="project_name" value="', ProjectTools_Project::getCurrent()->name, '" size="30" tabindex="', $context['tabindex']++, '" />
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -52,7 +52,7 @@ function template_edit_project()
 				<span class="smalltext">', $txt['project_description_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', $context['project']['description'], '</textarea>
+				<textarea name="desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', ProjectTools_Project::getCurrent()->description, '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -61,7 +61,7 @@ function template_edit_project()
 				<span class="smalltext">', $txt['project_description_long_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="long_desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', $context['project']['long_description'], '</textarea>
+				<textarea name="long_desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', ProjectTools_Project::getCurrent()->long_description, '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -73,7 +73,7 @@ function template_edit_project()
 
 	foreach ($context['profiles'] as $profile)
 		echo '
-					<option value="', $profile['id'], '"', $profile['id'] == $context['project']['profile'] ? ' selected="selected"' : '', '>', $profile['name'], '</option>';
+					<option value="', $profile['id'], '"', $profile['id'] == ProjectTools_Project::getCurrent()->profile ? ' selected="selected"' : '', '>', $profile['name'], '</option>';
 
 	echo '
 				</select>
@@ -89,11 +89,11 @@ function template_edit_project()
 
 	foreach ($context['themes'] as $theme)
 		echo '
-					<option value="', $theme['id'], '"', $context['project']['theme'] == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
+					<option value="', $theme['id'], '"', ProjectTools_Project::getCurrent()->theme == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
 
 	echo '
 				</select><br />
-				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', $context['project']['override_theme'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
+				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', ProjectTools_Project::getCurrent()->override_theme ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
 			</td>
 		</tr>
 
@@ -108,13 +108,13 @@ function template_edit_project()
 
 	foreach ($context['board_categories'] as $cat)
 		echo '
-					<option value="', $cat['id'], '"', $context['project']['category'] == $cat['id'] ? ' selected="selected"' : '', '>', $cat['name'], '</option>';
+					<option value="', $cat['id'], '"', ProjectTools_Project::getCurrent()->category == $cat['id'] ? ' selected="selected"' : '', '>', $cat['name'], '</option>';
 
 	echo '
 				</select>
 				<select name="category_position">
-					<option value="first"', $context['project']['category_position'] == 'first' ? ' selected="selected"' : '', '>', $txt['project_board_index_before'], '</option>
-					<option value="last"', $context['project']['category_position'] == 'last' ? ' selected="selected"' : '', '>', $txt['project_board_index_after'], '</option>
+					<option value="first"', ProjectTools_Project::getCurrent()->category_position == 'first' ? ' selected="selected"' : '', '>', $txt['project_board_index_before'], '</option>
+					<option value="last"', ProjectTools_Project::getCurrent()->category_position == 'last' ? ' selected="selected"' : '', '>', $txt['project_board_index_after'], '</option>
 				</select>
 			</td>
 		</tr>
@@ -140,7 +140,7 @@ function template_edit_project()
 						sItemListContainerId: \'developer_container\',
 						aListItems: [';
 
-	foreach ($context['project']['developers'] as $member)
+	foreach (ProjectTools_Project::getCurrent()->developers as $member)
 		echo '
 							{
 								sItemId: ', JavaScriptEscape($member['id']), ',
@@ -179,7 +179,7 @@ function template_edit_project()
 
 	foreach ($context['installed_modules'] as $key => $module)
 		echo '
-				<input type="checkbox" name="modules[]" value="', $key, '" id="module_', $key, '"', in_array($key, $context['project']['modules']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="module_', $key, '">', $module['name'], '</label><br />';
+				<input type="checkbox" name="modules[]" value="', $key, '" id="module_', $key, '"', in_array($key, ProjectTools_Project::getCurrent()->modules) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="module_', $key, '">', $module['name'], '</label><br />';
 
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'modules[]\');" tabindex="', $context['tabindex']++, '" /><br />
@@ -195,7 +195,7 @@ function template_edit_project()
 
 	foreach ($context['issue_trackers'] as $key => $type)
 		echo '
-				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, $context['project']['trackers']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
+				<input type="checkbox" name="trackers[]" value="', $key, '" id="tracker_', $key, '"', in_array($key, ProjectTools_Project::getCurrent()->trackers) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="tracker_', $key, '">', $type['name'], '</label><br />';
 
 	echo '
 				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'trackers[]\');" tabindex="', $context['tabindex']++, '" /><br />
@@ -205,7 +205,7 @@ function template_edit_project()
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
-	if (isset($context['project']['is_new']))
+	if (isset(ProjectTools_Project::getCurrent()->is_new))
 		echo '
 				<input class="button_submit" type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
 	else
@@ -225,7 +225,7 @@ function template_confirm_project_delete()
 
 	echo '
 <form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
-	<input type="hidden" name="project" value="', $context['project']['id'], '" />
+	<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
 
 	<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 		<tr class="titlebg">

@@ -77,7 +77,7 @@ class ProjectTools_Permissions
 				WHERE id_group IN({array_int:groups})
 					AND id_profile = {int:profile}',
 				array(
-					'profile' => $context['project']['profile'],
+					'profile' => ProjectTools_Project::getCurrent()->profile,
 					'groups' => $user_info['groups'],
 				)
 			);

@@ -67,13 +67,13 @@ function template_report_issue()
 						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
 					</dd>';
 
-	if (count($context['project']['trackers']) > 1)
+	if (count(ProjectTools_Project::getCurrent()->trackers) > 1)
 	{
 		echo '
 					<dt>', $txt['issue_type'], ':</dt>
 					<dd>';
 
-		foreach ($context['project']['trackers'] as $id => $tracker)
+		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 		{
 			echo '
 						<div class="toggle">
@@ -115,7 +115,7 @@ function template_report_issue()
 						<select name="category" tabindex="', $context['tabindex']++, '">
 							<option></option>';
 
-		foreach ($context['project']['category'] as $c)
+		foreach (ProjectTools_Project::getCurrent()->category as $c)
 			echo '
 							<option value="', $c['id'], '" ', $context['issue']['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '
@@ -151,7 +151,7 @@ function template_report_issue()
 			</div>
 		</div>
 
-		<input type="hidden" name="project" value="', $context['project']['id'], '" />
+		<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';
@@ -280,7 +280,7 @@ function template_issue_reply()
 						<td>
 							<select name="type">';
 
-		foreach ($context['project']['trackers'] as $id => $tracker)
+		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			echo '
 								<option value="', $id, '" ', $id == $context['current_issue']['tracker']['id'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
@@ -297,7 +297,7 @@ function template_issue_reply()
 							<select name="category">
 								<option></option>';
 
-		foreach ($context['project']['category'] as $c)
+		foreach (ProjectTools_Project::getCurrent()->category as $c)
 			echo '
 								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '

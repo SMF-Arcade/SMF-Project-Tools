@@ -218,7 +218,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		createList($listOptions);
 	
 		// Template
-		$context['page_title'] = sprintf($txt['title_versions_list'], $context['project']['name']);
+		$context['page_title'] = sprintf($txt['title_versions_list'], ProjectTools_Project::getCurrent()->name);
 		$context['sub_template'] = 'versions_list';
 	}
 	
@@ -241,7 +241,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'permission_inherit' => true,
 			);
 			
-			$context['page_title'] = sprintf($txt['title_versions_new'], $context['project']['name']);
+			$context['page_title'] = sprintf($txt['title_versions_new'], ProjectTools_Project::getCurrent()->name);
 		}
 		else
 		{
@@ -276,7 +276,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'permission_inherit' => !empty($row['permission_inherit']),
 			);
 			
-			$context['page_title'] = sprintf($txt['title_versions_edit'], $context['project']['name'], htmlspecialchars($row['version_name']));
+			$context['page_title'] = sprintf($txt['title_versions_edit'], ProjectTools_Project::getCurrent()->name, htmlspecialchars($row['version_name']));
 		}
 	
 		// Default membergroups.
@@ -494,7 +494,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		createList($listOptions);
 	
 		// Template
-		$context['page_title'] = sprintf($txt['title_category_list'], $context['project']['name']);
+		$context['page_title'] = sprintf($txt['title_category_list'], ProjectTools_Project::getCurrent()->name);
 		$context['sub_template'] = 'categories_list';
 	}
 	
@@ -510,7 +510,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'name' => '',
 			);
 			
-			$context['page_title'] = sprintf($txt['title_category_new'], $context['project']['name']);
+			$context['page_title'] = sprintf($txt['title_category_new'], ProjectTools_Project::getCurrent()->name);
 		}
 		else
 		{
@@ -535,7 +535,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'name' => htmlspecialchars($row['category_name']),
 			);
 			
-			$context['page_title'] = sprintf($txt['title_category_edit'], $context['project']['name'], htmlspecialchars($row['category_name']));
+			$context['page_title'] = sprintf($txt['title_category_edit'], ProjectTools_Project::getCurrent()->name, htmlspecialchars($row['category_name']));
 	
 			unset($row);
 		}
