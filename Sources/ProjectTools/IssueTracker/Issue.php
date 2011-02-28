@@ -252,7 +252,6 @@ class ProjectTools_IssueTracker_Issue
 		$this->reporter = &$memberContext[$row['id_reporter']];
 		$this->assignee = &$memberContext[$row['id_member']];
 		
-		$this->is_mine = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'];
 		
 		$this->tracker = &$context['issue_trackers'][$row['id_tracker']];
 		
@@ -272,7 +271,9 @@ class ProjectTools_IssueTracker_Issue
 		$this->id_event_mod = $row['id_event_mod'];
 		
 		$this->replies = $row['replies'];
+		
 		$this->is_private = !empty($row['private_issue']);
+		$this->is_mine = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'];
 	}
 	
 	/**
