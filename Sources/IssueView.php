@@ -350,12 +350,12 @@ function getEvent()
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
 					else
-						$old_value = getVersions(explode(',', $old_value), true);
+						$old_value = getVersions(explode(',', $old_value), null, true);
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
 					else
-						$new_value = getVersions(explode(',', $new_value), true);
+						$new_value = getVersions(explode(',', $new_value), null, true);
 				}
 				elseif ($field == 'category')
 				{

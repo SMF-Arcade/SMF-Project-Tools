@@ -99,8 +99,8 @@ function ReportIssue()
 	$context['post_box_name'] = $editorOptions['id'];
 	$context['destination'] = 'report2';
 
-	$context['show_version'] = !empty($context['versions']);
-	$context['show_category'] = !empty(ProjectTools_Project::getCurrent()->category);
+	$context['show_version'] = !empty(ProjectTools_Project::getCurrent()->versions);
+	$context['show_category'] = !empty(ProjectTools_Project::getCurrent()->categories);
 
 	checkSubmitOnce('register');
 

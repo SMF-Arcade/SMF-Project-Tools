@@ -127,7 +127,7 @@ function template_issue_view_below()
 					<li id="issue_view_status">
 						<dl>
 							<dt>', $txt['issue_view_status'], '</dt>
-							<dd>', $context['current_issue']['private'] ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
+							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->is_private ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_tracker">
@@ -382,7 +382,7 @@ function template_issue_view_below()
 	else
 	{
 		echo '
-			var ddIssueViewS = currentIssue.addDropdown("issue_view_status", "private", ', (int) $context['current_issue']['private'], ');
+			var ddIssueViewS = currentIssue.addDropdown("issue_view_status", "private", ', (int) ProjectTools_IssueTracker_Issue::getCurrent()->is_private, ');
 			ddIssueViewS.addOption(0, "', $txt['issue_view_status_public'], '");
 			ddIssueViewS.addOption(1, "', $txt['issue_view_status_private'], '");';
 		

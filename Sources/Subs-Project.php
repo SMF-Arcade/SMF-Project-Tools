@@ -1180,24 +1180,24 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
 					else
-						$old_value = getVersions(explode(',', $old_value), true);
+						$old_value = getVersions(explode(',', $old_value), $issue['project'], true);
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
 					else
-						$new_value = getVersions(explode(',', $new_value), true);
+						$new_value = getVersions(explode(',', $new_value), $issue['project'], true);
 				}
 				elseif ($field == 'category')
 				{
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
-					elseif (isset(ProjectTools_Project::getCurrent()->category[$old_value]))
-						$old_value = ProjectTools_Project::getCurrent()->category'][$old_value]['name;
+					elseif (isset(ProjectTools_Project::getCurrent()->categories[$old_value]))
+						$old_value = ProjectTools_Project::getCurrent()->categories[$old_value]['name'];
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
-					elseif (isset(ProjectTools_Project::getCurrent()->category[$new_value]))
-						$new_value = ProjectTools_Project::getCurrent()->category'][$new_value]['name;
+					elseif (isset(ProjectTools_Project::getCurrent()->categories[$new_value]))
+						$new_value = ProjectTools_Project::getCurrent()->categories[$new_value]['name'];
 				}
 				elseif ($field == 'assign')
 				{

@@ -18,104 +18,11 @@ function loadIssue()
 	if (empty($project) || empty($issue))
 		return;
 
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.id_tracker,
-			i.id_comment_first, i.id_comment_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
-			i.versions, i.versions_fixed,
-			mem.id_member, mem.real_name, cat.id_category, cat.category_name,
-			' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
-			com.id_event, com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
-			com.poster_ip
-		FROM {db_prefix}issues AS i
-			INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
-			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
-			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = i.id_project AND lmr.id_member = {int:current_member})') . '
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
-			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-		WHERE i.id_issue = {int:issue}
-			AND i.id_project = {int:project}
-		LIMIT 1',
-		array(
-			'current_member' => $user_info['id'],
-			'issue' => $issue,
-			'project' => $project,
-			'any' => '*',
-		)
-	);
-
-	if ($smcFunc['db_num_rows']($request) == 0)
+	if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools_IssueTracker_Issue::getCurrent()->canSee())
 	{
 		$context['project_error'] = 'issue_not_found';
-
 		return;
 	}
-
-	$row = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
-
-	// Load reporter
-	loadMemberData(array($row['id_reporter']));
-	loadMemberContext($row['id_reporter']);
-
-	$memberContext[$row['id_reporter']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
-
-	$type = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'] ? 'own' : 'any';
-
-	// Prepare issue array
-	$context['current_issue'] = array(
-		'id' => $row['id_issue'],
-		'name' => $row['subject'],
-		'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
-		'details' => array(
-			'id' => $row['id_comment_first'],
-			'id_event' => $row['id_event'],
-			'time' => timeformat($row['post_time']),
-			'body' => parse_bbc($row['body']),
-			'ip' => $row['poster_ip'],
-			'modified' => array(
-				'time' => timeformat($row['edit_time']),
-				'timestamp' => forum_time(true, $row['edit_time']),
-				'name' => $row['edit_name'],
-			),
-			'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
-			'can_remove' => projectAllowedTo('delete_comment_' . $type),
-			'can_edit' => projectAllowedTo('edit_comment_' . $type),
-			'first_new' => $row['id_event_mod'] > $row['new_from'],
-		),
-		'category' => array(
-			'id' => $row['id_category'],
-			'name' => $row['category_name'],
-			'link' => '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
-		),
-		'versions' => getVersions(explode(',', $row['versions'])),
-		'versions_fixed' => getVersions(explode(',', $row['versions_fixed'])),
-		'reporter' => &$memberContext[$row['id_reporter']],
-		'assignee' => array(
-			'id' => $row['id_member'],
-			'name' => $row['real_name'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
-		),
-		'is_mine' => !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'],
-		'tracker' => &$context['issue_trackers'][$row['id_tracker']],
-		'status' => &$context['issue_status'][$row['status']],
-		'priority_num' => $row['priority'],
-		'priority' => $context['issue']['priority'][$row['priority']],
-		'created' => timeformat($row['created']),
-		'updated' => timeformat($row['updated']),
-		'new_from' => $row['new_from'],
-		'comment_first' => $row['id_comment_first'],
-		'comment_last' => $row['id_comment_last'],
-		'id_event_mod' => $row['id_event_mod'],
-		'replies' => $row['replies'],
-		'private' => !empty($row['private_issue']),
-	);
-
-	if (!$user_info['is_admin'] && !empty($context['current_issue']['versions']) && count(array_intersect(array_keys($context['current_issue']['versions']), $user_info['project_allowed_versions'])) == 0)
-		$context['project_error'] = 'issue_not_found';
-	// If this is private issue are you allowed to see it?
-	elseif ($context['current_issue']['private'] && !$user_info['is_admin'] && !ProjectTools_Project::getCurrent()->is_developer && $user_info['id'] != $row['id_reporter'] && !projectAllowedTo('issue_view_private'))
-		$context['project_error'] = 'issue_not_found';
 
 	if (!$user_info['is_guest'])
 	{
@@ -1403,22 +1310,29 @@ function link_tags(&$tag, $key, $baseurl)
  * @param array $versions array of version ids
  * @param boolean $as_string return as comma separated string instead of array
  */
-function getVersions($versions, $as_string = false)
+function getVersions($versions, $project = null, $as_string = false)
 {
 	global $context;
 	
 	// Versions might be comma separated list from database
 	if (!is_array($versions))
 		$versions = explode(',', $versions);
+		
+	if ($project === null)
+		$project = ProjectTools_Project::getCurrent()->id;
 	
 	$return = array();
 	
 	foreach ($versions as $ver)
 	{
-		if (!empty($context['versions_id'][$ver]))
-			$return[$ver] = $as_string ? $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver]['name'] : $context['versions'][$context['versions_id'][$ver]]['sub_versions'][$ver];
-		elseif (!empty($context['versions'][$ver]))
-			$return[$ver] = $as_string ? $context['versions'][$ver]['name'] : $context['versions'][$ver];
+		if (!empty(ProjectTools_Project::getProject()->versions_id[$ver]))
+			$return[$ver] = $as_string ?
+				ProjectTools_Project::getProject()->versions['versions'][ ProjectTools_Project::getProject()->versions_id[$ver] ]['sub_versions'][$ver]['name'] :
+				ProjectTools_Project::getProject()->versions['versions'][ ProjectTools_Project::getProject()->versions_id[$ver] ]['sub_versions'][$ver];
+		elseif (!empty(ProjectTools_Project::getProject()->versions[$ver]))
+			$return[$ver] = $as_string ?
+				ProjectTools_Project::getProject()->versions[$ver]['name'] :
+				ProjectTools_Project::getProject()->versions[$ver];
 	}
 	
 	return $as_string ? implode(', ', $return) : $return;
