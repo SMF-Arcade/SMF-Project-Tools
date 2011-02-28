@@ -14,6 +14,41 @@
 class ProjectTools_Hooks
 {
 	/**
+	 * Autoload function
+	 * 
+	 * @param string $class_name Class Name
+	 */
+	static public function autoload($class_name)
+	{
+		global $sourcedir;
+		
+		if (substr($class_name, 0, 7) == 'ProjectTools')
+		{
+			
+			$class_file = str_replace('_', '/', $class_name);
+	
+			if (file_exists($sourcedir . '/' . $class_file . '.php'))
+				require_once($sourcedir . '/' . $class_file . '.php');
+			else
+				return false;
+				
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Registers autoload function
+	 *
+	 * @todo Move to somewhere else?
+	 */
+	static public function registerAutoload()
+	{
+		spl_autoload_register(array(__CLASS__, 'autoload'));
+	}
+	
+	/**
 	 * Inserts array in array after key
 	 *
 	 * @param array $input Input array
@@ -45,6 +80,14 @@ class ProjectTools_Hooks
 				$insert,
 				array_slice($input, $position, null, true)
 			);
+	}
+	
+	/**
+	 * SMF Hook integrate_pre_load
+	 */
+	public static function pre_load()
+	{
+		self::registerAutoload();
 	}
 	
 	/**

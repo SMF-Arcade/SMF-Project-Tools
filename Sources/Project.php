@@ -15,7 +15,7 @@ if (!defined('SMF'))
  *
  */
 class ProjectTools
-{
+{	
 	/**
 	 *
 	 */
