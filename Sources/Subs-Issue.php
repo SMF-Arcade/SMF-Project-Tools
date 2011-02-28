@@ -1252,7 +1252,7 @@ function createIssueList($issueListOptions)
 			INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)' . (!empty($issueListOptions['filter']['tag']) ? '
 			INNER JOIN {db_prefix}issue_tags AS stag ON (stag.id_issue = i.id_issue
 				AND stag.tag = {string:search_tag})' : '') . '
-		WHERE {query_see_issue_project}
+		WHERE {query_current_project_see_issue}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND (' . implode(')
 			AND (', $where) . ')' : '') . '',
@@ -1308,7 +1308,7 @@ function createIssueList($issueListOptions)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 			LEFT JOIN {db_prefix}issue_tags AS tags ON (tags.id_issue = i.id_issue)
-		WHERE {query_see_issue_project}
+		WHERE {query_current_project_see_issue}
 			AND i.id_project = {int:project}' . (!empty($where) ? '
 			AND ' . implode('
 			AND ', $where) : '') . '

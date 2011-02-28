@@ -620,8 +620,10 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		return $user_info['query_see_version'];
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
-	elseif ($matches[1] === 'query_see_issue_project')
-		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
+	elseif (substr($matches[1], 0, 14) == 'query_project_')
+		return ProjectTools_Project::getProject($values['project'])->getQuery(substr($matches[1], 14));
+	elseif (substr($matches[1], 0, 22) == 'query_current_project_')
+		return ProjectTools_Project::getCurrent()->getQuery(substr($matches[1], 22));
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
 ]]></add>
@@ -639,8 +641,10 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		return $user_info['query_see_version'];
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
-	elseif ($matches[1] === 'query_see_issue_project')
-		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
+	elseif (substr($matches[1], 0, 14) == 'query_project_')
+		return ProjectTools_Project::getProject($values['project'])->getQuery(substr($matches[1], 14));
+	elseif (substr($matches[1], 0, 22) == 'query_current_project_')
+		return ProjectTools_Project::getCurrent()->getQuery(substr($matches[1], 22));
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
 ]]></add>
@@ -658,10 +662,12 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		return $user_info['query_see_version'];
 	elseif ($matches[1] === 'query_see_issue')
 		return $user_info['query_see_issue'];
-	elseif ($matches[1] === 'query_see_issue_project')
-		return ProjectTools_Project::getProject($values['project'])->getQuery('see_issue');
 	elseif ($matches[1] === 'query_see_version_timeline')
 		return $user_info['query_see_version_timeline'];
+	elseif (substr($matches[1], 0, 14) == 'query_project_')
+		return ProjectTools_Project::getProject($values['project'])->getQuery(substr($matches[1], 14));
+	elseif (substr($matches[1], 0, 22) == 'query_current_project_')
+		return ProjectTools_Project::getCurrent()->getQuery(substr($matches[1], 22));
 ]]></add>
 		</operation>
 	</file>

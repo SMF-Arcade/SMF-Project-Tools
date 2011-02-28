@@ -376,13 +376,12 @@ class ProjectTools_Project
 		}
 		else
 		{
-			
 			if ($user_info['is_guest'])
-				$this->queries['query_see_issue_private'] = '0=1';
+				$this->queries['see_issue_private'] = '0=1';
 			else
-				$this->queries['query_see_issue_private'] = 'i.id_reporter = ' . $user_info['id'];
+				$this->queries['see_issue_private'] = 'i.id_reporter = ' . $user_info['id'];
 				
-			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $this->versions_id) . ', i.versions) AND ' . $this->queries['query_see_issue_private'] . ')';
+			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $this->versions_id) . ', i.versions) AND ' . $this->queries['see_issue_private'] . ')';
 		}
 	}
 	

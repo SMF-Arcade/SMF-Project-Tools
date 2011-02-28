@@ -64,7 +64,6 @@ function loadProjectTools()
 	{
 		$see_project = '1 = 1';
 		$see_version = '1 = 1';
-		$see_version_issue = '1 = 1';
 		$see_version_timeline = '1 = 1';
 		$see_issue = '1 = 1';
 	}
@@ -92,12 +91,6 @@ function loadProjectTools()
 		else
 			$see_version = '(0=1)';
 			
-		// See version in issue query
-		if (!empty($user_info['project_allowed_versions']))
-			$see_version_issue = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions))';
-		else
-			$see_version_issue = '(0=1)';
-			
 		// See version in timeline query
 		if (!empty($user_info['project_allowed_versions']))
 			$see_version_timeline = '(FIND_IN_SET(' . implode(', IFNULL(i.versions, tl.versions)) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', IFNULL(i.versions, tl.versions)))';
@@ -107,6 +100,12 @@ function loadProjectTools()
 		// See private issues code
 		$my_issue = $user_info['is_guest'] ? '(0=1)' : '(i.id_reporter = ' . $user_info['id'] . ')';
 		
+		// See version in issue query
+		if (!empty($user_info['project_allowed_versions']))
+			$see_version_issue = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions))';
+		else
+			$see_version_issue = '(0=1)';
+			
 		// Private issues
 		$see_private_profiles = getPrivateProfiles();
 		if (!empty($see_private_profiles))
@@ -121,11 +120,8 @@ function loadProjectTools()
 	$user_info['query_see_project'] = $see_project;
 	// See version
 	$user_info['query_see_version'] = $see_version;
-	// See version of issue
-	$user_info['query_see_version_issue'] = $see_version_issue;
 	// See version timeline
 	$user_info['query_see_version_timeline'] = $see_version_timeline;
-	
 	// Issue of any project
 	$user_info['query_see_issue'] = $see_issue;
 	
@@ -246,10 +242,8 @@ function loadProject()
 	
 	// For Who's online
 	$_GET['project'] = $project;
-
-	$cp = ProjectTools_Project::getCurrent();
 	
-	if (!$cp)
+	if (!ProjectTools_Project::getCurrent())
 	{
 		$context['project_error'] = 'project_not_found';
 		
@@ -260,14 +254,14 @@ function loadProject()
 
 	$context['possible_types'] = array();
 
-	foreach ($cp->trackers as $id => $tracker)
+	foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 		$context['possible_types'][$tracker['tracker']['short']] = $id;
 		
 	// Developers can see all issues
-	if ($cp->isDeveloper())
+	if (ProjectTools_Project::getCurrent()->isDeveloper())
 		$user_info['query_see_issue_project'] = '1=1';
 			
-	if (count(array_intersect($user_info['groups'], $cp->groups)) == 0 && !$user_info['is_admin'])
+	if (count(array_intersect($user_info['groups'], ProjectTools_Project::getCurrent()->groups)) == 0 && !$user_info['is_admin'])
 		$context['project_error'] = 'project_not_found';
 		
 	if (!empty($projects_show) && !in_array($cp->id, $projects_show))
@@ -403,7 +397,7 @@ function loadTimeline($project = 0)
 			LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 				AND dev.id_member = {int:current_member})
 		WHERE {query_see_project}' . (!empty($project) ? '
-			AND {query_see_issue_project}
+			AND {query_project_see_issue}
 			AND tl.id_project = {int:project}' : '') . '
 			AND {query_see_version_timeline}
 		ORDER BY tl.event_time DESC

@@ -85,10 +85,6 @@ class ProjectTools_Permissions
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$this->permissions[$row['permission']] = true;	
 			$smcFunc['db_free_result']($request);
-	
-			// User can see private issues
-			//if (!empty($user_info['project_permissions']['issue_view_private']))
-			//	$user_info['query_see_issue_project'] = $user_info['query_see_version_issue'];
 			
 			if (!empty($modSettings['cache_enable']))
 				cache_put_data('project_profile:' . $this->id . ':' . $cache_groups, array($user_info['project_permissions'], null), 240);			
