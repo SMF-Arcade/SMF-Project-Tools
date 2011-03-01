@@ -155,7 +155,7 @@ function template_issue_list_block($block, $data)
 	echo '
 	<table cellspacing="0" class="table_grid">
 		<thead>
-			<tr>';
+			<tr class="catbg">';
 
 		if (!empty($data))
 			echo '
