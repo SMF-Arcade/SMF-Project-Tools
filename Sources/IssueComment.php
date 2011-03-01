@@ -15,10 +15,10 @@ function IssueReply()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options, $project;
 
-	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent() || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
 
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
@@ -202,7 +202,7 @@ function IssueReply()
 
 	// Template
 	$context['sub_template'] = 'issue_reply';
-	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, $context['current_issue']['id'], $context['current_issue']['name']);
+	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
 
 	loadTemplate('IssueReport');
 }
@@ -214,10 +214,10 @@ function IssueReply2()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $project;
 
-	if (!isset($context['current_issue']) || !projectAllowedTo('issue_comment'))
+	if (!ProjectTools_Project::getCurrent() || !projectAllowedTo('issue_comment'))
 		fatal_lang_error('issue_not_found', false);
 
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
@@ -439,7 +439,7 @@ function IssueDeleteComment()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 
-	if (!isset($context['current_issue']) || empty($_REQUEST['com']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent() || empty($_REQUEST['com']))
 		fatal_lang_error('issue_not_found', false);
 
 	projectIsAllowedTo('edit_comment_own');
@@ -455,7 +455,7 @@ function IssueDeleteComment()
 		array(
 			'current_user' => $user_info['id'],
 			'comment' => (int) $_REQUEST['com'],
-			'issue' => $context['current_issue']['id'],
+			'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
 		)
 	);
 
@@ -464,7 +464,7 @@ function IssueDeleteComment()
 		fatal_lang_error('comment_not_found', false);
 	$smcFunc['db_free_result']($request);
 
-	if ($row['id_comment'] == $context['current_issue']['details']['id'])
+	if ($row['id_comment'] == ProjectTools_IssueTracker_Issue::getCurrent()->details['id'])
 		fatal_lang_error('comment_cant_remove_first', false);
 
 	// Delete comment
@@ -523,7 +523,7 @@ function IssueDeleteComment()
 		FROM {db_prefix}project_timeline
 		WHERE id_issue = {int:issue} AND event = {string:event}',
 		array(
-			'issue' => $context['current_issue']['id'],
+			'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
 			'event' => 'new_comment',
 		)
 	);
@@ -535,14 +535,14 @@ function IssueDeleteComment()
 		SET replies = {int:replies}
 		WHERE id_issue = {int:issue}',
 		array(
-			'issue' => $context['current_issue']['id'],
+			'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
 			'replies' => $num_replies,
 		)
 	);
 
 	logAction('project_remove_comment', array('comment' => $row['id_comment']));
 
-	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+	redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 }
 
 ?>

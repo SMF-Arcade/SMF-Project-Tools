@@ -18,7 +18,7 @@ function loadIssueView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
 	
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
 	$context['show_update'] = false;
 	$context['can_comment'] = projectAllowedTo('issue_comment');
@@ -35,7 +35,7 @@ function loadIssueView()
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 	
 	// URL for posting updates from ajax
-	$context['issue_xml_url'] = project_get_url(array('issue' => $context['current_issue']['id'], 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
+	$context['issue_xml_url'] = project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 	
 	// Tags
 	$context['can_add_tags'] = projectAllowedTo('issue_moderate');
@@ -66,12 +66,12 @@ function IssueView()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
 
-	if (!isset($context['current_issue']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent())
 		fatal_lang_error('issue_not_found', false);
 
 	projectIsAllowedTo('issue_view');
 
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 
 	$context['current_tags'] = array();
 
@@ -168,7 +168,7 @@ function IssueView()
 	$context['start'] = $_REQUEST['start'];
 
 	$posters = array();
-	$events = array($context['current_issue']['details']['id_event']);
+	$events = array(ProjectTools_IssueTracker_Issue::getCurrent()->details['id_event']);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_event, id_member
@@ -208,7 +208,7 @@ function IssueView()
 			WHERE tl.id_event IN ({array_int:events})',
 			array(
 				'events' => $events,
-				'new_from' => $context['current_issue']['new_from'],
+				'new_from' => ProjectTools_IssueTracker_Issue::getCurrent()->new_from,
 			)
 		);
 	}
@@ -252,7 +252,7 @@ function IssueView()
 	loadTemplate('IssueView');
 	$context['template_layers'][] = 'issue_view';
 	$context['sub_template'] = 'issue_view_main';
-	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, $context['current_issue']['id'], $context['current_issue']['name']);
+	$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
 }
 
 /**
@@ -269,7 +269,7 @@ function getEvent()
 		return false;
 
 	if ($first_new)
-		$first_new = !$context['current_issue']['details']['first_new'];
+		$first_new = !ProjectTools_IssueTracker_Issue::getCurrent()->details['first_new'];
 
 	$row = $smcFunc['db_fetch_assoc']($context['comment_request']);
 
@@ -362,12 +362,12 @@ function getEvent()
 					if (empty($old_value))
 						$old_value = $txt['issue_none'];
 					elseif (isset(ProjectTools_Project::getCurrent()->category[$old_value]))
-						$old_value = ProjectTools_Project::getCurrent()->category'][$old_value]['name;
+						$old_value = ProjectTools_Project::getCurrent()->category[$old_value]['name'];
 
 					if (empty($new_value))
 						$new_value = $txt['issue_none'];
 					elseif (isset(ProjectTools_Project::getCurrent()->category[$new_value]))
-						$new_value = ProjectTools_Project::getCurrent()->category'][$new_value]['name;
+						$new_value = ProjectTools_Project::getCurrent()->category[$new_value]['name'];
 				}
 				elseif ($field == 'assign')
 				{
@@ -564,7 +564,7 @@ function IssueTag()
 
 	checkSession('request');
 
-	if (!isset($context['current_issue']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent())
 		fatal_lang_error('issue_not_found', false);
 
 	$posterOptions = array(
@@ -591,13 +591,13 @@ function IssueTag()
 
 			if (!empty($tag))
 			{
-				$rows[] = array($context['current_issue']['id'], $smcFunc['htmlspecialchars']($tag, ENT_QUOTES));
+				$rows[] = array(ProjectTools_IssueTracker_Issue::getCurrent()->id, $smcFunc['htmlspecialchars']($tag, ENT_QUOTES));
 				$tags[] = $tag;
 			}
 		}
 
 		if (empty($rows))
-			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+			redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}issue_tags',
@@ -613,7 +613,7 @@ function IssueTag()
 			),
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
+		$id_event = createTimelineEvent(ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 	elseif (isset($_REQUEST['tag']))
 	{
@@ -634,14 +634,14 @@ function IssueTag()
 		}
 
 		if (empty($rows))
-			redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+			redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}issue_tags
 			WHERE id_issue = {int:issue}
 				AND tag IN({array_string:tag})',
 			array(
-				'issue' => $context['current_issue']['id'],
+				'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
 				'tag' => $rows,
 			)
 		);
@@ -653,10 +653,10 @@ function IssueTag()
 			),
 		);
 		
-		$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
+		$id_event = createTimelineEvent(ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
 	}
 
-	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+	redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 }
 
 /**
@@ -668,7 +668,7 @@ function IssueMove()
 {
 	global $context, $project, $user_info, $smcFunc;
 
-	if (!isset($context['current_issue']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent())
 		fatal_lang_error('issue_not_found', false);
 
 	projectIsAllowedTo('issue_move');
@@ -711,9 +711,9 @@ function IssueMove()
 			'email' => htmlspecialchars($user_info['email']),
 		);
 		
-		updateIssue($context['current_issue']['id'], array('project' => $_POST['project_to']), $posterOptions);
+		updateIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, array('project' => $_POST['project_to']), $posterOptions);
 		
-		redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+		redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	}
 	
 	// Template
@@ -733,7 +733,7 @@ function IssueDelete()
 
 	checkSession('get');
 
-	if (!isset($context['current_issue']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent())
 		fatal_lang_error('issue_not_found', false);
 
 	projectIsAllowedTo('issue_moderate');
@@ -747,9 +747,9 @@ function IssueDelete()
 	);
 
 	// Send Notifications
-	sendIssueNotification(array('id' => $context['current_issue']['id'], 'project' => ProjectTools_Project::getCurrent()->id), array(), array(), 'issue_delete', $user_info['id']);
+	sendIssueNotification(array('id' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'project' => ProjectTools_Project::getCurrent()->id), array(), array(), 'issue_delete', $user_info['id']);
 
-	deleteIssue($context['current_issue']['id'], $posterOptions);
+	deleteIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, $posterOptions);
 
 	redirectexit(project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')));
 }

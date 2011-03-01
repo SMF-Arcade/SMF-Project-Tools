@@ -22,23 +22,23 @@ function template_issue_view_above()
 			'text' => 'reply',
 			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
-			'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0' , 'area' => 'issues', 'sa' => 'reply')),
+			'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0' , 'area' => 'issues', 'sa' => 'reply')),
 			'lang' => true
 		),
 	);
 
-	if ($context['current_issue']['details']['first_new'])
+	if (ProjectTools_IssueTracker_Issue::getCurrent()->details['first_new'])
 		echo '
 	<a name="new"></a>';
 
 	// Issue Details
 	echo '
-	<a name="com', $context['current_issue']['comment_first'], '"></a>
+	<a name="com', ProjectTools_IssueTracker_Issue::getCurrent()->comment_first, '"></a>
 	<div id="issue_comments" class="floatleft">
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<img src="', $settings['default_images_url'], '/', $context['current_issue']['tracker']['image'], '" style="vertical-align: middle;" alt="', $context['current_issue']['tracker']['name'], '" width="20" />
-				<span>', $txt['issue'], ': ', $context['current_issue']['name'], '</span>
+				<img src="', $settings['default_images_url'], '/', ProjectTools_IssueTracker_Issue::getCurrent()->tracker['image'], '" style="vertical-align: middle;" alt="', ProjectTools_IssueTracker_Issue::getCurrent()->tracker['name'], '" width="20" />
+				<span>', $txt['issue'], ': ', ProjectTools_IssueTracker_Issue::getCurrent()->name, '</span>
 			</h3>
 		</div>';
 }
@@ -55,7 +55,7 @@ function template_issue_view_main()
 			'text' => 'reply',
 			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
-			'url' => $scripturl . '?issue=' . $context['current_issue']['id'] . '.0;sa=reply',
+			'url' => /*project_get_url(array('')),*/$scripturl . '?issue=' . ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0;sa=reply',
 			'lang' => true
 		),
 	);
@@ -92,9 +92,9 @@ function template_issue_view_below()
 	global $context, $settings, $options, $txt, $modSettings, $settings;
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
-		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
-		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
+		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
 	);
 
 	echo '
@@ -115,13 +115,13 @@ function template_issue_view_below()
 					<li>
 						<dl>
 							<dt>', $txt['issue_reported'], '</dt>
-							<dd>', $context['current_issue']['created'], '</dd>
+							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->created, '</dd>
 						</dl>
 					</li>
 					<li id="issue_updated">
 						<dl>
 							<dt>', $txt['issue_updated'], '</dt>
-							<dd>', $context['current_issue']['updated'], '</dd>
+							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->updated, '</dd>
 						</dl>
 					</li>
 					<li id="issue_view_status">
@@ -133,19 +133,19 @@ function template_issue_view_below()
 					<li id="issue_tracker">
 						<dl>
 							<dt>', $txt['issue_type'], '</dt>
-							<dd>', $context['current_issue']['tracker']['name'], '</dd>
+							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->tracker['name'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_status">
 						<dl>
 							<dt>', $txt['issue_status'], '</dt>
-							<dd>', $context['current_issue']['status']['text'], '</dd>
+							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->status['text'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_priority">
 						<dl>
 							<dt>', $txt['issue_priority'], '</dt>
-							<dd>', $txt[$context['current_issue']['priority']], '</dd>
+							<dd>', $txt[ProjectTools_IssueTracker_Issue::getCurrent()->priority], '</dd>
 						</dl>
 					</li>
 					<li id="issue_version">
@@ -153,13 +153,13 @@ function template_issue_view_below()
 							<dt>', $txt['issue_version'], '</dt>
 							<dd>';
 	
-	if (empty($context['current_issue']['versions']))
+	if (empty(ProjectTools_IssueTracker_Issue::getCurrent()->versions))
 		echo $txt['issue_none'];
 	else
 	{
 		$first = true;
 		
-		foreach ($context['current_issue']['versions'] as $version)
+		foreach (ProjectTools_IssueTracker_Issue::getCurrent()->versions as $version)
 		{
 			if ($first)
 				$first = false;
@@ -179,13 +179,13 @@ function template_issue_view_below()
 							<dt>', $txt['issue_version_fixed'], '</dt>
 							<dd>';
 						
-	if (empty($context['current_issue']['versions_fixed']))
+	if (empty(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed))
 		echo $txt['issue_none'];
 	else
 	{
 		$first = true;
 		
-		foreach ($context['current_issue']['versions_fixed'] as $version)
+		foreach (ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed as $version)
 		{
 			if ($first)
 				$first = false;
@@ -203,13 +203,13 @@ function template_issue_view_below()
 					<li id="issue_assign">
 						<dl>
 							<dt>', $txt['issue_assigned_to'], '</dt>
-							<dd>', !empty($context['current_issue']['assignee']['id']) ? $context['current_issue']['assignee']['link'] : $txt['issue_none'], '</dd>
+							<dd>', !empty(ProjectTools_IssueTracker_Issue::getCurrent()->assignee['id']) ? ProjectTools_IssueTracker_Issue::getCurrent()->assignee['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
 					<li id="issue_category">
 						<dl>
 							<dt>', $txt['issue_category'], '</dt>
-							<dd>', !empty($context['current_issue']['category']['id']) ? $context['current_issue']['category']['link'] : $txt['issue_none'], '</dd>
+							<dd>', !empty(ProjectTools_IssueTracker_Issue::getCurrent()->category['id']) ? ProjectTools_IssueTracker_Issue::getCurrent()->category['link'] : $txt['issue_none'], '</dd>
 						</dl>
 					</li>
 				</ul>
@@ -225,7 +225,7 @@ function template_issue_view_below()
 				', $txt['issue_tags'], '
 			</h3>
 		</div>
-		<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
+		<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>';
 
@@ -243,7 +243,7 @@ function template_issue_view_below()
 
 				if ($context['can_remove_tags'])
 					echo '
-						<a href="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'area' => 'issues', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+						<a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
 					echo '
 					</li>';
@@ -309,7 +309,7 @@ function template_issue_view_below()
 				<hr />';
 				
 			echo '
-				<form action="', project_get_url(array('issue' => $context['current_issue']['id'], '.0', 'area' => 'issues', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">		
+				<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">		
 					<input type="file" size="32" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
 
 			if (!empty($modSettings['attachmentCheckExtensions']))
@@ -338,7 +338,7 @@ function template_issue_view_below()
 	if ($context['can_comment'])
 	{
 		echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues',  'sa' => 'reply2')), '" method="post">
+	<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues',  'sa' => 'reply2')), '" method="post">
 		<div class="tborder">
 			<div class="cat_bar">
 				<h3 class="catbg">
@@ -363,7 +363,7 @@ function template_issue_view_below()
 	
 	echo '
 	<script language="JavaScript" type="text/javascript">
-		var currentIssue = new PTIssue(', $context['current_issue']['id'], ', "', $context['issue_xml_url'], '", ', $context['current_issue']['id_event_mod'], ', "loaded_events");
+		var currentIssue = new PTIssue(', ProjectTools_IssueTracker_Issue::getCurrent()->id, ', "', $context['issue_xml_url'], '", ', ProjectTools_IssueTracker_Issue::getCurrent()->id_event_mod, ', "loaded_events");
 		currentIssue.addLabel("issue_updated", "updated");';
 		
 	// If no permission to update, add as labels, so they get updated on ajax events
@@ -388,7 +388,7 @@ function template_issue_view_below()
 		
 		// Types
 		echo '
-			var ddIssueType = currentIssue.addDropdown("issue_tracker", "tracker", "', $context['current_issue']['tracker']['short'], '");';
+			var ddIssueType = currentIssue.addDropdown("issue_tracker", "tracker", "', ProjectTools_IssueTracker_Issue::getCurrent()->tracker['short'], '");';
 		
 		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			echo '
@@ -396,10 +396,10 @@ function template_issue_view_below()
 		
 		// Categories
 		echo '
-			var ddIssueCate = currentIssue.addDropdown("issue_category", "category", ', (int) $context['current_issue']['category']['id'], ');
+			var ddIssueCate = currentIssue.addDropdown("issue_category", "category", ', (int) ProjectTools_IssueTracker_Issue::getCurrent()->category['id'], ');
 			ddIssueCate.addOption(0, "', $txt['issue_none'], '");';
 
-		foreach (ProjectTools_Project::getCurrent()->category as $c)
+		foreach (ProjectTools_Project::getCurrent()->categories as $c)
 			echo '
 			ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
 		
@@ -413,11 +413,11 @@ function template_issue_view_below()
 			foreach ($context['versions'] as $v)
 			{
 				echo '
-			ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions'][$v['id']]) ? 1 : 0 ,', "group");';
+			ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions[$v['id']]) ? 1 : 0 ,', "group");';
 	
 				foreach ($v['sub_versions'] as $subv)
 					echo '
-			ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions'][$subv['id']]) ? 1 : 0 ,');';
+			ddIssueVers.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions[$subv['id']]) ? 1 : 0 ,');';
 			}
 		}
 
@@ -426,7 +426,7 @@ function template_issue_view_below()
 		{
 			// Status
 			echo '
-			var ddIssueStat = currentIssue.addDropdown("issue_status", "status", ', (int) $context['current_issue']['status']['id'], ');';
+			var ddIssueStat = currentIssue.addDropdown("issue_status", "status", ', (int) ProjectTools_IssueTracker_Issue::getCurrent()->status['id'], ');';
 
 			foreach ($context['issue_status'] as $status)
 				echo '
@@ -434,7 +434,7 @@ function template_issue_view_below()
 
 			// Assigned to
 			echo '
-			var ddIssueAssi = currentIssue.addDropdown("issue_assign", "assign", ', (int) $context['current_issue']['assignee']['id'], ');
+			var ddIssueAssi = currentIssue.addDropdown("issue_assign", "assign", ', (int) ProjectTools_IssueTracker_Issue::getCurrent()->assignee['id'], ');
 			ddIssueAssi.addOption(0, "', $txt['issue_none'], '");';
 		
 			foreach ($context['assign_members'] as $mem)
@@ -451,17 +451,17 @@ function template_issue_view_below()
 				foreach ($context['versions'] as $v)
 				{
 					echo '
-			ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", ', isset($context['current_issue']['versions_fixed'][$v['id']]) ? 1 : 0 ,', "group");';
+			ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed[$v['id']]) ? 1 : 0 ,', "group");';
 	
 				foreach ($v['sub_versions'] as $subv)
 					echo '
-			ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? 1 : 0 ,');';
+			ddIssueFixv.addOption(', $subv['id'], ', "', $subv['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed[$subv['id']]) ? 1 : 0 ,');';
 				}
 			}
 
 			// Priority
 			echo '
-			var ddIssuePrio = currentIssue.addDropdown("issue_priority", "priority", ', (int) $context['current_issue']['priority_num'], ');';
+			var ddIssuePrio = currentIssue.addDropdown("issue_priority", "priority", ', (int) ProjectTools_IssueTracker_Issue::getCurrent()->priority_num, ');';
 
 			foreach ($context['issue']['priority'] as $id => $text)
 				echo '
@@ -551,8 +551,8 @@ function template_event_full(&$event, &$alternate)
 		if ($event['member']['karma']['allow'])
 			echo '
 					<li class="karma_allow">
-						<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.' . $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
-						<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', $context['current_issue']['id'], '.', $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
+						<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $event['member']['id'], ';issue=', ProjectTools_IssueTracker_Issue::getCurrent()->id, '.' . $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
+						<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $event['member']['id'], ';issue=', ProjectTools_IssueTracker_Issue::getCurrent()->id, '.', $context['start'], ';e=', $event['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
 					</li>';
 
 		// Show the member's gender icon?
@@ -676,17 +676,17 @@ function template_event_full(&$event, &$alternate)
 	// Can they reply? Have they turned on quick reply?
 	if ($context['can_comment'])
 		echo '
-						<li class="quote_button" ><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['quote'], '</a></li>';
+						<li class="quote_button" ><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['quote'], '</a></li>';
 
 	// Can the user modify the contents of this post?
 	if ($event['comment']['can_edit'])
 		echo '
-						<li class="modify_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
+						<li class="modify_button"><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
 
 	// How about... even... remove it entirely?!
 	if ($event['comment']['can_remove'])
 		echo '
-						<li class="remove_button"><a href="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
+						<li class="remove_button"><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
 
 	if ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove'])
 		echo '
@@ -862,7 +862,7 @@ function template_issue_move()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	echo '
-	<form action="', project_get_url(array('issue' => $context['current_issue']['id'] . '.0', 'area' => 'issues', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="cat_bar">
 				<h3 class="catbg">

@@ -249,7 +249,7 @@ function template_issue_reply()
 					<tr>
 						<td width="30%">', $txt['issue_title'], '</td>
 						<td>
-							<input name="title" value="', $context['current_issue']['name'], '" tabindex="', $context['tabindex']++, '" />
+							<input name="title" value="', ProjectTools_IssueTracker_Issue::getCurrent()->name, '" tabindex="', $context['tabindex']++, '" />
 						</td>
 					</tr>';
 
@@ -262,11 +262,11 @@ function template_issue_reply()
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-							<input type="checkbox" id="version_', $v['id'], '" name="version[]" value="', $v['id'], '"', isset($context['current_issue']['versions'][$v['id']])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
+							<input type="checkbox" id="version_', $v['id'], '" name="version[]" value="', $v['id'], '"', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions[$v['id']])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value="', $subv['id'], '"', isset($context['current_issue']['versions'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
+							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value="', $subv['id'], '"', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions[$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 
 		echo '
@@ -282,7 +282,7 @@ function template_issue_reply()
 
 		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			echo '
-								<option value="', $id, '" ', $id == $context['current_issue']['tracker']['id'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
+								<option value="', $id, '" ', $id == ProjectTools_IssueTracker_Issue::getCurrent()->tracker['id'] ? ' selected="selected"' : '', '>', $tracker['tracker']['name'], '</option>';
 
 		echo '
 							</select>
@@ -299,7 +299,7 @@ function template_issue_reply()
 
 		foreach (ProjectTools_Project::getCurrent()->category as $c)
 			echo '
-								<option value="', $c['id'], '" ', $context['current_issue']['category']['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
+								<option value="', $c['id'], '" ', ProjectTools_IssueTracker_Issue::getCurrent()->category['id'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '
 							</select>
 						</td>
@@ -318,7 +318,7 @@ function template_issue_reply()
 			foreach ($context['issue_status'] as $status)
 
 				echo '
-								<option value="', $status['id'], '"', $context['current_issue']['status']['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
+								<option value="', $status['id'], '"', ProjectTools_IssueTracker_Issue::getCurrent()->status['id'] == $status['id'] ? ' selected="selected"' : '', '>', $status['text'], '</option>';
 
 			echo '
 							</select>
@@ -334,11 +334,11 @@ function template_issue_reply()
 		foreach ($context['versions'] as $v)
 		{
 			echo '
-							<input type="checkbox" id="version_fixed_', $v['id'], '" name="version_fixed[]" value="', $v['id'], '"', isset($context['current_issue']['versions_fixed'][$v['id']])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
+							<input type="checkbox" id="version_fixed_', $v['id'], '" name="version_fixed[]" value="', $v['id'], '"', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed[$v['id']])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
 
 			foreach ($v['sub_versions'] as $subv)
 				echo '
-							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_fixed_', $subv['id'], '" name="version_fixed[]" value="', $subv['id'], '"', isset($context['current_issue']['versions_fixed'][$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
+							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_fixed_', $subv['id'], '" name="version_fixed[]" value="', $subv['id'], '"', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed[$subv['id']]) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_fixed', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
 		}
 		
 		echo '
@@ -355,7 +355,7 @@ function template_issue_reply()
 
 			foreach ($context['assign_members'] as $mem)
 				echo '
-								<option value="', $mem['id'], '"',$context['current_issue']['assignee']['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
+								<option value="', $mem['id'], '"', ProjectTools_IssueTracker_Issue::getCurrent()->assignee['id'] == $mem['id'] ? ' selected="selected"' : '', '>', $mem['name'], '</option>';
 
 			echo '
 							</select>
@@ -373,7 +373,7 @@ function template_issue_reply()
 	}
 
 	echo '
-		<input type="hidden" name="issue" value="', $context['current_issue']['id'], '" />
+		<input type="hidden" name="issue" value="', ProjectTools_IssueTracker_Issue::getCurrent()->id, '" />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';

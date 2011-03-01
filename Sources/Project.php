@@ -40,6 +40,8 @@ class ProjectTools
 	 */
 	static function fix_url()
 	{
+		global $issue;
+		
 		// Array for fixing old < 0.5 urls
 		$saToArea = array(
 			'main' => 'main',

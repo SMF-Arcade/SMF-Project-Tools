@@ -255,12 +255,12 @@ function IssueUpdate()
 {
 	global $context, $user_info, $smcFunc, $issue, $sourcedir;
 
-	if (!isset($context['current_issue']))
+	if (!ProjectTools_IssueTracker_Issue::getCurrent())
 		fatal_lang_error('issue_not_found', false);
 
 	is_not_guest();
 
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 
 	checkSession('get');
 
@@ -364,7 +364,7 @@ function IssueUpdate()
 				WHERE tl.id_event IN ({array_int:events})',
 				array(
 					'events' => $events,
-					'new_from' => $context['current_issue']['new_from'],
+					'new_from' => ProjectTools_IssueTracker_Issue::getCurrent()->new_from,
 				)
 			);
 		}
@@ -409,7 +409,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 {
 	global $context, $user_info, $smcFunc, $sourcedir, $txt;
 
-	$type = $context['current_issue']['is_mine'] ? 'own' : 'any';
+	$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 
 	// Assigning
 	if (projectAllowedTo('issue_moderate') && isset($_REQUEST['assign']))
@@ -615,7 +615,7 @@ function IssueUpload()
 
 	// Not possible
 	if (empty($modSettings['projectAttachments']))
-		redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+		redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 
 	projectIsAllowedTo('issue_attach');
 
@@ -671,7 +671,7 @@ function IssueUpload()
 		SET id_issue = {int:issue}
 		WHERE id_attach IN({array_int:attach})',
 		array(
-			'issue' => $context['current_issue']['id'],
+			'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
 			'attach' => $attachIDs,
 		)
 	);
@@ -687,12 +687,12 @@ function IssueUpload()
 		'time' => time(),
 	);
 
-	$id_event = createTimelineEvent($context['current_issue']['id'], ProjectTools_Project::getCurrent()->id, 'new_attachment', array('attachments' => $attachIDs), $posterOptions, $eventOptions);
+	$id_event = createTimelineEvent(ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_Project::getCurrent()->id, 'new_attachment', array('attachments' => $attachIDs), $posterOptions, $eventOptions);
 
 	$rows = array();
 
 	foreach ($attachIDs as $id)
-		$rows[] = array($context['current_issue']['id'], $id, $user_info['id'], $id_event);
+		$rows[] = array(ProjectTools_IssueTracker_Issue::getCurrent()->id, $id, $user_info['id'], $id_event);
 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_attachments',
@@ -701,7 +701,7 @@ function IssueUpload()
 		array('id_issue', 'id_attach')
 	);
 
-	redirectexit(project_get_url(array('issue' => $context['current_issue']['id'] . '.0')));
+	redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 }
 
 ?>

@@ -44,7 +44,7 @@ class ProjectTools_IssueTracker_Issue
 	static function getCurrent()
 	{
 		global $issue, $project;
-			
+		
 		if (isset($issue) && isset($project))
 			return self::getIssue($issue, $project);
 		
@@ -193,7 +193,6 @@ class ProjectTools_IssueTracker_Issue
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 				LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
 			WHERE i.id_issue = {int:issue}
-				AND i.id_project = {int:project}
 			LIMIT 1',
 			array(
 				'current_member' => $user_info['id'],
@@ -212,7 +211,13 @@ class ProjectTools_IssueTracker_Issue
 		$smcFunc['db_free_result']($request);
 	
 		// Load reporter and assignee
-		loadMemberData(array($row['id_reporter'], $row['id_member']));
+		if (!empty($row['id_member']))
+		{
+			loadMemberData(array($row['id_reporter'], $row['id_member']));
+			loadMemberContext($row['id_member']);
+		}
+		else
+			loadMemberData(array($row['id_reporter']));
 		loadMemberContext($row['id_reporter']);
 	
 		$memberContext[$row['id_reporter']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member'] == $user_info['id'] && allowedTo('profile_view_own'));
@@ -222,6 +227,8 @@ class ProjectTools_IssueTracker_Issue
 		$this->id = $row['id_issue'];
 		$this->name = $row['subject'];
 		$this->href = project_get_url(array('issue' => $row['id_issue'] . '.0'));
+		
+		$this->project = $row['id_project'];
 		
 		$this->details = array(
 			'id' => $row['id_comment_first'],
@@ -243,15 +250,16 @@ class ProjectTools_IssueTracker_Issue
 		$this->category = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . project_get_url(array('project' => $project, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		);
 		
 		$this->versions = getVersions(explode(',', $row['versions']));
 		$this->versions_fixed = getVersions(explode(',', $row['versions_fixed']));
 	
 		$this->reporter = &$memberContext[$row['id_reporter']];
-		$this->assignee = &$memberContext[$row['id_member']];
 		
+		if (!empty($row['id_member']))
+			$this->assignee = &$memberContext[$row['id_member']];
 		
 		$this->tracker = &$context['issue_trackers'][$row['id_tracker']];
 		
@@ -277,7 +285,7 @@ class ProjectTools_IssueTracker_Issue
 	}
 	
 	/**
-	 *
+	 * 
 	 */
 	public function canSee()
 	{

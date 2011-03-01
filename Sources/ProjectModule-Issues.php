@@ -182,10 +182,10 @@ class ProjectModule_Issues extends ProjectModule_Base
 	{
 		global $context;
 		
-		if (isset($context['current_issue']))
+		if (ProjectTools_IssueTracker_Issue::getCurrent())
 			$context['linktree'][] = array(
-				'name' => $context['current_issue']['name'],
-				'url' => $context['current_issue']['href'],
+				'name' => ProjectTools_IssueTracker_Issue::getCurrent()->name,
+				'url' => ProjectTools_IssueTracker_Issue::getCurrent()->href,
 			);
 			
 		call_user_func($this->subActions[$subaction]['callback']);
