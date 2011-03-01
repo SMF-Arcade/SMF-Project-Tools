@@ -22,7 +22,7 @@ class ProjectTools_Hooks
 	{
 		global $sourcedir;
 		
-		if (substr($class_name, 0, 7) == 'ProjectTools')
+		if (substr($class_name, 0, 12) == 'ProjectTools')
 		{
 			
 			$class_file = str_replace('_', '/', $class_name);

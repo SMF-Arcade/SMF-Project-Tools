@@ -147,7 +147,7 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
-	public function __construct($id)
+	public function __construct($project)
 	{
 		global $smcFunc, $context, $modSettings, $user_info;
 		

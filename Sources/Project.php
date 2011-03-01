@@ -107,7 +107,7 @@ class ProjectTools
 		
 		// Project was not selected
 		if (empty($project))
-			self::ProjectMain();
+			return self::ProjectMain();
 		
 		self::fix_url();
 		
