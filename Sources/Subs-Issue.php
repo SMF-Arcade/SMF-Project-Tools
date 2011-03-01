@@ -1325,14 +1325,14 @@ function getVersions($versions, $project = null, $as_string = false)
 	
 	foreach ($versions as $ver)
 	{
-		if (!empty(ProjectTools_Project::getProject()->versions_id[$ver]))
+		if (!empty(ProjectTools_Project::getProject($project)->versions_id[$ver]))
 			$return[$ver] = $as_string ?
-				ProjectTools_Project::getProject()->versions['versions'][ ProjectTools_Project::getProject()->versions_id[$ver] ]['sub_versions'][$ver]['name'] :
-				ProjectTools_Project::getProject()->versions['versions'][ ProjectTools_Project::getProject()->versions_id[$ver] ]['sub_versions'][$ver];
-		elseif (!empty(ProjectTools_Project::getProject()->versions[$ver]))
+				ProjectTools_Project::getProject($project)->versions['versions'][ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver]['name'] :
+				ProjectTools_Project::getProject($project)->versions['versions'][ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver];
+		elseif (!empty(ProjectTools_Project::getProject($project)->versions[$ver]))
 			$return[$ver] = $as_string ?
-				ProjectTools_Project::getProject()->versions[$ver]['name'] :
-				ProjectTools_Project::getProject()->versions[$ver];
+				ProjectTools_Project::getProject($project)->versions[$ver]['name'] :
+				ProjectTools_Project::getProject($project)->versions[$ver];
 	}
 	
 	return $as_string ? implode(', ', $return) : $return;

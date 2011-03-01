@@ -27,7 +27,7 @@ function ReportIssue()
 	$context['issue'] = array(
 		'title' => '',
 		'private' => !empty($_REQUEST['private']),
-		'tracker' => isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers'][$_REQUEST['tracker]) ? $_REQUEST['tracker'] : '',
+		'tracker' => isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers[$_REQUEST['tracker']]) ? $_REQUEST['tracker'] : '',
 		'version' => isset($_REQUEST['version']) ? (is_array($_REQUEST['version']) ? $_REQUEST['version'] : explode(',', $_REQUEST['version'])) : array(),
 		'category' => isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : 0,
 	);
@@ -164,7 +164,7 @@ function ReportIssue2()
 	if (count(ProjectTools_Project::getCurrent()->trackers) == 1)
 		list ($_POST['tracker']) = array_keys(ProjectTools_Project::getCurrent()->trackers);
 
-	if (empty($_POST['tracker']) || !isset(ProjectTools_Project::getCurrent()->trackers'][$_POST['tracker]))
+	if (empty($_POST['tracker']) || !isset(ProjectTools_Project::getCurrent()->trackers[$_POST['tracker']]))
 		$post_errors[] = 'no_issue_type';
 	
 	if (!empty($_POST['version']))
@@ -587,7 +587,7 @@ function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 			);
 	}
 
-	if (isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers'][$_REQUEST['tracker]))
+	if (isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers[$_REQUEST['tracker']]))
 	{
 		$issueOptions['tracker'] = $_REQUEST['tracker'];
 
