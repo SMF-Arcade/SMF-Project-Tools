@@ -108,7 +108,14 @@ function EditProject()
 {
 	global $context, $smcFunc, $sourcedir, $user_info, $txt;
 
-	$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
+	$context['project_form'] = new ProjectTools_Form_ProjectEdit(isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : null);
+	
+	if ($context['project_form']->is_post && $context['project_form']->Save())
+		redirectexit('action=admin;area=manageprojects');
+	
+	$context['sub_template'] = 'edit_project';
+	
+	/*$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
 	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProjectAdmin($_REQUEST['project']))
 		$_REQUEST['sa'] = 'new';
 
@@ -242,7 +249,7 @@ function EditProject()
 	{
 		$context['sub_template'] = 'confirm_project_delete';
 		$context['page_title'] = $txt['confirm_project_delete'];
-	}
+	}*/
 }
 
 function EditProject2()

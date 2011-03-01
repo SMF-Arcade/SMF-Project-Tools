@@ -440,7 +440,7 @@ function updatePTCategory($id_project, $id_category, $categoryOptions)
 /**
  * Loads project data for admin pages
  */
-function loadProjectAdmin($id_project)
+function loadProjectAdmin__($id_project)
 {
 	global $context, $smcFunc, $user_info, $txt, $user_info;
 
