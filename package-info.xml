@@ -96,6 +96,7 @@
 	<upgrade for="2.0 RC2, 2.0 RC3" from="0.5">
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
+		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		
 		<modification format="xml" type="file">upgrade-0.501.xml</modification>
 	</upgrade>

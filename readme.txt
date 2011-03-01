@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]SMF Project Tools {version}[/b][/size][/color]
+[center][color=red][size=16pt][b]SMF Project Tools 0.5.1[/b][/size][/color]
 [/center]
 [hr]
 [center][url=http://www.smfproject.net]Official website[/url] | [url=http://www.simplemachines.org/community/index.php?topic=273062.0]Support Topic[/url] | [url=http://www.smfproject.net/forum/index.php?project=5]Issue Tracker[/url][/center]

@@ -18,7 +18,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<!-- This information needs to be the same as that in the package-info.xml. -->
 	<id>Niko:SMFProject</id>
-	<version>{version}</version>
+	<version>0.501</version>
 
 	<file name="$themedir/Profile.template.php">
 		<operation>

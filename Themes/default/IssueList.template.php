@@ -114,7 +114,7 @@ function template_issue_list_full($id)
 	<div class="issue_table">
 		<table cellspacing="0" class="table_grid">
 			<thead>
-				<tr>';
+				<tr class="catbg">';
 
 		if (!empty($context[$id]['issues']))
 			echo '
