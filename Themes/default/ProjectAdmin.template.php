@@ -163,7 +163,8 @@ function template_project_admin_extensions()
 					<ul>';
 					
 		foreach ($extension['modules'] as $module)
-			echo '<li>', $module['class_name'], '</li>';
+			echo '
+						<li>', $module['class_name'], '</li>';
 					
 		echo '
 					

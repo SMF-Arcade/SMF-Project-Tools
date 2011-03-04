@@ -97,6 +97,31 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		$ldesc->setSubtext($txt['project_description_long_desc']);
 		
 		//
+		$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
+		foreach (list_getProfiles() as $p)
+			$profile->addOption($p['id'], $p['name']);
+			
+		//
+		$theme = new Madjoki_Form_Element_Select($this, 'project_theme', $txt['project_theme']);
+		$theme->addOption('0', $txt['project_theme_default']);
+
+		// Get all the themes...
+		$request = $smcFunc['db_query']('', '
+			SELECT id_theme AS id, value AS name
+			FROM {db_prefix}themes
+			WHERE variable = {string:name}',
+			array(
+				'name' => 'name',
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$theme->addOption($row['id'], $row['name']);
+		$smcFunc['db_free_result']($request);
+		
+		// Override theme
+		new Madjoki_Form_Element_Check($this, 'override_theme', $txt['project_theme_override']);
+		
+		//
 		new Madjoki_Form_Element_Divider($this);
 		new Madjoki_Form_Element_Submit($this);
 	}

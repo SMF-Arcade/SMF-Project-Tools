@@ -20,83 +20,9 @@ function template_edit_project()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
-<form action="', $scripturl, '?action=admin;area=manageprojects;sa=edit2" method="post" accept-charset="', $context['character_set'], '">
-	<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
-	
-	<div class="cat_bar">
-		<h3 class="catbg">', isset(ProjectTools_Project::getCurrent()->is_new) ? $txt['new_project'] : $txt['edit_project'], '</h3>
-	</div>
-	<div class="windowbg2">
-		<span class="topslice"><span></span></span>
-		<div class="content">
-			<dl class="settings">
-			
-			</dl>
-		</div>
-		<span class="botslice"><span></span></span>
-	</div>
+	$context['project_form']->render();
 
-	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">
-		<tr class="windowbg2">
-			<td>
-				<b>', $txt['project_name'], ':</b>
-			</td>
-			<td valign="top" align="left">
-				<input type="text" name="project_name" value="', ProjectTools_Project::getCurrent()->name, '" size="30" tabindex="', $context['tabindex']++, '" />
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
-				<b>', $txt['project_description'], ':</b><br />
-				<span class="smalltext">', $txt['project_description_desc'], '</span><br />
-			</td>
-			<td valign="top" align="left">
-				<textarea name="desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', ProjectTools_Project::getCurrent()->description, '</textarea>
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
-				<b>', $txt['project_description_long'], ':</b><br />
-				<span class="smalltext">', $txt['project_description_long_desc'], '</span><br />
-			</td>
-			<td valign="top" align="left">
-				<textarea name="long_desc" rows="3" cols="35" tabindex="', $context['tabindex']++, '">', ProjectTools_Project::getCurrent()->long_description, '</textarea>
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
-				<b>', $txt['project_profile'], ':</b><br />
-			</td>
-			<td valign="top" align="left">
-				<select id="profile_profile" name="project_profile">';
-
-	foreach ($context['profiles'] as $profile)
-		echo '
-					<option value="', $profile['id'], '"', $profile['id'] == ProjectTools_Project::getCurrent()->profile ? ' selected="selected"' : '', '>', $profile['name'], '</option>';
-
-	echo '
-				</select>
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
-				<b>', $txt['project_theme'], ':</b><br />
-			</td>
-			<td valign="top" align="left">
-				<select name="project_theme">
-					<option value="0">', $txt['project_theme_default'], '</option>';
-
-	foreach ($context['themes'] as $theme)
-		echo '
-					<option value="', $theme['id'], '"', ProjectTools_Project::getCurrent()->theme == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
-
-	echo '
-				</select><br />
-				<input type="checkbox" id="override_theme" name="override_theme" value="1" ', ProjectTools_Project::getCurrent()->override_theme ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="override_theme">', $txt['project_theme_override'], '</label>
-			</td>
-		</tr>
-
+	/*echo '
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_board_index'], ':</b><br />
@@ -216,7 +142,7 @@ function template_edit_project()
 			</td>
 		</tr>
 	</table>
-</form>';
+</form>';*/
 }
 
 function template_confirm_project_delete()
