@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SMFProject" default="dist">
+<project name="SMF_Project_Tools" default="dist">
 	<property name="repository" value="smfproject" override="true" />
 	<property name="branch" value="0.5" override="true" />
     <property name="package" value="${phing.project.name}" override="true" />
@@ -21,7 +21,7 @@
 			workingcopy="."
 			propertyname="svn.lastrevision"/>
 		
-		<available file="${build_output}/${package}-${version}-rev${svn.lastrevision}.tar.gz" property="already_build" />
+		<available file="${build_output}/${package}_${version}-rev${svn.lastrevision}.tar.gz" property="already_build" />
 		
 		<fail if="already_build" message="Revision ${svn.lastrevision} Already build!" />
     </target>
@@ -67,7 +67,7 @@
     <target name="dist" depends="build">
         <echo msg="Creating archive..." />
 
-        <tar destfile="${build_output}/${package}-${version}.tar.gz" compression="gzip">
+        <tar destfile="${build_output}/${package}_${version}.tar.gz" compression="gzip">
             <fileset dir="${builddir}">
                 <include name="**" />
             </fileset>
@@ -79,7 +79,7 @@
     <target name="svn" depends="svnrev,build">
         <echo msg="Creating archive..." />
 
-        <tar destfile="${build_output}/${package}-${version}-rev${svn.lastrevision}.tar.gz" compression="gzip">
+        <tar destfile="${build_output}/${package}_${version}-rev${svn.lastrevision}.tar.gz" compression="gzip">
             <fileset dir="${builddir}">
                 <include name="**" />
             </fileset>
@@ -111,7 +111,7 @@
 			dir="${ftp.dir}" 
 			mode="binary">
 			<fileset dir="${build_output}">
-				<include name="${package}-${version}-rev${svn.lastrevision}.tar.gz" />
+				<include name="${package}_${version}-rev${svn.lastrevision}.tar.gz" />
 			</fileset>
 		</ftpdeploy>
 	</target>

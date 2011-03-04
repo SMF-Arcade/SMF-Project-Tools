@@ -367,7 +367,7 @@ function loadProject()
 			$cache_groups .= '-spider';
 			
 		if (($temp = cache_get_data('project_versions:' . $project . ':' . $cache_groups, 240)) != null && time() - 240 > $modSettings['settings_updated'])
-			list ($this->versions, $this->versions_id) = $temp;
+			list ($context['versions'], $context['versions_id']) = $temp;
 	}
 
 	if (empty($context['versions']))
