@@ -18,7 +18,7 @@ function ManageProjects()
 	require_once($sourcedir . '/Subs-Project.php');
 
 	isAllowedTo('project_admin');
-	loadProjectToolsPage('admin');
+	ProjectTools_Main::loadPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_projects'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_projects_description'];

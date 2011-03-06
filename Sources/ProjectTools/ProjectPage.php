@@ -16,6 +16,9 @@ if (!defined('SMF'))
  */
 class ProjectTools_ProjectPage
 {
+	/**
+	 *
+	 */
 	static public function Main()
 	{
 		global $context;

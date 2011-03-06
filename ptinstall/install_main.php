@@ -9,7 +9,7 @@
  */
 
 global $txt, $smcFunc, $db_prefix, $modSettings;
-global $project_version, $addSettings, $permissions, $tables, $sourcedir;
+global $addSettings, $permissions, $tables, $sourcedir;
 
 if (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please run ptinstall/index.php instead');

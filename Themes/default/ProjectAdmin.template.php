@@ -17,7 +17,7 @@ function template_project_admin_above()
 
 function template_project_admin_main()
 {
-	global $context, $settings, $options, $txt, $modSettings, $project_version, $forum_version;
+	global $context, $settings, $options, $txt, $modSettings, $forum_version;
 
 	echo '
 	<div class="tborder floatleft" style="width: 69%;">
@@ -43,7 +43,7 @@ function template_project_admin_main()
 		<div class="windowbg2 smallpadding">
 			<span class="topslice"><span></span></span>
 			<div style="overflow: auto; height: 18ex;" class="windowbg2 smallpadding">
-				', $txt['project_installed_version'], ': <span id="project_installed_version">', $project_version, '</span><br />
+				', $txt['project_installed_version'], ': <span id="project_installed_version">', ProjectTools_Main::$version, '</span><br />
 				', $txt['project_latest_version'], ': <span id="project_latest_version">???</span>
 			</div>
 			<span class="botslice"><span></span></span>
@@ -77,7 +77,7 @@ function template_project_admin_main()
 			setInnerHTML(document.getElementById("project_latest_version"), window.projectCurrentVersion);
 		}
 	// ]]></script>
-	<script language="JavaScript" type="text/javascript" src="http://service.smfproject.net/news.js?v=', urlencode($project_version), ';smf_version=', urlencode($forum_version), '" defer="defer"></script>';
+	<script language="JavaScript" type="text/javascript" src="http://service.smfproject.net/news.js?v=', urlencode(ProjectTools_Main::$version), ';smf_version=', urlencode($forum_version), '" defer="defer"></script>';
 }
 
 function template_project_admin_maintenance()
@@ -189,7 +189,7 @@ function template_project_admin_below()
 	// Print out copyright and version. Removing copyright is not allowed by license
 	echo '
 	<div id="project_bottom" class="smalltext" style="text-align: center;">
-		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', $project_version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2011
+		Powered by: <a href="http://www.smfproject.net/" target="_blank">SMF Project Tools ', ProjectTools_Main::$version, '</a> &copy; <a href="http://www.madjoki.com/" target="_blank">Niko Pahajoki</a> 2007-2011
 	</div>';
 }
 

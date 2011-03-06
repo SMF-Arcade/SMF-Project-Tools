@@ -22,7 +22,7 @@ function ProjectsAdmin()
 	require_once($sourcedir . '/ManageServer.php');
 
 	isAllowedTo('project_admin');
-	loadProjectToolsPage('admin');
+	ProjectTools_Main::loadPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['project_tools_admin'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['project_tools_admin_desc'];

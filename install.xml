@@ -38,7 +38,7 @@ require_once($sourcedir . '/Madjoki/Main.php');]]></add>
 		require_once($sourcedir . '/Subs-Project.php');
 		require_once($sourcedir . '/Subs-Issue.php');
 
-		loadProjectTools();
+		ProjectTools_Main::load();
 
 		// Load Project (if needed)
 		loadProject();
@@ -77,10 +77,10 @@ if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project
 	require_once($sourcedir . '/Subs-Project.php');
 	require_once($sourcedir . '/Subs-Issue.php');
 
-	loadProjectTools();
+	ProjectTools_Main::load();
 	
 	if (empty($project_tools))
-		loadProjectToolsPage('smf');
+		ProjectTools_Main::loadPage('smf');
 	// Load Project (if needed)
 	else
 		loadProject();
@@ -126,7 +126,7 @@ else
 
 		require_once($sourcedir . '/Project.php');
 
-		loadProjectToolsPage('smf');
+		ProjectTools_Main::loadPage('smf');
 
 		// Make sure this attachment is on this issue.
 		$request = $smcFunc['db_query']('', '
@@ -520,7 +520,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			<search position="after"><![CDATA[	return $boardIndexOptions['include_categories'] ? $categories : $this_category;]]></search>
 			<add><![CDATA[	if (!empty($modSettings['projectEnabled']))
 	{
-		loadProjectToolsPage('smf');
+		ProjectTools_Main::loadPage('smf');
 
 		// TODO: Limit to projects that will be seen
 

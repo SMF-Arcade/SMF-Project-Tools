@@ -20,7 +20,7 @@ function ManageProjectPermissions()
 	isAllowedTo('project_admin');
 	
 	loadLanguage('ManagePermissions');
-	loadProjectToolsPage('admin');
+	ProjectTools_Main::loadPage('admin');
 
 	$context[$context['admin_menu_name']]['tab_data']['title'] = $txt['manage_project_permissions'];
 	$context[$context['admin_menu_name']]['tab_data']['description'] = $txt['manage_project_permissions_description'];

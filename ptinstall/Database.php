@@ -8,7 +8,7 @@
  * @since 0.1
  */
 
-global $project_version, $addSettings, $permissions, $tables;
+global $addSettings, $permissions, $tables;
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
