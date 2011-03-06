@@ -151,5 +151,7 @@
 		<remove-file name="$languagedir/Project.english.php" />
 		<remove-file name="$languagedir/ProjectAdmin.english.php" />
 		<remove-file name="$languagedir/ProjectEmail.english.php" />
+		
+		<code>ptinstall/uninstall.php</code>
 	</uninstall>
 </package-info>

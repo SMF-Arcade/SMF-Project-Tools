@@ -25,27 +25,6 @@ function template_edit_project()
 	/*echo '
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['project_board_index'], ':</b><br />
-				<span class="smalltext">', $txt['project_board_index_desc'], '</span><br />
-			</td>
-			<td valign="top" align="left">
-				<select name="category">
-					<option value="0">', $txt['project_board_index_dont_show'], '</option>';
-
-	foreach ($context['board_categories'] as $cat)
-		echo '
-					<option value="', $cat['id'], '"', ProjectTools_Project::getCurrent()->category == $cat['id'] ? ' selected="selected"' : '', '>', $cat['name'], '</option>';
-
-	echo '
-				</select>
-				<select name="category_position">
-					<option value="first"', ProjectTools_Project::getCurrent()->category_position == 'first' ? ' selected="selected"' : '', '>', $txt['project_board_index_before'], '</option>
-					<option value="last"', ProjectTools_Project::getCurrent()->category_position == 'last' ? ' selected="selected"' : '', '>', $txt['project_board_index_after'], '</option>
-				</select>
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
 				<b>', $txt['project_developers'], ':</b><br />
 			</td>
 			<td valign="top" align="left">
@@ -80,22 +59,7 @@ function template_edit_project()
 				// ]]></script>
 			</td>
 		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
-				<b>', $txt['project_membergroups'], ':</b><br />
-				<span class="smalltext">', $txt['project_membergroups_desc'], '</span><br />
-			</td>
-			<td valign="top" align="left">';
 
-	foreach ($context['groups'] as $group)
-		echo '
-				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['pgroups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
-
-	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" tabindex="', $context['tabindex']++, '" /><br />
-				<br />
-			</td>
-		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['project_modules'], ':</b><br />
@@ -128,15 +92,7 @@ function template_edit_project()
 				<br />
 			</td>
 		</tr>
-		<tr class="windowbg2">
-			<td colspan="2" align="right">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
-	if (isset(ProjectTools_Project::getCurrent()->is_new))
-		echo '
-				<input class="button_submit" type="submit" name="add" value="', $txt['new_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />';
-	else
-		echo '
-				<input class="button_submit" type="submit" name="edit" value="', $txt['edit_project'], '" onclick="return !isEmptyText(this.form.project_name);" tabindex="', $context['tabindex']++, '" />
+
 				<input class="button_submit" type="submit" name="delete" value="', $txt['delete_project'], '" onclick="return confirm(\'', $txt['pdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
 	echo '
 			</td>

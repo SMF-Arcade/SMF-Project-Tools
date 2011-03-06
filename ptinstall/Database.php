@@ -15,20 +15,6 @@ if (!defined('SMF'))
 
 $project_version = '0.5';
 
-$addSettings = array(
-	'issuesPerPage' => array(25, false),
-	'commentsPerPage' => array(20, false),
-	'projectEnabled' => array(true, false),
-	'projectExtensions' => array('admin,general,issues,roadmap', false),
-	'projectAttachments' => array(true, false),
-	'linkIssues' => array(true, false),
-);
-
-$permissions = array(
-	'project_access' => array(-1, 0, 2),
-	'project_admin' => array(),
-);
-
 $tables = array(
 	// Projects
 	'projects' => array(

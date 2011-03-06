@@ -14,19 +14,23 @@ global $project_version, $addSettings, $permissions, $tables, $sourcedir;
 if (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please run ptinstall/index.php instead');
 
+require_once($sourcedir . '/Madjoki/Install/Helper.php');
+require_once($sourcedir . '/ProjectTools/Install.php');
 require_once($sourcedir . '/Subs-ProjectMaintenance.php');
 
 // Step 1: Do tables
 doTables($tables);
 
 // Step 2: Do Settings
-doSettings($addSettings);
+//doSettings($addSettings);
 
 // Step 3: Update admin features
-updateAdminFeatures('pj', !empty($modSettings['projectEnabled']));
+//updateAdminFeatures('pj', !empty($modSettings['projectEnabled']));
 
 // Step 3: Do Permissions
-doPermission($permissions);
+//doPermission($permissions);
+
+ProjectTools_Install::run();
 
 // Step 4: Install default groups if needed
 $request = $smcFunc['db_query']('', '

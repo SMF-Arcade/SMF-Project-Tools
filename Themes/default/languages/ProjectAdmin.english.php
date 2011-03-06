@@ -79,6 +79,7 @@ $txt['project_theme_override'] = 'Override member\'s theme';
 $txt['project_board_index'] = 'Show Project in Board Index';
 $txt['project_board_index_desc'] = '';
 $txt['project_board_index_dont_show'] = 'Don\'t show';
+$txt['project_board_position'] = 'Position';
 $txt['project_board_index_before'] = 'Before Boards';
 $txt['project_board_index_after'] = 'After Boards';
 
