@@ -149,7 +149,11 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		
 		//
 		new Madjoki_Form_Element_Divider($this);
-		new Madjoki_Form_Element_Submit($this);
+		
+		if ($this->id !== 'new')
+			new Madjoki_Form_Element_Submit($this, $txt['edit_project']);
+		else
+			new Madjoki_Form_Element_Submit($this, $txt['new_project']);
 	}
 }
 
