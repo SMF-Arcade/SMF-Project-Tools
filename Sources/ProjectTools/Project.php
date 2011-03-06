@@ -198,7 +198,6 @@ class ProjectTools_Project
 		$this->_loadDevelopers();
 		$this->_loadTrackers($row, explode(',', $row['trackers']));
 		$this->_loadSettings();
-		
 		$this->_setupQueries();
 		
 		//

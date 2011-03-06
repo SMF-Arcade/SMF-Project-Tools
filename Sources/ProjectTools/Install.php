@@ -25,7 +25,7 @@ class ProjectTools_Install
 		'issuesPerPage' => array(25, false),
 		'commentsPerPage' => array(20, false),
 		'projectEnabled' => array(true, false),
-		'projectExtensions' => array('admin,general,issues,roadmap', false),
+		'projectExtensions' => array('IssueTracker,Admin', true),
 		'projectAttachments' => array(true, false),
 		'linkIssues' => array(true, false),
 	);

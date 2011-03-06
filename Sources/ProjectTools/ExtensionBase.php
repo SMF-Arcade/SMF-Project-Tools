@@ -16,7 +16,10 @@ if (!defined('SMF'))
  */
 abstract class ProjectTools_ExtensionBase
 {
-	
+	/**
+	 *
+	 */
+	abstract public function getExtensionInfo();
 }
 
 ?>

@@ -82,17 +82,67 @@ class ProjectTools_Main
 		else
 			$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
 			
-		// Load Project Tools Extensions
-		$context['project_modules'] = array();
-		$context['project_extensions'] = array();
-		
 		$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'issues', 'roadmap');
 	
-		loadProjectToolsExtension('general');
-	
+		// Load extensions
 		foreach ($modSettings['projectExtensions'] as $extension)
-			loadProjectToolsExtension($extension);
+			ProjectTools_Extensions::loadExtension($extension);
+			
+		// Status, types, priorities
+		$context['issue_status'] = array(
+			1 => array(
+				'id' => 1,
+				'name' => 'new',
+				'type' => 'open',
+			),
+			2 => array(
+				'id' => 2,
+				'name' => 'feedback',
+				'type' => 'open',
+			),
+			3 => array(
+				'id' => 3,
+				'name' => 'confirmed',
+				'type' => 'open',
+			),
+			4 => array(
+				'id' => 4,
+				'name' => 'assigned',
+				'type' => 'open',
+			),
+			5 => array(
+				'id' => 5,
+				'name' => 'resolved',
+				'type' => 'closed',
+			),
+			6 => array(
+				'id' => 6,
+				'name' => 'closed',
+				'type' => 'closed',
+			),
+		);
 	
+		$context['closed_status'] = array(5, 6);
+	
+		// Priorities
+		$context['issue']['priority'] = array(
+			1 => 'issue_priority_low',
+			'issue_priority_normal',
+			'issue_priority_high'
+		);
+		
+		$this->setupQueries();
+		$this->loadTrackers();
+		$this->loadProject();
+	}
+	
+	/**
+	 *
+	 */
+	static protected function setupQueries()
+	{
+		global $user_info;
+		
 		// Administrators can see all projects.
 		if ($user_info['is_admin'] || allowedTo('project_admin'))
 		{
@@ -163,6 +213,14 @@ class ProjectTools_Main
 			$user_info['query_see_project'] = '0=1';
 		elseif (isset($projects_show))
 			$user_info['query_see_project'] = '(p.id_project IN(' . implode(',', $projects_show) . ') AND ' . $see_project . ')';
+	}
+	
+	/**
+	 *
+	 */
+	static protected function loadTrackers()
+	{
+		global $smcFunc, $context;
 		
 		// Trackers
 		$context['issue_trackers'] = array();
@@ -190,50 +248,13 @@ class ProjectTools_Main
 			$context['tracker_columns'][] = "closed_$row[short_name]";
 		}
 		$smcFunc['db_free_result']($request);
+	}
 	
-		// Status, types, priorities
-		$context['issue_status'] = array(
-			1 => array(
-				'id' => 1,
-				'name' => 'new',
-				'type' => 'open',
-			),
-			2 => array(
-				'id' => 2,
-				'name' => 'feedback',
-				'type' => 'open',
-			),
-			3 => array(
-				'id' => 3,
-				'name' => 'confirmed',
-				'type' => 'open',
-			),
-			4 => array(
-				'id' => 4,
-				'name' => 'assigned',
-				'type' => 'open',
-			),
-			5 => array(
-				'id' => 5,
-				'name' => 'resolved',
-				'type' => 'closed',
-			),
-			6 => array(
-				'id' => 6,
-				'name' => 'closed',
-				'type' => 'closed',
-			),
-		);
-	
-		$context['closed_status'] = array(5, 6);
-	
-		// Priorities
-		$context['issue']['priority'] = array(
-			1 => 'issue_priority_low',
-			'issue_priority_normal',
-			'issue_priority_high'
-		);
-		
+	/**
+	 *
+	 */
+	static protected function loadProject()
+	{
 		// Issue with start
 		if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 		{
@@ -310,16 +331,6 @@ class ProjectTools_Main
 			if (!empty($projects_show) && !in_array($cp->id, $projects_show))
 				$context['project_error'] = 'project_not_found';
 		}
-	}
-	
-	/**
-	 * Load Current project
-	 */
-	function loadProject()
-	{
-		global $context, $smcFunc, $user_info, $force_project, $project, $issue, $modSettings, $projects_show, $projectSettings;
-		
-
 	}
 
 	/**
@@ -426,8 +437,6 @@ class ProjectTools_Main
 			'name' => $txt['linktree_projects'],
 			'url' => project_get_url(),
 		);
-		
-		ProjectTools_Extensions::loadExtension('IssueTracker');
 		
 		// Project was not selected
 		if (!empty($project))

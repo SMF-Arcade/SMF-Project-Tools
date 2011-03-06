@@ -915,37 +915,6 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 }
 
 /**
- * Lodas project tools extension
- */
-function loadProjectToolsExtension($name, $active = true)
-{
-	global $context, $projectModules, $extensionInformation, $smcFunc;
-	 
-	// Prevent extensionInformation from previous extension coming up
-	$extensionInformation = array();
-	
-	if (!isset($context['project_extensions'][$name]))
-	{
-		$projectModules = array();
-		
-		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($name) . '.php');
-		$context['project_extensions'][$name] = $extensionInformation;
-		$context['project_extensions'][$name]['modules'] = $projectModules;
-		
-		unset($projectModules);
-		unset($extensionInformation);
-	}
-	
-	if (!$active)
-		return $context['project_extensions'][$name];
-	
-	foreach ($context['project_extensions'][$name]['modules'] as $id => $module)
-		$context['project_modules'][$id] = $module;
-		
-	return $context['project_extensions'][$name];
-}
-
-/**
  * Handles modules registering new features 
  */
 function register_project_feature($module, $class_name)
@@ -955,42 +924,6 @@ function register_project_feature($module, $class_name)
 	$projectModules[$module] = array(
 		'class_name' => $class_name,
 	);
-}
-
-/**
- * Returns list of installed extensions
- * @return array List of extensions
- */
-function getInstalledExtensions()
-{
-	global $sourcedir, $smcFunc, $modSettings;
-
-	$extensions = array();
-	if ($dh = opendir($sourcedir))
-	{
-		while (($file = readdir($dh)) !== false)
-		{
-			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
-			{
-				$extInfo = loadProjectToolsExtension(strtolower($matches[1]), false);
-				
-				$extensions[strtolower($matches[1])] = array(
-					'id' => strtolower($matches[1]),
-					'name' => $extInfo['title'],
-					'version' => $extInfo['version'],
-					'api_version' => $extInfo['api_version'],
-					'modules' => $extInfo['modules'],
-					'filename' => $file,
-					'enabled' => in_array(strtolower($matches[1]), $modSettings['projectExtensions']),
-					'can_enable' => $extInfo['api_version'] === 1,
-					'can_disable' => !in_array(strtolower($matches[1]), array('admin', 'general', 'issues')),
-				);
-			}
-		}
-	}
-	closedir($dh);
-
-	return $extensions;
 }
 
 /**
