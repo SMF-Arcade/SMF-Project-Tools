@@ -18,7 +18,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<!-- This information needs to be the same as that in the package-info.xml. -->
 	<id>Niko:SMFProject</id>
-	<version>{version}</version>
+	<version>0.6</version>
 
 	<!-- Board directory -->
 	<file name="$boarddir/index.php">		
@@ -33,9 +33,6 @@
 		require_once($sourcedir . '/Subs-Issue.php');
 
 		ProjectTools_Main::load();
-
-		// Load Project (if needed)
-		loadProject();
 	}
 	else
 	{
@@ -75,9 +72,6 @@ if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project
 	
 	if (empty($project_tools))
 		ProjectTools_Main::loadPage('smf');
-	// Load Project (if needed)
-	else
-		loadProject();
 }
 else
 {

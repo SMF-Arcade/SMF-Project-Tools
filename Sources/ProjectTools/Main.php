@@ -131,9 +131,9 @@ class ProjectTools_Main
 			'issue_priority_high'
 		);
 		
-		$this->setupQueries();
-		$this->loadTrackers();
-		$this->loadProject();
+		self::setupQueries();
+		self::loadTrackers();
+		self::loadProject();
 	}
 	
 	/**

@@ -38,14 +38,13 @@ class ProjectTools_Extensions
 				{
 					$extension = self::loadExtension($file, false);
 					
-					$extension->getExtensionInfo();
+					$extInfo = $extension->getExtensionInfo();
 					
 					$extensions[$file] = array(
 						'id' => $file,
 						'name' => $extInfo['title'],
 						'version' => $extInfo['version'],
 						'api_version' => $extInfo['api_version'],
-						'modules' => $extInfo['modules'],
 						'filename' => $file,
 						'enabled' => in_array($file, $modSettings['projectExtensions']),
 						'can_enable' => $extInfo['api_version'] === 2,
@@ -104,7 +103,10 @@ class ProjectTools_Extensions
 	 */
 	static public function runHooks($hook, $params)
 	{
-		
+		/*foreach ()
+		{
+			
+		}*/
 	}
 }
 

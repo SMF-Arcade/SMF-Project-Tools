@@ -102,16 +102,6 @@ class ProjectModule_Issues extends ProjectModule_Base
 	/**
 	 *
 	 */
-	function RegisterProjectArea()
-	{
-		return array(
-			'area' => 'issues', 'tab' => 'issues',
-		);
-	}
-
-	/**
-	 *
-	 */
 	function RegisterProjectTabs(&$tabs)
 	{
 		global $txt, $project;

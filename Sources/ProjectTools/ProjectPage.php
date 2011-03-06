@@ -41,7 +41,7 @@ class ProjectTools_ProjectPage
 			),
 		);
 		
-		$context['active_project_modules'] = array('ProjectTools_IssueTracker_Extension');
+		$context['active_project_modules'] = array('ProjectTools_IssueTracker_Module');
 	
 		// Let Modules register subAreas
 		if (!empty($context['active_project_modules']))
