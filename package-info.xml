@@ -84,7 +84,7 @@
 		<!-- Run Installer/upgrader -->
 		<code>ptinstall/Database.php</code>
 		<code>ptinstall/Subs-Install.php</code>
-		<code>ProjectTools/Install.php</code>
+		<code>Sources/ProjectTools/Install.php</code>
 		<database>ptinstall/install_main.php</database>
 
 		<modification format="xml" type="file">install.xml</modification>
