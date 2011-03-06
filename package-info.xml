@@ -25,7 +25,6 @@
 	<install for="2.0 RC5">
 		<readme parsebbc="true">readme.txt</readme>
 		
-		<require-dir name="Sources/Madjoki" destination="$sourcedir" />
 		<require-dir name="Sources/ProjectTools" destination="$sourcedir" />
 
 		<!-- These files goes to Sources directory -->
