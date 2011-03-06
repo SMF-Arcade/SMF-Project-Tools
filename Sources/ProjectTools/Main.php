@@ -255,6 +255,8 @@ class ProjectTools_Main
 	 */
 	static protected function loadProject()
 	{
+		global $issue, $project, $context, $user_info;
+		
 		// Issue with start
 		if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 		{
@@ -306,7 +308,9 @@ class ProjectTools_Main
 		{
 			// For Who's online
 			$_REQUEST['project'] = $_GET['project'] = $project;
-			
+			$_REQUEST['action'] = 'projects';
+			$_GET['action'] = 'projects';
+				
 			if (!ProjectTools_Project::getCurrent())
 			{
 				$context['project_error'] = 'project_not_found';
@@ -368,25 +372,7 @@ class ProjectTools_Main
 	
 		if ($mode == '')
 		{
-			loadTemplate('Project', array('project'));
-	
-			$context['html_headers'] .= '
-			<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
-			
-			// If project is loaded parse BBC now for descriptions
-			if (ProjectTools_Project::getCurrent())
-			{
-				//ProjectTools_Project::getCurrent()->description = parse_bbc(ProjectTools_Project::getCurrent()->description);
-				//ProjectTools_Project::getCurrent()->long_description = parse_bbc(ProjectTools_Project::getCurrent()->long_description);
-				
-				$context['active_project_modules'] = array();
-				
-				foreach (ProjectTools_Project::getCurrent()->modules as $module)
-					$context['active_project_modules'][$module] = new $context['project_modules'][$module]['class_name']();
-			}
-	
-			if (!isset($_REQUEST['xml']))
-				$context['template_layers'][] = 'project';
+
 		}
 		// In SMF (SSI, etc)
 		elseif ($mode == 'smf')
@@ -439,10 +425,10 @@ class ProjectTools_Main
 		);
 		
 		// Project was not selected
-		if (!empty($project))
+		if (ProjectTools_Project::getCurrent())
 		{		
 			self::fix_url();
-			ProjectTools_ProjectPage();
+			ProjectTools_ProjectPage::Main();
 			return;
 		}
 		

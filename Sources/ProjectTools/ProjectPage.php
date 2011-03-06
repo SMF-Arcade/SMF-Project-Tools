@@ -19,98 +19,101 @@ class ProjectTools_ProjectPage
 	/**
 	 *
 	 */
+	static protected $areas;
+	
+	/**
+	 *
+	 */
+	static protected $current_area;
+	
+	/**
+	 *
+	 */
 	static public function Main()
 	{
-		global $context;
+		global $context, $txt, $settings;
+			
+		$context['active_project_modules'] = array();
+			
+		// Load Modules
+		foreach (ProjectTools_Project::getCurrent()->modules as $id)
+		{
+			$module = ProjectTools_Extensions::getModule($id);
+			
+			if ($module)
+				$context['active_project_modules'][$id] = new $module['class_name'](ProjectTools_Project::getCurrent());
+		}
 		
-		// Areas are sets of subactions (registered by modules)
-		$subAreas = array();
+		//
+		$project_areas = array(
+			'main' => array(
+				'title' => $txt['project'],
+				'href' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
+				'callback' => array(get_class(), 'ViewPage'),
+				'hide_linktree' => true,
+				'order' => 'first',
+			),
+		);
+		
+		//
+		foreach ($context['active_project_modules'] as $id => $module)
+		{
+			$area = $module->RegisterArea();
+			$project_areas[$area['id']] = $area;
+		}
+		
+		self::CreateAreas($project_areas);
+		unset($project_areas);
 		
 		// Tabs
 		$context['project_tabs'] = array(
 			'title' => ProjectTools_Project::getCurrent()->name,
 			'description' => ProjectTools_Project::getCurrent()->description,
-			'tabs' => array(
-				'main' => array(
-					'href' => project_get_url(array('project' => $project)),
-					'title' => $txt['project'],
-					'is_selected' => false,
-					'hide_linktree' => true,
-					'order' => 'first',
-				),
-			),
+			'tabs' => array(),
 		);
 		
-		$context['active_project_modules'] = array('ProjectTools_IssueTracker_Module');
-	
-		// Let Modules register subAreas
-		if (!empty($context['active_project_modules']))
-		{
-			foreach ($context['active_project_modules'] as $id => $module)
-			{
-				if (method_exists($module, 'RegisterProjectArea'))
-				{
-					$area = $module->RegisterProjectArea();
-					
-					$subAreas[$area['area']] = array(
-						'area' => $area['area'],
-						'module' => $id,
-						'tab' => !empty($area['tab']) ? $area['tab'] : $area['area'],
-					);
-				}
-				if (method_exists($module, 'RegisterProjectTabs'))
-					$module->RegisterProjectTabs($context['project_tabs']['tabs']);
-			}
-		}
-		
-		// Remove tabs which user has no permission to see 
-		foreach ($context['project_tabs']['tabs'] as $id => $tab)
-		{
-			if (!empty($tab['permission']) && !allowedTo($tab['permission']))
-				unset($context['project_tabs']['tabs'][$id]);
-			elseif (!empty($tab['project_permission']) && !projectAllowedTo($tab['project_permission']))
-				unset($context['project_tabs']['tabs'][$id]);
-		}
-	
-		// Sort tabs to correct order
-		uksort($context['project_tabs']['tabs'], 'projectTabSort');
-	
-		if (empty($_REQUEST['area']) || !isset($subAreas[$_REQUEST['area']]))
+		if (empty($_REQUEST['area']) || !isset(self::$areas[$_REQUEST['area']]))
 			$_REQUEST['area'] = 'main';
 			
 		if (empty($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'main';
 			
-		$current_area = &$subAreas[$_REQUEST['area']];
-		$context['current_project_module'] = &$context['active_project_modules'][$current_area['module']];
+		self::$current_area = &self::$areas[$_REQUEST['area']];
 		
-		if (isset($context['project_tabs']['tabs'][$current_area['tab']]))
-			$context['project_tabs']['tabs'][$current_area['tab']]['is_selected'] = true;
-		else
-			$context['project_tabs']['tabs']['main']['is_selected'] = true;
+		// Create Tabs
+		foreach (self::$areas as $id => &$area)
+		{
+			$area['href'] = isset($area['href']) ? $area['href'] : project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id));
 			
-		// Can access this area?
-		if (isset($current_area['permission']))
-			isAllowedTo($current_area['permission']);
-		if (isset($current_area['project_permission']))
-			projectIsAllowedTo($current_area['project_permission']);
+			$context['project_tabs']['tabs'][$id] = array(
+				'title' => $area['title'],
+				'href' => $area['href'],
+				'is_selected' => $area === self::$current_area,
+				'hide_linktree' => !empty($area['hide_linktree']),
+				'order' => $area['order'],
+			);
+		}
+	
+		// Sort tabs to correct order
+		uksort($context['project_tabs']['tabs'], 'projectTabSort');
 			
 		// Call Initialize View function
-		if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
-			$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
+		//if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
+		//	$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
 			
 		// Linktree
 		$context['linktree'][] = array(
 			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
-			'url' => project_get_url(array('project' => $project)),
+			'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
 		);
 		
-		if (empty($context['project_tabs']['tabs'][$current_area['tab']]['hide_linktree']))
+		if (empty(self::$current_area['hide_linktree']))
 			$context['linktree'][] = array(
-				'name' => $context['project_tabs']['tabs'][$current_area['tab']]['title'],
-				'url' => $context['project_tabs']['tabs'][$current_area['tab']]['href'],
+				'name' => self::$current_area['title'],
+				'url' => self::$current_area['href'],
 			);
-			
+		
+		/*
 		if (isset($context['current_project_module']->subTabs[$_REQUEST['sa']]))
 		{
 			$context['current_project_module']->subTabs[$_REQUEST['sa']]['is_selected'] = true;
@@ -122,9 +125,36 @@ class ProjectTools_ProjectPage
 				);
 			
 			$context['project_sub_tabs'] = $context['current_project_module']->subTabs;
+		}*/
+		
+		// Template
+		loadTemplate('Project', array('project'));
+		
+		if (!isset($_REQUEST['xml']))
+		{
+			$context['template_layers'][] = 'project';
+			
+			$context['html_headers'] .= '
+			<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 		}
 		
-		$context['current_project_module']->main($_REQUEST['sa']);
+		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
+	}
+	
+	/**
+	 *
+	 */
+	static private function CreateAreas($areas)
+	{
+		foreach ($areas as $id => $area)
+		{
+			if (!empty($area['project_permission']) && !ProjectTools_Project::getCurrent()->allowedTo($area['project_permission']))
+				continue;
+			elseif (!empty($area['permission']) && !allowedTo($area['permission']))
+				continue;
+		
+			self::$areas[$id] = $area;
+		}
 	}
 }
 

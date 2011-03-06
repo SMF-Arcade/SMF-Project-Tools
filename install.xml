@@ -49,12 +49,6 @@
 	{
 		// Load Issue (if needed)
 		loadIssue();
-
-		if (empty($_REQUEST['action']) && (!empty($project) || !empty($issue)))
-		{
-			$_REQUEST['action'] = 'projects';
-			$_GET['action'] = 'projects';
-		}
 	}]]></add>
 		</operation>
 	</file>

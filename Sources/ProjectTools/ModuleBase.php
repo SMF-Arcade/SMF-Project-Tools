@@ -17,6 +17,11 @@ if (!defined('SMF'))
 abstract class ProjectTools_ModuleBase
 {
 	/**
+	 * @var ProjectTools_Project
+	 */
+	protected $project;
+	
+	/**
 	 * Defines subactions handled by this module
 	 */
 	public $subActions = array();
@@ -27,16 +32,29 @@ abstract class ProjectTools_ModuleBase
 	public $subTabs = array();
 	
 	/**
+	 *
+	 */
+	function __construct(ProjectTools_Project $project)
+	{
+		$this->project = $project;
+	}
+	
+	/**
+	 *
+	 */
+	abstract public function RegisterArea();
+	
+	/**
 	 * Default constructor
 	 */
-	function __construct()
+	/*function __construct(ProjectTools_Project $project)
 	{
-		$this->subActions = array('main' => array('callback' => array($this, 'mainView')));
+		//$this->subActions = array('main' => array('callback' => array($this, 'mainView')));
 	}
 	
 	public function registersubAction($sa, $data)
 	{
-		$this->subActions[$sa] = $data;
+		//$this->subActions[$sa] = $data;
 	}
 	
 	public function beforeSubaction(&$subaction)
@@ -67,7 +85,7 @@ abstract class ProjectTools_ModuleBase
 	public function main($subaction)
 	{
 		call_user_func($this->subActions[$subaction]['callback']);
-	}
+	}*/
 }
 
 ?>

@@ -22,6 +22,11 @@ class ProjectTools_Extensions
 	static protected $extensions = array();
 	
 	/**
+	 *
+	 */
+	static protected $modules = array();
+	
+	/**
 	 * Returns list of installed extensions
 	 * @return array List of extensions
 	 */
@@ -34,7 +39,10 @@ class ProjectTools_Extensions
 		{
 			while (($file = readdir($dh)) !== false)
 			{
-				if (is_dir($file))
+				if ($file[0] == '.')
+					continue;
+				
+				if (is_dir($sourcedir . '/ProjectTools/' . $file . '/') && file_exists($sourcedir . '/ProjectTools/' . $file . '/Extension.php'))
 				{
 					$extension = self::loadExtension($file, false);
 					
@@ -54,8 +62,18 @@ class ProjectTools_Extensions
 			}
 		}
 		closedir($dh);
-	
+		
 		return $extensions;
+	}
+	
+	/**
+	 *
+	 */
+	static public function getModule($module)
+	{
+		if (isset(self::$modules[$module]))
+			return self::$modules[$module];
+		return false;
 	}
 
 	/**
@@ -64,11 +82,17 @@ class ProjectTools_Extensions
 	 */
 	static public function loadExtension($extension, $register = true)
 	{
+		if (isset(self::$extensions[$extension]))
+			return self::$extensions[$extension];
+			
 		$mod = 'ProjectTools_' . $extension . '_Extension';
 		
 		if (class_exists($mod))
 		{
 			self::$extensions[$extension] = new $mod();
+			
+			self::$modules = array_merge(self::$modules, self::$extensions[$extension]->getModules());
+			
 			return self::$extensions[$extension];
 		}
 		

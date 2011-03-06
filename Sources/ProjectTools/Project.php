@@ -28,6 +28,9 @@ class ProjectTools_Project
 		if (!isset(self::$_instances[$id]))
 			self::$_instances[$id] = new self($id);
 			
+		if (self::$_instances[$id]->id === false)
+			return false;
+		
 		return self::$_instances[$id];
 	}
 	
@@ -176,8 +179,8 @@ class ProjectTools_Project
 		$this->name = $row['name'];
 		
 		// TODO: Parsebbc?
-		$this->description = $row['description'];
-		$this->long_description = $row['long_description'];
+		$this->description = /*parse_bbc*/($row['description']);
+		$this->long_description = /*parse_bbc*/($row['long_description']);
 		
 		$this->link = project_get_url(array('project' => $row['id_project']));
 		$this->href = '<a href="' . $this->link . '">' . $row['name'] . '</a>';

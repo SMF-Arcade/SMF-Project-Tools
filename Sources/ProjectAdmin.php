@@ -274,7 +274,7 @@ function ProjectsAdminExtensions()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 	
-	$context['installed_extensions'] = getInstalledExtensions();
+	$context['installed_extensions'] = ProjectTools_Extensions::getInstalledExtensions();
 
 	$context['sub_template'] = 'project_admin_extensions';
 }
