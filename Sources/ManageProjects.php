@@ -169,43 +169,7 @@ function EditProject()
 	// Load Possible modules
 	$context['installed_modules'] = project_getInstalledModules();
 
-	// Default membergroups.
-	$context['groups'] = array(
-		-1 => array(
-			'id' => '-1',
-			'name' => $txt['guests'],
-			'checked' => in_array('-1', $curProject['member_groups']),
-			'is_post_group' => false,
-		),
-		0 => array(
-			'id' => '0',
-			'name' => $txt['regular_members'],
-			'checked' => in_array('0', $curProject['member_groups']),
-			'is_post_group' => false,
-		)
-	);
 
-	// Load membergroups.
-	$request = $smcFunc['db_query']('', '
-		SELECT group_name, id_group, min_posts
-		FROM {db_prefix}membergroups
-		WHERE id_group > 3 OR id_group = 2
-		ORDER BY min_posts, id_group != 2, group_name');
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		if ($_REQUEST['sa'] == 'new' && $row['min_posts'] == -1)
-			$curProject['member_groups'][] = $row['id_group'];
-
-		$context['groups'][(int) $row['id_group']] = array(
-			'id' => $row['id_group'],
-			'name' => trim($row['group_name']),
-			'checked' => in_array($row['id_group'], $curProject['member_groups']),
-			'is_post_group' => $row['min_posts'] != -1,
-		);
-	}
-
-	$smcFunc['db_free_result']($request);
 
 	// Load Board Categories
 	$context['board_categories'] = array();
@@ -222,19 +186,7 @@ function EditProject()
 		);
 	$smcFunc['db_free_result']($request);
 
-	// Get all the themes...
-	$request = $smcFunc['db_query']('', '
-		SELECT id_theme AS id, value AS name
-		FROM {db_prefix}themes
-		WHERE variable = {string:name}',
-		array(
-			'name' => 'name',
-		)
-	);
-	$context['themes'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['themes'][] = $row;
-	$smcFunc['db_free_result']($request);
+
 
 	if (!isset($_REQUEST['delete']))
 	{

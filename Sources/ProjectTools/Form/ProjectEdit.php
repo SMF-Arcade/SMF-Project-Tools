@@ -66,7 +66,7 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 	/**
 	 *
 	 */
-	function addFields()
+	protected function addFields()
 	{
 		global $scripturl, $txt;
 		
@@ -120,6 +120,32 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		
 		// Override theme
 		new Madjoki_Form_Element_Check($this, 'override_theme', $txt['project_theme_override']);
+		
+		//
+		$memgroups = new Madjoki_Form_Element_MemberGroups($this, 'member_groups', $txt['project_membergroups']);
+		$memgroups->setSubtext($txt['project_membergroups_desc']);
+		
+		// Load Board Categories
+		$options = array(0 => $txt['project_board_index_dont_show']);
+	
+		$request = $smcFunc['db_query']('', '
+			SELECT id_cat, name
+			FROM {db_prefix}categories
+			ORDER BY cat_order');
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$options[$row['id_cat']] = $row['name'];
+		$smcFunc['db_free_result']($request);
+		
+		//
+		$categories = new Madjoki_Form_Element_Select($this, 'id_category', $txt['project_board_index']);
+		$categories->setSubtext($txt['project_board_index_desc']);
+		$categories->setOptions($options);
+		
+		//
+		$pos = new Madjoki_Form_Element_Select($this, 'cat_position', $txt['project_board_position']);
+		$pos->addOption('first', $txt['project_board_index_before']);
+		$pos->addOption('last', $txt['project_board_index_after']);
 		
 		//
 		new Madjoki_Form_Element_Divider($this);
