@@ -281,7 +281,7 @@ class ProjectTools_Main
 	 */
 	static protected function loadProject()
 	{
-		global $issue, $project, $context, $user_info;
+		global $issue, $project, $context, $user_info, $smcFunc;
 		
 		// Issue with start
 		if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
