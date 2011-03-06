@@ -125,10 +125,10 @@ add_integration_function('integrate_actions', 'ProjectTools_Hooks::actions');
 add_integration_function('integrate_admin_areas', 'ProjectTools_Hooks::admin_areas');
 add_integration_function('integrate_core_features', 'ProjectTools_Hooks::core_features');
 add_integration_function('integrate_load_theme', 'ProjectTools_Hooks::load_theme');
+add_integration_function('integrate_profile_areas', 'ProjectTools_Hooks::profile_areas');
 
 //add_integration_function('integrate_actions', 'Arcade_actions');
 //add_integration_function('integrate_load_permissions', 'Arcade_load_permissions');
-//add_integration_function('integrate_profile_areas', 'Arcade_profile_areas');
 //add_integration_function('integrate_menu_buttons', 'Arcade_menu_buttons');
 //add_integration_function('integrate_admin_areas', 'Arcade_admin_areas');
 

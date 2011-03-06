@@ -203,6 +203,37 @@ class ProjectTools_Hooks
 	/**
 	 *
 	 */
+	public static function profile_areas(&$profile_areas)
+	{
+		global $txt, $modSettings;
+		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
+		self::array_insert($profile_areas['info']['areas'], 'showposts',
+			array(
+				'project' => array(
+					'label' => $txt['project_profile'],
+					'file' => 'Profile-Project.php',
+					'function' => 'projectProfile',
+					'enabled' => !empty($modSettings['projectEnabled']),
+					'subsections' => array(
+						'main' => array($txt['project_profile_main']),
+						'reported' => array($txt['project_profile_reported']),
+						'assigned' => array($txt['project_profile_assigned']),
+					),
+					'permission' => array(
+						'own' => 'project_profile_own',
+						'any' => 'project_profile_any',
+					),
+				),
+			)
+		);
+	}
+	
+	/**
+	 *
+	 */
 	public static function core_features(&$core_features)
 	{
 		$core_features['pj'] = array(

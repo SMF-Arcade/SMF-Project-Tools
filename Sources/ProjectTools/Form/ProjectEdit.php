@@ -66,9 +66,9 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 	/**
 	 *
 	 */
-	protected function addFields()
+	public function addFields()
 	{
-		global $scripturl, $txt;
+		global $scripturl, $txt, $smcFunc;
 		
 		if ($this->id === 'new')
 		{

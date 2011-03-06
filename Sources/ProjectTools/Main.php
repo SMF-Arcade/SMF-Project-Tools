@@ -334,12 +334,13 @@ class ProjectTools_Main
 			}
 		}
 		
-		if (!empty($project))
+		if (!empty($project) && (empty($_REQUEST['action']) || $_REQUEST['action'] == 'projects'))
 		{
 			// For Who's online
 			$_REQUEST['project'] = $_GET['project'] = $project;
-			$_REQUEST['action'] = 'projects';
-			$_GET['action'] = 'projects';
+			
+			if (empty($_REQUEST['action']))
+				$_REQUEST['action'] = $_GET['action'] = 'projects';
 				
 			if (!ProjectTools_Project::getCurrent())
 			{

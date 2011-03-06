@@ -154,28 +154,6 @@ else
 		</operation>
 	</file>
 
-	<file name="$sourcedir/Profile.php">
-		<operation>
-			<search position="after"><![CDATA[				'permissions' => array(]]></search>
-			<add><![CDATA[				'project' => array(
-					'label' => $txt['project_profile'],
-					'file' => 'Profile-Project.php',
-					'function' => 'projectProfile',
-					'enabled' => !empty($modSettings['projectEnabled']),
-					'subsections' => array(
-						'main' => array($txt['project_profile_main']),
-						'reported' => array($txt['project_profile_reported']),
-						'assigned' => array($txt['project_profile_assigned']),
-					),
-					'permission' => array(
-						'own' => 'project_profile_own',
-						'any' => 'project_profile_any',
-					),
-				),
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$sourcedir/Profile-Modify.php">
 		<operation>
 			<search position="replace"><![CDATA[function makeNotificationChanges($memID)
