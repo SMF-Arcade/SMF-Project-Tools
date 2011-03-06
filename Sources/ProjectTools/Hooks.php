@@ -102,7 +102,7 @@ class ProjectTools_Hooks
 		if (empty($modSettings['projectEnabled']))
 			return;
 		
-		$actionArray['projects'] = array('Project.php', array('ProjectTools', 'Projects'));
+		$actionArray['projects'] = array('ProjectTools/Main.php', array('ProjectTools_Main', 'Main'));
 	}
 	
 	/**

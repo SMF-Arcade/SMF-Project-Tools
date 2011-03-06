@@ -43,17 +43,9 @@ class ProjectTools_Install
 	 */
 	static public function run()
 	{
-		Madjoki_Install_Helper::updateAdminFeatures(self::adminFeature);
-		
-		if (!$this->reverse)
-		{
-			Madjoki_Install_Helper::doSettings(self::$settings);
-			Madjoki_Install_Helper::doPermission(self::$permissions);
-		}
-		else
-		{
-			
-		}
+		Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, true);
+		Madjoki_Install_Helper::doSettings(self::$settings);
+		Madjoki_Install_Helper::doPermission(self::$permissions);
 	}
 }
 
