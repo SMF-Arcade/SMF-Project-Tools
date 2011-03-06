@@ -44,7 +44,7 @@
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
-		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />-->
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 
 		<!-- These files goes to default Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
