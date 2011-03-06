@@ -101,6 +101,8 @@
 		<modification format="xml" type="file" reverse="true">install.xml</modification>
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
 
+		<remove-dir name="$sourcedir/ProjectTools" />
+
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueComment.php" />
 		<remove-file name="$sourcedir/IssueList.php" />
