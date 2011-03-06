@@ -15,7 +15,6 @@ if (!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please run ptinstall/index.php instead');
 
 require_once($sourcedir . '/Madjoki/Install/Helper.php');
-require_once($sourcedir . '/ProjectTools/Install.php');
 require_once($sourcedir . '/Subs-ProjectMaintenance.php');
 
 // Step 1: Do tables
