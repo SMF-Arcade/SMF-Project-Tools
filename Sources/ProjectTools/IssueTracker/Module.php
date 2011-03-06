@@ -16,6 +16,37 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
+	public function Main()
+	{
+		$subActions = array(
+			'main' => array('ProjectTools_IssueTracker_List', 'Main'),
+			'view' => array('ProjectTools_IssueTracker_View', 'Main'),
+			'tags' => array('ProjectTools_IssueTracker_Tags', 'Main'),
+			'update' => array('ProjectTools_IssueTracker_Edit', 'Update'),
+			'upload' => array('ProjectTools_IssueTracker_Edit', 'Upload'),
+			'move' => array('ProjectTools_IssueTracker_Edit', 'Move'),
+			'delete' => array('ProjectTools_IssueTracker_Edit', 'Delete'),
+			// Edit
+			'edit' => array('ProjectTools_IssueTracker_Edit', 'Main'),
+			'edit2' => array('ProjectTools_IssueTracker_Edit', 'Main2'),
+			// Comment
+			'reply' => array('ProjectTools_IssueTracker_Comment', 'Add'),
+			'reply2' => array('ProjectTools_IssueTracker_Comment', 'Add2'),
+			'removeComment' => array('ProjectTools_IssueTracker_Comment', 'Delete'),
+			// Report
+			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),
+			'report' => array('ProjectTools_IssueTracker_Report', 'Report2'),
+		);
+		
+		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
+			$_REQUEST['sa'] = 'main';
+			
+		call_user_func($subActions[$_REQUEST['sa']]);
+	}
+	
+	/**
+	 *
+	 */
 	public function RegisterArea()
 	{
 		global $txt;

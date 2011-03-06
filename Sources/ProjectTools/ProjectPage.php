@@ -24,6 +24,7 @@ class ProjectTools_ProjectPage
 		$subActions = array(
 			'main' => array(__CLASS__, 'Frontpage'),
 			'subscribe' => array(__CLASS__, 'Subscribe'),
+			'markasread' => array(__CLASS__, 'MarkRead'),
 		);
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
@@ -248,6 +249,18 @@ class ProjectTools_ProjectPage
 		$smcFunc['db_free_result']($request);
 	
 		redirectexit(project_get_url(array('issue' => $issue . '.0')));
+	}
+	
+	/**
+	 *
+	 */
+	static public function MarkRead()
+	{
+		global $project;
+		
+		markProjectsRead($project, isset($_REQUEST['unread']));
+		
+		redirectexit(project_get_url(array('project' => $project)));
 	}
 }
 
