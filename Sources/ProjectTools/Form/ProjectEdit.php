@@ -95,13 +95,8 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 			$this, 'long_description', $txt['project_description_long'], new Madjoki_Form_Validator_BBC
 		);
 		$ldesc->setSubtext($txt['project_description_long_desc']);
-		
-		//
-		$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
-		foreach (list_getProfiles() as $p)
-			$profile->addOption($p['id'], $p['name']);
 			
-		//
+		// Theme
 		$theme = new Madjoki_Form_Element_Select($this, 'project_theme', $txt['project_theme']);
 		$theme->addOption('0', $txt['project_theme_default']);
 
@@ -120,10 +115,6 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		
 		// Override theme
 		new Madjoki_Form_Element_Check($this, 'override_theme', $txt['project_theme_override']);
-		
-		//
-		$memgroups = new Madjoki_Form_Element_MemberGroups($this, 'member_groups', $txt['project_membergroups']);
-		$memgroups->setSubtext($txt['project_membergroups_desc']);
 		
 		// Load Board Categories
 		$options = array(0 => $txt['project_board_index_dont_show']);
@@ -146,6 +137,18 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		$pos = new Madjoki_Form_Element_Select($this, 'cat_position', $txt['project_board_position']);
 		$pos->addOption('first', $txt['project_board_index_before']);
 		$pos->addOption('last', $txt['project_board_index_after']);
+		
+		// Permissions editor
+		new Madjoki_Form_Element_Header($this, $txt['project_permissions']);
+		
+		// Permissions Profile
+		$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
+		foreach (list_getProfiles() as $p)
+			$profile->addOption($p['id'], $p['name']);
+			
+		//
+		$memgroups = new Madjoki_Form_Element_MemberGroups($this, 'member_groups', $txt['project_membergroups']);
+		$memgroups->setSubtext($txt['project_membergroups_desc']);
 		
 		//
 		new Madjoki_Form_Element_Divider($this);

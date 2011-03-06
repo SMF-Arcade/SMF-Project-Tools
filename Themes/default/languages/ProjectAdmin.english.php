@@ -70,8 +70,6 @@ $txt['project_description_desc'] = 'Displayed on board index';
 $txt['project_description_long'] = 'Description';
 $txt['project_description_long_desc'] = 'Description displayed on Project Page';
 
-$txt['project_profile'] = 'Permissions Profile';
-
 $txt['project_theme'] = 'Project Theme';
 $txt['project_theme_default'] = '(overall forum default)';
 $txt['project_theme_override'] = 'Override member\'s theme';
@@ -83,12 +81,15 @@ $txt['project_board_position'] = 'Position';
 $txt['project_board_index_before'] = 'Before Boards';
 $txt['project_board_index_after'] = 'After Boards';
 
+$txt['project_permissions'] = 'Permissions';
+$txt['project_profile'] = 'Permissions Profile';
 $txt['project_membergroups'] = 'Membergroups';
 $txt['project_membergroups_desc'] = 'Select Membergroups allowed to see this project';
 $txt['regular_members'] = 'Regular Members';
 $txt['guests'] = 'Guests';
 $txt['pgroups_post_group'] = 'This is post based group.';
 $txt['check_all'] = 'Select All';
+
 
 $txt['project_developers'] = 'Developers';
 $txt['developer_add'] = 'Add';
