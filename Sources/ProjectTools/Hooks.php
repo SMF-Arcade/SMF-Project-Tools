@@ -106,6 +106,45 @@ class ProjectTools_Hooks
 	}
 	
 	/**
+	 *
+	 */
+	static public function load_theme()
+	{
+		global $modSettings, $context, $txt;
+		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
+		loadLanguage('Project');
+	
+		// Load status texts
+		foreach ($context['issue_status'] as $id => $status)
+		{
+			if (isset($txt['issue_status_' . $status['name']]))
+				$status['text'] = $txt['issue_status_' . $status['name']];
+	
+			$context['issue_status'][$id] = $status;
+		}
+	
+		// Apply translated names to trackers
+		foreach ($context['issue_trackers'] as $id => $tracker)
+		{
+			if (!isset($txt['issue_type_' . $tracker['short']]) || !isset($txt['issue_type_plural_' . $tracker['short']]))
+				continue;
+			
+			$tracker['name'] = $txt['issue_type_' . $tracker['short']];
+			$tracker['plural'] = $txt['issue_type_plural_' . $tracker['short']];
+			
+			$context['issue_trackers'][$id] = $tracker;
+		}
+		
+		$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
+		$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;	
+
+		loadIssue();
+	}
+	
+	/**
 	 * SMF Hook integrate_admin_areas
 	 *
 	 * Adds Project Tools group in admin.

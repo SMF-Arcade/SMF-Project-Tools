@@ -100,8 +100,12 @@ class ProjectTools_Main
 	static public function load()
 	{
 		global $context, $smcFunc, $modSettings, $user_info, $txt, $settings, $projects_show;
-		global $project, $issue;
+		global $project, $issue, $sourcedir;
 	
+		//
+		require_once($sourcedir . '/Subs-Project.php');
+		require_once($sourcedir . '/Subs-Issue.php');
+		
 		// Issue Regex
 		if (empty($modSettings['issueRegex']))
 			$modSettings['issueRegex'] = array('[Ii]ssues?:?(\s*(,|and)?\s*#\d+)+', '(\d+)');
@@ -370,32 +374,6 @@ class ProjectTools_Main
 	{
 		global $context, $smcFunc, $modSettings, $sourcedir, $user_info, $txt, $settings;
 	
-		loadLanguage('Project');
-	
-		// Load status texts
-		foreach ($context['issue_status'] as $id => $status)
-		{
-			if (isset($txt['issue_status_' . $status['name']]))
-				$status['text'] = $txt['issue_status_' . $status['name']];
-	
-			$context['issue_status'][$id] = $status;
-		}
-	
-		// Apply translated names to trackers
-		foreach ($context['issue_trackers'] as $id => $tracker)
-		{
-			if (!isset($txt['issue_type_' . $tracker['short']]) || !isset($txt['issue_type_plural_' . $tracker['short']]))
-				continue;
-			
-			$tracker['name'] = $txt['issue_type_' . $tracker['short']];
-			$tracker['plural'] = $txt['issue_type_plural_' . $tracker['short']];
-			
-			$context['issue_trackers'][$id] = $tracker;
-		}
-		
-		$context['issues_per_page'] = !empty($modSettings['issuesPerPage']) ? $modSettings['issuesPerPage'] : 25;
-		$context['comments_per_page'] = !empty($modSettings['commentsPerPage']) ? $modSettings['commentsPerPage'] : 20;
-	
 		// In SMF (SSI, etc)
 		if ($mode == 'smf')
 		{
@@ -430,8 +408,6 @@ class ProjectTools_Main
 	static public function Main($standalone = false)
 	{
 		global $context, $smcFunc, $user_info, $txt;
-	
-		self::loadPage();
 	
 		// Check that user can access Project Tools
 		isAllowedTo('project_access');

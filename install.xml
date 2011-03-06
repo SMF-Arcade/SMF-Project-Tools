@@ -28,28 +28,10 @@
 	// Project Tools (edit 1)
 	global $project, $issue;
 	if (!empty($modSettings['projectEnabled']))
-	{
-		require_once($sourcedir . '/Subs-Project.php');
-		require_once($sourcedir . '/Subs-Issue.php');
-
 		ProjectTools_Main::load();
-	}
 	else
-	{
 		$user_info['query_see_project'] = '0=1';
-	}
 ]]></add>
-		</operation>
-
-		<operation>
-			<search position="after"><![CDATA[	// If we are in a topic and don't have permission to approve it then duck out now.]]></search>
-			<add><![CDATA[
-	// Project Tools (edit 2)
-	if (!empty($modSettings['projectEnabled']))
-	{
-		// Load Issue (if needed)
-		loadIssue();
-	}]]></add>
 		</operation>
 	</file>
 
@@ -59,18 +41,13 @@
 			<add><![CDATA[// Project Tools
 if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project_tools === true))
 {
-	require_once($sourcedir . '/Subs-Project.php');
-	require_once($sourcedir . '/Subs-Issue.php');
-
 	ProjectTools_Main::load();
 	
 	if (empty($project_tools))
 		ProjectTools_Main::loadPage('smf');
 }
 else
-{
 	$user_info['query_see_project'] = '0=1';
-}
 ]]></add>
 		</operation>
 	</file>
