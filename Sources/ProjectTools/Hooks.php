@@ -114,6 +114,9 @@ class ProjectTools_Hooks
 	{
 		global $txt, $modSettings;
 		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
 		self::array_insert($admin_areas, 'forum',
 			array(
 				'project' => array(
@@ -155,6 +158,19 @@ class ProjectTools_Hooks
 					),
 				),
 			)
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public static function core_features(&$core_features)
+	{
+		$core_features['pj'] = array(
+			'url' => 'action=admin;area=projectsadmin',
+			'settings' => array(
+				'projectEnabled' => 1,
+			),
 		);
 	}
 }

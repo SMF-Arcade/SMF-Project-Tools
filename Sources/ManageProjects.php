@@ -115,9 +115,7 @@ function EditProject()
 	
 	$context['sub_template'] = 'edit_project';
 	
-	/*$_REQUEST['project'] = isset($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
-	if (!isset($context['project']) && empty($_REQUEST['project']) || !$project = loadProjectAdmin($_REQUEST['project']))
-		$_REQUEST['sa'] = 'new';
+	/*
 
 	$context['profiles'] = list_getProfiles();
 
@@ -168,24 +166,6 @@ function EditProject()
 	
 	// Load Possible modules
 	$context['installed_modules'] = project_getInstalledModules();
-
-
-
-	// Load Board Categories
-	$context['board_categories'] = array();
-
-	$request = $smcFunc['db_query']('', '
-		SELECT id_cat, name
-		FROM {db_prefix}categories
-		ORDER BY cat_order');
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['board_categories'][] = array(
-			'id' => $row['id_cat'],
-			'name' => $row['name'],
-		);
-	$smcFunc['db_free_result']($request);
-
 
 
 	if (!isset($_REQUEST['delete']))

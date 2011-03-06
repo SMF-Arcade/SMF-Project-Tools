@@ -124,9 +124,9 @@ add_integration_function('integrate_pre_include', '$sourcedir/ProjectTools/Hooks
 add_integration_function('integrate_pre_load', 'ProjectTools_Hooks::pre_load');
 add_integration_function('integrate_actions', 'ProjectTools_Hooks::actions');
 add_integration_function('integrate_admin_areas', 'ProjectTools_Hooks::admin_areas');
+add_integration_function('integrate_core_features', 'ProjectTools_Hooks::core_features');
 
 //add_integration_function('integrate_actions', 'Arcade_actions');
-//add_integration_function('integrate_core_features', 'Arcade_core_features');
 //add_integration_function('integrate_load_permissions', 'Arcade_load_permissions');
 //add_integration_function('integrate_profile_areas', 'Arcade_profile_areas');
 //add_integration_function('integrate_menu_buttons', 'Arcade_menu_buttons');
