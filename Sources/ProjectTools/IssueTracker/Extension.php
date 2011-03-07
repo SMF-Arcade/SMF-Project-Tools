@@ -28,13 +28,9 @@ class ProjectTools_IssueTracker_Extension extends ProjectTools_ExtensionBase
 	/**
 	 *
 	 */
-	public function getModules()
+	public function getModule()
 	{
-		return array(
-			'issues' => array(
-				'class_name' => 'ProjectTools_IssueTracker_Module',
-			),
-		);
+		return 'ProjectTools_IssueTracker_Module';
 	}
 }
 

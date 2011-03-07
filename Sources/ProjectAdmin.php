@@ -274,6 +274,16 @@ function ProjectsAdminExtensions()
 {
 	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
 	
+	if (isset($_REQUEST['save']))
+	{
+		foreach (ProjectTools_Extensions::getInstalledExtensions() as $ext)
+			if (empty($ext['can_disable']))
+				$_POST['extension'][] = $ext['id'];
+		updateSettings(array('projectExtensions' => implode(',', $_POST['extension'])));
+		
+		redirectexit('action=admin;area=projectsadmin;sa=extensions');
+	}
+	
 	$context['installed_extensions'] = ProjectTools_Extensions::getInstalledExtensions();
 
 	$context['sub_template'] = 'project_admin_extensions';

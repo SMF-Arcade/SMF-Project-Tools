@@ -454,12 +454,10 @@ class ProjectTools_Main
 		$context['active_project_modules'] = array();
 			
 		// Load Modules
-		foreach (ProjectTools_Project::getCurrent()->modules as $id)
+		foreach (ProjectTools_Project::getCurrent()->extensions as $ext)
 		{
-			$module = ProjectTools_Extensions::getModule($id);
-			
-			if ($module)
-				$context['active_project_modules'][$id] = new $module['class_name'](ProjectTools_Project::getCurrent());
+			$module = $ext->getModule();
+			$context['active_project_modules'][$module] = new $module(ProjectTools_Project::getCurrent());
 		}
 		
 		//

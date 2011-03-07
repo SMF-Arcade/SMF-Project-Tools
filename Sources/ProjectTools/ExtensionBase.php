@@ -24,7 +24,7 @@ abstract class ProjectTools_ExtensionBase
 	/**
 	 *
 	 */
-	abstract public function getModules();
+	abstract public function getModule();
 }
 
 ?>

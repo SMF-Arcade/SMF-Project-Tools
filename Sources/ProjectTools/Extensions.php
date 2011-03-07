@@ -65,22 +65,15 @@ class ProjectTools_Extensions
 		
 		return $extensions;
 	}
-
-	/**
-	 *
-	 */
-	static public function getModules()
-	{
-		return self::$modules;
-	}
 	
 	/**
-	 *
+	 * 
+	 * @return ProjectTools_ExtensionBase
 	 */
-	static public function getModule($module)
+	static public function getExtension($extension)
 	{
-		if (isset(self::$modules[$module]))
-			return self::$modules[$module];
+		if (isset(self::$extensions[$extension]))
+			return self::$extensions[$extension];
 		return false;
 	}
 
@@ -98,9 +91,6 @@ class ProjectTools_Extensions
 		if (class_exists($mod))
 		{
 			self::$extensions[$extension] = new $mod();
-			
-			self::$modules = array_merge(self::$modules, self::$extensions[$extension]->getModules());
-			
 			return self::$extensions[$extension];
 		}
 		

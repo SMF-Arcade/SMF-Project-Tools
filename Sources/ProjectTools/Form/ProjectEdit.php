@@ -1,8 +1,9 @@
 <?php
 /**
- * 
  *
- * @package IssueTracker
+ * 
+ * @package ProjectTools
+ * @subpackage Afmin
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.6
@@ -120,8 +121,8 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		$modules = new Madjoki_Form_Element_CheckList($this, 'modules', $txt['project_modules']);
 		$modules->setSubtext($txt['project_modules_desc']);
 		
-		foreach (ProjectTools_Extensions::getModules() as $id => $module)
-			$modules->addOption($id, $modules['class_name']);
+		foreach (ProjectTools_Extensions::getInstalledExtensions() as $id => $ext)
+			$modules->addOption($id, $ext['name']);
 		
 		// Load Board Categories
 		$options = array(0 => $txt['project_board_index_dont_show']);

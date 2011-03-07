@@ -115,7 +115,7 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
-	public $modules = array();
+	public $extensions = array();
 	
 	/**
 	 *
@@ -190,7 +190,8 @@ class ProjectTools_Project
 		
 		$this->groups = explode(',', $row['member_groups']);
 		
-		$this->modules = explode(',', $row['modules']);
+		foreach (explode(',', $row['modules']) as $module)
+			$this->extensions[$module] = ProjectTools_Extensions::getExtension($module);
 		
 		$this->id_event_mod = $row['id_event_mod'];
 		

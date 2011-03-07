@@ -134,41 +134,42 @@ function template_project_admin_extensions()
 	global $scripturl, $context, $settings, $options, $txt, $modSettings;
 	
 	echo '
-	<div class="cat_bar">
-		<h3 class="catbg">
-			', $txt['project_general_extensions'], '
-		</h3>
-	</div>
-	<table class="table_grid" cellspacing="0" width="100%">
-		<thead>
-			<tr class="catbg">
-				<th scope="col" class="first_th">', $txt['extension_enable'], '</th>
-				<th scope="col">', $txt['extension_name'], '</th>
-				<th scope="col" class="last_th">', $txt['extension_version'], '</th>
-			</tr>
-		</thead>
-		<tbody>';
+	<form action="', $scripturl, '?action=admin;area=projectsadmin;sa=extensions;save" method="post">
+		<div class="cat_bar">
+			<h3 class="catbg">
+				', $txt['project_general_extensions'], '
+			</h3>
+		</div>
+		<table class="table_grid" cellspacing="0" width="100%">
+			<thead>
+				<tr class="catbg">
+					<th scope="col" class="first_th">', $txt['extension_enable'], '</th>
+					<th scope="col">', $txt['extension_name'], '</th>
+					<th scope="col" class="last_th">', $txt['extension_version'], '</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 	foreach ($context['installed_extensions'] as $id => $extension)
 	{
 		echo '
-			<tr>
-				<td><input type="checkbox" name="extension[', $id, ']" value="1"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_enable'] || !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
-				<td>', $extension['name'], ' (', $extension['filename'], ')<br />';
+				<tr>
+					<td><input type="checkbox" name="extension[]" value="', $id, '"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_enable'] || !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
+					<td>', $extension['name'], ' (', $extension['filename'], ')<br />';
 				
 		if (!empty($extension['modules']))
 		{
 			echo '
-					', $txt['extension_modules'], ':', '
-					<ul>';
+						', $txt['extension_modules'], ':', '
+						<ul>';
 					
 		foreach ($extension['modules'] as $module)
 			echo '
-						<li>', $module['class_name'], '</li>';
+							<li>', $module['class_name'], '</li>';
 					
 		echo '
 					
-					</ul>';
+						</ul>';
 		}
 					
 		echo '
@@ -178,8 +179,10 @@ function template_project_admin_extensions()
 	}
 	
 	echo '
-		</tbody>
-	</table>';
+			</tbody>
+		</table>
+		<input type="submit" name="save" value="', $txt['save'], '" />
+	</form>';
 }
 
 function template_project_admin_below()

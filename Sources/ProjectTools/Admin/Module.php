@@ -2,10 +2,10 @@
 /**
  * Admin pages for Projects 
  *
- * @package project-admin
- * @version 0.5
+ * @package ProjectTools
+ * @subpackage Admin
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
- * @since 0.5
  */
 
 if (!defined('SMF'))

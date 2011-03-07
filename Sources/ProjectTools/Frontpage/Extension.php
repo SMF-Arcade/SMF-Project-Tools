@@ -2,7 +2,8 @@
 /**
  * 
  *
- * @package Admin
+ * @package ProjectTools
+ * @subpackage Frontpage
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.6
@@ -19,7 +20,7 @@ class ProjectTools_Frontpage_Extension extends ProjectTools_ExtensionBase
 	public function getExtensionInfo()
 	{
 		return array(
-			'title' => 'Admin',
+			'title' => 'Frontpage',
 			'version' => '0.6',
 			'api_version' => 2,
 		);
@@ -28,13 +29,9 @@ class ProjectTools_Frontpage_Extension extends ProjectTools_ExtensionBase
 	/**
 	 *
 	 */
-	public function getModules()
+	public function getModule()
 	{
-		return array(
-			'frontpage' => array(
-				'class_name' => 'ProjectTools_Frontpage_Module',
-			),
-		);
+		return 'ProjectTools_Frontpage_Module';
 	}
 }
 
