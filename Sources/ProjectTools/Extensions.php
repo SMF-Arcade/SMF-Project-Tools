@@ -65,6 +65,14 @@ class ProjectTools_Extensions
 		
 		return $extensions;
 	}
+
+	/**
+	 *
+	 */
+	static public function getModules()
+	{
+		return self::$modules;
+	}
 	
 	/**
 	 *
@@ -95,29 +103,6 @@ class ProjectTools_Extensions
 			
 			return self::$extensions[$extension];
 		}
-		
-		/*	// Prevent extensionInformation from previous extension coming up
-	$extensionInformation = array();
-	
-	if (!isset($context['project_extensions'][$name]))
-	{
-		$projectModules = array();
-		
-		loadClassFile('ProjectModule-' . $smcFunc['ucwords']($name) . '.php');
-		$context['project_extensions'][$name] = $extensionInformation;
-		$context['project_extensions'][$name]['modules'] = $projectModules;
-		
-		unset($projectModules);
-		unset($extensionInformation);
-	}
-	
-	if (!$active)
-		return $context['project_extensions'][$name];
-	
-	foreach ($context['project_extensions'][$name]['modules'] as $id => $module)
-		$context['project_modules'][$id] = $module;
-		
-	return $context['project_extensions'][$name];*/
 		
 		return false;
 	}

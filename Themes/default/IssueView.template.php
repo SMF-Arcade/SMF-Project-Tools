@@ -68,7 +68,7 @@ function template_issue_view_main()
 	
 	$alternate = true;
 
-	while ($event = getEvent())
+	while ($event = ProjectTools_IssueTracker_View::getEvent())
 	{
 		if ($event['type'] == 'comment')
 			template_event_full($event, $alternate);
@@ -477,7 +477,6 @@ function template_issue_view_below()
 		currentIssue.addLabel("issue_priority", "priority");';
 		}
 	}
-	
 
 	echo '
 	</script>';

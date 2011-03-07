@@ -439,7 +439,7 @@ class ProjectTools_Main
 		
 		$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 		
-		call_user_func(array('ProjectTools_Main', $subActions[$_REQUEST['sa']][0]));
+		call_user_func(array(get_class(), $subActions[$_REQUEST['sa']][0]));
 		
 		return;	
 	}
@@ -463,20 +463,13 @@ class ProjectTools_Main
 		}
 		
 		//
-		$project_areas = array(
-			'main' => array(
-				'title' => $txt['project'],
-				'href' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
-				'callback' => array('ProjectTools_ProjectPage', 'Main'),
-				'hide_linktree' => true,
-				'order' => 'first',
-			),
-		);
+		$project_areas = array();
 		
 		//
 		foreach ($context['active_project_modules'] as $id => $module)
 		{
 			$area = $module->RegisterArea();
+			$area['module'] = $module;
 			$project_areas[$area['id']] = $area;
 		}
 		
@@ -490,6 +483,7 @@ class ProjectTools_Main
 			'tabs' => array(),
 		);
 		
+		//
 		if (empty($_REQUEST['area']) || !isset(self::$areas[$_REQUEST['area']]))
 			$_REQUEST['area'] = 'main';
 			
@@ -501,7 +495,8 @@ class ProjectTools_Main
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)
 		{
-			$area['href'] = isset($area['href']) ? $area['href'] : project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id));
+			$area['href'] = $area['id'] !== 'main' ? project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
+				: project_get_url(array('project' => ProjectTools_Project::getCurrent()->id));
 			
 			$context['project_tabs']['tabs'][$id] = array(
 				'title' => $area['title'],
@@ -515,35 +510,32 @@ class ProjectTools_Main
 		// Sort tabs to correct order
 		uksort($context['project_tabs']['tabs'], 'projectTabSort');
 			
-		// Call Initialize View function
-		//if (isset($context['current_project_module']) && method_exists($context['current_project_module'], 'beforeSubaction'))
-		//	$context['current_project_module']->beforeSubaction($_REQUEST['sa']);
-			
 		// Linktree
 		$context['linktree'][] = array(
 			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
 			'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
 		);
 		
+		// Add area to linktree
 		if (empty(self::$current_area['hide_linktree']))
 			$context['linktree'][] = array(
 				'name' => self::$current_area['title'],
 				'url' => self::$current_area['href'],
 			);
 		
-		/*
-		if (isset($context['current_project_module']->subTabs[$_REQUEST['sa']]))
+		//
+		if (isset(self::$current_area['module']->subTabs[$_REQUEST['sa']]))
 		{
-			$context['current_project_module']->subTabs[$_REQUEST['sa']]['is_selected'] = true;
+			self::$current_area['module']->subTabs[$_REQUEST['sa']]['is_selected'] = true;
 			
-			if (empty($context['current_project_module']->subTabs[$_REQUEST['sa']]['hide_linktree']))
+			if (empty(self::$current_area['module']->subTabs[$_REQUEST['sa']]['hide_linktree']))
 				$context['linktree'][] = array(
-					'name' => $context['current_project_module']->subTabs[$_REQUEST['sa']]['title'],
-					'url' => $context['current_project_module']->subTabs[$_REQUEST['sa']]['href'],
+					'name' => self::$current_area['module']->subTabs[$_REQUEST['sa']]['title'],
+					'url' => self::$current_area['module']->subTabs[$_REQUEST['sa']]['href'],
 				);
 			
-			$context['project_sub_tabs'] = $context['current_project_module']->subTabs;
-		}*/
+			$context['project_sub_tabs'] = self::$current_area['module']->subTabs;
+		}
 		
 		// Template
 		loadTemplate('Project', array('project'));
@@ -556,7 +548,7 @@ class ProjectTools_Main
 			<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 		}
 		
-		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
+		call_user_func(array(self::$current_area['module'], self::$current_area['callback']), array($_REQUEST['sa']));
 	}
 	
 	/**

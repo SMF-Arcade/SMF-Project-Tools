@@ -12,73 +12,15 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /**
-	!!!
-*/
-
-global $extensionInformation;
-
-$extensionInformation = array(
-	'title' => 'Admin',
-	'version' => '0.5',
-	'api_version' => 1,
-);
-
-register_project_feature('admin', 'ProjectModule_Admin');
-
-/**
  * Project Module Admin
  */
-class ProjectModule_Admin extends ProjectModule_Base
+class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 {
-	public $title = 'Admin';
-	
-	function __construct()
+	/**
+	 *
+	 */
+	public function Main()
 	{
-		global $txt, $project;
-		
-		parent::__construct();
-		
-		$this->subActions = array(
-			'main' => array(
-				'area' => 'admin',
-				'callback' => array($this, 'ProjectAdminMain'),
-				'tab' => 'admin',
-			),
-			'versions' => array(
-				'area' => 'admin',
-				'callback' => array($this, 'ProjectAdminVersions'),
-				'tab' => 'admin',
-			),
-			'category' => array(
-				'area' => 'admin',
-				'callback' => array($this, 'ProjectAdminCategory'),
-				'tab' => 'admin',
-			),
-		);
-	}
-	
-	public function RegisterProjectArea()
-	{
-		return array('area' => 'admin', 'tab' => 'admin', 'project_permission' => 'admin');
-	}
-	
-	public function RegisterProjectTabs(&$tabs)
-	{
-		global $project, $context, $txt;
-		
-		$tabs['admin'] = array(
-			'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
-			'title' => $txt['project_admin'],
-			'is_selected' => false,
-			'order' => 'last',
-			'project_permission' => 'admin',
-			'sub_buttons' => $this->subTabs,
-		);
-	}
-	
-	// Callback before any subaction routine is called
-	public function beforeSubaction(&$subaction)
-	{	
 		global $sourcedir, $context, $project, $txt;
 		
 		require_once($sourcedir . '/Subs-ProjectAdmin.php');
@@ -86,7 +28,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
 		
-		$this->subTabs = array(
+		/*$this->subTabs = array(
 			'main' => array(
 				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
 				'title' => $txt['project'],
@@ -106,11 +48,41 @@ class ProjectModule_Admin extends ProjectModule_Base
 				'is_selected' => false,
 				'order' => 10,
 			),
+		);*/
+		
+		$subActions = array(
+			'main' => array($this, 'ProjectAdminMain'),
+			'versions' => array($this, 'ProjectAdminVersions'),
+			'category' => array($this, 'ProjectAdminCategory'),
+			
 		);
-
-		parent::beforeSubaction($subaction);
+		
+		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
+			$_REQUEST['sa'] = 'main';
+			
+		call_user_func($subActions[$_REQUEST['sa']], $this->project);
 	}
 	
+	/**
+	 *
+	 */
+	public function RegisterArea()
+	{
+		global $txt;
+		
+		return array(
+			'id' => 'admin',
+			'title' => $txt['project_admin'],
+			'callback' => 'Main',
+			'hide_linktree' => true,
+			'order' => 50,
+			'project_permission' => 'admin',
+		);
+	}
+	
+	/**
+	 *
+	 */
 	public function ProjectAdminMain()
 	{
 		global $context, $txt;
@@ -118,6 +90,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['page_title'] = $txt['title_project_admin'];
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminVersions()
 	{
 		global $context, $txt;
@@ -132,6 +107,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['project_tabs']['description'] = $txt['project_admin_versions_description'];
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminVersionList()
 	{	
 		global $sourcedir, $context, $txt, $project;
@@ -222,6 +200,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['sub_template'] = 'versions_list';
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminVersionEdit()
 	{	
 		global $smcFunc, $sourcedir, $context, $txt, $project;
@@ -320,6 +301,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['sub_template'] = 'edit_version';
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminVersionEdit2()
 	{	
 		global $sourcedir, $context, $txt, $project;
@@ -413,6 +397,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		redirectexit(project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminCategory()
 	{
 		global $txt;
@@ -427,6 +414,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['project_tabs']['description'] = $txt['project_admin_category_description'];
 	}
 	
+	/**
+	 *
+	 */
 	public function ProjectAdminCategoryList()
 	{
 		global $sourcedir, $context, $txt, $project;
@@ -498,6 +488,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		$context['sub_template'] = 'categories_list';
 	}
 	
+	/**
+	 *
+	 */
 	function ProjectAdminCategoryEdit()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
@@ -556,6 +549,9 @@ class ProjectModule_Admin extends ProjectModule_Base
 		}
 	}
 	
+	/**
+	 *
+	 */
 	function ProjectAdminCategoryEdit2()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;

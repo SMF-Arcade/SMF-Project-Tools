@@ -1,45 +1,56 @@
 <?php
 /**
- * Main handler for Project Tools
+ * Admin pages for Projects 
  *
- * @package core
+ * @package project-admin
  * @version 0.5
  * @license http://download.smfproject.net/license.php New-BSD
- * @since 0.1
+ * @since 0.5
  */
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /**
- *
+ * 
  */
-class ProjectTools_ProjectPage
+class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 {
-	/**
-	 *
-	 */
-	static protected $subActions = array(
-		'main' => array(__CLASS__, 'Frontpage'),
-		'subscribe' => array(__CLASS__, 'Subscribe'),
-		'markasread' => array(__CLASS__, 'MarkRead'),
-	);
-	
 	/**
 	 *
 	 */
 	public function Main()
 	{
-		if (!isset($_REQUEST['sa']) || !isset(self::$subActions[$_REQUEST['sa']]))
+		$subActions = array(
+			'main' => array($this, 'Frontpage'),
+			'subscribe' => array($this, 'Subscribe'),
+			'markasread' => array($this, 'MarkRead'),
+		);
+		
+		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
 			
-		call_user_func(self::$subActions[$_REQUEST['sa']]);
+		call_user_func($subActions[$_REQUEST['sa']]);
+	}
+	
+	/**
+	 *
+	 */
+	public function RegisterArea()
+	{
+		return array(
+			'id' => 'main',
+			'title' => $txt['project'],
+			'callback' => 'Main',
+			'hide_linktree' => true,
+			'order' => 'first',
+		);
 	}
 	
 	/**
 	 * Main project page
 	 */
-	static public function Frontpage()
+	public function Frontpage()
 	{
 		global $context, $modSettings, $smcFunc, $sourcedir, $user_info, $txt, $project;
 	
@@ -141,7 +152,7 @@ class ProjectTools_ProjectPage
 	/**
 	 * Subscribe to project
 	 */
-	static public function Subscribe()
+	public function Subscribe()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 	
@@ -204,7 +215,7 @@ class ProjectTools_ProjectPage
 	 *
 	 * @todo Move to IssueTracker modules
 	 */
-	static public function SubscribeIssue()
+	public function SubscribeIssue()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project, $issue;
 	
@@ -257,7 +268,7 @@ class ProjectTools_ProjectPage
 	/**
 	 *
 	 */
-	static public function MarkRead()
+	public function MarkRead()
 	{
 		global $project;
 		

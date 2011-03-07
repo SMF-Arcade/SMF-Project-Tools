@@ -16,6 +16,11 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
+	
+	
+	/**
+	 *
+	 */
 	public function Main()
 	{
 		$subActions = array(
@@ -41,7 +46,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
 			
-		call_user_func($subActions[$_REQUEST['sa']]);
+		call_user_func($subActions[$_REQUEST['sa']], $this->project);
 	}
 	
 	/**
@@ -54,7 +59,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 		return array(
 			'id' => 'issues',
 			'title' => $txt['issues'],
-			'callback' => array(get_class(), 'Main'),
+			'callback' => 'Main',
 			'hide_linktree' => true,
 			'order' => 10,
 		);

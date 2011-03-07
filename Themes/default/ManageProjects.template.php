@@ -62,22 +62,6 @@ function template_edit_project()
 
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['project_modules'], ':</b><br />
-				<span class="smalltext">', $txt['project_modules_desc'], '</span><br />
-			</td>
-			<td valign="top" align="left">';
-
-	foreach ($context['installed_modules'] as $key => $module)
-		echo '
-				<input type="checkbox" name="modules[]" value="', $key, '" id="module_', $key, '"', in_array($key, ProjectTools_Project::getCurrent()->modules) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" /> <label for="module_', $key, '">', $module['name'], '</label><br />';
-
-	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'modules[]\');" tabindex="', $context['tabindex']++, '" /><br />
-				<br />
-			</td>
-		</tr>
-		<tr valign="top" class="windowbg2">
-			<td>
 				<b>', $txt['project_trackers'], ':</b><br />
 				<span class="smalltext">', $txt['project_trackers_desc'], '</span><br />
 			</td>
