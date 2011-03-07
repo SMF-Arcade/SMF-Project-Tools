@@ -253,8 +253,8 @@ class ProjectTools_IssueTracker_Issue
 			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		);
 		
-		$this->versions = getVersions(explode(',', $row['versions']));
-		$this->versions_fixed = getVersions(explode(',', $row['versions_fixed']));
+		$this->versions = getVersions(explode(',', $row['versions']), $row['id_project']);
+		$this->versions_fixed = getVersions(explode(',', $row['versions_fixed']), $row['id_project']);
 	
 		$this->reporter = &$memberContext[$row['id_reporter']];
 		

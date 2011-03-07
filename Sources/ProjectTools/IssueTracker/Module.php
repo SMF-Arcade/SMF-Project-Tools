@@ -35,7 +35,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'removeComment' => array('ProjectTools_IssueTracker_Comment', 'Delete'),
 			// Report
 			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),
-			'report' => array('ProjectTools_IssueTracker_Report', 'Report2'),
+			'report2' => array('ProjectTools_IssueTracker_Report', 'Report2'),
 		);
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
