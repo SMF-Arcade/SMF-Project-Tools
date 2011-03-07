@@ -19,18 +19,21 @@ class ProjectTools_ProjectPage
 	/**
 	 *
 	 */
-	static public function Main()
+	static protected $subActions = array(
+		'main' => array(__CLASS__, 'Frontpage'),
+		'subscribe' => array(__CLASS__, 'Subscribe'),
+		'markasread' => array(__CLASS__, 'MarkRead'),
+	);
+	
+	/**
+	 *
+	 */
+	public function Main()
 	{
-		$subActions = array(
-			'main' => array(__CLASS__, 'Frontpage'),
-			'subscribe' => array(__CLASS__, 'Subscribe'),
-			'markasread' => array(__CLASS__, 'MarkRead'),
-		);
-		
-		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
+		if (!isset($_REQUEST['sa']) || !isset(self::$subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
 			
-		call_user_func($subActions[$_REQUEST['sa']]);
+		call_user_func(self::$subActions[$_REQUEST['sa']]);
 	}
 	
 	/**
