@@ -59,7 +59,6 @@ function template_project_above()
 		
 		echo '
 	</ul></div>
-	<br class="clear" />
 	<div class="cat_bar">
 		<h3 class="catbg">
 			', $context['project_tabs']['title'], '

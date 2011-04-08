@@ -522,7 +522,7 @@ class ProjectTools_Main
 			);
 		
 		//
-		if (isset(self::$current_area['module']->subTabs[$_REQUEST['sa']]))
+		/*if (isset(self::$current_area['module']->subTabs[$_REQUEST['sa']]))
 		{
 			self::$current_area['module']->subTabs[$_REQUEST['sa']]['is_selected'] = true;
 			
@@ -533,7 +533,7 @@ class ProjectTools_Main
 				);
 			
 			$context['project_sub_tabs'] = self::$current_area['module']->subTabs;
-		}
+		}*/
 		
 		// Template
 		loadTemplate('Project', array('project'));

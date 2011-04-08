@@ -28,7 +28,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
 		
-		/*$this->subTabs = array(
+		$context['project_sub_tabs'] = array(
 			'main' => array(
 				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
 				'title' => $txt['project'],
@@ -48,7 +48,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 				'is_selected' => false,
 				'order' => 10,
 			),
-		);*/
+		);
 		
 		$subActions = array(
 			'main' => array($this, 'ProjectAdminMain'),
@@ -59,6 +59,8 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
+			
+		$context['project_sub_tabs'][$_REQUEST['sa']]['is_selected'] = true;
 			
 		call_user_func($subActions[$_REQUEST['sa']], $this->project);
 	}
