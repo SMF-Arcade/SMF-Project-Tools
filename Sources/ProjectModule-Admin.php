@@ -322,7 +322,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	
 	public function ProjectAdminVersionEdit2()
 	{	
-		global $sourcedir, $context, $txt, $project;
+		global $sourcedir, $context, $txt, $project, $smcFunc;
 		
 		checkSession();
 	
