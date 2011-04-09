@@ -103,6 +103,38 @@ class ProjectTools_Hooks
 			return;
 		
 		$actionArray['projects'] = array('ProjectTools/Main.php', array('ProjectTools_Main', 'Main'));
+		$actionArray['projectadmin'] = array('ProjectTools/Admin/Main.php', array('ProjectTools_Admin_Main', 'Main'));
+	}
+	
+	/**
+	 * SMF Hook integrate_menu_buttons
+	 */
+	public static function menu_buttons(&$menu_buttons)
+	{
+		global $modSettings, $context;
+		
+		$context['allow_project'] = !empty($modSettings['projectEnabled']) && allowedTo('project_access');
+		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
+		if ($context['current_action'] == 'projectadmin')
+			$context['current_action'] = 'projects';
+		
+		self::array_insert($menu_buttons, 'search', array(
+			'projects' => array(
+				'title' => $txt['projects'],
+				'href' => $scripturl . '?action=projects',
+				'show' => $context['allow_project'],
+				'sub_buttons' => array(
+					'admin' => array(
+						'title' => $txt['projects_admin'],
+						'href' => $scripturl . '?action=projectadmin',
+						'show' => allowedTo('project_admin'), // TODO: Allow is users is project admin
+					),
+				),
+			)), 'before'
+		);
 	}
 	
 	/**

@@ -9,6 +9,7 @@ $txt['issue_tracker'] = 'Issue Tracker';
 $txt['issues'] = 'Issues';
 $txt['project'] = 'Project';
 $txt['projects'] = 'Projects';
+$txt['projects_admin'] = 'Admin';
 $txt['core_settings_item_pj'] = 'Project Tools';
 $txt['core_settings_item_pj_desc'] = 'Enables/Disables Project Tools addon';
 $txt['patch_highlight'] = 'Viewing Highlight of Patch: %s';

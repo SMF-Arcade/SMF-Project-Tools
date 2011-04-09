@@ -341,21 +341,6 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			<search position="before"><![CDATA[$context['allow_admin'] = allowedTo(array(]]></search>
 			<add><![CDATA['project_admin', ]]></add>
 		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);]]></search>
-			<add><![CDATA[	$context['allow_project'] = !empty($modSettings['projectEnabled']) && allowedTo('project_access');]]></add>
-		</operation>
-
-		<operation>
-			<search position="after"><![CDATA[			'search' => array(]]></search>
-			<add><![CDATA[			'projects' => array(
-				'title' => $txt['projects'],
-				'href' => $scripturl . '?action=projects',
-				'show' => $context['allow_project'],
-				'sub_buttons' => array(),
-			),]]></add>
-		</operation>
 
 		<operation>
 			<search position="after"><![CDATA[|action=profile;u=\d+]]></search>

@@ -28,6 +28,13 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
 		
+		//
+		foreach ($context['active_project_modules'] as $id => $module)
+		{
+			$area = $module->RegisterAdminSubactions();
+			
+		}
+		
 		$context['project_sub_tabs'] = array(
 			'main' => array(
 				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
@@ -54,7 +61,6 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 			'main' => array($this, 'ProjectAdminMain'),
 			'versions' => array($this, 'ProjectAdminVersions'),
 			'category' => array($this, 'ProjectAdminCategory'),
-			
 		);
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
