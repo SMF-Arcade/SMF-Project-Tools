@@ -279,9 +279,11 @@ function markProjectsRead($projects, $unread = false)
  * @param array $params Array of GET parametrs
  * @param int $project 
  */
-function project_get_url($params = array(), $project = null)
+function project_get_url($params = array(), $project = null, $is_admin = false)
 {
 	global $scripturl, $modSettings;
+	
+	$action = !$is_admin ? 'projects' : 'projectadmin';
 
 	// Detect project
 	if ($project === null && !empty($params))
@@ -337,7 +339,7 @@ function project_get_url($params = array(), $project = null)
 		$return = '';
 		
 		// Which url shall be base for this?
-		$base = !empty($modSettings['projectStandaloneUrl_project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]) ?  $modSettings['projectStandaloneUrl_project_' . $project] : (!empty($modSettings['projectStandaloneUrl']) ? $modSettings['projectStandaloneUrl'] : '{SCRIPTURL}');
+		$base = !empty($modSettings['projectStandaloneUrl_project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]) ? $modSettings['projectStandaloneUrl_project_' . $project] : (!empty($modSettings['projectStandaloneUrl']) ? $modSettings['projectStandaloneUrl'] : '{SCRIPTURL}');
 		
 		if (isset($params['project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]))
 			unset($params['project']);
@@ -345,10 +347,13 @@ function project_get_url($params = array(), $project = null)
 		if (count($params) === 0)
 		{
 			if ($base == '{SCRIPTURL}')
-				return $scripturl . '?action=projects';
+				return $scripturl . '?action=' . $action;
 			
 			return strtr($base, array('{SCRIPTURL}' => $scripturl, '{BOARDURL}' => $GLOBALS['boardurl']));
 		}
+
+		if ($is_admin)
+			$params['action'] = $action;
 
 		foreach ($params as $p => $value)
 		{
@@ -373,8 +378,8 @@ function project_get_url($params = array(), $project = null)
 	{
 		$return = '';
 
-		if (empty($params))
-			$params['action'] = 'projects';
+		if (empty($params) || $is_admin)
+			$params['action'] = $action;
 
 		foreach ($params as $p => $value)
 		{
@@ -394,6 +399,14 @@ function project_get_url($params = array(), $project = null)
 
 		return $scripturl . $return;
 	}
+}
+
+/**
+ *
+ */
+function project_admin_get_url($params = array(), $project = null)
+{
+	return project_get_url($params, $project, true);
 }
 
 /**

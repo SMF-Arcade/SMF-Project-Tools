@@ -22,9 +22,10 @@ class ProjectTools_Hooks
 	{
 		global $sourcedir;
 		
-		if (substr($class_name, 0, 12) == 'ProjectTools')
+		if ($class_name == 'ProjectTools')
+			require_once($sourcedir . '/ProjectTools/ProjectTools.php');	
+		elseif (substr($class_name, 0, 12) == 'ProjectTools')
 		{
-			
 			$class_file = str_replace('_', '/', $class_name);
 	
 			if (file_exists($sourcedir . '/' . $class_file . '.php'))
@@ -111,7 +112,7 @@ class ProjectTools_Hooks
 	 */
 	public static function menu_buttons(&$menu_buttons)
 	{
-		global $modSettings, $context;
+		global $modSettings, $context, $txt, $scripturl;
 		
 		$context['allow_project'] = !empty($modSettings['projectEnabled']) && allowedTo('project_access');
 		
@@ -124,12 +125,12 @@ class ProjectTools_Hooks
 		self::array_insert($menu_buttons, 'search', array(
 			'projects' => array(
 				'title' => $txt['projects'],
-				'href' => $scripturl . '?action=projects',
+				'href' => project_get_url(),
 				'show' => $context['allow_project'],
 				'sub_buttons' => array(
 					'admin' => array(
 						'title' => $txt['projects_admin'],
-						'href' => $scripturl . '?action=projectadmin',
+						'href' => project_admin_get_url(),
 						'show' => allowedTo('project_admin'), // TODO: Allow is users is project admin
 					),
 				),
