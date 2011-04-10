@@ -226,7 +226,7 @@ class ProjectTools_IssueTracker_Issue
 	
 		$this->id = $row['id_issue'];
 		$this->name = $row['subject'];
-		$this->href = project_get_url(array('issue' => $row['id_issue'] . '.0'));
+		$this->href = ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'));
 		
 		$this->project = $row['id_project'];
 		
@@ -250,7 +250,7 @@ class ProjectTools_IssueTracker_Issue
 		$this->category = array(
 			'id' => $row['id_category'],
 			'name' => $row['category_name'],
-			'link' => '<a href="' . project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
+			'link' => '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 		);
 		
 		$this->versions = getVersions(explode(',', $row['versions']), $row['id_project']);

@@ -42,7 +42,7 @@ function template_report_issue()
 	</div>';
 
 	echo '
-	<form action="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<div class="title_bar">
 				<h4 class="titlebg">', $txt['report_issue'], '</h4>
@@ -190,7 +190,7 @@ function template_issue_reply()
 	</div>';
 
 	echo '
-	<form action="', project_get_url(array('area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
+	<form action="', ProjectTools::get_url(array('area' => 'issues', 'sa' => $context['destination'])), '" method="post" accept-charset="', $context['character_set'], '" name="reportissue" id="reportissue" onsubmit="submitonce(this);saveEntities();" enctype="multipart/form-data">
 		<div class="tborder" id="reportform">
 			<div class="title_bar">
 				<h4 class="titlebg">', $txt['issue_reply'], '</h4>

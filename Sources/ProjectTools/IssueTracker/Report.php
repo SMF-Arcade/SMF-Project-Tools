@@ -110,7 +110,7 @@ class ProjectTools_IssueTracker_Report
 	
 		$context['linktree'][] = array(
 			'name' => $txt['linktree_report_issue'],
-			'url' => project_get_url(array('project' => $project, 'area' => 'issues', 'sa' => 'report')),
+			'url' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'sa' => 'report')),
 		);
 	
 		// Template
@@ -249,7 +249,7 @@ class ProjectTools_IssueTracker_Report
 	
 		cache_put_data('project-' . $project, null, 120);
 	
-		redirectexit(project_get_url(array('project' => $project, 'area' => 'issues')));
+		redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'issues')));
 	}
 	
 	/**
@@ -619,7 +619,7 @@ class ProjectTools_IssueTracker_Report
 	
 		// Not possible
 		if (empty($modSettings['projectAttachments']))
-			redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+			redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	
 		projectIsAllowedTo('issue_attach');
 	
@@ -705,7 +705,7 @@ class ProjectTools_IssueTracker_Report
 			array('id_issue', 'id_attach')
 		);
 	
-		redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+		redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	}
 }
 

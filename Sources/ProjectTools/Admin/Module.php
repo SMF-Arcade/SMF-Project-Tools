@@ -37,20 +37,20 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		
 		$context['project_sub_tabs'] = array(
 			'main' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin')),
+				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin')),
 				'title' => $txt['project'],
 				'is_selected' => false,
 				'order' => 'first',
 				'hide_linktree' => true,
 			),
 			'versions' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
+				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 				'title' => $txt['manage_versions'],
 				'is_selected' => false,
 				'order' => 10,
 			),
 			'category' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
 				'title' => $txt['manage_project_category'],
 				'is_selected' => false,
 				'order' => 10,
@@ -124,7 +124,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		
 		$listOptions = array(
 			'id' => 'versions_list',
-			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
+			'base_href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 			'get_items' => array(
 				'function' => 'list_getVersions',
 				'params' => array(
@@ -169,7 +169,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 					'data' => array(
 						'function' => create_function('$list_item', '
 							global $txt, $project;
-							return (empty($list_item[\'level\']) ? \'<a href="\' .  project_get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
+							return (empty($list_item[\'level\']) ? \'<a href="\' .  ProjectTools::get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 						'),
 						'style' => 'text-align: right;',
 					),
@@ -180,7 +180,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 				),
 			),
 			'form' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
+				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')),
 				'include_sort' => true,
 				'include_start' => true,
 				'hidden_fields' => array(
@@ -191,7 +191,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 				array(
 					'position' => 'bottom_of_list',
 					'value' => '
-						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions', 'version' => 'new')) . '">
+						<a href="' . ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions', 'version' => 'new')) . '">
 							' . $txt['new_version_group'] . '
 						</a>',
 					'class' => 'catbg',
@@ -402,7 +402,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 			);
 		}
 	
-		redirectexit(project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
+		redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
 	}
 	
 	/**
@@ -431,7 +431,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 
 		$listOptions = array(
 			'id' => 'categories_list',
-			'base_href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+			'base_href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
 			'get_items' => array(
 				'function' => 'list_getCategories',
 				'params' => array(
@@ -468,7 +468,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 				),
 			),
 			'form' => array(
-				'href' => project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
+				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
 				'include_sort' => true,
 				'include_start' => true,
 				'hidden_fields' => array(
@@ -479,7 +479,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 				array(
 					'position' => 'bottom_of_list',
 					'value' => '
-						<a href="' . project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => 'new')) . '">
+						<a href="' . ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => 'new')) . '">
 							' . $txt['new_category'] . '
 						</a>',
 					'class' => 'catbg',

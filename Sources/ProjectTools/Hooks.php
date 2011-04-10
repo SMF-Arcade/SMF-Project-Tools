@@ -125,12 +125,12 @@ class ProjectTools_Hooks
 		self::array_insert($menu_buttons, 'search', array(
 			'projects' => array(
 				'title' => $txt['projects'],
-				'href' => project_get_url(),
+				'href' => ProjectTools::get_url(),
 				'show' => $context['allow_project'],
 				'sub_buttons' => array(
 					'admin' => array(
 						'title' => $txt['projects_admin'],
-						'href' => project_admin_get_url(),
+						'href' => ProjectTools::get_admin_url(),
 						'show' => allowedTo('project_admin'), // TODO: Allow is users is project admin
 					),
 				),

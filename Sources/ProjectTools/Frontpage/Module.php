@@ -57,7 +57,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 		global $context, $modSettings, $smcFunc, $sourcedir, $user_info, $txt, $project;
 	
 		// Canonical url for search engines
-		$context['canonical_url'] = project_get_url(array('project' => $project));
+		$context['canonical_url'] = ProjectTools::get_url(array('project' => $project));
 		
 		$context['can_subscribe'] = !$user_info['is_guest'];
 		$context['can_report_issues'] = projectAllowedTo('issue_report');
@@ -209,7 +209,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 	
 		$smcFunc['db_free_result']($request);
 	
-		redirectexit(project_get_url(array('project' => $project)));
+		redirectexit(ProjectTools::get_url(array('project' => $project)));
 	}
 	
 	/**
@@ -264,7 +264,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 	
 		$smcFunc['db_free_result']($request);
 	
-		redirectexit(project_get_url(array('issue' => $issue . '.0')));
+		redirectexit(ProjectTools::get_url(array('issue' => $issue . '.0')));
 	}
 	
 	/**
@@ -276,7 +276,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 		
 		markProjectsRead($project, isset($_REQUEST['unread']));
 		
-		redirectexit(project_get_url(array('project' => $project)));
+		redirectexit(ProjectTools::get_url(array('project' => $project)));
 	}
 }
 

@@ -26,7 +26,7 @@ function template_edit_version()
 	global $context, $settings, $options, $scripturl, $txt, $project, $modSettings;
 
 	echo '
-<form action="', project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions', 'save')), '" method="post" accept-charset="', $context['character_set'], '">
+<form action="', ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions', 'save')), '" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="version" value="', $context['version']['id'], '" />
 	<input type="hidden" name="parent" value="', $context['version']['parent'], '" />
 
@@ -134,7 +134,7 @@ function template_edit_category()
 	global $context, $settings, $options, $txt, $modSettings, $project;
 
 	echo '
-<form action="', project_get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'save')), '" method="post" accept-charset="', $context['character_set'], '">
+<form action="', ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'save')), '" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="category" value="', $context['category']['id'], '" />
 
 	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">

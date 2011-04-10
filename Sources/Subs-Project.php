@@ -195,9 +195,9 @@ function loadTimeline($project = 0)
 
 		$context['events'][$index]['events'][] = array(
 			'event' => $row['event'],
-			'project_link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+			'project_link' => '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
 			'member_link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['user'] . '</a>' : $txt['issue_guest'],
-			'link' => !empty($row['subject']) ? '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
+			'link' => !empty($row['subject']) ? '<a href="' . ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>' : (!empty($data['subject']) ? $data['subject'] : ''),
 			'time' => strftime($clockFromat, forum_time(true, $row['event_time'])),
 			'extra' => $extra,
 		);
@@ -272,141 +272,6 @@ function markProjectsRead($projects, $unread = false)
 			'projects' => $projects,
 		)
 	);
-}
-
-/**
- * Generates url for project tools pages
- * @param array $params Array of GET parametrs
- * @param int $project 
- */
-function project_get_url($params = array(), $project = null, $is_admin = false)
-{
-	global $scripturl, $modSettings;
-	
-	$action = !$is_admin ? 'projects' : 'projectadmin';
-
-	// Detect project
-	if ($project === null && !empty($params))
-	{
-		if (isset($params['project']))
-			$project = $params['project'];
-		elseif (!empty($GLOBALS['project']))
-			$project = $GLOBALS['project'];
-		// Should never happen, log in case it happens
-		else
-		{
-			log_error('Unable to detect project! Please include this in bug report: ' . print_r(debug_backtrace(), true));
-			trigger_error('Unable to detect project! See error_log for details');
-		}
-	}
-			
-	// Running in "standalone" mode WITH rewrite
-	if (!empty($modSettings['projectStandalone']) && $modSettings['projectStandalone'] == 2)
-	{
-		// Main Page? Too easy
-		if (empty($params))
-			return $modSettings['projectStandaloneUrl'] . '/';
-			
-		if (isset($params['project']))
-			unset($params['project']);
-		
-		if (count($params) === 0)
-			return $modSettings['projectStandaloneUrl'] . '/' . $project . '/';
-
-		$query = '';
-
-		foreach ($params as $p => $value)
-		{
-			if ($value === null)
-				continue;
-
-			if (!empty($query))
-				$query .= ';';
-			else
-				$query .= '?';
-
-			if (is_int($p))
-				$query .= $value;
-			else
-				$query .= $p . '=' . $value;
-		}
-
-		return $modSettings['projectStandaloneUrl'] . '/' . $project . '/' . $query;
-	}
-	// Running in "standalone" mode without rewrite
-	elseif (!empty($modSettings['projectStandalone']))
-	{
-		$return = '';
-		
-		// Which url shall be base for this?
-		$base = !empty($modSettings['projectStandaloneUrl_project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]) ? $modSettings['projectStandaloneUrl_project_' . $project] : (!empty($modSettings['projectStandaloneUrl']) ? $modSettings['projectStandaloneUrl'] : '{SCRIPTURL}');
-		
-		if (isset($params['project']) && !empty($modSettings['projectStandaloneUrl_project_' . $project]))
-			unset($params['project']);
-			
-		if (count($params) === 0)
-		{
-			if ($base == '{SCRIPTURL}')
-				return $scripturl . '?action=' . $action;
-			
-			return strtr($base, array('{SCRIPTURL}' => $scripturl, '{BOARDURL}' => $GLOBALS['boardurl']));
-		}
-
-		if ($is_admin)
-			$params['action'] = $action;
-
-		foreach ($params as $p => $value)
-		{
-			if ($value === null)
-				continue;
-
-			if (!empty($return))
-				$return .= ';';
-			else
-				$return .= '?';
-
-			if (is_int($p))
-				$return .= $value;
-			else
-				$return .= $p . '=' . $value;
-		}
-
-		return strtr($base, array('{SCRIPTURL}' => $scripturl, '{BOARDURL}' => $GLOBALS['boardurl'])) . $return;		
-	}
-	// Running in standard mode
-	else
-	{
-		$return = '';
-
-		if (empty($params) || $is_admin)
-			$params['action'] = $action;
-
-		foreach ($params as $p => $value)
-		{
-			if ($value === null)
-				continue;
-
-			if (!empty($return))
-				$return .= ';';
-			else
-				$return .= '?';
-
-			if (is_int($p))
-				$return .= $value;
-			else
-				$return .= $p . '=' . $value;
-		}
-
-		return $scripturl . $return;
-	}
-}
-
-/**
- *
- */
-function project_admin_get_url($params = array(), $project = null)
-{
-	return project_get_url($params, $project, true);
 }
 
 /**
@@ -600,7 +465,7 @@ function issue_link_callback_2($data)
 	if (!$project)
 		return $data[0];
 		
-	return '<a href="' . project_get_url(array('issue' => $data[1] . '.0'), $project) . '">' . $data[1] . '</a>';
+	return '<a href="' . ProjectTools::get_url(array('issue' => $data[1] . '.0'), $project) . '">' . $data[1] . '</a>';
 }
 
 /**
@@ -690,9 +555,9 @@ function sendProjectNotification($issue, $type, $exclude = 0)
 
 		$replacements = array(
 			'ISSUENAME' => $issue['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $issue['project']),
+			'ISSUELINK' => ProjectTools::get_url(array('issue' => $issue['id'] . '.0'), $issue['project']),
 			'DETAILS' => $issue['body'],
-			'UNSUBSCRIBELINK' => project_get_url(array('project' => $issue['project'], 'sa' => 'subscribe'), $issue['project']),
+			'UNSUBSCRIBELINK' => ProjectTools::get_url(array('project' => $issue['project'], 'sa' => 'subscribe'), $issue['project']),
 		);
 
 		if ($type == 'new_issue' && !empty($rowmember['notify_send_body']))
@@ -897,10 +762,10 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 		$replacements = array(
 			'ISSUENAME' => $row['subject'],
-			'ISSUELINK' => project_get_url(array('issue' => $issue['id'] . '.0'), $row['id_project']),
+			'ISSUELINK' => ProjectTools::get_url(array('issue' => $issue['id'] . '.0'), $row['id_project']),
 			'BODY' => $comment['body'],
 			'UPDATES' => $update_body,
-			'UNSUBSCRIBELINK' => project_get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe'), $row['id_project']),
+			'UNSUBSCRIBELINK' => ProjectTools::get_url(array('issue' => $issue['id'] . '.0', 'sa' => 'subscribe'), $row['id_project']),
 		);
 
 		if (!empty($replacements['BODY']))
@@ -909,7 +774,7 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 			$replacements['BODY'] = $update_body;
 
 		if (isset($comment['id']))
-			$replacements['COMMENTLINK'] = project_get_url(array('issue' => $issue['id'] . '.com' . $comment['id']), $issue['project']);
+			$replacements['COMMENTLINK'] = ProjectTools::get_url(array('issue' => $issue['id'] . '.com' . $comment['id']), $issue['project']);
 
 		if ($type == 'new_comment' && empty($row['notify_send_body']) && !empty($update_body))
 		{

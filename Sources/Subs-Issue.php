@@ -997,12 +997,12 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 		$return[] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>',
-			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']),
+			'link' => '<a href="' . ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>',
+			'href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']),
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'], 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions']), $row['id_project']),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed']), $row['id_project']),
@@ -1029,7 +1029,7 @@ function getIssueList($start = 0, $num_issues, $order = 'i.updated DESC', $where
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_event_mod'],
-			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from']), $row['id_project']) . '#new',
+			'new_href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from']), $row['id_project']) . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -1184,13 +1184,13 @@ function createIssueList($issueListOptions)
 	$context[$key]['start'] = isset($issueListOptions['start']) ? $issueListOptions['start'] : 0;
 	
 	if (isset($issueListOptions['page_index']))
-		$context[$key]['page_index'] = constructPageIndex(project_get_url($issueListOptions['base_url']), $context[$key]['start'], $context[$key]['num_issues'], !empty($issueListOptions['issues_per_page']) ? $issueListOptions['issues_per_page'] : $context['issues_per_page']);
+		$context[$key]['page_index'] = constructPageIndex(ProjectTools::get_url($issueListOptions['base_url']), $context[$key]['start'], $context[$key]['num_issues'], !empty($issueListOptions['issues_per_page']) ? $issueListOptions['issues_per_page'] : $context['issues_per_page']);
 	
 	// Canonical url for search engines
 	if (!empty($issueListOptions['page_index']) && !empty($return['start']))
-		$context[$key]['canonical_url'] = project_get_url(array_merge($issueListOptions['base_url'], array('start' => $context[$key]['start'])));
+		$context[$key]['canonical_url'] = ProjectTools::get_url(array_merge($issueListOptions['base_url'], array('start' => $context[$key]['start'])));
 	elseif (!empty($issueListOptions['page_index']))
-		$context[$key]['canonical_url'] = project_get_url($issueListOptions['base_url']);
+		$context[$key]['canonical_url'] = ProjectTools::get_url($issueListOptions['base_url']);
 	
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -1252,12 +1252,12 @@ function createIssueList($issueListOptions)
 		$context[$key]['issues'][] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
-			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0')),
+			'link' => '<a href="' . ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0')) . '">' . $row['subject'] . '</a>',
+			'href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0')),
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions']), $row['id_project']),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed']), $row['id_project']),
@@ -1285,7 +1285,7 @@ function createIssueList($issueListOptions)
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_event_mod'],
-			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
+			'new_href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from'])) . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -1299,7 +1299,7 @@ function createIssueList($issueListOptions)
 function link_tags(&$tag, $key, $baseurl)
 {
 	if (is_array($baseurl))
-		$tag = '<a href="' . project_get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
+		$tag = '<a href="' . ProjectTools::get_url(array_merge($baseurl, array('tag' => urlencode($tag)))). '">' . $tag . '</a>';
 	else
 		$tag = '<a href="' . $baseurl . (strpos($baseurl,'?') !== false ? ';' : '?') . 'tag=' . urlencode($tag) . '">' . $tag . '</a>';
 	

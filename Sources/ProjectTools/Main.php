@@ -420,7 +420,7 @@ class ProjectTools_Main
 		// Add "Projects" to Linktree
 		$context['linktree'][] = array(
 			'name' => $txt['linktree_projects'],
-			'url' => project_get_url(),
+			'url' => ProjectTools::get_url(),
 		);
 		
 		// Project was not selected
@@ -493,8 +493,8 @@ class ProjectTools_Main
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)
 		{
-			$area['href'] = $area['id'] !== 'main' ? project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
-				: project_get_url(array('project' => ProjectTools_Project::getCurrent()->id));
+			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
+				: ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id));
 			
 			$context['project_tabs']['tabs'][$id] = array(
 				'title' => $area['title'],
@@ -511,7 +511,7 @@ class ProjectTools_Main
 		// Linktree
 		$context['linktree'][] = array(
 			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
-			'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
+			'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
 		);
 		
 		// Add area to linktree
@@ -557,7 +557,7 @@ class ProjectTools_Main
 		global $context, $smcFunc, $scripturl, $user_info, $txt;
 		
 		// Canonical url for search engines
-		$context['canonical_url'] = project_get_url();
+		$context['canonical_url'] = ProjectTools::get_url();
 	
 		$request = $smcFunc['db_query']('', '
 			SELECT
@@ -595,8 +595,8 @@ class ProjectTools_Main
 	
 			$context['projects'][$row['id_project']] = array(
 				'id' => $row['id_project'],
-				'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
-				'href' => project_get_url(array('project' => $row['id_project'])),
+				'link' => '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+				'href' => ProjectTools::get_url(array('project' => $row['id_project'])),
 				'name' => $row['name'],
 				'description' => $row['description'],
 				'new' => $row['new_from'] <= $row['id_event_mod'] && !$user_info['is_guest'],
@@ -618,7 +618,7 @@ class ProjectTools_Main
 					'closed' => $row['closed_' . $tracker['short']],
 					'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
 					'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
-					'link' => project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
+					'link' => ProjectTools::get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
 				);
 				unset($tracker);
 			}

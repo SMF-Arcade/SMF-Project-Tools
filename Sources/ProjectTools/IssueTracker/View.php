@@ -40,7 +40,7 @@ class ProjectTools_IssueTracker_View
 		$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 		
 		// URL for posting updates from ajax
-		$context['issue_xml_url'] = project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
+		$context['issue_xml_url'] = ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 		
 		// Tags
 		$context['can_add_tags'] = projectAllowedTo('issue_moderate');
@@ -93,7 +93,7 @@ class ProjectTools_IssueTracker_View
 			$context['current_tags'][] = array(
 				'id' => urlencode($row['tag']),
 				'tag' => $row['tag'],
-				'link' => '<a href="' . project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
+				'link' => '<a href="' . ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tag' => urlencode($row['tag']))) . '">' . $row['tag'] . '</a>',
 			);
 	
 		self::loadIssueView();
@@ -165,10 +165,10 @@ class ProjectTools_IssueTracker_View
 		}
 	
 		// Page Index
-		$context['page_index'] = constructPageIndex(project_get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events - 1, $context['comments_per_page'], true);
+		$context['page_index'] = constructPageIndex(ProjectTools::get_url(array('issue' => $issue . '.%d')), $_REQUEST['start'], $num_events - 1, $context['comments_per_page'], true);
 	
 		// Canonical url for search engines
-		$context['canonical_url'] = project_get_url(array('issue' => $issue . '.' . $_REQUEST['start']));
+		$context['canonical_url'] = ProjectTools::get_url(array('issue' => $issue . '.' . $_REQUEST['start']));
 		
 		$context['start'] = $_REQUEST['start'];
 	
@@ -602,7 +602,7 @@ class ProjectTools_IssueTracker_View
 			}
 	
 			if (empty($rows))
-				redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+				redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}issue_tags',
@@ -639,7 +639,7 @@ class ProjectTools_IssueTracker_View
 			}
 	
 			if (empty($rows))
-				redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+				redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}issue_tags
@@ -661,7 +661,7 @@ class ProjectTools_IssueTracker_View
 			$id_event = createTimelineEvent(ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_Project::getCurrent()->id, 'update_issue', $event_data, $posterOptions, $eventOptions);
 		}
 	
-		redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+		redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	}
 	
 	/**
@@ -698,8 +698,8 @@ class ProjectTools_IssueTracker_View
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['projects'][$row['id_project']] = array(
 				'id' => $row['id_project'],
-				'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
-				'href' => project_get_url(array('project' => $row['id_project'])),
+				'link' => '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+				'href' => ProjectTools::get_url(array('project' => $row['id_project'])),
 				'name' => $row['name'],
 			);
 		$smcFunc['db_free_result']($request);
@@ -718,7 +718,7 @@ class ProjectTools_IssueTracker_View
 			
 			updateIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, array('project' => $_POST['project_to']), $posterOptions);
 			
-			redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+			redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 		}
 		
 		// Template
@@ -756,7 +756,7 @@ class ProjectTools_IssueTracker_View
 	
 		deleteIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, $posterOptions);
 	
-		redirectexit(project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')));
+		redirectexit(ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')));
 	}
 }
 

@@ -23,7 +23,7 @@ function template_issue_list()
 	<div id="search_panel" class="windowbg2"', empty($options['issue_search_collapse']) ? '' : ' style="display: none;"', '>
 		<span class="topslice"><span></span></span>
 		<div style="padding: 0.5em 0.7em">
-			<form action="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')), '" method="post">
+			<form action="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')), '" method="post">
 				', $txt['issue_title'], ':
 				<input type="text" name="title" value="', $context['issue_search']['title'], '" tabindex="', $context['tabindex']++, '" />
 				<select name="status">
@@ -85,7 +85,7 @@ function template_issue_list()
 		'reportIssue' => array(
 			'text' => 'new_issue',
 			'image' => 'new_issue.gif',
-			'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => 'report')),
+			'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => 'report')),
 			'lang' => true,
 			'test' => 'can_report_issues',
 		),
@@ -143,7 +143,7 @@ function template_issue_list_full($id)
 			echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+						<a href="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
 							<img src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 						</a>
 					</td>

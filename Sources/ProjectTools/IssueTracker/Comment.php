@@ -437,7 +437,7 @@ class ProjectTools_IssueTracker_Comment
 		list ($id_event) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	
-		redirectexit(project_get_url(array('issue' => $issue . '.com' . $id_event)) . '#com' . $id_comment);
+		redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id_event)) . '#com' . $id_comment);
 	}
 	
 	/**
@@ -550,7 +550,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		logAction('project_remove_comment', array('comment' => $row['id_comment']));
 	
-		redirectexit(project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
+		redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	}
 }
 

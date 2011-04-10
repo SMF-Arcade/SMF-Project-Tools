@@ -14,9 +14,9 @@ function template_project_view()
 	global $context, $settings, $options, $txt, $modSettings;
 
 	$project_buttons = array(
-		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
-		'reportIssue' => array('test' => 'can_report_issues', 'text' => 'new_issue', 'image' => 'new_issue.gif', 'lang' => true, 'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => 'report')),),
-		'markRead' => array('text' => 'project_mark_read', 'image' => 'mark_project_read.gif', 'lang' => true, 'url' => project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'sa' => 'markasread')))
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
+		'reportIssue' => array('test' => 'can_report_issues', 'text' => 'new_issue', 'image' => 'new_issue.gif', 'lang' => true, 'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'sa' => 'report')),),
+		'markRead' => array('text' => 'project_mark_read', 'image' => 'mark_project_read.gif', 'lang' => true, 'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'sa' => 'markasread')))
 	);
 
 	echo '
@@ -181,7 +181,7 @@ function template_issue_list_block($block, $data)
 				echo '
 			<tr>
 				<td class="windowbg icon">
-					<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+					<a href="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
 						<img src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 					</a>
 				</td>

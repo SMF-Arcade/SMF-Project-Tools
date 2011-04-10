@@ -207,17 +207,17 @@ function projectProfileIssues($memID)
 		$context['issues'][$row['id_issue']] = array(
 			'id' => $row['id_issue'],
 			'name' => $row['subject'],
-			'link' => '<a href="' . project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>',
-			'href' => project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']),
+			'link' => '<a href="' . ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']) . '">' . $row['subject'] . '</a>',
+			'href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']),
 			'project' => array(
 				'id' => $row['id_project'],
 				'name' => $row['project_name'],
-				'link' => !empty($row['project_name']) ? '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['project_name'] . '</a>' : '',
+				'link' => !empty($row['project_name']) ? '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'])) . '">' . $row['project_name'] . '</a>' : '',
 			),
 			'category' => array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => !empty($row['category_name']) ? '<a href="' . project_get_url(array('project' =>  $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
+				'link' => !empty($row['category_name']) ? '<a href="' . ProjectTools::get_url(array('project' =>  $row['id_project'], 'sa' => 'issues', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>' : '',
 			),
 			'versions' => getVersions(explode(',', $row['versions']), $row['id_project']),
 			'versions_fixed' => getVersions(explode(',', $row['versions_fixed']), $row['id_project']),
@@ -239,7 +239,7 @@ function projectProfileIssues($memID)
 			'replies' => comma_format($row['replies']),
 			'priority' => $row['priority'],
 			'new' => $row['new_from'] <= $row['id_event_mod'],
-			'new_href' => project_get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from']), $row['id_project']) . '#new',
+			'new_href' => ProjectTools::get_url(array('issue' => $row['id_issue'] . '.com' . $row['new_from']), $row['id_project']) . '#new',
 		);
 	}
 	$smcFunc['db_free_result']($request);

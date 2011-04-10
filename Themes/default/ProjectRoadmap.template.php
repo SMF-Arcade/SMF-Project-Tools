@@ -30,8 +30,8 @@ function template_project_roadmap()
 					<div style="width: ', $version['progress'], '%"></div>
 				</div>
 				<div class="smalltext">
-					<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'status' => 'open', 'version' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
-					<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'status' => 'closed', 'version' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
+					<a href="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'status' => 'open', 'version' => $version['id'])), '">', sprintf($txt['open_issues'], $version['issues']['open']), '</a> /
+					<a href="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'status' => 'closed', 'version' => $version['id'])), '">', sprintf($txt['closed_issues'], $version['issues']['closed']), '</a>
 				</div>
 				<p>
 					', $version['description'], '
@@ -102,7 +102,7 @@ function template_project_roadmap_version()
 				echo '
 				<tr>
 					<td class="windowbg icon">
-						<a href="', project_get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
+						<a href="', ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues', 'tracker' => $issue['tracker']['short'])), '">
 							<img src="', $settings['default_images_url'], '/', $issue['tracker']['image'], '" alt="', $issue['tracker']['name'], '" />
 						</a>
 					</td>

@@ -182,7 +182,7 @@ class ProjectTools_Project
 		$this->description = /*parse_bbc*/($row['description']);
 		$this->long_description = /*parse_bbc*/($row['long_description']);
 		
-		$this->link = project_get_url(array('project' => $row['id_project']));
+		$this->link = ProjectTools::get_url(array('project' => $row['id_project']));
 		$this->href = '<a href="' . $this->link . '">' . $row['name'] . '</a>';
 		
 		$this->theme = $row['project_theme'];
@@ -308,7 +308,7 @@ class ProjectTools_Project
 				'closed' => $row['closed_' . $tracker['short']],
 				'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
 				'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
-				'link' => project_get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
+				'link' => ProjectTools::get_url(array('project' => $row['id_project'], 'area' => 'issues', 'tracker' => $tracker['short'])),
 			);
 			unset($tracker);
 		}

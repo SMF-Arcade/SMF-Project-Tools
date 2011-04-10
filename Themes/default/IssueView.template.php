@@ -22,7 +22,7 @@ function template_issue_view_above()
 			'text' => 'reply',
 			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
-			'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0' , 'area' => 'issues', 'sa' => 'reply')),
+			'url' => ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0' , 'area' => 'issues', 'sa' => 'reply')),
 			'lang' => true
 		),
 	);
@@ -55,7 +55,7 @@ function template_issue_view_main()
 			'text' => 'reply',
 			'test' => 'can_comment',
 			'image' => 'reply_issue.gif',
-			'url' => /*project_get_url(array('')),*/$scripturl . '?issue=' . ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0;sa=reply',
+			'url' => /*ProjectTools::get_url(array('')),*/$scripturl . '?issue=' . ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0;sa=reply',
 			'lang' => true
 		),
 	);
@@ -92,9 +92,9 @@ function template_issue_view_below()
 	global $context, $settings, $options, $txt, $modSettings, $settings;
 
 	$mod_buttons = array(
-		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
-		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
-		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
+		'delete' => array('test' => 'can_issue_moderate', 'text' => 'issue_delete', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['issue_delete_confirm'] . '\');"', 'url' => ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'delete', $context['session_var'] => $context['session_id']))),
+		'move' => array('test' => 'can_issue_move', 'text' => 'issue_move', 'lang' => true, 'url' => ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move', $context['session_var'] => $context['session_id']))),
+		'subscribe' => array('test' => 'can_subscribe', 'text' => empty($context['is_subscribed']) ? 'project_subscribe' : 'project_unsubscribe', 'image' => empty($context['is_subscribed']) ? 'subscribe.gif' : 'unsubscribe.gif', 'lang' => true, 'url' => ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'sa' => 'subscribe', $context['session_var'] => $context['session_id']))),
 	);
 
 	echo '
@@ -225,7 +225,7 @@ function template_issue_view_below()
 				', $txt['issue_tags'], '
 			</h3>
 		</div>
-		<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
+		<form action="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags')), '" method="post">
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>';
 
@@ -243,7 +243,7 @@ function template_issue_view_below()
 
 				if ($context['can_remove_tags'])
 					echo '
-						<a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
+						<a href="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'tags', 'remove', 'tag' => $tag['id'], $context['session_var'] => $context['session_id'])), '"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['remove_tag'], '" /></a>';
 
 					echo '
 					</li>';
@@ -309,7 +309,7 @@ function template_issue_view_below()
 				<hr />';
 				
 			echo '
-				<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">		
+				<form action="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, '.0', 'area' => 'issues', 'sa' => 'upload')), '" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">		
 					<input type="file" size="32" name="attachment[]" tabindex="', $context['tabindex']++, '" /><br />';
 
 			if (!empty($modSettings['attachmentCheckExtensions']))
@@ -338,7 +338,7 @@ function template_issue_view_below()
 	if ($context['can_comment'])
 	{
 		echo '
-	<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues',  'sa' => 'reply2')), '" method="post">
+	<form action="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues',  'sa' => 'reply2')), '" method="post">
 		<div class="tborder">
 			<div class="cat_bar">
 				<h3 class="catbg">
@@ -675,17 +675,17 @@ function template_event_full(&$event, &$alternate)
 	// Can they reply? Have they turned on quick reply?
 	if ($context['can_comment'])
 		echo '
-						<li class="quote_button" ><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['quote'], '</a></li>';
+						<li class="quote_button" ><a href="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'reply', 'quote' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['quote'], '</a></li>';
 
 	// Can the user modify the contents of this post?
 	if ($event['comment']['can_edit'])
 		echo '
-						<li class="modify_button"><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
+						<li class="modify_button"><a href="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'edit', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '">', $txt['modify'], '</a></li>';
 
 	// How about... even... remove it entirely?!
 	if ($event['comment']['can_remove'])
 		echo '
-						<li class="remove_button"><a href="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
+						<li class="remove_button"><a href="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'removeComment', 'com' => $event['comment']['id'], $context['session_var'] => $context['session_id'])), '" onclick="return confirm(\'', $txt['remove_comment_sure'], '?\');">', $txt['remove'], '</a></li>';
 
 	if ($context['can_comment'] || $event['comment']['can_edit'] || $event['comment']['can_remove'])
 		echo '
@@ -861,7 +861,7 @@ function template_issue_move()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings, $settings;
 
 	echo '
-	<form action="', project_get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0', 'area' => 'issues', 'sa' => 'move')), '" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder">
 			<div class="cat_bar">
 				<h3 class="catbg">

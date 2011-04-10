@@ -483,8 +483,8 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 
 			$context['boardindex_projects'][$key][$row['id_project']] = array(
 				'id' => $row['id_project'],
-				'link' => '<a href="' . project_get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
-				'href' => project_get_url(array('project' => $row['id_project'])),
+				'link' => '<a href="' . ProjectTools::get_url(array('project' => $row['id_project'])) . '">' . $row['name'] . '</a>',
+				'href' => ProjectTools::get_url(array('project' => $row['id_project'])),
 				'name' => $row['name'],
 				'description' => $row['description'],
 				'new' => $row['new_from'] <= $row['id_event_mod'] && !$user_info['is_guest'],
@@ -506,7 +506,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 					'closed' => $row['closed_' . $tracker['short']],
 					'total' => $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']],
 					'progress' => round(($row['closed_' . $tracker['short']] / max(1, $row['open_' . $tracker['short']] + $row['closed_' . $tracker['short']])) * 100, 2),
-					'link' => project_get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
+					'link' => ProjectTools::get_url(array('project' => $row['id_project'], 'sa' => 'issues', 'tracker' => $tracker['short'])),
 				);
 				unset($tracker);
 			}
@@ -712,7 +712,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 			elseif (isset($actions['action']) && $actions['action'] == 'projects')
 			{
 				if (allowedTo('project_access'))
-					$data[$k] = sprintf($txt['who_project_index'], project_get_url());
+					$data[$k] = sprintf($txt['who_project_index'], ProjectTools::get_url());
 				else
 					$data[$k] = $txt['who_hidden'];
 			}
@@ -747,7 +747,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		{
 			// Put the project name into the string for each member...
 			foreach ($project_ids[$row['id_project']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('project' => $row['id_project'])), $row['name']);
+				$data[$k] = sprintf($session_text, ProjectTools::get_url(array('project' => $row['id_project'])), $row['name']);
 		}
 		$smcFunc['db_free_result']($request);
 	}
@@ -773,7 +773,7 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 		{
 			// Put the project name into the string for each member...
 			foreach ($issue_ids[$row['id_issue']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, project_get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']), $row['subject']);
+				$data[$k] = sprintf($session_text, ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'), $row['id_project']), $row['subject']);
 		}
 		$smcFunc['db_free_result']($request);
 	}
