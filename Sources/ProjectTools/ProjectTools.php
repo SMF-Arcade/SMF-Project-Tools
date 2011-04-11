@@ -64,8 +64,8 @@ class ProjectTools
 		{
 			if (isset($params['project']))
 				$project = $params['project'];
-			elseif (!empty($GLOBALS['project']))
-				$project = $GLOBALS['project'];
+			elseif (ProjectTools_Project::getCurrent())
+				$project = ProjectTools_Project::getCurrent()->id;
 			// Should never happen, log in case it happens
 			else
 			{
