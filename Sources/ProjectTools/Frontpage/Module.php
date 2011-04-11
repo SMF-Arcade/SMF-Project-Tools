@@ -60,7 +60,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 		$context['canonical_url'] = ProjectTools::get_url(array('project' => $project));
 		
 		$context['can_subscribe'] = !$user_info['is_guest'];
-		$context['can_report_issues'] = projectAllowedTo('issue_report');
+		$context['can_report_issues'] = ProjectTools::allowedTo('issue_report');
 	
 		if (!$user_info['is_guest'] && !empty($modSettings['project_maxEventID']))
 		{

@@ -26,11 +26,11 @@ class ProjectTools_IssueTracker_View
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 		
 		$context['show_update'] = false;
-		$context['can_comment'] = projectAllowedTo('issue_comment');
-		$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-		$context['can_issue_move'] = projectAllowedTo('issue_move');
-		$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
-		$context['can_issue_attach'] = projectAllowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
+		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_move'] = ProjectTools::allowedTo('issue_move');
+		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
 		$context['can_issue_warning'] = allowedTo('issue_warning');
 		$context['can_moderate_forum'] = allowedTo('moderate_forum');
 		$context['can_subscribe'] = !$user_info['is_guest'];
@@ -43,8 +43,8 @@ class ProjectTools_IssueTracker_View
 		$context['issue_xml_url'] = ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
 		
 		// Tags
-		$context['can_add_tags'] = projectAllowedTo('issue_moderate');
-		$context['can_remove_tags'] = projectAllowedTo('issue_moderate');
+		$context['can_add_tags'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_remove_tags'] = ProjectTools::allowedTo('issue_moderate');
 	
 		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 	
@@ -57,7 +57,7 @@ class ProjectTools_IssueTracker_View
 			$context['show_update'] = true;
 		}
 	
-		if (projectAllowedTo('issue_moderate'))
+		if (ProjectTools::allowedTo('issue_moderate'))
 		{
 			$context['can_assign'] = true;
 			$context['assign_members'] = ProjectTools_Project::getCurrent()->developers;
@@ -74,7 +74,7 @@ class ProjectTools_IssueTracker_View
 		if (!ProjectTools_IssueTracker_Issue::getCurrent())
 			fatal_lang_error('issue_not_found', false);
 	
-		projectIsAllowedTo('issue_view');
+		ProjectTools::isAllowedTo('issue_view');
 	
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
@@ -340,8 +340,8 @@ class ProjectTools_IssueTracker_View
 					'timestamp' => forum_time(true, $row['edit_time']),
 					'name' => $row['edit_name'],
 				),
-				'can_remove' => projectAllowedTo('delete_comment_' . $type),
-				'can_edit' => projectAllowedTo('edit_comment_' . $type),
+				'can_remove' => ProjectTools::allowedTo('delete_comment_' . $type),
+				'can_edit' => ProjectTools::allowedTo('edit_comment_' . $type),
 				'new' => empty($row['is_read']),
 				'first_new' => $first_new && empty($row['is_read']),
 			);
@@ -492,7 +492,7 @@ class ProjectTools_IssueTracker_View
 		
 		if (isset($_REQUEST['tag']) && !isset($_REQUEST['remove']))
 		{
-			projectIsAllowedTo('issue_moderate');
+			ProjectTools::isAllowedTo('issue_moderate');
 	
 			$rows = array();
 			$tags = array();
@@ -529,7 +529,7 @@ class ProjectTools_IssueTracker_View
 		}
 		elseif (isset($_REQUEST['tag']))
 		{
-			projectIsAllowedTo('issue_moderate');
+			ProjectTools::isAllowedTo('issue_moderate');
 	
 			$rows = array();
 			$tags = array();
@@ -583,7 +583,7 @@ class ProjectTools_IssueTracker_View
 		if (!ProjectTools_IssueTracker_Issue::getCurrent())
 			fatal_lang_error('issue_not_found', false);
 	
-		projectIsAllowedTo('issue_move');
+		ProjectTools::isAllowedTo('issue_move');
 	
 		// Get list of projects
 		$request = $smcFunc['db_query']('', '
@@ -648,7 +648,7 @@ class ProjectTools_IssueTracker_View
 		if (!ProjectTools_IssueTracker_Issue::getCurrent())
 			fatal_lang_error('issue_not_found', false);
 	
-		projectIsAllowedTo('issue_moderate');
+		ProjectTools::isAllowedTo('issue_moderate');
 	
 		$posterOptions = array(
 			'id' => $user_info['id'],

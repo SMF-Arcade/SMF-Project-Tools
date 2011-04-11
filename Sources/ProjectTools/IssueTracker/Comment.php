@@ -23,17 +23,17 @@ class ProjectTools_IssueTracker_Comment
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options, $project;
 	
-		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !projectAllowedTo('issue_comment'))
+		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
 			fatal_lang_error('issue_not_found', false);
 	
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
 		$context['show_update'] = false;
-		$context['can_comment'] = projectAllowedTo('issue_comment');
+		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
 		$context['can_subscribe'] = !$user_info['is_guest'];
-		$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-		$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
-		$context['can_issue_attach'] = projectAllowedTo('issue_attach');
+		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach');
 	
 		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 	
@@ -43,7 +43,7 @@ class ProjectTools_IssueTracker_Comment
 			$context['show_update'] = true;
 		}
 	
-		if (projectAllowedTo('issue_moderate'))
+		if (ProjectTools::allowedTo('issue_moderate'))
 		{
 			$context['can_assign'] = true;
 			$context['assign_members'] = &ProjectTools_Project::getCurrent()->developers;
@@ -84,7 +84,7 @@ class ProjectTools_IssueTracker_Comment
 		// Editing
 		if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
 		{
-			projectIsAllowedTo('edit_comment_own');
+			ProjectTools::isAllowedTo('edit_comment_own');
 			require_once($sourcedir . '/Subs-Post.php');
 	
 			if (empty($_REQUEST['com']) || !is_numeric($_REQUEST['com']))
@@ -95,7 +95,7 @@ class ProjectTools_IssueTracker_Comment
 					IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
 				FROM {db_prefix}issue_comments AS c
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
-				WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+				WHERE id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
 					AND c.id_member = {int:current_user}' : '') . '
 				ORDER BY id_comment',
 				array(
@@ -222,17 +222,17 @@ class ProjectTools_IssueTracker_Comment
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $project;
 	
-		if (!ProjectTools_Project::getCurrent() || !projectAllowedTo('issue_comment'))
+		if (!ProjectTools_Project::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
 			fatal_lang_error('issue_not_found', false);
 	
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
 		$context['show_update'] = false;
-		$context['can_comment'] = projectAllowedTo('issue_comment');
+		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
 		$context['can_subscribe'] = !$user_info['is_guest'];
-		$context['can_issue_moderate'] = projectAllowedTo('issue_moderate');
-		$context['can_issue_update'] = projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate');
-		$context['can_issue_attach'] = projectAllowedTo('issue_attach');
+		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach');
 	
 		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 	
@@ -242,7 +242,7 @@ class ProjectTools_IssueTracker_Comment
 			$context['show_update'] = true;
 		}
 	
-		if (projectAllowedTo('issue_moderate'))
+		if (ProjectTools::allowedTo('issue_moderate'))
 		{
 			$context['can_assign'] = true;
 			$context['assign_members'] = &ProjectTools_Project::getCurrent()->developers;
@@ -330,7 +330,7 @@ class ProjectTools_IssueTracker_Comment
 			'mark_read' => true,
 		);
 	
-		if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
+		if (ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate'))
 			handleUpdate($posterOptions, $issueOptions);
 	
 		if (count($issueOptions) > 1)
@@ -355,7 +355,7 @@ class ProjectTools_IssueTracker_Comment
 		}
 		else
 		{
-			projectIsAllowedTo('edit_comment_own');
+			ProjectTools::isAllowedTo('edit_comment_own');
 			require_once($sourcedir . '/Subs-Post.php');
 	
 			if (empty($_REQUEST['com']) || !is_numeric($_REQUEST['com']))
@@ -366,7 +366,7 @@ class ProjectTools_IssueTracker_Comment
 					IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
 				FROM {db_prefix}issue_comments AS c
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
-				WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+				WHERE id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
 					AND c.id_member = {int:current_user}' : '') . '
 				ORDER BY id_comment',
 				array(
@@ -450,13 +450,13 @@ class ProjectTools_IssueTracker_Comment
 		if (!ProjectTools_IssueTracker_Issue::getCurrent() || empty($_REQUEST['com']))
 			fatal_lang_error('issue_not_found', false);
 	
-		projectIsAllowedTo('edit_comment_own');
+		ProjectTools::isAllowedTo('edit_comment_own');
 		require_once($sourcedir . '/Subs-Post.php');
 	
 		$request = $smcFunc['db_query']('', '
 			SELECT c.id_comment, c.id_event, c.poster_name, c.id_member
 			FROM {db_prefix}issue_comments AS c
-			WHERE id_comment = {int:comment}' . (!projectAllowedTo('edit_comment_any') ? '
+			WHERE id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
 				AND c.id_member = {int:current_user}' : '') . '
 				AND c.id_issue = {int:issue}
 			ORDER BY id_comment',

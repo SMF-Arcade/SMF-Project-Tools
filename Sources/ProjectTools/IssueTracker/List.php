@@ -23,7 +23,7 @@ class ProjectTools_IssueTracker_List
 	{
 		global $context, $txt;
 	
-		projectIsAllowedTo('issue_view');
+		ProjectTools::isAllowedTo('issue_view');
 	
 		// Sorting methods
 		$sort_methods = array(
@@ -104,8 +104,8 @@ class ProjectTools_IssueTracker_List
 		
 		$context['canonical_url'] = $context[$context['issue_list_id']]['canonical_url'];
 	
-		$context['show_checkboxes'] = projectAllowedTo('issue_moderate');
-		$context['can_report_issues'] = projectAllowedTo('issue_report');
+		$context['show_checkboxes'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_report_issues'] = ProjectTools::allowedTo('issue_report');
 		
 		// Template
 		$context['sub_template'] = 'issue_list';

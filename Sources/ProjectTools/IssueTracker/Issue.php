@@ -242,8 +242,8 @@ class ProjectTools_IssueTracker_Issue
 				'name' => $row['edit_name'],
 			),
 			'can_see_ip' => allowedTo('moderate_forum') || ($row['id_member'] == $user_info['id'] && !empty($user_info['id'])),
-			'can_remove' => projectAllowedTo('delete_comment_' . $type),
-			'can_edit' => projectAllowedTo('edit_comment_' . $type),
+			'can_remove' => ProjectTools::allowedTo('delete_comment_' . $type),
+			'can_edit' => ProjectTools::allowedTo('edit_comment_' . $type),
 			'first_new' => $row['id_event_mod'] > $row['new_from'],
 		);
 		

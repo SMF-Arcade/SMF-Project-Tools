@@ -23,7 +23,7 @@ class ProjectTools_IssueTracker_Report
 	{
 		global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project, $options;
 	
-		projectIsAllowedTo('issue_report');
+		ProjectTools::isAllowedTo('issue_report');
 		require_once($sourcedir . '/Subs-Post.php');
 	
 		$context['can_subscribe'] = !$user_info['is_guest'];
@@ -128,7 +128,7 @@ class ProjectTools_IssueTracker_Report
 	{
 		global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project;
 	
-		projectIsAllowedTo('issue_report');
+		ProjectTools::isAllowedTo('issue_report');
 	
 		$context['can_subscribe'] = !$user_info['is_guest'];
 	
@@ -291,7 +291,7 @@ class ProjectTools_IssueTracker_Report
 			),
 		);
 	
-		if (projectAllowedTo('issue_update_' . $type) || projectAllowedTo('issue_moderate'))
+		if (ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate'))
 			self::handleUpdate($posterOptions, $issueOptions, true);
 	
 		if (!empty($issueOptions))
@@ -416,7 +416,7 @@ class ProjectTools_IssueTracker_Report
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
 		// Assigning
-		if (projectAllowedTo('issue_moderate') && isset($_REQUEST['assign']))
+		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['assign']))
 		{
 			if (!isset(ProjectTools_Project::getCurrent()->developers[(int) $_REQUEST['assign']]))
 				$_REQUEST['assign'] = 0;
@@ -519,7 +519,7 @@ class ProjectTools_IssueTracker_Report
 		}
 	
 		// Version fixed
-		if (projectAllowedTo('issue_moderate') && isset($_REQUEST['version_fixed']))
+		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['version_fixed']))
 		{
 			$issueOptions['versions_fixed'] = is_array($_REQUEST['version_fixed']) ? $_REQUEST['version_fixed'] : explode(',', $_REQUEST['version_fixed']);
 	
@@ -576,7 +576,7 @@ class ProjectTools_IssueTracker_Report
 		}
 	
 		// Status
-		if (projectAllowedTo('issue_moderate') && isset($_REQUEST['status']))
+		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['status']))
 		{
 			if (isset($context['issue_status'][(int) $_REQUEST['status']]))
 				$issueOptions['status'] = (int) $_REQUEST['status'];
@@ -621,7 +621,7 @@ class ProjectTools_IssueTracker_Report
 		if (empty($modSettings['projectAttachments']))
 			redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 	
-		projectIsAllowedTo('issue_attach');
+		ProjectTools::isAllowedTo('issue_attach');
 	
 		$total_size = 0;
 	
