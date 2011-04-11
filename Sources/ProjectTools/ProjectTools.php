@@ -17,6 +17,38 @@ if (!defined('SMF'))
 class ProjectTools
 {
 	/**
+	* Checks whatever permission is allowed in current project
+	*/
+	public static function allowedTo($permission)
+	{
+		global $context, $user_info;
+	   
+		if (!ProjectTools_Project::getCurrent())
+			trigger_error('projectAllowedTo(): Project not loaded', E_FATAL_ERROR);
+		   
+		return ProjectTools_Project::getCurrent()->allowedTo($permission);
+	}
+   
+	/**
+	 * Checks if permission is allowed in curernt project and shows error page if not
+	 */
+	public static function isAllowedTo($permission)
+	{
+		global $context, $txt, $user_info;
+		
+		if (!self::allowedTo($permission))
+		{
+			if ($user_info['is_guest'])
+				is_not_guest($txt['cannot_project_' . $permission]);
+		
+			fatal_lang_error('cannot_project_' . $permission, false);
+		
+			// Getting this far is a really big problem, but let's try our best to prevent any cases...
+			trigger_error('Hacking attempt...', E_USER_ERROR);
+		}
+	}
+
+	/**
 	* Generates url for project tools pages
 	* @param array $params Array of GET parametrs
 	* @param int $project 
