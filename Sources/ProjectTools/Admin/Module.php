@@ -27,14 +27,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
-		
-		//
-		foreach ($context['active_project_modules'] as $id => $module)
-		{
-			$area = $module->RegisterAdminSubactions();
-			
-		}
-		
+
 		$context['project_sub_tabs'] = array(
 			'main' => array(
 				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin')),
@@ -62,6 +55,26 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 			'versions' => array($this, 'ProjectAdminVersions'),
 			'category' => array($this, 'ProjectAdminCategory'),
 		);
+		
+		//
+		foreach ($context['active_project_modules'] as $id => $module)
+		{
+			if (method_exists($module, 'RegisterAdminSubactions'))
+			{
+				$area = $module->RegisterAdminSubactions();
+				
+				foreach ($area as $id => $a)
+				{
+					$context['project_sub_tabs'][$id] = array(
+						'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => $id)),
+						'title' => $a['title'],
+						'is_selected' => false,
+						'order' => !isset($a['order']) ? 10 : (int) $a['order'],						
+					);
+					$subActions[$id] = $a['callback'];
+				}
+			}
+		}
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';

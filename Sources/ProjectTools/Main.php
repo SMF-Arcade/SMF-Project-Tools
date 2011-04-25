@@ -466,9 +466,11 @@ class ProjectTools_Main
 		//
 		foreach ($context['active_project_modules'] as $id => $module)
 		{
-			$area = $module->RegisterArea();
-			$area['module'] = $module;
-			$project_areas[$area['id']] = $area;
+			if ($area = $module->RegisterArea())
+			{
+				$area['module'] = $module;
+				$project_areas[$area['id']] = $area;
+			}
 		}
 		
 		self::CreateAreas($project_areas);

@@ -37,6 +37,8 @@ abstract class ProjectTools_ModuleBase
 	function __construct(ProjectTools_Project $project)
 	{
 		$this->project = $project;
+		
+		loadLanguage(str_replace('_', '/', substr(get_class($this), 0, -7)));
 	}
 	
 	/**

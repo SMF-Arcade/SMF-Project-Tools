@@ -226,11 +226,6 @@ $txt['allowed_types'] = 'Allowed Filetypes';
 $txt['max_size'] = 'Maximum attachment size allowed';
 $txt['add_attach'] = 'Attach';
 
-// Reply To Issue
-$txt['issue_reply'] = 'Reply';
-$txt['preview'] = 'Preview';
-$txt['issue_save'] = 'Save';
-
 // Move Project
 $txt['move_issue'] = 'Move Issue';
 $txt['project_move_to'] = 'Move To Project:';
@@ -239,9 +234,6 @@ $txt['move_issue_btn'] = 'Move Issue';
 // Page Titles
 $txt['project_list_title'] = '%s - Projects';
 $txt['project_title'] = 'Projects - %s';
-$txt['project_title_issues'] = '%s - Issues';
-$txt['project_view_issue'] = '%s - Issue #%d: %s';
-$txt['project_report_issue'] = '%s - Report Issue';
 $txt['project_roadmap_title'] = '%s - Roadmap';
 
 // Errors
