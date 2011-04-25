@@ -127,6 +127,7 @@ class ProjectTools_Hooks
 				'title' => $txt['projects'],
 				'href' => ProjectTools::get_url(),
 				'show' => $context['allow_project'],
+				'active_button' => false,
 				'sub_buttons' => array(
 					'admin' => array(
 						'title' => $txt['projects_admin'],

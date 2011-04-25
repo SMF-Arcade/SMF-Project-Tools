@@ -273,7 +273,7 @@ function ProjectsMaintenanceUpgrade()
  */
 function ProjectsAdminExtensions()
 {
-	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $txt;
+	global $context, $smcFunc, $sourcedir, $scripturl, $user_info, $modSettings, $txt;
 	
 	if (isset($_REQUEST['save']))
 	{
@@ -295,12 +295,12 @@ function ProjectsAdminExtensions()
 		}
 		
 		// Call onDisable
-		foreach (array_diff($_POST['extension'], $modSettings['projectExtensions']) as $extension)
+		foreach (array_diff($modSettings['projectExtensions'], $_POST['extension']) as $extension)
 		{
 			$ext = ProjectTools_Extensions::loadExtension($extension, false);
 			
 			if (method_exists($ext, 'onDisable'))
-				$ext->onActivate();
+				$ext->onDisable();
 		}
 		
 		updateSettings(array('projectExtensions' => implode(',', $_POST['extension'])));
