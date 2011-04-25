@@ -269,6 +269,7 @@ function ProjectsMaintenanceUpgrade()
 
 /**
  * Installed extensions page
+ * @return ProjectTools_ExtensionBase
  */
 function ProjectsAdminExtensions()
 {
@@ -277,8 +278,31 @@ function ProjectsAdminExtensions()
 	if (isset($_REQUEST['save']))
 	{
 		foreach (ProjectTools_Extensions::getInstalledExtensions() as $ext)
+		{
 			if (empty($ext['can_disable']))
 				$_POST['extension'][] = $ext['id'];
+		}
+		
+		$disabled = array_diff($modSettings['projectExtensions'], $_POST['extension']);
+		
+		// Call onActive
+		foreach (array_diff($_POST['extension'], $modSettings['projectExtensions']) as $extension)
+		{
+			$ext = ProjectTools_Extensions::loadExtension($extension, false);
+			
+			if (method_exists($ext, 'onActivate'))
+				$ext->onActivate();
+		}
+		
+		// Call onDisable
+		foreach (array_diff($_POST['extension'], $modSettings['projectExtensions']) as $extension)
+		{
+			$ext = ProjectTools_Extensions::loadExtension($extension, false);
+			
+			if (method_exists($ext, 'onDisable'))
+				$ext->onActivate();
+		}
+		
 		updateSettings(array('projectExtensions' => implode(',', $_POST['extension'])));
 		
 		redirectexit('action=admin;area=projectsadmin;sa=extensions');
