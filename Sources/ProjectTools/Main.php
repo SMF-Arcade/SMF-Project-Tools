@@ -452,7 +452,7 @@ class ProjectTools_Main
 		global $context, $txt, $settings;
 			
 		$context['active_project_modules'] = array();
-			
+
 		// Load Modules
 		foreach (ProjectTools_Project::getCurrent()->extensions as $id => $ext)
 		{
@@ -489,6 +489,7 @@ class ProjectTools_Main
 			$_REQUEST['sa'] = 'main';
 			
 		self::$current_area = &self::$areas[$_REQUEST['area']];
+			
 		
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)

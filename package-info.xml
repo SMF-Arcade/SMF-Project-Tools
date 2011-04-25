@@ -26,21 +26,14 @@
 		<readme parsebbc="true">readme.txt</readme>
 		
 		<require-dir name="Sources/ProjectTools" destination="$sourcedir" />
+		<require-dir name="Themes/default/languages/ProjectTools" destination="$languagedir" />
 
 		<!-- These files goes to Sources directory -->
-		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
-		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
-		<require-file name="Sources/IssueView.php" destination="$sourcedir" />
-		<require-file name="Sources/IssueReport.php" destination="$sourcedir" />
 		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectModule-Admin.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectModule-General.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectModule-Issues.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectModule-Roadmap.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectView.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
@@ -100,6 +93,7 @@
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
 
 		<remove-dir name="$sourcedir/ProjectTools" />
+		<remove-dir name="$languagedir/ProjectTools" />
 
 		<!-- Remove these files from Sources -->
 		<remove-file name="$sourcedir/IssueComment.php" />
