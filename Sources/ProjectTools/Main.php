@@ -100,7 +100,7 @@ class ProjectTools_Main
 	static public function load()
 	{
 		global $context, $smcFunc, $modSettings, $user_info, $txt, $settings, $projects_show;
-		global $project, $issue, $sourcedir;
+		global $sourcedir;
 	
 		//
 		require_once($sourcedir . '/Subs-Project.php');

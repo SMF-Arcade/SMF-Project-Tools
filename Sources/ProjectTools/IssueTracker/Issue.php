@@ -304,6 +304,297 @@ class ProjectTools_IssueTracker_Issue
 		
 		return true;
 	}
+	
+	/**
+	 * Updates issue in database
+	 * @param int $id_issue ID of issue to update
+	 * @param array $issueOptions
+	 * @param array &$posterOptions
+	 * @param boolean $return_log Return event data instead of inserting into database
+	 */
+	public function update($issueOptions, $posterOptions, $return_log = false)
+	{
+		global $smcFunc, $context;
+	
+		//if (!isset($context['issue_status']))
+		//	trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
+	
+		$event_data = array(
+			'changes' => array(),
+		);
+	
+		$issueUpdates = array();
+	
+		// Make sure project exists always
+		if (!isset($issueOptions['project']))
+			$issueOptions['project'] = $this->project;
+	
+		if (isset($issueOptions['project']) && $issueOptions['project'] != $this->project)
+		{
+			$issueUpdates[] = 'id_project = {int:project}';
+			$issueOptions['project'] = $issueOptions['project'];
+	
+			$event_data['changes'][] = array(
+				'project', $this->project, $issueOptions['project']
+			);
+		}
+	
+		if (isset($issueOptions['private']) && $issueOptions['private'] != $this->is_private)
+		{
+			$issueUpdates[] = 'private_issue = {int:private}';
+			$issueOptions['private'] = !empty($issueOptions['private']) ? 1 : 0;
+	
+			$event_data['changes'][] = array(
+				'view_status', $this->is_private ? 1 : 0, $issueOptions['private']
+			);
+		}
+	
+		if (!empty($issueOptions['subject']) && $issueOptions['subject'] != $this->name)
+		{
+			$issueUpdates[] = 'subject = {string:subject}';
+	
+			$event_data['changes'][] = array(
+				'rename', $this->name, $issueOptions['subject']
+			);
+		}
+	
+		if (!empty($issueOptions['status']) && $issueOptions['status'] != $this->status['id'])
+		{
+			$issueUpdates[] = 'status = {int:status}';
+	
+			$event_data['changes'][] = array(
+				'status', $this->status['id'], $issueOptions['status'],
+			);
+		}
+	
+		if (isset($issueOptions['assignee']) && $issueOptions['assignee'] != $this->assignee['id'])
+		{
+			$issueUpdates[] = 'id_assigned = {int:assignee}';
+	
+			$event_data['changes'][] = array(
+				'assign', $this->assignee['id'], $issueOptions['assignee'],
+			);
+		}
+	
+		if (!empty($issueOptions['priority']) && $issueOptions['priority'] != $this->priority_num)
+		{
+			$issueUpdates[] = 'priority = {int:priority}';
+	
+			$event_data['changes'][] = array(
+				'priority', $this->priority_num, $issueOptions['priority'],
+			);
+		}
+		
+		$oldVersions = array_merge(array_keys($this->versions), array_keys($this->versions_fixed));
+		$newVersions = array();
+	
+		if (isset($issueOptions['versions']) && $issueOptions['versions'] != array_keys($this->versions))
+		{
+			$issueUpdates[] = 'versions = {string:versions}';
+			
+			if (empty($issueOptions['versions']))
+				$issueOptions['versions'] = array(0);
+		
+			$newVersions = array_merge($newVersions, $issueOptions['versions']);
+			$issueOptions['versions'] = implode(',', $issueOptions['versions']);
+	
+			$event_data['changes'][] = array(
+				'version', implode(',', array_keys($this->versions)), $issueOptions['versions'],
+			);
+		}
+		else
+			$newVersions = array_merge($newVersions, array_keys($this->versions));
+	
+		if (isset($issueOptions['versions_fixed']) && $issueOptions['versions_fixed'] != array_keys($this->versions_fixed))
+		{
+			$issueUpdates[] = 'versions_fixed = {string:versions_fixed}';
+			
+			if (empty($issueOptions['versions_fixed']))
+				$issueOptions['versions_fixed'] = array(0);
+		
+			$newVersions = array_merge($newVersions, $issueOptions['versions_fixed']);
+			$issueOptions['versions_fixed'] = implode(',', $issueOptions['versions_fixed']);
+	
+			$event_data['changes'][] = array(
+				'target_version', implode(',', array_keys($this->versions_fixed)), $issueOptions['versions_fixed'],
+			);
+		}
+		else
+			$newVersions = array_merge($newVersions, array_keys($this->versions_fixed));
+	
+		if (isset($issueOptions['event_first']))
+			$issueUpdates[] = 'id_issue_event_first = {int:event_first}';
+	
+		if (isset($issueOptions['category']) && $issueOptions['category'] != $this->category['id'])
+		{
+			$issueUpdates[] = 'id_category = {int:category}';
+	
+			$event_data['changes'][] = array(
+				'category', $this->category['id'], $issueOptions['category'],
+			);
+		}
+	
+		if (!empty($issueOptions['tracker']) && $issueOptions['tracker'] != $this->tracker['id'])
+		{
+			$issueUpdates[] = 'id_tracker = {int:tracker}';
+	
+			$event_data['changes'][] = array(
+				'tracker', $this->tracker['id'], $issueOptions['tracker'],
+			);
+		}
+	
+		if (!empty($this->status['id']))
+			$oldStatus = $context['issue_status'][$this->status['id']]['type'];
+		else
+			$oldStatus = '';
+	
+		if (!empty($issueOptions['status']))
+			$newStatus = $context['issue_status'][$issueOptions['status']]['type'];
+		else
+			$newStatus = $oldStatus;
+	
+		if (!isset($issueOptions['tracker']))
+			$issueOptions['tracker'] = $this->tracker['id'];
+	
+		// Updates needed?
+		if (empty($issueUpdates))
+			return !$return_log ? true : $event_data;
+	
+		$issueUpdates[] = 'updated = {int:time}';
+		$issueOptions['time'] = time();
+		$issueUpdates[] = 'id_updater = {int:updater}';
+		$issueOptions['updater'] = $posterOptions['id'];
+	
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}issues
+			SET
+				' . implode(',
+				', $issueUpdates) . '
+			WHERE id_issue = {int:issue}',
+			array_merge($issueOptions ,array(
+				'issue' => $id_issue,
+			))
+		);
+	
+		// Update Issue Counts from project
+		$projectUpdates = array();
+	
+		// Which tracker it belonged to and will belong in future?
+		if (!empty($this->tracker['id']))
+			$oldTracker = $context['issue_trackers'][$this->tracker['id']]['column_' . $oldStatus];
+		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
+			
+		if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $this->tracker['id'] || $oldStatus != $newStatus))
+		{
+			if (!empty($oldStatus))
+				$projectUpdates[$this->project][] = "$oldTracker = $oldTracker - 1";
+	
+			$projectUpdates[$issueOptions['project']][] = "$newTracker = $newTracker + 1";
+		}
+	
+		if (!empty($projectUpdates))
+			foreach ($projectUpdates as $id => $updates)
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}projects
+					SET
+						' . implode(',
+						', $updates) . '
+					WHERE id_project = {int:project}',
+					array(
+						'project' => $id,
+					)
+				);
+				
+		// If tracker hasn't changed remove values that doesn't need to be changed
+		if (isset($oldTracker) && $oldTracker == $newTracker)
+		{
+			$oldVersions = array_diff($oldVersions, $newVersions);
+			$newVersions = array_diff($newVersions, $oldVersions);
+		}
+				
+		// Update issue counts in versions
+		if (isset($oldTracker) && !empty($oldVersions))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_versions
+				SET {raw:tracker} = {raw:tracker} - 1
+				WHERE id_version IN({array_int:versions})',
+				array(
+					'tracker' => $oldTracker,
+					'versions' => $oldVersions,
+				)
+			);
+		if (!empty($newVersions))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_versions
+				SET {raw:tracker} = {raw:tracker} + 1
+				WHERE id_version IN({array_int:versions})',
+				array(
+					'tracker' => $newTracker,
+					'versions' => $newVersions,
+				)
+			);
+			
+		// Update id_project in timeline if needed
+		if ($this->project != $issueOptions['project'])
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_timeline
+				SET id_project = {int:project}
+				WHERE id_issue = {int:issue}',
+				array(
+					'project' => $issueOptions['project'],
+					'issue' => $id_issue,
+				)
+			);
+	
+		if ($return_log)
+			return $event_data;
+		
+		// Create issue event
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}issue_events',
+			array(
+				'id_issue' => 'int',
+				'id_member' => 'int',
+				'id_comment' => 'int',
+				'event_time' => 'int',
+				'poster_name' => 'string-60',
+				'poster_email' => 'string-256',
+				'poster_ip' => 'string-60',
+				'changes' => 'string',
+			),
+			array(
+				$id_issue,
+				$posterOptions['id'],
+				$id_comment,
+				$time,
+				$posterOptions['username'],
+				$posterOptions['email'],
+				$posterOptions['ip'],
+				serialize($event_data),
+			),
+			array()
+		);
+	
+		$id_issue_event = $smcFunc['db_insert_id']('{db_prefix}issue_events', 'id_comment');
+	
+		if (empty($issueOptions['no_log']))
+		{
+			$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'update_issue', array('subject' => isset($issueOptions['subject']) ? $issueOptions['subject'] : $this->name), $posterOptions, $issueOptions);
+			
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}issue_events
+				SET id_event = {int:event}
+				WHERE id_issue_event = {int:issue_event}',
+				array(
+					'issue_event' => $id_issue_event,
+					'event' => $id_event
+				)
+			);
+			
+			return $id_event;
+		}
+		return true;
+	}
 }
 
 ?>

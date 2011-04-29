@@ -333,7 +333,7 @@ class ProjectTools_IssueTracker_Comment
 			ProjectTools_IssueTracker_Report::handleUpdate($posterOptions, $issueOptions);
 	
 		if (count($issueOptions) > 1)
-			$event_data = updateIssue($issue, $issueOptions, $posterOptions, empty($_REQUEST['com']));
+			$event_data = ProjectTools_IssueTracker_Issue::getCurrent()->update($issueOptions, $posterOptions, empty($_REQUEST['com']));
 		else
 			$event_data = array();
 	
@@ -453,11 +453,11 @@ class ProjectTools_IssueTracker_Comment
 		require_once($sourcedir . '/Subs-Post.php');
 	
 		$request = $smcFunc['db_query']('', '
-			SELECT c.id_comment, c.id_event, c.poster_name, c.id_member
-			FROM {db_prefix}issue_comments AS c
-			WHERE id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
-				AND c.id_member = {int:current_user}' : '') . '
-				AND c.id_issue = {int:issue}
+			SELECT iv.id_issue_event, iv.changes, iv.id_comment, c.id_event, iv.poster_name, iv.id_member
+			FROM {db_prefix}issue_events
+			WHERE iv.id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
+				AND iv.id_member = {int:current_user}' : '') . '
+				AND iv.id_issue = {int:issue}
 			ORDER BY id_comment',
 			array(
 				'current_user' => $user_info['id'],
@@ -483,70 +483,45 @@ class ProjectTools_IssueTracker_Comment
 			)
 		);
 	
-		// Check event_data, there might be changes that we should keep
-		$request = $smcFunc['db_query']('', '
-			SELECT event_data
-			FROM {db_prefix}project_timeline
-			WHERE id_event = {int:event}',
-			array(
-				'event' => $row['id_event'],
-			)
-		);
-	
-		list ($event_data) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	
+		$event_data = unserialize($row['changes']);
+		
 		// By default remove event too
 		$removeEvent = true;
 	
-		if ($event_data && $event_data = unserialize($event_data))
-		{
-			if (isset($event_data['changes']) && is_array($event_data['changes']) && !empty($event_data['changes']))
-				$removeEvent = false;
-		}
+		if (!empty($event_data))
+			$removeEvent = false;
 	
 		if ($removeEvent)
 			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}project_timeline
-				WHERE id_event = {int:event}',
+				DELETE FROM {db_prefix}issue_events
+				WHERE id_issue_event = {int:issue_event}',
 				array(
-					'event' => $row['id_event'],
+					'issue_event' => $row['id_issue_event'],
 				)
 			);
 		else
+		{
 			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}project_timeline
-				SET event = {string:update_issue}
-				WHERE id_event = {int:event}',
+				UPDATE {db_prefix}issue_events
+				SET id_comment = 0
+				WHERE id_issue_event = {int:issue_event}',
 				array(
-					'update_issue' => 'update_issue',
-					'event' => $row['id_event'],
+					'issue_event' => $row['id_issue_event'],
 				)
 			);
 	
-		// Adjust reply count on issue
-		$request = $smcFunc['db_query']('', '
-			SELECT count(*) as total
-			FROM {db_prefix}project_timeline
-			WHERE id_issue = {int:issue} AND event = {string:event}',
-			array(
-				'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
-				'event' => 'new_comment',
-			)
-		);
-		list ($num_replies) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}issues
+				SET replies = {int:replies}
+				WHERE id_issue = {int:issue}',
+				array(
+					'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
+					'replies' => $num_replies,
+				)
+			);
+		}
 		
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}issues
-			SET replies = {int:replies}
-			WHERE id_issue = {int:issue}',
-			array(
-				'issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id,
-				'replies' => $num_replies,
-			)
-		);
-	
+		// CreateTimeline?/project Adminlog?
 		logAction('project_remove_comment', array('comment' => $row['id_comment']));
 	
 		redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));

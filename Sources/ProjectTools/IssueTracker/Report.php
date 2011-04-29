@@ -297,7 +297,7 @@ class ProjectTools_IssueTracker_Report
 		if (!empty($issueOptions))
 		{
 			$issueOptions['mark_read'] = true;
-			$id_event = updateIssue($issue, $issueOptions, $posterOptions);
+			$id_event = ProjectTools_IssueTracker_Issue::getCurrent()->update($issueOptions, $posterOptions);
 		}
 		else
 			$id_event = false;

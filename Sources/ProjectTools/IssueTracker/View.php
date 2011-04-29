@@ -624,7 +624,7 @@ class ProjectTools_IssueTracker_View
 				'email' => htmlspecialchars($user_info['email']),
 			);
 			
-			updateIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, array('project' => $_POST['project_to']), $posterOptions);
+			ProjectTools_IssueTracker_Issue::getCurrent()->update(array('project' => $_POST['project_to']), $posterOptions);
 			
 			redirectexit(ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id . '.0')));
 		}
