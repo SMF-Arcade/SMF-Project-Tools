@@ -542,12 +542,12 @@ $tables = array(
 				'default' => 0,
 			),			
 			array(
-				'name' => 'id_comment_first',
+				'name' => 'id_issue_event_first',
 				'type' => 'int',
 				'default' => 0,
 			),
 			array(
-				'name' => 'id_comment_last',
+				'name' => 'id_issue_event_last',
 				'type' => 'int',
 				'default' => 0,
 			),

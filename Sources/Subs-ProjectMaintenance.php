@@ -23,31 +23,104 @@ function ptUpgrade_database06($check = false)
 		return true;
 
 	db_extend('packages');
-	
-	
-		//var_dump($smcFunc['db_list_columns']('{db_prefix}project_timeline'));die();
 
 	// Moving issue event to new table '{db_prefix}issue_events'
-	if (in_array('versions', $smcFunc['db_list_columns']('{db_prefix}project_timeline')))
+	if (in_array('id_event_mod', $smcFunc['db_list_columns']('{db_prefix}issue_comments')))
 	{
 		$smcFunc['db_query']('', 'TRUNCATE TABLE {db_prefix}issue_events');
-		//$smcFunc['db_query']('', 'TRUNCATE TABLE {db_prefix}issue_changes');
 		
 		$request = $smcFunc['db_query']('', '
-			SELECT *
-			FROM {db_prefix}project_timeline
-			WHERE event IN({array_string:event_types})',
+			SELECT
+				tl.*,
+				c.id_comment, IFNULL(c.id_event_mod, tl.id_event) AS id_event_mod
+			FROM {db_prefix}project_timeline AS tl
+				LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_event = tl.id_event)
+			WHERE tl.id_issue > 0',
 			array(
-				'event_types' => array('new_comment', 'update_issue'),
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			var_dump($row);
+			$changes = unserialize($row['event_data']);
+			
+			//var_dump($changes);
+			
+			if (isset($changes['changes']) && is_array($changes['changes']))
+				$newchanges = array('changes' => $changes['changes']);
+			else
+				$newchanges = array();
+				
+			if (isset($changes['attachments']))
+				$newchanges['attachments'] = $changes['attachments'];
+				
+			if ($row['id_comment'] == NULL)
+				continue;
+
+			$smcFunc['db_insert']('',
+				'{db_prefix}issue_events', 
+				array(
+					'id_issue' => 'int',
+					'id_member' => 'int',
+					'id_comment' => 'int',
+					'id_event' => 'int',
+					'id_event_mod' => 'int',
+					'event_time' => 'int',
+					'poster_name' => 'string-255',
+					'poster_email' => 'string-255',
+					'poster_ip' => 'string-60',
+					'changes' => 'string',
+				),
+				array(
+					$row['id_issue'],
+					$row['id_member'],
+					$row['id_comment'],
+					$row['id_event'],
+					$row['id_event_mod'],
+					$row['event_time'],
+					$row['poster_name'],
+					$row['poster_email'],
+					$row['poster_ip'],
+					serialize($newchanges),
+				),
+				array('id_issue_event')
+			);
+			
+			$id_issue_event = $smcFunc['db_insert_id']('{db_prefix}issue_events', 'id_issue_event');
+			
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}issues
+				SET id_issue_event_first = {int:event}
+				WHERE id_comment_first = {int:comment}',
+				array(
+					'event' => $id_issue_event,
+					'comment' => $row['id_comment'],
+				)
+			);
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}issues
+				SET id_issue_event_last = {int:event}
+				WHERE id_comment_last = {int:comment}',
+				array(
+					'event' => $row['id_issue_event_first'],
+					'comment' => $row['id_comment'],
+				)
+			);
 		}
 		$smcFunc['db_free_result']($request);
 		
-		die();
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_issue');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_member');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event_mod');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'post_time');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_name');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_email');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_first');
+		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_last');
+			
+		die('abcd');
 
 		//$smcFunc['db_remove_column']('issues', 'issue_type');
 	}	

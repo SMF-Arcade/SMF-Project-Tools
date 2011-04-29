@@ -184,8 +184,7 @@ class ProjectTools_IssueTracker_Issue
 				i.versions, i.versions_fixed,
 				mem.id_member, mem.real_name, cat.id_category, cat.category_name,
 				' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
-				com.id_event, com.id_event_mod AS id_event_mod_com, com.post_time, com.edit_time, com.body, com.edit_name, com.edit_time,
-				com.poster_ip
+				com.body, com.edit_name, com.edit_time
 			FROM {db_prefix}issues AS i
 				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
@@ -232,10 +231,10 @@ class ProjectTools_IssueTracker_Issue
 		
 		$this->details = array(
 			'id' => $row['id_comment_first'],
-			'id_event' => $row['id_event'],
-			'time' => timeformat($row['post_time']),
+			//'id_event' => $row['id_event'],
+			'time' => timeformat($row['created']),
 			'body' => parse_bbc($row['body']),
-			'ip' => $row['poster_ip'],
+			//'ip' => $row['poster_ip'],
 			'modified' => array(
 				'time' => timeformat($row['edit_time']),
 				'timestamp' => forum_time(true, $row['edit_time']),
