@@ -282,8 +282,6 @@ class ProjectTools_IssueTracker_Issue
 		
 		$this->is_private = !empty($row['private_issue']);
 		$this->is_mine = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'];
-		
-		var_dump($this);
 	}
 	
 	/**

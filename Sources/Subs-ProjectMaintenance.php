@@ -43,8 +43,6 @@ function ptUpgrade_database06($check = false)
 		{
 			$changes = unserialize($row['event_data']);
 			
-			//var_dump($changes);
-			
 			if (isset($changes['changes']) && is_array($changes['changes']))
 				$newchanges = array('changes' => $changes['changes']);
 			else

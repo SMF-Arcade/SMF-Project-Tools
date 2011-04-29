@@ -346,7 +346,7 @@ class ProjectTools_IssueTracker_Comment
 			$commentOptions = array(
 				'body' => $_POST['comment'],
 			);
-			$id_comment = createComment(ProjectTools_Project::getCurrent()->id, $issue, $commentOptions, $posterOptions, $event_data);
+			list ($id_comment, $id_issue_event) = createComment(ProjectTools_Project::getCurrent()->id, $issue, $commentOptions, $posterOptions, $event_data);
 	
 			$commentOptions['id'] = $id_comment;
 	

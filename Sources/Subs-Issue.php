@@ -99,7 +99,7 @@ function createIssue($issueOptions, &$posterOptions)
 		)
 	);
 
-	$issueOptions['event_first'] = createComment(
+	list ($id_comment, $issueOptions['event_first']) = createComment(
 		$issueOptions['project'],
 		$id_issue,
 		array(
@@ -911,7 +911,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		)
 	);
 
-	return $id_comment;
+	return array($id_comment, $id_issue_event);
 }
 
 /**
