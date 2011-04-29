@@ -148,12 +148,12 @@ class ProjectTools_IssueTracker_Issue
 	/**
 	 *
 	 */
-	public $comment_first;
+	public $event_first;
 	
 	/**
 	 *
 	 */
-	public $comment_last;
+	public $event_last;
 	
 	/**
 	 *
@@ -180,13 +180,14 @@ class ProjectTools_IssueTracker_Issue
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				i.id_project, i.id_issue, i.subject, i.priority, i.status, i.created, i.updated, i.id_tracker,
-				i.id_comment_first, i.id_comment_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
+				i.id_issue_event_first, i.id_issue_event_last, i.id_event_mod, i.id_reporter, i.replies, i.private_issue,
 				i.versions, i.versions_fixed,
 				mem.id_member, mem.real_name, cat.id_category, cat.category_name,
 				' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
-				com.body, com.edit_name, com.edit_time
+				iv.id_event, iv.poster_ip, com.body, com.edit_name, com.edit_time
 			FROM {db_prefix}issues AS i
-				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)' . ($user_info['is_guest'] ? '' : '
+				INNER JOIN {db_prefix}issue_events AS iv ON (iv.id_issue_event = id_issue_event_first)
+				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = iv.id_comment)' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
 				LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = i.id_project AND lmr.id_member = {int:current_member})') . '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
@@ -230,11 +231,11 @@ class ProjectTools_IssueTracker_Issue
 		$this->project = $row['id_project'];
 		
 		$this->details = array(
-			'id' => $row['id_comment_first'],
-			//'id_event' => $row['id_event'],
+			'id' => $row['id_issue_event_first'],
+			'id_event' => $row['id_event'],
 			'time' => timeformat($row['created']),
 			'body' => parse_bbc($row['body']),
-			//'ip' => $row['poster_ip'],
+			'ip' => $row['poster_ip'],
 			'modified' => array(
 				'time' => timeformat($row['edit_time']),
 				'timestamp' => forum_time(true, $row['edit_time']),
@@ -272,8 +273,8 @@ class ProjectTools_IssueTracker_Issue
 		
 		$this->new_from = $row['new_from'];
 		
-		$this->comment_first = $row['id_comment_first'];
-		$this->comment_last = $row['id_comment_last'];
+		$this->event_first = $row['id_issue_event_first'];
+		$this->event_last = $row['id_issue_event_last'];
 		
 		$this->id_event_mod = $row['id_event_mod'];
 		

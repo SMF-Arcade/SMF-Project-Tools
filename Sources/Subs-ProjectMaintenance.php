@@ -55,6 +55,7 @@ function ptUpgrade_database06($check = false)
 				
 			if ($row['id_comment'] == NULL)
 				continue;
+			
 
 			$smcFunc['db_insert']('',
 				'{db_prefix}issue_events', 
@@ -101,26 +102,26 @@ function ptUpgrade_database06($check = false)
 				SET id_issue_event_last = {int:event}
 				WHERE id_comment_last = {int:comment}',
 				array(
-					'event' => $row['id_issue_event_first'],
+					'event' => $id_issue_event,
 					'comment' => $row['id_comment'],
 				)
 			);
 		}
 		$smcFunc['db_free_result']($request);
 		
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_issue');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_member');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_issue');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_member');
 		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event');
 		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event_mod');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'post_time');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_name');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_email');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
-		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'post_time');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_name');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_email');
+		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+	//	$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
 		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_first');
 		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_last');
 			
-		die('abcd');
+		//die('abcd');
 
 		//$smcFunc['db_remove_column']('issues', 'issue_type');
 	}	

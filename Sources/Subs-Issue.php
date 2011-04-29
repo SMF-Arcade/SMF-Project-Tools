@@ -261,8 +261,8 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 	else
 		$newVersions = array_merge($newVersions, $row['versions_fixed']);
 
-	if (isset($issueOptions['comment_first']))
-		$issueUpdates[] = 'id_comment_first = {int:comment_first}';
+	if (isset($issueOptions['event_first']))
+		$issueUpdates[] = 'id_issue_event_first = {int:event_first}';
 
 	if (isset($issueOptions['category']) && $issueOptions['category'] != $row['id_category'])
 	{
@@ -781,7 +781,7 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	global $smcFunc, $db_prefix, $context, $user_info;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT subject, id_comment_first
+		SELECT subject, id_issue_event_first
 		FROM {db_prefix}issues
 		WHERE id_issue = {int:issue}',
 		array(
@@ -798,29 +798,44 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	$smcFunc['db_insert']('insert',
 		'{db_prefix}issue_comments',
 		array(
-			'id_issue' => 'int',
 			'body' => 'string',
-			'post_time' => 'int',
-			'id_member' => 'int',
-			'poster_name' => 'string-60',
-			'poster_email' => 'string-256',
-			'poster_ip' => 'string-60',
 		),
 		array(
-			$id_issue,
 			$commentOptions['body'],
-			time(),
-			$posterOptions['id'],
-			$posterOptions['username'],
-			$posterOptions['email'],
-			$posterOptions['ip']
 		),
 		array()
 	);
 
 	$id_comment = $smcFunc['db_insert_id']('{db_prefix}issue_comments', 'id_comment');
 	$time = time();
+	
+	// Create issue event
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}issue_events',
+		array(
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'id_comment' => 'int',
+			'event_time' => 'int',
+			'poster_name' => 'string-60',
+			'poster_email' => 'string-256',
+			'poster_ip' => 'string-60',
+		),
+		array(
+			$id_issue,
+			$posterOptions['id'],
+			$id_comment,
+			$time,
+			$posterOptions['username'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			
+		),
+		array()
+	);
 
+	$id_issue_event = $smcFunc['db_insert_id']('{db_prefix}issue_events', 'id_comment');
+	
 	// Make event
 	$id_event = 0;
 
@@ -1196,7 +1211,7 @@ function createIssueList($issueListOptions)
 		SELECT
 			i.id_issue, p.id_project, i.id_tracker, i.subject, i.priority,
 			i.status, i.created, i.updated, i.id_event_mod, i.replies,
-			rep.id_member AS id_reporter, IFNULL(rep.real_name, com.poster_name) AS reporter_name,
+			rep.id_member AS id_reporter, IFNULL(rep.real_name, iv.poster_name) AS reporter_name,
 			asg.id_member AS id_assigned, asg.real_name AS assigned_name,
 			i.id_category, IFNULL(cat.category_name, {string:empty}) AS category_name,
 			i.id_updater, IFNULL(mu.real_name, {string:empty}) AS updater,
@@ -1209,7 +1224,7 @@ function createIssueList($issueListOptions)
 				AND stag.tag = {string:search_tag})' : '') . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_issues AS log ON (log.id_member = {int:current_member} AND log.id_issue = i.id_issue)
 			LEFT JOIN {db_prefix}log_project_mark_read AS lmr ON (lmr.id_project = p.id_project AND lmr.id_member = {int:current_member})') . '
-			LEFT JOIN {db_prefix}issue_comments AS com ON (com.id_comment = i.id_comment_first)
+			LEFT JOIN {db_prefix}issue_events AS iv ON (iv.id_issue_event = i.id_issue_event_first)
 			LEFT JOIN {db_prefix}members AS rep ON (rep.id_member = i.id_reporter)
 			LEFT JOIN {db_prefix}members AS asg ON (asg.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}members AS mu ON (mu.id_member = i.id_updater)
