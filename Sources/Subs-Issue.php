@@ -394,60 +394,45 @@ function updateIssue($id_issue, $issueOptions, $posterOptions, $return_log = fal
 }
 
 /**
- * Creates event in timeline
- * @param int $id_issue ID of issue
- * @param int $id_project ID of project issue is in
- * @param string $event_name Name of event
- * @param array $event_data 
- * @param array $posterOptions
- * @param array $issueOptions
+ *
+ *
  */
-function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $posterOptions, $issueOptions)
+function createIssueEvent($id_issue, $id_comment, $posterOptions, $event_data)
 {
-	global $smcFunc, $context, $user_info;
-
-	$id_event = 0;
-
-	if ($posterOptions['id'] != 0 && ($event_name == 'update_issue' || $event_name == 'new_comment'))
+	global $smcFunc;
+	
+	if ($posterOptions['id'] != 0)
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_event, event, event_data
-			FROM {db_prefix}project_timeline
-			WHERE id_project = {int:project}
-				AND id_issue = {int:issue}
-				AND event IN({array_string:event})
-				AND id_member = {int:member}
+			SELECT id_issue_event, changes
+			FROM {db_prefix}issue_events
+			WHERE id_issue = {int:issue}
+				AND id_member = {int:member}' . (!empty($id_comment) ? '
+				AND id_comment = 0' : '') . '
 				AND event_time > {int:event_time}
 			ORDER BY id_event DESC
 			LIMIT 1',
 			array(
 				'issue' => $id_issue,
-				'project' => $id_project,
 				'member' => $posterOptions['id'],
-				// Update issue can be merged with new_comment and update_issue
-				// new comment can be merged with update_issue
-				'event' => $event_name == 'update_issue' ? array('new_comment', 'update_issue') : array('update_issue'),
+				// TODO: Make time configurable
 				'event_time' => time() - 120,
 			)
 		);
 
 		if ($smcFunc['db_num_rows']($request) > 0)
 		{
-			list ($id_event, $event_name2, $event_data2) = $smcFunc['db_fetch_row']($request);
+			list ($id_issue_event, $event_data2) = $smcFunc['db_fetch_row']($request);
 
 			$event_data2 = unserialize($event_data2);
 
 			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}project_timeline
-				WHERE id_event = {int:event}',
+				DELETE FROM {db_prefix}issue_events
+				WHERE id_issue_event = {int:issue_event}',
 				array(
-					'event' => $id_event,
+					'issue_event' => $id_issue_event,
 				)
 			);
-
-			// 'new_comment' > 'update_issue'
-			if ($event_name2 == 'new_comment' || $event_name == 'new_comment')
-				$event_name = 'new_comment';
 
 			if (isset($event_data2['changes']) && isset($event_data['changes']))
 			{
@@ -502,13 +487,13 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				}
 
 				// Changed everything back to orignal?
-				if (empty($temp_changes) && $event_name != 'new_comment')
+				if (empty($temp_changes) && empty($id_comment))
 					return;
 				elseif (!empty($temp_changes))
 					foreach ($temp_changes as $field => $data)
 						$new_changes[] = array($field, $data[0], $data[1]);
 			}
-			// This is easier :P
+			// This is easier
 			elseif (isset($event_data2['changes']))
 				$new_changes = $event_data2['changes'];
 			elseif (isset($event_data['changes']))
@@ -520,6 +505,90 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 				unset($event_data['changes']);
 		}
 
+		$smcFunc['db_free_result']($request);
+	}
+	
+	// Create issue event
+	$smcFunc['db_insert']('insert',
+		'{db_prefix}issue_events',
+		array(
+			'id_issue' => 'int',
+			'id_member' => 'int',
+			'id_comment' => 'int',
+			'event_time' => 'int',
+			'poster_name' => 'string-60',
+			'poster_email' => 'string-256',
+			'poster_ip' => 'string-60',
+			'changes' => 'string',
+		),
+		array(
+			$id_issue,
+			$posterOptions['id'],
+			$id_comment,
+			time(),
+			$posterOptions['username'],
+			$posterOptions['email'],
+			$posterOptions['ip'],
+			serialize($event_data),
+		),
+		array()
+	);
+
+	return $smcFunc['db_insert_id']('{db_prefix}issue_events', 'id_comment');
+}
+
+/**
+ * Creates event in timeline
+ * @param int $id_issue ID of issue
+ * @param int $id_project ID of project issue is in
+ * @param string $event_name Name of event
+ * @param array $event_data 
+ * @param array $posterOptions
+ * @param array $issueOptions
+ */
+function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $posterOptions, $issueOptions)
+{
+	global $smcFunc, $context, $user_info;
+
+	$id_event = 0;
+
+	if ($posterOptions['id'] != 0 && ($event_name == 'update_issue' || $event_name == 'new_comment'))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_event, event, event_data
+			FROM {db_prefix}project_timeline
+			WHERE id_project = {int:project}
+				AND id_issue = {int:issue}
+				AND event IN({array_string:event})
+				AND id_member = {int:member}
+				AND event_time > {int:event_time}
+			ORDER BY id_event DESC
+			LIMIT 1',
+			array(
+				'issue' => $id_issue,
+				'project' => $id_project,
+				'member' => $posterOptions['id'],
+				// Update issue can be merged with new_comment and update_issue
+				// new comment can be merged with update_issue
+				'event' => $event_name == 'update_issue' ? array('new_comment', 'update_issue') : array('update_issue'),
+				'event_time' => time() - 120,
+			)
+		);
+
+		if ($smcFunc['db_num_rows']($request) > 0)
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_timeline
+				WHERE id_event = {int:event}',
+				array(
+					'event' => $id_event,
+				)
+			);
+
+			// 'new_comment' > 'update_issue'
+			if ($event_name2 == 'new_comment' || $event_name == 'new_comment')
+				$event_name = 'new_comment';
+		}
 		$smcFunc['db_free_result']($request);
 	}
 
