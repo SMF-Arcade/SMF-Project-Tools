@@ -12,6 +12,46 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /**
+ * Maintenance function for upgrading project modules
+ */
+function ptUpgrade_upgrade06($check = false)
+{
+	global $smcFunc;
+
+	// Is this step required to run?
+	if ($check)
+		return true;
+
+	db_extend('packages');
+
+	// Moving issue event to new table '{db_prefix}issue_events'
+	if (in_array('versions', $smcFunc['db_list_columns']('{db_prefix}project_timeline')))
+	{
+		$smcFunc['db_query']('', 'TRUNCATE TABLE {db_prefix}issue_events');
+		$smcFunc['db_query']('', 'TRUNCATE TABLE {db_prefix}issue_changes');
+		
+		$request = $smcFunc['db_query']('', '
+			SELECT 
+			FROM {db_prefix}project_timeline
+			WHERE NOT (id_issue = 0)
+				AND event IN({array_string:even_types})',
+			array(
+				'event_types' => array('new_comment', 'update_issue'),
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			print_r($row);
+		}
+		$smcFunc['db_free_result']($request);
+		
+		die();
+
+		//$smcFunc['db_remove_column']('issues', 'issue_type');
+	}	
+}
+
+/**
  * Maintenance function for adding id_project to log_issues
  */
 function ptUpgrade_log_issues($check = false)

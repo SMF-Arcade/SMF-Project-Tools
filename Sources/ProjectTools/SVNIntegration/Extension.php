@@ -40,6 +40,8 @@ class ProjectTools_SVNIntegration_Extension extends ProjectTools_ExtensionBase
 	{
 		global $smcFunc;
 		
+		db_extend('packages');
+		
 		$smcFunc['db_create_table'](
 			'{db_prefix}projects_svn_repository',
 			array(

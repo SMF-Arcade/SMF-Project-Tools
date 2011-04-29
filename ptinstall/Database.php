@@ -379,6 +379,85 @@ $tables = array(
 			),
 		)
 	),
+	// Project Timeline
+	'project_timeline' => array(
+		'name' => 'project_timeline',
+		'columns' => array(
+			array(
+				'name' => 'id_event',
+				'type' => 'int',
+				'auto' => true,
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+				'unsigned' => true,
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'poster_name',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '',
+			),
+			array(
+				'name' => 'poster_email',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '',
+			),
+			array(
+				'name' => 'poster_ip',
+				'type' => 'varchar',
+				'size' => 60,
+				'default' => '',
+			),
+			array(
+				'name' => 'versions',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '0',
+			),
+			array(
+				'name' => 'event',
+				'type' => 'varchar',
+				'size' => 15,
+				'default' => '',
+			),
+			array(
+				'name' => 'event_time',
+				'type' => 'int',
+				'unsigned' => true,
+				'default' => 0,
+			),
+			array(
+				'name' => 'event_data',
+				'type' => 'text',
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_event')
+			),
+			array(
+				'name' => 'id_project',
+				'type' => 'index',
+				'columns' => array('id_project')
+			),
+		),
+	),
 	// Categories/modules table
 	'issue_category' => array(
 		'name' => 'issue_category',
@@ -537,6 +616,85 @@ $tables = array(
 			),
 		),
 	),
+	// Issue events table
+	'issue_events' => array(
+		'name' => 'issue_events',
+		// Columns
+		'columns' => array(
+			array(
+				'name' => 'id_issue_event',
+				'type' => 'int',
+				'auto' => true,
+			),
+			array(
+				'name' => 'id_issue',
+				'type' => 'int',
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
+				'name' => 'id_comment',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
+				'name' => 'id_event',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
+				'name' => 'id_event_mod',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
+				'name' => 'event_time',
+				'type' => 'int',
+				'default' => 0,
+			),
+			array(
+				'name' => 'poster_name',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '',
+			),
+			array(
+				'name' => 'poster_email',
+				'type' => 'varchar',
+				'size' => 255,
+				'default' => '',
+			),
+			array(
+				'name' => 'poster_ip',
+				'type' => 'varchar',
+				'size' => 60,
+				'default' => '',
+			),
+			array(
+				'name' => 'changes',
+				'type' => 'text',
+			),
+		),
+		'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_issue_event')
+			),
+			array(
+				'name' => 'id_issue',
+				'type' => 'index',
+				'columns' => array('id_issue')
+			),
+			array(
+				'name' => 'id_event',
+				'type' => 'index',
+				'columns' => array('id_event')
+			),
+		),	
+	),
 	// Comments
 	'issue_comments' => array(
 		'name' => 'issue_comments',
@@ -625,85 +783,6 @@ $tables = array(
 				'columns' => array('id_event')
 			),
 		)
-	),
-	// Project Timeline
-	'project_timeline' => array(
-		'name' => 'project_timeline',
-		'columns' => array(
-			array(
-				'name' => 'id_event',
-				'type' => 'int',
-				'auto' => true,
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_project',
-				'type' => 'int',
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_issue',
-				'type' => 'int',
-				'unsigned' => true,
-			),
-			array(
-				'name' => 'id_member',
-				'type' => 'int',
-				'unsigned' => true,
-				'default' => 0,
-			),
-			array(
-				'name' => 'poster_name',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => '',
-			),
-			array(
-				'name' => 'poster_email',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => '',
-			),
-			array(
-				'name' => 'poster_ip',
-				'type' => 'varchar',
-				'size' => 60,
-				'default' => '',
-			),
-			array(
-				'name' => 'versions',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => '0',
-			),
-			array(
-				'name' => 'event',
-				'type' => 'varchar',
-				'size' => 15,
-				'default' => '',
-			),
-			array(
-				'name' => 'event_time',
-				'type' => 'int',
-				'unsigned' => true,
-				'default' => 0,
-			),
-			array(
-				'name' => 'event_data',
-				'type' => 'text',
-			),
-		),
-		'indexes' => array(
-			array(
-				'type' => 'primary',
-				'columns' => array('id_event')
-			),
-			array(
-				'name' => 'id_project',
-				'type' => 'index',
-				'columns' => array('id_project')
-			),
-		),
 	),
 	// Tags
 	'issue_tags' => array(
