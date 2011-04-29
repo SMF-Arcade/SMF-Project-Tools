@@ -258,10 +258,9 @@ class ProjectTools_IssueTracker_Comment
 		}
 	
 		if (isset($_REQUEST['preview']))
-			return IssueReply();
+			return self::Reply();
 	
 		require_once($sourcedir . '/Subs-Post.php');
-		require_once($sourcedir . '/IssueReport.php');
 	
 		checkSubmitOnce('check');
 	
@@ -290,7 +289,7 @@ class ProjectTools_IssueTracker_Comment
 				$context['post_error']['messages'][] = $txt['error_' . $post_error];
 			}
 	
-			return IssueReply();
+			return self::Reply();
 		}
 		
 		// Check if user has subscribed to issue
@@ -331,7 +330,7 @@ class ProjectTools_IssueTracker_Comment
 		);
 	
 		if (ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate'))
-			handleUpdate($posterOptions, $issueOptions);
+			ProjectTools_IssueTracker_Report::handleUpdate($posterOptions, $issueOptions);
 	
 		if (count($issueOptions) > 1)
 			$event_data = updateIssue($issue, $issueOptions, $posterOptions, empty($_REQUEST['com']));

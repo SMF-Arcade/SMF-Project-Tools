@@ -278,7 +278,7 @@ function template_issue_reply()
 					<tr>
 						<td>', $txt['issue_type'], '</td>
 						<td>
-							<select name="type">';
+							<select name="tracker">';
 
 		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
 			echo '

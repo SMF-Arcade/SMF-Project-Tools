@@ -27,7 +27,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'main' => array('ProjectTools_IssueTracker_List', 'Main'),
 			'view' => array('ProjectTools_IssueTracker_View', 'Main'),
 			'tags' => array('ProjectTools_IssueTracker_Tags', 'Main'),
-			'update' => array('ProjectTools_IssueTracker_Edit', 'Update'),
+			'update' => array('ProjectTools_IssueTracker_Report', 'Update'),
 			'upload' => array('ProjectTools_IssueTracker_Edit', 'Upload'),
 			'move' => array('ProjectTools_IssueTracker_Edit', 'Move'),
 			'delete' => array('ProjectTools_IssueTracker_Edit', 'Delete'),
@@ -35,8 +35,8 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'edit' => array('ProjectTools_IssueTracker_Edit', 'Main'),
 			'edit2' => array('ProjectTools_IssueTracker_Edit', 'Main2'),
 			// Comment
-			'reply' => array('ProjectTools_IssueTracker_Comment', 'Add'),
-			'reply2' => array('ProjectTools_IssueTracker_Comment', 'Add2'),
+			'reply' => array('ProjectTools_IssueTracker_Comment', 'Reply'),
+			'reply2' => array('ProjectTools_IssueTracker_Comment', 'Reply2'),
 			'removeComment' => array('ProjectTools_IssueTracker_Comment', 'Delete'),
 			// Report
 			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),

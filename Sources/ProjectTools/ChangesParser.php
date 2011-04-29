@@ -20,7 +20,8 @@ class ProjectTools_ChangesParser
 	{
 		global $txt, $context;
 		
-		$project = ProjectTools_Project::getProject($project);
+		if (!$project instanceof ProjectTools_Project)
+			$project = ProjectTools_Project::getProject($project);
 		
 		$return = array();
 

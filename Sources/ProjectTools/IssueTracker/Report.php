@@ -590,7 +590,7 @@ class ProjectTools_IssueTracker_Report
 					'value' => $issueOptions['status'],
 				);
 		}
-	
+		
 		if (isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers[$_REQUEST['tracker']]))
 		{
 			$issueOptions['tracker'] = $_REQUEST['tracker'];

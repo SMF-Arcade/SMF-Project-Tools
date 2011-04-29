@@ -307,7 +307,7 @@ class ProjectTools_IssueTracker_View
 			$data = unserialize($row['event_data']);
 	
 			if (is_array($data['changes']) && !empty($data['changes']))
-				$changes = ProjectTools_ChangesParser::Parse($data['changes']);
+				$changes = ProjectTools_ChangesParser::Parse(ProjectTools_Project::getCurrent(), $data['changes']);
 		}
 	
 		$type = $row['id_member'] == $user_info['id'] && $row['id_member'] != 0 ? 'own' : 'any';
