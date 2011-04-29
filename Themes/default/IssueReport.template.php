@@ -3,7 +3,7 @@
  * Template for IssueReport.php
  *
  * @package issuetracker
- * @version 0.5
+ * @version 0.5.2
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  * @see IssueReport.php
@@ -278,7 +278,7 @@ function template_issue_reply()
 					<tr>
 						<td>', $txt['issue_type'], '</td>
 						<td>
-							<select name="type">';
+							<select name="tracker">';
 
 		foreach ($context['project']['trackers'] as $id => $tracker)
 			echo '
