@@ -212,7 +212,7 @@ class ProjectTools_Hooks
 						'manageprojects' => array(
 							'label' => $txt['manage_projects'],
 							'file' => 'ManageProjects.php',
-							'function' => 'ManageProjects',
+							'function' => array('ProjectTools_ManageProjects', 'Main'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
 							'subsections' => array(
