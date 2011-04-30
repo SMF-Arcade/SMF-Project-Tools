@@ -29,7 +29,6 @@
 		<require-dir name="Themes/default/languages/ProjectTools" destination="$languagedir" />
 
 		<!-- These files goes to Sources directory -->
-		<require-file name="Sources/ManageProjects.php" destination="$sourcedir" />
 		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectModule-Roadmap.php" destination="$sourcedir" />
@@ -100,7 +99,6 @@
 		<remove-file name="$sourcedir/IssueList.php" />
 		<remove-file name="$sourcedir/IssueView.php" />
 		<remove-file name="$sourcedir/IssueReport.php" />
-		<remove-file name="$sourcedir/ManageProjects.php" />
 		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectModule-Admin.php" />
 		<remove-file name="$sourcedir/ProjectModule-General.php" />
