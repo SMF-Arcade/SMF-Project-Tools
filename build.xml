@@ -19,7 +19,8 @@
 		<svnlastrevision
 			svnpath="/usr/bin/svn"
 			workingcopy="."
-			propertyname="svn.lastrevision"/>
+			propertyname="svn.lastrevision"
+			lastChanged="true" />
 		
 		<available file="${build_output}/${package}_${version}-rev${svn.lastrevision}.tar.gz" property="already_build" />
 		
