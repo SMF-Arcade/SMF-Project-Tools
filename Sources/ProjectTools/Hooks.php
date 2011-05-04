@@ -27,8 +27,13 @@ class ProjectTools_Hooks
 		elseif (substr($class_name, 0, 12) == 'ProjectTools')
 		{
 			$class_file = str_replace('_', '/', $class_name);
-	
-			if (file_exists($sourcedir . '/' . $class_file . '.php'))
+			
+			if (file_exists($class_file) && is_dir($class_file))
+			{				
+				$class_file .= substr($class_file, strrpos($class_file, '/'));
+				require_once($sourcedir . '/' . $class_file . '.php');
+			}
+			elseif (file_exists($sourcedir . '/' . $class_file . '.php'))
 				require_once($sourcedir . '/' . $class_file . '.php');
 			else
 				return false;

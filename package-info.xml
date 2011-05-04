@@ -26,6 +26,7 @@
 		<readme parsebbc="true">readme.txt</readme>
 		
 		<require-dir name="Sources/ProjectTools" destination="$sourcedir" />
+		<require-dir name="Themes/default/ProjectTools" destination="$themedir" />
 		<require-dir name="Themes/default/languages/ProjectTools" destination="$languagedir" />
 
 		<!-- These files goes to Sources directory -->
