@@ -211,7 +211,7 @@ class ProjectTools_Hooks
 						),
 						'manageprojects' => array(
 							'label' => $txt['manage_projects'],
-							'file' => 'ManageProjects.php',
+							//'file' => 'ManageProjects.php',
 							'function' => array('ProjectTools_ManageProjects', 'Main'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
@@ -248,8 +248,8 @@ class ProjectTools_Hooks
 			array(
 				'project' => array(
 					'label' => $txt['project_profile'],
-					'file' => 'Profile-Project.php',
-					'function' => 'projectProfile',
+					//'file' => 'Profile-Project.php',
+					'function' => array('ProjectTools_UserProfile', 'Main'),
 					'enabled' => !empty($modSettings['projectEnabled']),
 					'subsections' => array(
 						'main' => array($txt['project_profile_main']),
