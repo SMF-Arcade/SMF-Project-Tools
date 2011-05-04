@@ -104,7 +104,7 @@ class ProjectTools_Hooks
 			return;
 		
 		$actionArray['projects'] = array('ProjectTools/Main.php', array('ProjectTools_Main', 'Main'));
-		$actionArray['projectadmin'] = array('ProjectTools/Admin/Main.php', array('ProjectTools_Admin_Main', 'Main'));
+		$actionArray['projectadmin'] = array('ProjectTools/UserAdmin.php', array('ProjectTools_UserAdmin', 'Main'));
 	}
 	
 	/**

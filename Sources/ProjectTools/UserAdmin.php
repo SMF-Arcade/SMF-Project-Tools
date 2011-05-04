@@ -14,7 +14,7 @@ if (!defined('SMF'))
 /**
  * Project Admin
  */
-class ProjectTools_Admin_Main
+class ProjectTools_UserAdmin
 {
 	
 }
