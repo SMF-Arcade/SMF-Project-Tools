@@ -27,7 +27,7 @@ class ProjectTools_Hooks
 		elseif (substr($class_name, 0, 12) == 'ProjectTools')
 		{
 			$class_file = str_replace('_', '/', $class_name);
-			
+				
 			if (file_exists($class_file) && is_dir($class_file))
 			{				
 				$class_file .= substr($class_file, strrpos($class_file, '/'));
@@ -114,7 +114,7 @@ class ProjectTools_Hooks
 			return;
 		
 		$actionArray['projects'] = array('ProjectTools/Main.php', array('ProjectTools_Main', 'Main'));
-		$actionArray['projectadmin'] = array('ProjectTools/UserAdmin.php', array('ProjectTools_UserAdmin', 'Main'));
+		$actionArray['projectadmin'] = array('ProjectTools/UserAdmin/UserAdmin.php', array('ProjectTools_UserAdmin', 'Main'));
 	}
 	
 	/**

@@ -109,9 +109,19 @@ class ProjectTools_UserAdmin
 	{
 		global $context, $txt;
 		
-		$project_areas['main'] = array(
-			'module' => 'ProjectTools_UserAdmin',
-			'callback' => 'Frontpage',
+		$project_areas = array(
+			'main' => array(
+				'module' => 'ProjectTools_UserAdmin',
+				'callback' => 'Frontpage',
+				'title' => $txt['pt_ua_tab_main'],
+				'order' => 'first',
+			),
+			'versions' => array(
+				'module' => 'ProjectTools_UserAdmin_Versions',
+				'callback' => 'Main',
+				'title' => $txt['pt_ua_tab_versions'],
+				'order' => 1,
+			),
 		);
 		//
 		foreach (ProjectTools_Project::getCurrent()->getModules() as $id => $module)
@@ -145,7 +155,7 @@ class ProjectTools_UserAdmin
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)
 		{
-			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
+			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
 				: ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id));
 			
 			$context['project_tabs']['tabs'][$id] = array(
@@ -179,7 +189,6 @@ class ProjectTools_UserAdmin
 		
 		// Template
 		loadTemplate('Project', array('project'));
-		loadTemplate('ProjectTools/UserAdmin');
 		
 		if (!isset($_REQUEST['xml']))
 		{
