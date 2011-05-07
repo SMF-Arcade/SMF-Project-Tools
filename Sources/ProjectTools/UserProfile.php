@@ -25,7 +25,6 @@ class ProjectTools_UserProfile
 		global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
 		global $user_info, $smcFunc, $sourcedir;
 	
-		require_once($sourcedir . '/Project.php');
 		ProjectTools_Main::loadPage('profile');
 	
 		$subActions = array(
@@ -43,7 +42,7 @@ class ProjectTools_UserProfile
 		if (isset($subActions[$_REQUEST['sa']][1]))
 			isAllowedTo($subActions[$_REQUEST['sa']][1]);
 	
-		$subActions[$_REQUEST['sa']][0]($memID);
+		self::$subActions[$_REQUEST['sa']][0]($memID);
 	}
 	
 	/**

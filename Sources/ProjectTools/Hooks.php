@@ -259,7 +259,7 @@ class ProjectTools_Hooks
 				'project' => array(
 					'label' => $txt['project_profile'],
 					//'file' => 'Profile-Project.php',
-					'function' => array('ProjectTools_UserProfile', 'Main'),
+					'function' => create_function('$memID', 'ProjectTools_UserProfile::Main($memID);'),
 					'enabled' => !empty($modSettings['projectEnabled']),
 					'subsections' => array(
 						'main' => array($txt['project_profile_main']),
