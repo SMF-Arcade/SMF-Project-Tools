@@ -34,6 +34,13 @@ class ProjectTools_UserAdmin
 		// Changing project?
 		if (isset($_REQUEST['change']))
 			unset($_SESSION['ptAdmin_project']);
+			
+		if ($standalone && isset($standalone['project']))
+			$context['admin_project'] = $standalone['project'];
+		elseif (isset($_SESSION['ptAdmin_project']))
+			$context['admin_project'] = (int) $_SESSION['ptAdmin_project'];
+		else
+			$context['admin_project'] = 0;
 		
 		// 
 		$context['admin_projects'] = array();
@@ -43,9 +50,10 @@ class ProjectTools_UserAdmin
 			SELECT p.id_project, p.name,
 			FROM {db_prefix}projects AS p' . (!allowedTo('project_admin') ? '
 				INNER JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
-					AND dev.id_member = {int:current_member})' : '') . (!empty($_SESSION['ptAdmin_project']) ? '
+					AND dev.id_member = {int:current_member})' : '') . (!empty($context['admin_project']) ? '
 			WHERE p.id_project = {int:project}' : ''),
 			array(
+				'project' => $context['admin_project'],
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -55,7 +63,7 @@ class ProjectTools_UserAdmin
 			);
 		$smcFunc['db_free_result']($request);
 		
-		if (!isset($_SESSION['ptAdmin_project']) || !isset($context['admin_projects'][$_SESSION['ptAdmin_project']]))
+		if (empty($context['admin_project']) || !isset($context['admin_projects'][$context['admin_project']]))
 			self::SelectProject();
 	}
 	
