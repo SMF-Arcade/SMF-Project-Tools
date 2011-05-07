@@ -153,7 +153,7 @@ class ProjectTools
 			$return = '';
 		
 			if (empty($params) || $is_admin)
-				$params['action'] = $action;
+				$return .= '?action=' . $action;
 		
 			foreach ($params as $p => $value)
 			{

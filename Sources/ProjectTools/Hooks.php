@@ -136,7 +136,7 @@ class ProjectTools_Hooks
 				'sub_buttons' => array(
 					'admin' => array(
 						'title' => $txt['projects_admin'],
-						'href' => ProjectTools::get_admin_url(),
+						'href' => ProjectTools::get_admin_url(ProjectTools_Project::getCurrent() ? array('project' => ProjectTools_Project::getCurrent()->id) : array()),
 						'show' => allowedTo('project_admin'), // TODO: Allow is users is project admin
 					),
 				),
@@ -217,7 +217,7 @@ class ProjectTools_Hooks
 						'manageprojects' => array(
 							'label' => $txt['manage_projects'],
 							//'file' => 'ManageProjects.php',
-							'function' => array('ProjectTools_ManageProjects', 'Main'),
+							'function' => create_function('', 'ProjectTools_ManageProjects::Main();'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
 							'subsections' => array(

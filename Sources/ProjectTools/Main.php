@@ -112,7 +112,7 @@ class ProjectTools_Main
 		else
 			$modSettings['issueRegex'] = explode("\n", $modSettings['issueRegex'], 2);
 			
-		$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('admin', 'issues', 'roadmap');
+		$modSettings['projectExtensions'] = !empty($modSettings['projectExtensions']) ? explode(',', $modSettings['projectExtensions']) : array('Frontpage', 'IssueTracker', 'Roadmap');
 	
 		// Load extensions
 		foreach ($modSettings['projectExtensions'] as $extension)
@@ -450,15 +450,22 @@ class ProjectTools_Main
 	static public function ProjectMain()
 	{
 		global $context, $txt, $settings;
+		
+		loadLanguage('ProjectTools/ProjectView');
 			
 		$context['active_project_modules'] = array();
 
 		// Load Modules
 		foreach (ProjectTools_Project::getCurrent()->extensions as $id => $ext)
 		{
+			if (!$ext)
+				continue;
 			$module = $ext->getModule();
 			$context['active_project_modules'][$module] = new $module(ProjectTools_Project::getCurrent());
 		}
+		
+		if (empty($context['active_project_modules']))
+			fatal_lang_error('pt_no_modules', false);
 		
 		//
 		$project_areas = array();
@@ -473,6 +480,10 @@ class ProjectTools_Main
 			}
 		}
 		
+		// No possible areas?
+		if (empty($project_areas))
+			fatal_lang_error('pt_no_modules', false);
+			
 		self::CreateAreas($project_areas);
 		unset($project_areas);
 		
