@@ -26,11 +26,8 @@
 			<search position="after"><![CDATA[	// Load the current user's permissions.]]></search>
 			<add><![CDATA[
 	// Project Tools (edit 1)
-	global $project, $issue;
-	if (!empty($modSettings['projectEnabled']))
+	if (class_exists('ProjectTools') && !empty($modSettings['projectEnabled']))
 		ProjectTools::load();
-	else
-		$user_info['query_see_project'] = '0=1';
 ]]></add>
 		</operation>
 	</file>
@@ -129,13 +126,13 @@ else
 		<!-- Project Theme -->
 		<operation>
 			<search position="after"><![CDATA[	// The theme is the forum's default.]]></search>
-			<add><![CDATA[	elseif (ProjectTools_Project::getCurrent() && !empty(ProjectTools_Project::getCurrent()->theme))
+			<add><![CDATA[	elseif (class_exists('ProjectTools') && ProjectTools_Project::getCurrent() && !empty(ProjectTools_Project::getCurrent()->theme))
 		$id_theme = ProjectTools_Project::getCurrent()->theme;
 ]]></add>
 		</operation>
 		<operation>
 			<search position="after"><![CDATA[	// If they have specified a particular theme to use with SSI allow it to be used.]]></search>
-			<add><![CDATA[	elseif (ProjectTools_Project::getCurrent() && !empty(ProjectTools_Project::getCurrent()->theme) && !empty(ProjectTools_Project::getCurrent()->override_theme))
+			<add><![CDATA[	elseif (class_exists('ProjectTools') && ProjectTools_Project::getCurrent() && !empty(ProjectTools_Project::getCurrent()->theme) && !empty(ProjectTools_Project::getCurrent()->override_theme))
 		$id_theme = ProjectTools_Project::getCurrent()->theme;
 	elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'projects' && !empty($modSettings['project_force_theme']))
 		$id_theme = (int) $modSettings['project_force_theme'];

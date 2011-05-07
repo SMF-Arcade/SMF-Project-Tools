@@ -93,6 +93,11 @@ class ProjectTools_Hooks
 	 */
 	public static function pre_load()
 	{
+		global $modSettings;
+		
+		if (empty($modSettings['projectEnabled']))
+			return;
+		
 		self::registerAutoload();
 	}
 	
