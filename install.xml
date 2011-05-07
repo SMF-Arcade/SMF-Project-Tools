@@ -28,7 +28,7 @@
 	// Project Tools (edit 1)
 	global $project, $issue;
 	if (!empty($modSettings['projectEnabled']))
-		ProjectTools_Main::load();
+		ProjectTools::load();
 	else
 		$user_info['query_see_project'] = '0=1';
 ]]></add>
@@ -41,7 +41,7 @@
 			<add><![CDATA[// Project Tools
 if (!empty($modSettings['projectEnabled']) || (isset($project_tools) && $project_tools === true))
 {
-	ProjectTools_Main::load();
+	ProjectTools::load();
 	
 	if (empty($project_tools))
 		ProjectTools_Main::loadPage('smf');
