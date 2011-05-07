@@ -115,7 +115,12 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
-	public $extensions = array();
+	protected $extensions = array();
+
+	/**
+	 *
+	 */
+	protected $modules = array();
 	
 	/**
 	 *
@@ -386,6 +391,27 @@ class ProjectTools_Project
 				
 			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $this->versions_id) . ', i.versions) AND ' . $this->queries['see_issue_private'] . ')';
 		}
+	}
+	
+	/**
+	 *
+	 */
+	public function getModules()
+	{
+		// Load modules
+		if (empty($this->modules))
+		{
+			// Load Modules
+			foreach ($this->extensions as $id => $ext)
+			{
+				if (!$ext)
+					continue;
+				$module = $ext->getModule();
+				$this->modules[$module] = new $module($this);
+			}		
+		}
+		
+		return $this->modules;
 	}
 	
 	/**

@@ -48,4 +48,13 @@ function template_select_project()
 	</div>';
 }
 
+/**
+ *
+ */
+function template_admin_frontpage()
+{
+	global $context, $settings, $options, $txt, $modSettings;
+	
+}
+
 ?>

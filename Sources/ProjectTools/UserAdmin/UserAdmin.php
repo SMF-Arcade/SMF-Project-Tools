@@ -1,19 +1,81 @@
 <?php
 /**
- * 
+ * Main handler for Project Tools User Admin
  *
  * @package core
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
+ * @since 0.6
  */
 
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
 /**
- *
- * @todo Cache queries
- * @todo fix version load
+ * Project Admin
  */
-class ProjectTools_ProjectView
+class ProjectTools_UserAdmin
 {
+	/**
+	 * Main Project Tools functions, handles calling correct module and action
+	 */
+	static public function Main()
+	{
+		global $context, $smcFunc, $user_info, $txt;
+		
+		loadLanguage('ProjectTools/UserAdmin');
+		loadTemplate('ProjectTools/UserAdmin');
+		
+		is_not_guest($txt['pt_ua_no_guest']);
+	
+		// Check that user can access Project Tools
+		isAllowedTo('project_access');
+		
+		if (!ProjectTools_Project::getCurrent())
+			return self::SelectProject();
+		else
+			return self::AdminProject();
+	}
+	
+	/**
+	 *
+	 */
+	static public function SelectProject()
+	{
+		global $context, $smcFunc, $user_info, $txt;
+		
+		// 
+		$context['admin_projects'] = array();
+
+		// Which projects I can admin?
+		$request = $smcFunc['db_query']('', '
+			SELECT p.id_project, p.name
+			FROM {db_prefix}projects AS p' . (!allowedTo('project_admin') ? '
+				INNER JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})' : ''),
+			array(
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['admin_projects'][$row['id_project']] = array(
+				'id' => $row['id_project'],
+				'name' => $row['name'],
+				'href' => ProjectTools::get_admin_url(array('project' => $row['id_project'])),
+			);
+		$smcFunc['db_free_result']($request);
+		
+		if (count($context['admin_projects']) == 1)
+		{
+			$project = array_pop($context['admin_projects']);
+			
+			redirectexit(ProjectTools::get_admin_url(array('project' => $project['id'])));
+		}
+		elseif (count($context['admin_projects']) == 0)
+			fatal_lang_error('pt_admin_not_allowed', false);
+			
+		$context['sub_template'] = 'select_project';
+	}
+	
 	/**
 	 *
 	 */
@@ -43,28 +105,23 @@ class ProjectTools_ProjectView
 	/**
 	 *
 	 */
-	static public function Main()
+	static public function AdminProject()
 	{
-		global $context, $txt, $settings;
+		global $context, $txt;
 		
-		loadLanguage('ProjectTools/ProjectView');
-			
+		$project_areas['main'] = array(
+			'module' => 'ProjectTools_UserAdmin',
+			'callback' => 'Frontpage',
+		);
 		//
-		$project_areas = array();
-		
-		// Let modules register areas
 		foreach (ProjectTools_Project::getCurrent()->getModules() as $id => $module)
 		{
-			if ($area = $module->RegisterArea())
+			/*if ($area = $module->RegisterAdminArea())
 			{
 				$area['module'] = $module;
 				$project_areas[$area['id']] = $area;
-			}
+			}*/
 		}
-		
-		// No possible areas?
-		if (empty($project_areas))
-			fatal_lang_error('pt_no_modules', false);
 			
 		self::CreateAreas($project_areas);
 		unset($project_areas);
@@ -108,6 +165,10 @@ class ProjectTools_ProjectView
 			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
 			'url' => ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id)),
 		);
+		$context['linktree'][] = array(
+			'name' => $txt['pt_admin'],
+			'url' => ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id)),
+		);
 		
 		// Add area to linktree
 		if (empty(self::$current_area['hide_linktree']))
@@ -118,6 +179,7 @@ class ProjectTools_ProjectView
 		
 		// Template
 		loadTemplate('Project', array('project'));
+		loadTemplate('ProjectTools/UserAdmin');
 		
 		if (!isset($_REQUEST['xml']))
 		{
@@ -130,6 +192,15 @@ class ProjectTools_ProjectView
 		call_user_func(array(self::$current_area['module'], self::$current_area['callback']), array($_REQUEST['sa']));
 	}
 	
+	/**
+	 *
+	 */
+	static public function Frontpage()
+	{
+		global $context;
+		
+		$context['sub_template'] = 'admin_frontpage';
+	}
 }
 
 ?>

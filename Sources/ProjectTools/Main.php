@@ -122,7 +122,7 @@ class ProjectTools_Main
 		if (ProjectTools_Project::getCurrent())
 		{
 			self::fix_url();
-			ProjectTools_View::Main();
+			ProjectTools_ProjectView::Main();
 			return;
 		}
 		
