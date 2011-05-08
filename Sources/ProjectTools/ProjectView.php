@@ -47,6 +47,7 @@ class ProjectTools_ProjectView
 	{
 		global $context, $txt, $settings;
 		
+		// Language
 		loadLanguage('ProjectTools/ProjectView');
 			
 		//

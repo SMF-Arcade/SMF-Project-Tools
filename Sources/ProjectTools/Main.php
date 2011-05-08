@@ -3,7 +3,7 @@
  * Main handler for Project Tools
  *
  * @package core
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */

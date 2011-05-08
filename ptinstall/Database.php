@@ -3,7 +3,7 @@
  * This script contains database description
  *
  * @package installer
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -13,7 +13,7 @@ global $addSettings, $permissions, $tables;
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-$project_version = '0.5';
+$project_version = '0.6';
 
 $tables = array(
 	// Projects

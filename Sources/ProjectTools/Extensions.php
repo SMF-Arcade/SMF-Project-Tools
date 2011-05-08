@@ -3,7 +3,7 @@
  * 
  *
  * @package core
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -78,7 +78,7 @@ class ProjectTools_Extensions
 	}
 
 	/**
-	 *
+	 * Loads extension
 	 * @return ProjectTools_ExtensionBase
 	 */
 	static public function loadExtension($extension, $register = true)
@@ -88,6 +88,7 @@ class ProjectTools_Extensions
 			
 		$mod = 'ProjectTools_' . $extension . '_Extension';
 		
+		// Create new instance of extension
 		if (class_exists($mod))
 		{
 			self::$extensions[$extension] = new $mod();
@@ -98,14 +99,38 @@ class ProjectTools_Extensions
 	}
 	
 	/**
-	 *
+	 * Run extension hooks
+	 * @param string $hook Name of Hook
+	 * @param array $params Parameters of hooks 
 	 */
 	static public function runHooks($hook, $params)
 	{
-		/*foreach ()
+		// Run hooks in all extensions
+		foreach (self::$extensions as $extension)
 		{
-			
-		}*/
+			if (method_exists($extension, $hook))
+				call_user_func_array(array($extension, $hook), $params);
+		}
+	}
+	
+	/**
+	 * Run module hooks (project hooks)
+	 * @param string $hook Name of Hook
+	 * @param array $params Parameters of hooks
+	 * @param ProjectTools_Project Project (current is default)
+	 */
+	static public function runProjectHooks($hook, $params, ProjectTools_Project $project = null)
+	{
+		// Get current project if not specified
+		if ($project === null)
+			$project = ProjectTools_Project::getCurrent();
+		
+		// Run hooks for each module
+		foreach ($project->getModules() as $module)
+		{
+			if (method_exists($module, $hook))
+				call_user_func_array(array($module, $hook), $params);
+		}
 	}
 }
 

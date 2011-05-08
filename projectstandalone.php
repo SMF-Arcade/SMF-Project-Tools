@@ -29,22 +29,10 @@
  *	eg. http://www.smfarcade.info/projects/index.php
  *
  * @package core
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
-
-/*
-	
-	
-
-	Eexample settings
-
-		
-
-	
-
-*/
 
 // Here you can add SSI settings or any settings for your site
 $project_tools = true;

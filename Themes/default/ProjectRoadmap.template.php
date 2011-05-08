@@ -3,7 +3,7 @@
  * Template for ProjecModule-Roadmap.php
  *
  * @package roadmap
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  * @see ProjectModule-Roadmap.php

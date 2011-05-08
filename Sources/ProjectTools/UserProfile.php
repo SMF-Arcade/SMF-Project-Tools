@@ -3,7 +3,7 @@
  * Contains code for profile pages.
  *
  * @package profile
- * @version 0.5
+ * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -32,6 +32,9 @@ class ProjectTools_UserProfile
 			'assigned' => array('projectProfileIssues'),
 			'reported' => array('projectProfileIssues'),
 		);
+		
+		
+		ProjectTools_Extensions::runHooks('Profile_subActions', array(&$subActions));
 	
 		$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'main';
 	

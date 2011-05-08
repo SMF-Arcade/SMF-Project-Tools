@@ -16,11 +16,6 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
-	
-	
-	/**
-	 *
-	 */
 	public function Main()
 	{
 		$subActions = array(
@@ -42,6 +37,8 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),
 			'report2' => array('ProjectTools_IssueTracker_Report', 'Report2'),
 		);
+		
+		ProjectTools_Extensions::runProjectHooks('IssueTracker_subActions', array(&$subActions));
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
