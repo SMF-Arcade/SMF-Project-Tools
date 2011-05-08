@@ -7,11 +7,18 @@ $txt['pt_admin'] = 'Admin';
 // Tabs
 $txt['pt_ua_tab_main'] = 'Main';
 $txt['pt_ua_tab_versions'] = 'Versions';
+$txt['pt_ua_tab_categories'] = 'Categories';
 $txt['pt_ua_tab_members'] = 'Members';
 
-// Ttiles
+// Tiles
 $txt['title_project_admin'] = '%s - Admin';
-$txt['title_members_list'] = '%s - Members';
+$txt['title_members_list'] = '%s - Admin - Members';
+$txt['title_category_list'] = '%s - Admin - Categories';
+$txt['title_category_new'] = '%s - Admin - New Category';
+$txt['title_category_edit'] = '%s - Admin - Edit category: %s';
+$txt['title_versions_list'] = '%s - Admin - Versions';
+$txt['title_versions_new'] = '%s - Admin - New Version';
+$txt['title_versions_edit'] = '%s - Admin - Edit version: %s';
 
 // Members
 $txt['pt_ua_members_desc'] = 'Here you can create and edit issue categories';
@@ -61,11 +68,7 @@ $txt['project_modules_desc'] = 'Select modules which are going to be available f
 $txt['project_submit'] = 'Submit';
 
 // Categories Admin
-$txt['manage_project_category'] = 'Categories';
-$txt['project_admin_category_description'] = 'Here you can create and edit issue categories';
-$txt['title_category_list'] = '%s - Admin - Categories';
-$txt['title_category_new'] = '%s - Admin - New Category';
-$txt['title_category_edit'] = '%s - Admin - Edit category: %s';
+$txt['pt_ua_category_desc'] = 'Here you can create and edit issue categories';
 
 $txt['header_category'] = 'Category';
 $txt['edit_category'] = 'Edit Category';
@@ -76,9 +79,7 @@ $txt['cdelete_warning'] = 'Are you sure?';
 
 // Versions Admin
 $txt['project_admin_versions_description'] = 'Here you can create and edit versions';
-$txt['title_versions_list'] = '%s - Admin - Versions';
-$txt['title_versions_new'] = '%s - Admin - New Version';
-$txt['title_versions_edit'] = '%s - Admin - Edit version: %s';
+
 
 $txt['header_version'] = 'Version';
 $txt['new_version_group'] = 'New Version Group';

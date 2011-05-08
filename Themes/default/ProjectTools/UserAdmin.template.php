@@ -115,6 +115,16 @@ function template_versions_list()
 /**
  *
  */
+function template_categories_list()
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	template_show_list('categories_list');
+}
+
+/**
+ *
+ */
 function template_edit_version()
 {
 	global $context, $settings, $options, $scripturl, $txt, $project, $modSettings;
@@ -214,16 +224,6 @@ function template_edit_version()
 		}
 		refreshOptions();
 	// ]]></script>';
-}
-
-/**
- *
- */
-function template_categories_list()
-{
-	global $context, $settings, $options, $txt, $modSettings;
-
-	template_show_list('categories_list');
 }
 
 /**

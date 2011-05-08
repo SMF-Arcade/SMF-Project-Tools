@@ -19,7 +19,7 @@ class ProjectTools_UserAdmin_Versions
 	/**
 	 *
 	 */
-	public function Main()
+	public static function Main()
 	{
 		global $context, $txt;
 			
@@ -41,7 +41,7 @@ class ProjectTools_UserAdmin_Versions
 	/**
 	 *
 	 */
-	public function ListVersions()
+	public static function ListVersions()
 	{	
 		global $sourcedir, $context, $txt, $project;
 		
@@ -134,7 +134,7 @@ class ProjectTools_UserAdmin_Versions
 	/**
 	 *
 	 */
-	public function Edit()
+	public static function Edit()
 	{	
 		global $smcFunc, $sourcedir, $context, $txt, $project;
 
@@ -235,7 +235,7 @@ class ProjectTools_UserAdmin_Versions
 	/**
 	 *
 	 */
-	public function Edit2()
+	public static function Edit2()
 	{	
 		global $sourcedir, $context, $txt, $project;
 		

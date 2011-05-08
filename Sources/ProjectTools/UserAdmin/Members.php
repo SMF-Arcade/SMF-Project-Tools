@@ -19,7 +19,7 @@ class ProjectTools_UserAdmin_Members
 	/**
 	 *
 	 */
-	public function Main()
+	public static function Main()
 	{
 		global $context, $txt;
 			

@@ -131,6 +131,13 @@ class ProjectTools_UserAdmin
 				'title' => $txt['pt_ua_tab_versions'],
 				'order' => 2,
 			),
+			'categories' => array(
+				'id' => 'categories',
+				'module' => 'ProjectTools_UserAdmin_Categories',
+				'callback' => 'Main',
+				'title' => $txt['pt_ua_tab_categories'],
+				'order' => 3,				
+			),
 		);
 		//
 		foreach (ProjectTools_Project::getCurrent()->getModules() as $id => $module)
