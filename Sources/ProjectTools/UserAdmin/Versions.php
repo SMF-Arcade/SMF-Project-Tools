@@ -49,7 +49,7 @@ class ProjectTools_UserAdmin_Versions
 			'id' => 'versions_list',
 			'base_href' => ProjectTools::get_admin_url(array('project' => $project, 'area' => 'versions')),
 			'get_items' => array(
-				'function' => 'list_getVersions',
+				'function' => array('ProjectTools_Admin', 'list_getVersions'),
 				'params' => array(
 					$project,
 				),
@@ -92,7 +92,7 @@ class ProjectTools_UserAdmin_Versions
 					'data' => array(
 						'function' => create_function('$list_item', '
 							global $txt, $project;
-							return (empty($list_item[\'level\']) ? \'<a href="\' .  ProjectTools::get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
+							return (empty($list_item[\'level\']) ? \'<a href="\' .  ProjectTools::get_admin_url(array(\'project\' => $project, \'area\' => \'versions\', \'sa\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
 						'),
 						'style' => 'text-align: right;',
 					),

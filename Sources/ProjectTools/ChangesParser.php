@@ -16,9 +16,12 @@ if (!defined('SMF'))
  */
 class ProjectTools_ChangesParser
 {
+	/**
+	 *
+	 */
 	public static function Parse($project, $changes, $short = false)
 	{
-		global $txt, $context;
+		global $txt, $context, $memberContext;
 		
 		if (!$project instanceof ProjectTools_Project)
 			$project = ProjectTools_Project::getProject($project);

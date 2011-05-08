@@ -165,7 +165,7 @@ class ProjectTools_UserAdmin
 		foreach (self::$areas as $id => &$area)
 		{
 			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
-				: ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id));
+				: ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id));
 			
 			$context['project_tabs']['tabs'][$id] = array(
 				'title' => $area['title'],
@@ -219,7 +219,7 @@ class ProjectTools_UserAdmin
 		
 		$context['project_form'] = new ProjectTools_Form_ProjectEdit(ProjectTools_Project::getCurrent()->id);
 		if ($context['project_form']->is_post && $context['project_form']->Save())
-			redirectexit(ProjectTools::get_admin_url(array('project' => ProjecTools_Project::getCurrent()->id)));
+			redirectexit(ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id)));
 		
 		$context['sub_template'] = 'admin_frontpage';
 	}
