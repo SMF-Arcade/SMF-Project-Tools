@@ -7,12 +7,59 @@ $txt['pt_admin'] = 'Admin';
 // Tabs
 $txt['pt_ua_tab_main'] = 'Main';
 $txt['pt_ua_tab_versions'] = 'Versions';
+$txt['pt_ua_tab_members'] = 'Members';
 
+// Ttiles
 $txt['title_project_admin'] = '%s - Admin';
-$txt['manage_versions'] = 'Versions';
-$txt['manage_project_category'] = 'Categories';
+$txt['title_members_list'] = '%s - Members';
+
+// Members
+$txt['pt_ua_members_desc'] = 'Here you can create and edit issue categories';
+$txt['pt_user_name'] = 'Name';
+
+// Edit Project
+$txt['edit_project'] = 'Edit Project';
+$txt['project_name'] = 'Project Name';
+
+$txt['project_description'] = 'Short description for project';
+$txt['project_description_desc'] = 'Displayed on board index';
+$txt['project_description_long'] = 'Description';
+$txt['project_description_long_desc'] = 'Description displayed on Project Page';
+
+$txt['project_theme'] = 'Project Theme';
+$txt['project_theme_default'] = '(overall forum default)';
+$txt['project_theme_override'] = 'Override member\'s theme';
+
+$txt['project_board_index'] = 'Show Project in Board Index';
+$txt['project_board_index_desc'] = '';
+$txt['project_board_index_dont_show'] = 'Don\'t show';
+$txt['project_board_position'] = 'Position';
+$txt['project_board_index_before'] = 'Before Boards';
+$txt['project_board_index_after'] = 'After Boards';
+
+$txt['project_permissions'] = 'Permissions';
+$txt['project_profile'] = 'Permissions Profile';
+$txt['project_membergroups'] = 'Membergroups';
+$txt['project_membergroups_desc'] = 'Select Membergroups allowed to see this project';
+$txt['regular_members'] = 'Regular Members';
+$txt['guests'] = 'Guests';
+$txt['pgroups_post_group'] = 'This is post based group.';
+$txt['check_all'] = 'Select All';
+
+$txt['project_developers'] = 'Developers';
+$txt['developer_add'] = 'Add';
+$txt['developer_remove'] = 'Remove';
+
+$txt['project_trackers'] = 'Issue Types';
+$txt['project_trackers_desc'] = 'Select issue types you want to use in this project';
+
+$txt['project_modules'] = 'Modules';
+$txt['project_modules_desc'] = 'Select modules which are going to be available for this project';
+
+$txt['project_submit'] = 'Submit';
 
 // Categories Admin
+$txt['manage_project_category'] = 'Categories';
 $txt['project_admin_category_description'] = 'Here you can create and edit issue categories';
 $txt['title_category_list'] = '%s - Admin - Categories';
 $txt['title_category_new'] = '%s - Admin - New Category';

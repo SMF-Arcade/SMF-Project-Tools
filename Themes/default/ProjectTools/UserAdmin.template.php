@@ -58,6 +58,17 @@ function template_admin_frontpage()
 	$context['project_form']->render();
 }
 
+/**
+ *
+ */
+function template_members_list()
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	template_show_list('members_list');
+	
+	// TODO: Add members
+}
 
 /**
  *

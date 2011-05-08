@@ -116,6 +116,12 @@ class ProjectTools_UserAdmin
 				'title' => $txt['pt_ua_tab_main'],
 				'order' => 'first',
 			),
+			'members' => array(
+				'module' => 'ProjectTools_UserAdmin_Members',
+				'callback' => 'Main',
+				'title' => $txt['pt_ua_tab_members'],
+				'order' => 1,				
+			),
 			'versions' => array(
 				'module' => 'ProjectTools_UserAdmin_Versions',
 				'callback' => 'Main',

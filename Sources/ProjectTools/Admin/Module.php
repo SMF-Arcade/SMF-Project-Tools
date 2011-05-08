@@ -27,6 +27,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 		
 		loadTemplate('ProjectModule-Admin');
 		loadLanguage('ProjectAdmin');
+		loadLanguage('ProjectTools/UserAdmin');
 
 		$context['project_sub_tabs'] = array(
 			'main' => array(
