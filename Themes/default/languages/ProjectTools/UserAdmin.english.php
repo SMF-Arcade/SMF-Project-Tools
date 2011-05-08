@@ -16,6 +16,8 @@ $txt['title_members_list'] = '%s - Members';
 // Members
 $txt['pt_ua_members_desc'] = 'Here you can create and edit issue categories';
 $txt['pt_user_name'] = 'Name';
+$txt['pt_add_project_member'] = 'Add Project Member';
+$txt['pt_add_members']  = 'Add';
 
 // Edit Project
 $txt['edit_project'] = 'Edit Project';

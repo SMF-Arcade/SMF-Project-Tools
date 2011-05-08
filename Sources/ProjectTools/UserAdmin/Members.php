@@ -25,6 +25,7 @@ class ProjectTools_UserAdmin_Members
 			
 		$subActions = array(
 			'main' => array('ProjectTools_UserAdmin_Members', 'ListMembers'),
+			'add' => array('ProjectTools_UserAdmin_Members', 'AddMembers'),
 		);
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
@@ -133,4 +134,31 @@ class ProjectTools_UserAdmin_Members
 		$context['page_title'] = sprintf($txt['title_members_list'], ProjectTools_Project::getCurrent()->name);
 		$context['sub_template'] = 'members_list';
 	}
+	
+	/**
+	 *
+	 */
+	public function AddMembers()
+	{
+		global $sourcedir, $context, $txt, $project, $smcFunc;
+		
+		$rows = array();
+
+		foreach ($_POST['member_container'] as $id_member)
+			if (!empty($id_member))
+				$rows[] = array(ProjectTools_Project::getCurrent()->id, (int) $id_member);
+
+		$smcFunc['db_insert']('ignore',
+			'{db_prefix}project_developer',
+			array(
+				'id_project' => 'int',
+				'id_member' => 'int',
+			),
+			$rows,
+			array('id_project', 'id_member')
+		);	
+		
+		redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'members')));
+	}
+	
 }

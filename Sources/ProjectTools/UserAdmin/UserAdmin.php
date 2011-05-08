@@ -107,26 +107,29 @@ class ProjectTools_UserAdmin
 	 */
 	static public function AdminProject()
 	{
-		global $context, $txt;
+		global $context, $txt, $settings;
 		
 		$project_areas = array(
 			'main' => array(
+				'id' => 'main',
 				'module' => 'ProjectTools_UserAdmin',
 				'callback' => 'Frontpage',
 				'title' => $txt['pt_ua_tab_main'],
 				'order' => 'first',
 			),
 			'members' => array(
+				'id' => 'members',
 				'module' => 'ProjectTools_UserAdmin_Members',
 				'callback' => 'Main',
 				'title' => $txt['pt_ua_tab_members'],
 				'order' => 1,				
 			),
 			'versions' => array(
+				'id' => 'versions',
 				'module' => 'ProjectTools_UserAdmin_Versions',
 				'callback' => 'Main',
 				'title' => $txt['pt_ua_tab_versions'],
-				'order' => 1,
+				'order' => 2,
 			),
 		);
 		//

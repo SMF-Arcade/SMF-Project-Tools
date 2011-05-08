@@ -67,7 +67,39 @@ function template_members_list()
 
 	template_show_list('members_list');
 	
-	// TODO: Add members
+	echo '
+	<br />
+	<form action="', ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'members', 'sa' => 'add')), '" method="post">
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['pt_add_project_member'], '</h3>
+		</div>
+		<div class="windowbg2">
+			<span class="top_slice"><span></span></span>
+			<div class="content">
+				<input type="text" name="member" id="member" size="25" tabindex="', $context['tabindex']++, '" />
+				<div id="member_container"></div>
+				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc5"></script>
+				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					var oDeveloperSuggest = new smc_AutoSuggest({
+						sSelf: \'oDeveloperSuggest\',
+						sSessionVar: \'', $context['session_var'], '\',
+						sSessionId: \'', $context['session_id'], '\',
+						sSuggestId: \'member\',
+						sControlId: \'member\',
+						sSearchType: \'member\',
+						bItemList: true,
+						sPostName: \'member_container\',
+						sURLMask: \'action=profile;u=%item_id%\',
+						sItemListContainerId: \'member_container\',
+						aListItems: []
+					});
+					// ]]></script>
+				<br />
+				<input class="button_submit" type="submit" value="', $txt['pt_add_members'], '" />
+			</div>
+			<span class="bot_slice"><span></span></span>
+		</div>
+	</form>';
 }
 
 /**

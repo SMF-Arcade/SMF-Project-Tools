@@ -26,7 +26,7 @@ class ProjectTools_Admin
 		$request = $smcFunc['db_query']('', '
 			SELECT dev.id_member, mem.real_name
 			FROM {db_prefix}project_developer AS dev
-				LEFT JOIN mem.id_member AS mem ON (mem.id_member = dev.id_member)
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = dev.id_member)
 			WHERE dev.id_project = {int:project}
 			ORDER BY ' . $sort,
 			array(
@@ -34,11 +34,11 @@ class ProjectTools_Admin
 			)
 		);
 	
-		$categories = array();
+		$members = array();
 	
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			$categories[] = array(
+			$members[] = array(
 				'id' => $row['id_member'],
 				'name' => $row['real_name'],
 				'link' => '<a href="' . ProjectTools::get_admin_url(array('project' => $project, 'area' => 'members', 'sa' => 'edit', 'member' => $row['id_member'])) . '">' . $row['real_name'] . '</a>',
@@ -46,7 +46,7 @@ class ProjectTools_Admin
 		}
 		$smcFunc['db_free_result']($request);
 	
-		return $categories;
+		return $members;
 	}
 }
 
