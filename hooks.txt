@@ -1,0 +1,22 @@
+Extension Hooks
+---------------
+These add general features not specific to a project
+
+Profile_subActions: Add sub-actions for project subsection of SMF Profile pages
+Profile_subSections: Add sub-sections for project subsection of SMF Profile pages
+
+Module Hooks
+------------
+These add features specific to project.
+These are provided by other modules.
+
+Frontpage
+---------
+
+Frontpage_RegsterBlocks:
+
+Issue Tracker
+-------------
+Issue tracker has following hooks
+
+IssueTracker_subActions: 

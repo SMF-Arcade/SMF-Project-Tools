@@ -254,6 +254,13 @@ class ProjectTools_Hooks
 		if (empty($modSettings['projectEnabled']))
 			return;
 		
+		$subsections = array(
+			'main' => array($txt['project_profile_main']),
+		);
+		
+		//
+		ProjectTools_Extensions::runHooks('Profile_subSections', array(&$subsections));
+		
 		self::array_insert($profile_areas['info']['areas'], 'showposts',
 			array(
 				'project' => array(
@@ -261,11 +268,7 @@ class ProjectTools_Hooks
 					//'file' => 'Profile-Project.php',
 					'function' => create_function('$memID', 'ProjectTools_UserProfile::Main($memID);'),
 					'enabled' => !empty($modSettings['projectEnabled']),
-					'subsections' => array(
-						'main' => array($txt['project_profile_main']),
-						'reported' => array($txt['project_profile_reported']),
-						'assigned' => array($txt['project_profile_assigned']),
-					),
+					'subsections' => $subsections,
 					'permission' => array(
 						'own' => 'project_profile_own',
 						'any' => 'project_profile_any',

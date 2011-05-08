@@ -65,35 +65,35 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
-	function RegisterProjectFrontpageBlocks(&$frontpage_blocks)
+	function Frontpage_RegsterBlocks(&$frontpage_blocks)
 	{
 		global $context, $project, $user_info;
 		
 		$issues_num = 5;
 
 		$issue_list = array(
-			'recent_issues' => array(
+			'IssueTracker:recent_issues' => array(
 				'title' => 'recent_issues',
 				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues')),
 				'order' => 'i.updated DESC',
 				'where' => '1 = 1',
 				'show' => ProjectTools::allowedTo('issue_view'),
 			),
-			'my_reports' => array(
+			'IssueTracker:my_reports' => array(
 				'title' => 'reported_by_me',
 				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'reporter' => $user_info['id'])),
 				'order' => 'i.updated DESC',
 				'where' => 'i.id_reporter = {int:current_member}',
 				'show' => ProjectTools::allowedTo('issue_report'),
 			),
-			'assigned' => array(
+			'IssueTracker:assigned' => array(
 				'title' => 'assigned_to_me',
 				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'assignee' => $user_info['id'])),
 				'order' => 'i.updated DESC',
 				'where' => 'i.id_assigned = {int:current_member} AND NOT (i.status IN ({array_int:closed_status}))',
 				'show' => ProjectTools::allowedTo('issue_resolve'),
 			),
-			'new_issues' => array(
+			'IssueTracker:new_issues' => array(
 				'title' => 'new_issues',
 				'href' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'status' => 1,)),
 				'order' => 'i.created DESC',

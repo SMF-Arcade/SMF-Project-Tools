@@ -116,13 +116,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 		
 		$frontpage_blocks = array();
 		
-		// Let Modules register Frontpage blocks
-		if (!empty($context['active_project_modules']))
-		{
-			foreach ($context['active_project_modules'] as $module)
-				if (method_exists($module, 'RegisterProjectFrontpageBlocks'))
-					$module->RegisterProjectFrontpageBlocks($frontpage_blocks);
-		}
+		ProjectTools_Extensions::runProjectHooks('Frontpage_RegsterBlocks', array(&$frontpage_blocks));
 		
 		$context['project_blocks'] = array();
 		
