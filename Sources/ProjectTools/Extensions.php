@@ -56,7 +56,7 @@ class ProjectTools_Extensions
 						'filename' => $file,
 						'enabled' => in_array($file, $modSettings['projectExtensions']),
 						'can_enable' => $extInfo['api_version'] === 2,
-						'can_disable' => !in_array($file, array('Admin', 'IssueTracker')),
+						'can_disable' => true, // Todo: check if it's in use
 					);
 				}
 			}

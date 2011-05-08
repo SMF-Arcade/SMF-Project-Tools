@@ -20,15 +20,11 @@ class ProjectTools_Roadmap_Module extends ProjectTools_ModuleBase
 	{
 		$subActions = array(
 			'main' => array(
-				'area' => 'roadmap',
-				'callback' => array($this, '__projectRoadmapMain'),
-				'tab' => 'roadmap',
+				array($this, '__projectRoadmapMain')
 			),
 			'version' => array(
-				'area' => 'roadmap',
-				'callback' => array($this, '__projectRoadmapVersion'),
-				'tab' => 'roadmap',
-			)
+				array($this, '__projectRoadmapVersion'),
+			),
 		);
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
@@ -37,7 +33,7 @@ class ProjectTools_Roadmap_Module extends ProjectTools_ModuleBase
 		if (isset($_REQUEST['version']) && $_REQUEST['sa'] == 'main')
 			$_REQUEST['sa'] = 'version';
 			
-		call_user_func($subActions[$_REQUEST['sa']], $this->project);
+		call_user_func($subActions[$_REQUEST['sa']][0], $this->project);
 	}
 
 	/**
