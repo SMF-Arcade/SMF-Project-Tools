@@ -140,7 +140,7 @@ class ProjectTools_Admin_Module extends ProjectTools_ModuleBase
 			'id' => 'categories_list',
 			'base_href' => ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category')),
 			'get_items' => array(
-				'function' => 'list_getCategories',
+				'function' => array('ProjectTools_Admin', 'list_getCategories'),
 				'params' => array(
 					$project,
 				),

@@ -107,6 +107,38 @@ class ProjectTools_Admin
 	
 		return $versions;
 	}
+	
+	/**
+	 * Returns list of categories for createList
+	 */
+	function list_getCategories($start, $items_per_page, $sort, $project)
+	{
+		global $smcFunc;
+	
+		$request = $smcFunc['db_query']('', '
+			SELECT cat.id_category, cat.category_name
+			FROM {db_prefix}issue_category AS cat
+			WHERE cat.id_project = {int:project}
+			ORDER BY cat.category_name',
+			array(
+				'project' => $project
+			)
+		);
+	
+		$categories = array();
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$categories[] = array(
+				'id' => $row['id_category'],
+				'name' => $row['category_name'],
+				'link' => '<a href="' . ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	
+		return $categories;
+	}
 }
 
 ?>
