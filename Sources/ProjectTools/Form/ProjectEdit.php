@@ -193,15 +193,18 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 					AND permission_inherit = {int:inherit}
 					AND id_parent = {int:no_parent}',
 				array(
-					'project' => $id_project,
+					'project' => $data['id_field'],
 					'inherit' => 1,
 					'no_parent' => 0,
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
-				updateVersion($id_project, $row['id_version'], array('member_groups' => explode(',', $data['member_groups'])));
+				updateVersion($data['id_field'], $row['id_version'], array('member_groups' => explode(',', $data['member_groups'])));
 			$smcFunc['db_free_result']($request);
 		}
+		
+		cache_put_data('project-' . $data['id_field'], null, 120);
+		cache_put_data('project-version-' . $data['id_field'], null, 120);
 	}
 }
 
