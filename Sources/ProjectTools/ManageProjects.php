@@ -61,7 +61,7 @@ class ProjectTools_ManageProjects
 			'id' => 'projects_list',
 			'base_href' => $scripturl . '?action=admin;area=manageprojects',
 			'get_items' => array(
-				'function' => 'list_getProjects',
+				'function' => array('ProjectTools_Admin', 'list_getProjects'),
 			),
 			'default_sort_col' => 'name',
 			'columns' => array(

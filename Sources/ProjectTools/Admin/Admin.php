@@ -17,6 +17,65 @@ if (!defined('SMF'))
 class ProjectTools_Admin
 {
 	/**
+	 * Returns list of projects for createList
+	 */
+	function list_getProjects($start, $items_per_page, $sort)
+	{
+		global $smcFunc, $scripturl;
+	
+		$projects = array();
+	
+		$request = $smcFunc['db_query']('', '
+			SELECT p.id_project, p.name
+			FROM {db_prefix}projects AS p
+			ORDER BY ' . $sort);
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$projects[] = array(
+				'id' => $row['id_project'],
+				'link' => '<a href="' . $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'] . '">' . $row['name'] . '</a>',
+				'href' => $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $row['id_project'],
+				'name' => $row['name'],
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	
+		return $projects;
+	}
+	
+	/**
+	 * Returns list of permission profiles for createList
+	 */
+	function list_getProfiles($start = 0, $items_per_page = -1, $sort = '')
+	{
+		global $smcFunc, $scripturl;
+	
+		$profiles = array();
+	
+		$request = $smcFunc['db_query']('', '
+			SELECT pr.id_profile, pr.profile_name, COUNT(p.id_project) AS num_project
+			FROM {db_prefix}project_profiles AS pr
+				LEFT JOIN {db_prefix}projects AS p ON (p.id_profile = pr.id_profile)
+			GROUP BY pr.id_profile');
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$profiles[] = array(
+				'id' => $row['id_profile'],
+				'link' => '<a href="' . $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'] . '">' . $row['profile_name'] . '</a>',
+				'href' => $scripturl . '?action=admin;area=projectpermissions;sa=edit;profile=' . $row['id_profile'],
+				'name' => $row['profile_name'],
+				'projects' => comma_format($row['num_project']),
+				'disabled' => ($row['num_project'] > 0 || $row['id_profile'] == 1) ? 'disabled="disabled" ' : '',
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	
+		return $profiles;
+	}
+
+	/**
 	 *
 	 */
 	function list_getMembers($start, $items_per_page, $sort, $project)

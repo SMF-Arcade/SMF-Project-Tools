@@ -161,7 +161,7 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		if (defined('PT_IN_ADMIN'))
 		{
 			$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
-			foreach (list_getProfiles() as $p)
+			foreach (ProjectTools_Admin::list_getProfiles() as $p)
 				$profile->addOption($p['id'], $p['name']);
 		}
 			
@@ -176,6 +176,32 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 			new Madjoki_Form_Element_Submit($this, $txt['edit_project']);
 		else
 			new Madjoki_Form_Element_Submit($this, $txt['new_project']);
+	}
+	
+	/**
+	 *
+	 */
+	protected function onUpdated($data)
+	{
+		if (isset($data['member_groups']))
+		{
+			// Update versions with permission inherited
+			$request = $smcFunc['db_query']('', '
+				SELECT id_version
+				FROM {db_prefix}project_versions
+				WHERE id_project = {int:project}
+					AND permission_inherit = {int:inherit}
+					AND id_parent = {int:no_parent}',
+				array(
+					'project' => $id_project,
+					'inherit' => 1,
+					'no_parent' => 0,
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				updateVersion($id_project, $row['id_version'], array('member_groups' => explode(',', $data['member_groups'])));
+			$smcFunc['db_free_result']($request);
+		}
 	}
 }
 

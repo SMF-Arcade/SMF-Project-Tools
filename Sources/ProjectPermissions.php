@@ -137,7 +137,7 @@ function ManageProjectPermissionsMain()
 		'id' => 'profiles_list',
 		'base_href' => $scripturl . '?action=admin;area=projectpermissions',
 		'get_items' => array(
-			'function' => 'list_getProfiles',
+			'function' => array('ProjectTools_Admin', 'list_getProfiles'),
 		),
 		'columns' => array(
 			'name' => array(
@@ -207,7 +207,7 @@ function ManageProjectPermissionsMain()
 	createList($listOptions);
 	
 	// Load List of Profiles
-	$context['profiles'] = list_getProfiles();
+	$context['profiles'] = ProjectTools_Admin::list_getProfiles();
 
 	// Template
 	$context['sub_template'] = 'profiles_list';
