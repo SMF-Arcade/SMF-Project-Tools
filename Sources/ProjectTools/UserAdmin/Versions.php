@@ -325,7 +325,7 @@ class ProjectTools_UserAdmin_Versions
 			);
 		}
 	
-		redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'versions')));
+		redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'versions')));
 	}
 }
 

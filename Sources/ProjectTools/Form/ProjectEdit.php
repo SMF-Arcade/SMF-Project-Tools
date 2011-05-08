@@ -78,7 +78,15 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		}
 		else
 		{
-			$this->action_url = $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $this->id;
+			if (defined('PT_IN_ADMIN'))
+			{
+				$this->action_url = $scripturl . '?action=admin;area=manageprojects;sa=edit;project=' . $this->id;
+			}
+			else
+			{
+				$this->action_url = ProjectTools::get_admin_url(array('project' => $this->id));
+			}
+			
 			new Madjoki_Form_Element_Header($this, $txt['edit_project']);
 		}
 		
@@ -150,9 +158,12 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		new Madjoki_Form_Element_Header($this, $txt['project_permissions']);
 		
 		// Permissions Profile
-		$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
-		foreach (list_getProfiles() as $p)
-			$profile->addOption($p['id'], $p['name']);
+		if (defined('PT_IN_ADMIN'))
+		{
+			$profile = new Madjoki_Form_Element_Select($this, 'id_profile', $txt['project_profile']);
+			foreach (list_getProfiles() as $p)
+				$profile->addOption($p['id'], $p['name']);
+		}
 			
 		//
 		$memgroups = new Madjoki_Form_Element_MemberGroups($this, 'member_groups', $txt['project_membergroups']);

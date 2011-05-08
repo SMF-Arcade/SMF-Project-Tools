@@ -208,6 +208,10 @@ class ProjectTools_UserAdmin
 	{
 		global $context;
 		
+		$context['project_form'] = new ProjectTools_Form_ProjectEdit(ProjectTools_Project::getCurrent()->id);
+		if ($context['project_form']->is_post && $context['project_form']->Save())
+			redirectexit(ProjectTools::get_admin_url(array('project' => ProjecTools_Project::getCurrent()->id)));
+		
 		$context['sub_template'] = 'admin_frontpage';
 	}
 }

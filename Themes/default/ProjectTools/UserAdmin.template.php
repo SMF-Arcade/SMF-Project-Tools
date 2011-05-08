@@ -55,6 +55,7 @@ function template_admin_frontpage()
 {
 	global $context, $settings, $options, $txt, $modSettings;
 	
+	$context['project_form']->render();
 }
 
 

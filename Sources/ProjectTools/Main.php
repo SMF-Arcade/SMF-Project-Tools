@@ -85,6 +85,7 @@ class ProjectTools_Main
 		}
 		elseif ($mode == 'admin')
 		{
+			define('PT_IN_ADMIN', true);
 			require_once($sourcedir . '/Subs-ProjectAdmin.php');
 	
 			$user_info['query_see_project'] = '1 = 1';
