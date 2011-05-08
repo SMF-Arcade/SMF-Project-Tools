@@ -511,7 +511,7 @@ function EditProfilePermissions()
 
 	PTloadProfile();
 
-	$allPermissions = getAllPTPermissions();
+	$allPermissions = ProjectTools_Admin::getAllPTPermissions();
 
 	$request = $smcFunc['db_query']('', '
 		SELECT permission
@@ -578,7 +578,7 @@ function EditProfilePermissions2()
 
 	checkSession();
 
-	$allPermissions = getAllPTPermissions();
+	$allPermissions = ProjectTools_Admin::getAllPTPermissions();
 
 	$permissions = array();
 

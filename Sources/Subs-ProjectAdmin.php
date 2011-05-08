@@ -260,26 +260,6 @@ function updatePTCategory($id_project, $id_category, $categoryOptions)
 
 
 
-/**
- * Returns list of all possible permissions
- */
-function getAllPTPermissions()
-{
-	// List of all possible permissions
-	// 'perm' => array(own/any, [guest = true])
 
-	return array(
-		'issue_view' => array(false),
-		'issue_view_private' => array(false),
-		'issue_report' => array(false),
-		'issue_comment' => array(false),
-		'issue_update' => array(true, false),
-		'issue_attach' => array(false),
-		'issue_moderate' => array(false, false),
-		// Comments
-		'edit_comment' => array(true, false),
-		'delete_comment' => array(true, false),
-	);
-}
 
 ?>

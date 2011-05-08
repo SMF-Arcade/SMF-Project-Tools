@@ -30,8 +30,6 @@
 		<require-dir name="Themes/default/languages/ProjectTools" destination="$languagedir" />
 
 		<!-- These files goes to Sources directory -->
-		<require-file name="Sources/Profile-Project.php" destination="$sourcedir" />
-		<require-file name="Sources/ProjectAdmin.php" destination="$sourcedir" />
 		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
@@ -92,17 +90,11 @@
 		<modification format="xml" type="file" reverse="true">curvetheme.xml</modification>
 
 		<remove-dir name="$sourcedir/ProjectTools" />
+		<remove-dir name="$themedir/ProjectTools" />
 		<remove-dir name="$languagedir/ProjectTools" />
 
 		<!-- Remove these files from Sources -->
-		<remove-file name="$sourcedir/IssueComment.php" />
-		<remove-file name="$sourcedir/IssueList.php" />
-		<remove-file name="$sourcedir/IssueView.php" />
-		<remove-file name="$sourcedir/IssueReport.php" />
-		<remove-file name="$sourcedir/ProjectAdmin.php" />
 		<remove-file name="$sourcedir/ProjectPermissions.php" />
-		<remove-file name="$sourcedir/ProjectRoadmap.php" />
-		<remove-file name="$sourcedir/ProjectView.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />
 		<remove-file name="$sourcedir/Subs-Project.php" />
 		<remove-file name="$sourcedir/Subs-ProjectAdmin.php" />

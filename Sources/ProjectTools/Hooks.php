@@ -208,8 +208,8 @@ class ProjectTools_Hooks
 					'areas' => array(
 						'projectsadmin' => array(
 							'label' => $txt['project_general'],
-							'file' => 'ProjectAdmin.php',
-							'function' => 'ProjectsAdmin',
+							//'file' => 'ProjectAdmin.php',
+							'function' => create_function('', 'ProjectTools_Admin::Main();'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
 							'subsections' => array(

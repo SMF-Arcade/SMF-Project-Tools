@@ -609,36 +609,6 @@ function register_project_feature($module, $class_name)
 	);
 }
 
-/**
- * Gets list of installed modules
- */
-function project_getInstalledModules()
-{
-	global $sourcedir, $smcFunc;
-
-	$modules = array();
-	if ($dh = opendir($sourcedir))
-	{
-		while (($file = readdir($dh)) !== false)
-		{
-			if (!is_dir($file) && preg_match('~ProjectModule-([A-Za-z\d]+)\.php~', $file, $matches))
-			{
-				$extensionInformation = loadProjectToolsExtension(strtolower($matches[1]), false);
-				
-				foreach ($extensionInformation['modules'] as $id => $module)
-					$modules[$id] = array(
-						'id' => strtolower($matches[1]),
-						'name' => $id,
-						'provided_by' => strtolower($matches[1]),
-					);
-			}
-		}
-	}
-	closedir($dh);
-
-	return $modules;
-}
-
 function projectTabSort($first, $second)
 {
 	global $context;
