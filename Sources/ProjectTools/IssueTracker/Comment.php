@@ -57,11 +57,11 @@ class ProjectTools_IssueTracker_Comment
 			$request = $smcFunc['db_query']('', '
 				SELECT sent
 				FROM {db_prefix}log_notify_projects
-				WHERE id_project = {int:project}
+				WHERE id_issue = {int:issue}
 					AND id_member = {int:current_member}
 				LIMIT 1',
 				array(
-					'project' => $project,
+					'issue' => $issue,
 					'current_member' => $user_info['id'],
 				)
 			);
