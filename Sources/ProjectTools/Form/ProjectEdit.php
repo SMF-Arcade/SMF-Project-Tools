@@ -103,6 +103,14 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 			$this, 'long_description', $txt['project_description_long'], new Madjoki_Form_Validator_BBC
 		);
 		$ldesc->setSubtext($txt['project_description_long_desc']);
+		
+		// Trackers
+		$trackers = new Madjoki_Form_Element_CheckList($this, 'trackers', $txt['project_trackers']);
+		$trackers->setSubtext($txt['project_trackers_desc']);
+		
+		foreach ($context['issue_trackers'] as $id => $tracker)
+			$trackers->addOption($id, $tracker['name']);
+		
 			
 		// Theme
 		$theme = new Madjoki_Form_Element_Select($this, 'project_theme', $txt['project_theme']);
@@ -197,6 +205,32 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		
 		cache_put_data('project-' . $data['id_field'], null, 120);
 		cache_put_data('project-version-' . $data['id_field'], null, 120);
+	}
+	
+	/**
+	 *
+	 */
+	protected function onNew($id, $data)
+	{
+		global $smcFunc;
+		
+		// Add default modules
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}project_settings',
+			array(
+				'id_project' => 'int',
+				'id_member' => 'int',
+				'variable' => 'string-255',
+				'value' => 'string',
+			),
+			array(
+				$id,
+				0,
+				'modules',
+				'Frontpage,Roadmap,IssueTracker',
+			),
+			array('id_project', 'id_member', 'variable')
+		);
 	}
 }
 
