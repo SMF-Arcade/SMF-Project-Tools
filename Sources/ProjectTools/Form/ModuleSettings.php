@@ -14,7 +14,10 @@
  */
 class ProjectTools_Form_ModuleSettings extends ProjectTools_Form_Settings
 {
-	
+	/**
+	 *
+	 */
+	protected $name = 'ModuleSettings';
 }
 
 ?>

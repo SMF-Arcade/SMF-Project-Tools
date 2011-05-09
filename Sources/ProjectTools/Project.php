@@ -431,7 +431,7 @@ class ProjectTools_Project
 	{
 		if ($allowUser && isset($this->updateSettings[$setting]))
 			return $this->updateSettings[$setting];
-		elseif (isset($this->settings[$setting];))
+		elseif (isset($this->settings[$setting]))
 			return $this->settings[$setting];
 		else
 			return false;
@@ -466,10 +466,10 @@ class ProjectTools_Project
 	 */
 	function allowedTo($permission)
 	{
-		global $context, $user_info, $project;
+		global $context, $user_info;
 
 		// Admins and developers can do anything
-		if (allowedTo('project_admin')/* || ProjectTools_Project::getCurrent()->is_developer*/)
+		if (allowedTo('project_admin') || ProjectTools_Project::getCurrent()->isDeveloper())
 			return true;
 	
 		return $this->permissions->allowedTo($permission);

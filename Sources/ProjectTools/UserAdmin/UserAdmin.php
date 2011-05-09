@@ -119,6 +119,8 @@ class ProjectTools_UserAdmin
 			'modules' => array(
 				'id' => '',
 				'callback' => array('ProjectTools_UserAdmin_Modules', 'Main'),
+				'title' => $txt['pt_ua_tab_modules'],
+				'order' => 1,		
 			),
 			'members' => array(
 				'id' => 'members',
