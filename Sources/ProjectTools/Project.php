@@ -166,7 +166,7 @@ class ProjectTools_Project
 		
 		$request = $smcFunc['db_query']('', '
 			SELECT
-				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.modules, p.member_groups,
+				p.id_project, p.id_profile, p.name, p.description, p.long_description, p.trackers, p.member_groups,
 				p.id_event_mod, p.' . implode(', p.', $context['tracker_columns']) . ', p.project_theme
 			FROM {db_prefix}projects AS p
 			WHERE p.id_project = {int:project}
@@ -200,9 +200,6 @@ class ProjectTools_Project
 		
 		$this->groups = explode(',', $row['member_groups']);
 		
-		foreach (explode(',', $row['modules']) as $module)
-			$this->extensions[$module] = ProjectTools_Extensions::getExtension($module);
-		
 		$this->id_event_mod = $row['id_event_mod'];
 		
 		$this->permissions = ProjectTools_Permissions::getProfile($row['id_profile']);
@@ -213,7 +210,11 @@ class ProjectTools_Project
 		$this->_loadTrackers($row, explode(',', $row['trackers']));
 		$this->_loadSettings();
 		$this->_setupQueries();
+
 		
+		foreach (explode(',', $this->getSetting('modules', false, 'Frontpage,Roadmap,IssueTracker')) as $module)
+			$this->extensions[$module] = ProjectTools_Extensions::getExtension($module);
+			
 		//
 		if (!empty($modSettings['cache_enable']))
 		{
@@ -427,12 +428,17 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
-	public function getSetting($setting, $allowUser = true)
+	public function getSetting($setting, $allowUser = false, $default = null)
 	{
 		if ($allowUser && isset($this->updateSettings[$setting]))
 			return $this->updateSettings[$setting];
 		elseif (isset($this->settings[$setting]))
 			return $this->settings[$setting];
+		elseif ($default !== null)
+		{
+			$this->updateSettings(array($setting => $default), $allowUser);
+			return $default;
+		}
 		else
 			return false;
 	}
@@ -523,7 +529,6 @@ class ProjectTools_Project
 			$rows,
 			array('id_project', 'variable')
 		);
-		die();
 	}
 }
 

@@ -50,7 +50,6 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		'description' => array('type' => 'string'),
 		'long_description' => array('type' => 'string'),
 		'trackers' => array('type' => 'string'),
-		'modules' => array('type' => 'string'),
 		'member_groups' => array('type' => 'string'),
 		'id_category' => array('type' => 'int'),
 		'cat_position' => array('type' => 'string'),

@@ -130,7 +130,7 @@ function ptUpgrade_database06($check = false)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			$modules = explode(',', $row['id_modules']);
+			$modules = explode(',', $row['modules']);
 			
 			$newModules = array('Frontpage');
 			
@@ -140,7 +140,7 @@ function ptUpgrade_database06($check = false)
 				$newModules[] = 'Roadmap';
 				
 			$smcFunc['db_insert']('ignore',
-				'{db_prefix}projects',
+				'{db_prefix}project_settings',
 				array(
 					'id_project' => 'int',
 					'id_member' => 'int',
@@ -148,7 +148,7 @@ function ptUpgrade_database06($check = false)
 					'value' => 'string',
 				),
 				array(
-					$roow['id_project'],
+					$row['id_project'],
 					0,
 					'modules',
 					implode(',', $newModules),
@@ -331,30 +331,6 @@ function ptUpgrade_versionFields($check = false)
 
 		$smcFunc['db_remove_column']('project_timeline', 'id_version');
 	}
-}
-
-/**
- * Maintenance function for upgrading project modules
- */
-function ptUpgrade_projectModules($check = false)
-{
-	global $smcFunc;
-
-	// Is this step required to run?
-	if ($check)
-		return true;
-
-	db_extend('packages');
-
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}projects
-		SET modules = {string:modules}
-		WHERE modules = {string:empty}',
-		array(
-			'modules' => 'general,admin',
-			'empty' => '',
-		)
-	);
 }
 
 /**
@@ -641,7 +617,7 @@ function ptMaintenanceIssues2($check = false)
 		$deletedMembers[$row['id_updater']] = $row['id_updater'];
 	$smcFunc['db_free_result']($request);
 	
-	// Commenters
+	/*// Commenters
 	$request = $smcFunc['db_query']('', '
 		SELECT DISTINCT com.id_member
 		FROM {db_prefix}issue_comments AS com
@@ -650,7 +626,7 @@ function ptMaintenanceIssues2($check = false)
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$deletedMembers[$row['id_member']] = $row['id_member'];
-	$smcFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);*/
 	
 	// Timeline
 	$request = $smcFunc['db_query']('', '
@@ -666,7 +642,7 @@ function ptMaintenanceIssues2($check = false)
 	if (empty($deletedMembers))
 		return true;
 	
-	// Make Project Tools comments guest posts
+	/*// Make Project Tools comments guest posts
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issue_comments
 		SET id_member = {int:guest_id}
@@ -676,7 +652,7 @@ function ptMaintenanceIssues2($check = false)
 			'blank_email' => '',
 			'users' => $deletedMembers,
 		)
-	);
+	);*/
 	// Make Project Tools issues guest
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issues

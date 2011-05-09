@@ -48,7 +48,7 @@ abstract class ProjectTools_Form_Settings extends Madjoki_Form_Base
 	 */
 	public function getValue($data_field)
 	{
-		return $this->project->getSetting($data_field, false);
+		return $this->project->getSetting($data_field);
 	}
 	
 	/**

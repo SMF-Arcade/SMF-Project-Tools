@@ -256,9 +256,6 @@ class ProjectTools_Admin
 				'function' => 'ptUpgrade_versionFields',
 			),
 			array(
-				'function' => 'ptUpgrade_projectModules',
-			),
-			array(
 				'function' => 'ptUpgrade_database06',
 			),
 			// These maintenance actions are needed for proper upgrade
