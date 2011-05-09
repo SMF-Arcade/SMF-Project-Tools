@@ -3,6 +3,10 @@ Changelog started April 6, 2007.
 
 SMF Project Tools 0.5.2
 ================================================================================
+May 2011
+--------------------------------------------------------------------------------
+ ! When commenting issue, subscription was checked against project not issue,
+   causing database error in some cases
 April 2011
 --------------------------------------------------------------------------------
  ! Unable to change tracker from reply form
