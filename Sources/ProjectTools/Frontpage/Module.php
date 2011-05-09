@@ -43,7 +43,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 		$project_areas['main'] = array(
 			'id' => 'main',
 			'title' => $txt['project'],
-			'callback' => 'Main',
+			'callback' => array($this, 'Main'),
 			'hide_linktree' => true,
 			'order' => 'first',
 		);

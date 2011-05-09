@@ -46,7 +46,7 @@ class ProjectTools_Roadmap_Module extends ProjectTools_ModuleBase
 		$project_areas['rodmap'] = array(
 			'id' => 'rodmap',
 			'title' => $txt['roadmap'],
-			'callback' => 'Main',
+			'callback' => array($this, 'Main'),
 			'order' => 50,
 			'project_permission' => 'admin',
 		);

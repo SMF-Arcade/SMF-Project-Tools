@@ -120,7 +120,7 @@ class ProjectTools_ProjectView
 			<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 		}
 		
-		call_user_func(array(self::$current_area['module'], self::$current_area['callback']), array($_REQUEST['sa']));
+		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
 	}
 	
 }

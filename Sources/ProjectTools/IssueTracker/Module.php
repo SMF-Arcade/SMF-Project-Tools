@@ -56,7 +56,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 		$project_areas['issues'] = array(
 			'id' => 'issues',
 			'title' => $txt['issues'],
-			'callback' => 'Main',
+			'callback' => array($this, 'Main'),
 			'hide_linktree' => true,
 			'order' => 10,
 		);
