@@ -217,7 +217,7 @@ class ProjectTools_Main
 		}
 		$smcFunc['db_free_result']($request);
 	
-		loadTimeline();
+		$context['timeline'] = new ProjectTools_Timeline();
 	
 		// Template
 		loadTemplate('ProjectList');

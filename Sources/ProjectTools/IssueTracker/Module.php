@@ -45,15 +45,15 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			
 		call_user_func($subActions[$_REQUEST['sa']], $this->project);
 	}
-	
+
 	/**
 	 *
 	 */
-	public function RegisterArea()
+	public function RegisterAreas(&$project_areas)
 	{
 		global $txt;
 		
-		return array(
+		$project_areas['issues'] = array(
 			'id' => 'issues',
 			'title' => $txt['issues'],
 			'callback' => 'Main',

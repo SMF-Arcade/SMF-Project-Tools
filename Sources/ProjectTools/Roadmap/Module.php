@@ -39,11 +39,11 @@ class ProjectTools_Roadmap_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
-	public function RegisterArea()
+	public function RegisterAreas(&$project_areas)
 	{
 		global $txt;
 		
-		return array(
+		$project_areas['rodmap'] = array(
 			'id' => 'rodmap',
 			'title' => $txt['roadmap'],
 			'callback' => 'Main',

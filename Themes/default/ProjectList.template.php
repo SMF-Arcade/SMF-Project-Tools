@@ -100,7 +100,7 @@ function template_project_list()
 
 	$first = true;
 
-	foreach ($context['events'] as $date)
+	foreach ($context['timeline']->getEvents() as $date)
 	{
 		echo '
 					<div class="title_bar">

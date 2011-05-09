@@ -36,11 +36,11 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 	/**
 	 *
 	 */
-	public function RegisterArea()
+	public function RegisterAreas(&$project_areas)
 	{
 		global $txt;
 		
-		return array(
+		$project_areas['main'] = array(
 			'id' => 'main',
 			'title' => $txt['project'],
 			'callback' => 'Main',
@@ -137,7 +137,7 @@ class ProjectTools_Frontpage_Module extends ProjectTools_ModuleBase
 			}
 		}
 	
-		loadTimeline($project);
+		$context['timeline'] = new ProjectTools_Timeline(ProjectTools_Project::getCurrent());
 	
 		// Template
 		loadTemplate('ProjectView');

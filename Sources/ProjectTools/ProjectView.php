@@ -53,15 +53,7 @@ class ProjectTools_ProjectView
 		//
 		$project_areas = array();
 		
-		// Let modules register areas
-		foreach (ProjectTools_Project::getCurrent()->getModules() as $id => $module)
-		{
-			if ($area = $module->RegisterArea())
-			{
-				$area['module'] = $module;
-				$project_areas[$area['id']] = $area;
-			}
-		}
+		ProjectTools_Extensions::runProjectHooks('RegisterAreas', array(&$project_areas));
 		
 		// No possible areas?
 		if (empty($project_areas))

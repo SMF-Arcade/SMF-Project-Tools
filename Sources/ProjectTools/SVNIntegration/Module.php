@@ -37,17 +37,6 @@ class ProjectTools_SVNIntegration_Module extends ProjectTools_ModuleBase
 	 */
 	public function Admin()
 	{
-		
-	}	
-	
-	/**
-	 *
-	 */
-	public function RegisterArea()
-	{
-		global $txt;
-		
-		return false;
 	}
 	
 	/**

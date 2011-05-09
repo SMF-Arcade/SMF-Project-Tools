@@ -40,11 +40,6 @@ abstract class ProjectTools_ModuleBase
 		
 		loadLanguage(str_replace('_', '/', substr(get_class($this), 0, -7)));
 	}
-	
-	/**
-	 *
-	 */
-	abstract public function RegisterArea();
 }
 
 ?>

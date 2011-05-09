@@ -139,16 +139,9 @@ class ProjectTools_UserAdmin
 				'order' => 3,				
 			),
 		);
-		//
-		foreach (ProjectTools_Project::getCurrent()->getModules() as $id => $module)
-		{
-			/*if ($area = $module->RegisterAdminArea())
-			{
-				$area['module'] = $module;
-				$project_areas[$area['id']] = $area;
-			}*/
-		}
-			
+		
+		ProjectTools_Extensions::runProjectHooks('RegisterAdminAreas', array(&$project_areas));
+		
 		self::CreateAreas($project_areas);
 		unset($project_areas);
 		
