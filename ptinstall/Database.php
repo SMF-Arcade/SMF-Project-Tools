@@ -58,12 +58,6 @@ $tables = array(
 				'default' => '-1,0,2',
 			),
 			array(
-				'name' => 'modules',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => 'general,issues,admin',
-			),
-			array(
 				'name' => 'open_bug',
 				'type' => 'int',
 				'unsigned' => true,

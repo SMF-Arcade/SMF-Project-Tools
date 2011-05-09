@@ -125,6 +125,16 @@ function template_categories_list()
 /**
  *
  */
+function template_modules_form()
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	$context['modules_form']->render();
+}
+
+/**
+ *
+ */
 function template_edit_version()
 {
 	global $context, $settings, $options, $scripturl, $txt, $project, $modSettings;

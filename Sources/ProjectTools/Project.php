@@ -372,7 +372,7 @@ class ProjectTools_Project
 	
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			if ($row['id_member'] === 0)
+			if ($row['id_member'] == 0)
 				$this->settings[$row['variable']] = $row['value'];
 			else
 				$this->userSettings[$row['variable']] = $row['value'];
@@ -517,12 +517,13 @@ class ProjectTools_Project
 			array(
 				'id_project' => 'int',
 				'id_member' => 'int',
-				'variable' => 'varchar-255',
+				'variable' => 'string-255',
 				'value' => 'string',
 			),
 			$rows,
 			array('id_project', 'variable')
 		);
+		die();
 	}
 }
 

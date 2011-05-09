@@ -43,7 +43,9 @@ class ProjectTools_UserAdmin_Modules
 		global $sourcedir, $context, $txt;
 		
 		$context['modules_form'] = new ProjectTools_Form_ModuleSettings(ProjectTools_Project::getCurrent());
-	
+		if ($context['modules_form']->is_post && $context['modules_form']->Save())
+			redirectexit(ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'modules')));
+			
 		// Template
 		$context['page_title'] = sprintf($txt['title_project_modules'], ProjectTools_Project::getCurrent()->name);
 		$context['sub_template'] = 'modules_form';

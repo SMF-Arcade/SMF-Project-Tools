@@ -107,22 +107,58 @@ function ptUpgrade_database06($check = false)
 		}
 		$smcFunc['db_free_result']($request);
 		
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_issue');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_member');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event_mod');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'post_time');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_name');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_email');
-		//$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
-	//	$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
-		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_first');
-		//$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_last');
-			
-		//die('abcd');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_issue');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_member');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'id_event_mod');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'post_time');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_name');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_email');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+		$smcFunc['db_remove_column']('{db_prefix}issue_comments', 'poster_ip');
+		$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_first');
+		$smcFunc['db_remove_column']('{db_prefix}issues', 'id_comment_last');
+	}
 
-		//$smcFunc['db_remove_column']('issues', 'issue_type');
-	}	
+	if (in_array('modules', $smcFunc['db_list_columns']('{db_prefix}projects')))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_project, modules	
+			FROM {db_prefix}projects',
+			array(
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$modules = explode(',', $row['id_modules']);
+			
+			$newModules = array('Frontpage');
+			
+			if (in_array('issues', $modules))
+				$newModules[] = 'IssueTracker';
+			if (in_array('roadmap', $modules))
+				$newModules[] = 'Roadmap';
+				
+			$smcFunc['db_insert']('ignore',
+				'{db_prefix}projects',
+				array(
+					'id_project' => 'int',
+					'id_member' => 'int',
+					'variable' => 'string-255',
+					'value' => 'string',
+				),
+				array(
+					$roow['id_project'],
+					0,
+					'modules',
+					implode(',', $newModules),
+				),
+				array('id_project', 'variable')
+		}
+		
+		$smcFunc['db_remove_column']('{db_prefix}projects', 'modules');
+	}
+	
 }
 
 /**
