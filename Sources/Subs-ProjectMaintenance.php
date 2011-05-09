@@ -154,6 +154,7 @@ function ptUpgrade_database06($check = false)
 					implode(',', $newModules),
 				),
 				array('id_project', 'variable')
+			);
 		}
 		
 		$smcFunc['db_remove_column']('{db_prefix}projects', 'modules');
