@@ -298,11 +298,11 @@ class ProjectTools_IssueTracker_Comment
 			$request = $smcFunc['db_query']('', '
 				SELECT sent
 				FROM {db_prefix}log_notify_projects
-				WHERE id_project = {int:project}
+				WHERE id_issue = {int:issue}
 					AND id_member = {int:current_member}
 				LIMIT 1',
 				array(
-					'project' => $project,
+					'issue' => $issue,
 					'current_member' => $user_info['id'],
 				)
 			);
@@ -392,7 +392,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'] && !$context['is_subscribed'])
 		{
-			$smcFunc['db_insert']('',
+			$smcFunc['db_insert']('ignore',
 				'{db_prefix}log_notify_projects',
 				array(
 					'id_project' => 'int',
@@ -425,7 +425,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		$request = $smcFunc['db_query']('', '
 			SELECT id_event
-			FROM {db_prefix}issue_comments
+			FROM {db_prefix}issue_events
 			WHERE id_comment = {int:comment}',
 			array(
 				'current_user' => $user_info['id'],

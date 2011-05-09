@@ -208,7 +208,7 @@ class ProjectTools_IssueTracker_View
 					iv.id_issue_event, iv.id_member, iv.event_time, iv.changes,
 					iv.poster_name, iv.poster_email, iv.poster_ip, 
 					IFNULL(c.id_comment, 0) AS is_comment, c.id_comment, c.body, c.edit_name, c.edit_time,
-					IFNULL(c.id_event_mod, {int:new_from}) < {int:new_from} AS is_read
+					IFNULL(iv.id_event_mod, {int:new_from}) < {int:new_from} AS is_read
 				FROM {db_prefix}issue_events AS iv
 					LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_comment = iv.id_comment)
 				WHERE iv.id_issue_event IN ({array_int:events})',

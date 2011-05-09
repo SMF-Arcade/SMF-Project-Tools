@@ -919,7 +919,9 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 	// Set id_event in issue_events
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}issue_events
-		SET id_event = {int:event}
+		SET
+			id_event_mod = {int:event},
+			id_event = {int:event}
 		WHERE id_issue_event = {int:issue_event}',
 		array(
 			'issue_event' => $id_issue_event,
@@ -965,18 +967,6 @@ function createComment($id_project, $id_issue, $commentOptions, $posterOptions, 
 		array(
 			'event' => $id_event,
 			'project' => $id_project,
-		)
-	);
-
-	// Set this for read marks
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}issue_comments
-		SET id_event_mod = {int:event},
-			id_event = {int:event}
-		WHERE id_comment = {int:comment}',
-		array(
-			'event' => $id_event,
-			'comment' => $id_comment,
 		)
 	);
 
