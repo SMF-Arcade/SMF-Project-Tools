@@ -68,7 +68,7 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 	 */
 	public function addFields()
 	{
-		global $scripturl, $txt, $smcFunc;
+		global $scripturl, $txt, $context, $smcFunc;
 		
 		if ($this->id === 'new')
 		{
@@ -183,6 +183,8 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 	 */
 	protected function onUpdated($data)
 	{
+		global $smcFunc;
+		
 		if (isset($data['member_groups']))
 		{
 			// Update versions with permission inherited
@@ -193,7 +195,7 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 					AND permission_inherit = {int:inherit}
 					AND id_parent = {int:no_parent}',
 				array(
-					'project' => $data['id_field'],
+					'project' => $data['id'],
 					'inherit' => 1,
 					'no_parent' => 0,
 				)
