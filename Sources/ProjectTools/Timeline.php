@@ -43,7 +43,7 @@ class ProjectTools_Timeline
 			ORDER BY tl.event_time DESC
 			LIMIT 12',
 			array(
-				'project' => $project,
+				'project' => !empty($project) ? $project->id : null,
 				'current_member' => $user_info['id'],
 				'empty' => ''
 			)

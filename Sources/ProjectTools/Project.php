@@ -135,7 +135,12 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
-	public $settings = array();
+	protected $settings = array();
+
+	/**
+	 *
+	 */
+	protected $userSettings = array();
 	
 	/**
 	 *
@@ -366,7 +371,12 @@ class ProjectTools_Project
 		);
 	
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$this->settings[$row['variable']] = $row['value'];
+		{
+			if ($row['id_member'] === 0)
+				$this->settings[$row['variable']] = $row['value'];
+			else
+				$this->userSettings[$row['variable']] = $row['value'];
+		}
 		$smcFunc['db_free_result']($request);
 	}
 	
@@ -412,6 +422,19 @@ class ProjectTools_Project
 		}
 		
 		return $this->modules;
+	}
+	
+	/**
+	 *
+	 */
+	public function getSetting($setting, $allowUser = true)
+	{
+		if ($allowUser && isset($this->updateSettings[$setting]))
+			return $this->updateSettings[$setting];
+		elseif (isset($this->settings[$setting];))
+			return $this->settings[$setting];
+		else
+			return false;
 	}
 	
 	/**
@@ -474,22 +497,26 @@ class ProjectTools_Project
 	/**
 	 * Updates project settings
 	 */
-	function updateSettings($settings)
+	function updateSettings($settings, $is_user_setting = false)
 	{
-		global $projectSettings, $project, $smcFunc;
+		global $smcFunc, $user_info;
 			
 		$rows = array();
 		
 		foreach ($settings as $variable => $value)
 		{
-			$rows[] = array($this->id, $variable, $value);
-			$this->settings[$variable] = $value;
+			$rows[] = array($this->id, $is_user_setting ? $user_info['id'] : 0, $variable, $value);
+			if ($is_user_setting)
+				$this->settings[$variable] = $value;
+			else
+				$this->userSettings[$variable] = $value;
 		}
 		
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}project_settings',
 			array(
 				'id_project' => 'int',
+				'id_member' => 'int',
 				'variable' => 'varchar-255',
 				'value' => 'string',
 			),

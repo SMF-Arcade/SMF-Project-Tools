@@ -112,31 +112,31 @@ class ProjectTools_UserAdmin
 		$project_areas = array(
 			'main' => array(
 				'id' => 'main',
-				'module' => 'ProjectTools_UserAdmin',
-				'callback' => 'Frontpage',
+				'callback' => array('ProjectTools_UserAdmin', 'Frontpage'),
 				'title' => $txt['pt_ua_tab_main'],
 				'order' => 'first',
 			),
+			'modules' => array(
+				'id' => '',
+				'callback' => array('ProjectTools_UserAdmin_Modules', 'Main'),
+			),
 			'members' => array(
 				'id' => 'members',
-				'module' => 'ProjectTools_UserAdmin_Members',
-				'callback' => 'Main',
+				'callback' => array('ProjectTools_UserAdmin_Members', 'Main'),
 				'title' => $txt['pt_ua_tab_members'],
-				'order' => 1,				
+				'order' => 2,				
 			),
 			'versions' => array(
 				'id' => 'versions',
-				'module' => 'ProjectTools_UserAdmin_Versions',
-				'callback' => 'Main',
+				'callback' => array('ProjectTools_UserAdmin_Versions', 'Main'),
 				'title' => $txt['pt_ua_tab_versions'],
-				'order' => 2,
+				'order' => 3,
 			),
 			'categories' => array(
 				'id' => 'categories',
-				'module' => 'ProjectTools_UserAdmin_Categories',
-				'callback' => 'Main',
+				'callback' => array('ProjectTools_UserAdmin_Categories', 'Frontpage'),
 				'title' => $txt['pt_ua_tab_categories'],
-				'order' => 3,				
+				'order' => 4,				
 			),
 		);
 		
@@ -207,7 +207,7 @@ class ProjectTools_UserAdmin
 			<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/project.js"></script>';
 		}
 		
-		call_user_func(array(self::$current_area['module'], self::$current_area['callback']), array($_REQUEST['sa']));
+		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
 	}
 	
 	/**
