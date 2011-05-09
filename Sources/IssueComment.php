@@ -3,7 +3,7 @@
  * Handles commenting issue and editing comments
  *
  * @package issuetracker
- * @version 0.5
+ * @version 0.5.2
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -49,11 +49,11 @@ function IssueReply()
 		$request = $smcFunc['db_query']('', '
 			SELECT sent
 			FROM {db_prefix}log_notify_projects
-			WHERE id_project = {int:project}
+			WHERE id_issue = {int:issue}
 				AND id_member = {int:current_member}
 			LIMIT 1',
 			array(
-				'project' => $project,
+				'issue' => $issue,
 				'current_member' => $user_info['id'],
 			)
 		);
@@ -291,11 +291,11 @@ function IssueReply2()
 		$request = $smcFunc['db_query']('', '
 			SELECT sent
 			FROM {db_prefix}log_notify_projects
-			WHERE id_project = {int:project}
+			WHERE id_issue = {int:issue}
 				AND id_member = {int:current_member}
 			LIMIT 1',
 			array(
-				'project' => $project,
+				'issue' => $issue,
 				'current_member' => $user_info['id'],
 			)
 		);

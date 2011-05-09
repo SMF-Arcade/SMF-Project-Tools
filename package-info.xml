@@ -94,6 +94,7 @@
 	</install>
 	
 	<upgrade for="2.0 RC5" from="0.501">
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
@@ -103,6 +104,7 @@
 	</upgrade>
 	
 	<upgrade for="2.0 RC5" from="0.5">
+		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
