@@ -91,6 +91,7 @@ class ProjectTools_Main
 			$user_info['query_see_project'] = '1 = 1';
 			$user_info['query_see_version'] = '1 = 1';
 	
+			loadLanguage('ProjectTools/UserAdmin');
 			loadLanguage('ProjectAdmin');
 			loadTemplate('ProjectAdmin',  array('project'));
 	

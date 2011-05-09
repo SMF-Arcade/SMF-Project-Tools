@@ -11,8 +11,6 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-
-
 /**
  * Returns list of profiles where viewing private issues is allowed
  */
@@ -595,36 +593,6 @@ function sendIssueNotification($issue, $comment, $event_data, $type, $exclude = 
 
 	// Back to original language
 	loadLanguage('Project');
-}
-
-/**
- * Handles modules registering new features 
- */
-function register_project_feature($module, $class_name)
-{
-	global $projectModules, $extensionInformation;
-	
-	$projectModules[$module] = array(
-		'class_name' => $class_name,
-	);
-}
-
-function projectTabSort($first, $second)
-{
-	global $context;
-	
-	$orderFirst = isset($context['project_tabs']['tabs'][$first]['order']) ? $context['project_tabs']['tabs'][$first]['order'] : 1;
-	$orderSecond = isset($context['project_tabs']['tabs'][$second]['order']) ? $context['project_tabs']['tabs'][$second]['order'] : 1;
-	
-	if ($orderFirst == $orderSecond)
-		return 0;
-	
-	if ($orderFirst == 'first' || $orderSecond == 'last')
-		return -1;
-	elseif ($orderFirst == 'last' || $orderSecond == 'first')
-		return 1;
-	else
-		return $orderFirst < $orderSecond ? -1 : 1;
 }
 
 ?>

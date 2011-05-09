@@ -461,6 +461,27 @@ class ProjectTools
 	{
 		return self::get_url($params, $project, true);
 	}
+	
+	/**
+	 *
+	 */
+	function projectTabSort($first, $second)
+	{
+		global $context;
+		
+		$orderFirst = isset($first['order']) ? $first['order'] : 1;
+		$orderSecond = isset($second['order']) ? $second['order'] : 1;
+		
+		if ($orderFirst == $orderSecond)
+			return 0;
+		
+		if ($orderFirst == 'first' || $orderSecond == 'last')
+			return -1;
+		elseif ($orderFirst == 'last' || $orderSecond == 'first')
+			return 1;
+		else
+			return $orderFirst < $orderSecond ? -1 : 1;
+	}
 }
 
 ?>

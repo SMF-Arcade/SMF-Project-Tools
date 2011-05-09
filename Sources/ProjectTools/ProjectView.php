@@ -102,7 +102,7 @@ class ProjectTools_ProjectView
 		}
 	
 		// Sort tabs to correct order
-		uksort($context['project_tabs']['tabs'], 'projectTabSort');
+		uasort($context['project_tabs']['tabs'], array('ProjectTools', 'projectTabSort'));
 			
 		// Linktree
 		$context['linktree'][] = array(
