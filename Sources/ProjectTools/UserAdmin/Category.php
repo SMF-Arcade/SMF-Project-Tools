@@ -123,7 +123,7 @@ class ProjectTools_UserAdmin_Category
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 	
-		if ($_REQUEST['category'] == 'new')
+		if ($_REQUEST['sa'] == 'new')
 		{
 			$context['category'] = array(
 				'is_new' => true,

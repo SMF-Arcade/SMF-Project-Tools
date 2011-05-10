@@ -136,7 +136,7 @@ class ProjectTools_UserAdmin
 			),
 			'categories' => array(
 				'id' => 'categories',
-				'callback' => array('ProjectTools_UserAdmin_Categories', 'Frontpage'),
+				'callback' => array('ProjectTools_UserAdmin_Category', 'Main'),
 				'title' => $txt['pt_ua_tab_categories'],
 				'order' => 4,				
 			),
