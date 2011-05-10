@@ -8,6 +8,8 @@ $txt['pt_admin'] = 'Admin';
 $txt['pt_ua_tab_main'] = 'Main';
 $txt['pt_ua_tab_versions'] = 'Versions';
 $txt['pt_ua_tab_categories'] = 'Categories';
+$txt['pt_ua_tab_categories_edit'] = 'Edit';
+$txt['pt_ua_tab_categories_new'] = 'New';
 $txt['pt_ua_tab_members'] = 'Members';
 $txt['pt_ua_tab_modules'] = 'Modules';
 

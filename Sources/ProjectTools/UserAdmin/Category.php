@@ -96,15 +96,6 @@ class ProjectTools_UserAdmin_Category
 				),
 			),
 			'additional_rows' => array(
-				array(
-					'position' => 'bottom_of_list',
-					'value' => '
-						<a href="' . ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories', 'sa' => 'new')) . '">
-							' . $txt['new_category'] . '
-						</a>',
-					'class' => 'catbg',
-					'align' => 'right',
-				),
 			),
 		);
 	
@@ -211,8 +202,8 @@ class ProjectTools_UserAdmin_Category
 				)
 			);
 		}
-	
-		redirectexit('action=admin;area=manageprojects;section=categories');
+		
+		redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories')));
 	}
 }
 

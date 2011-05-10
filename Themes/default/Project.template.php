@@ -71,7 +71,7 @@ function template_project_above()
 		if (isset($context['project_sub_tabs']))
 		{
 			echo '
-	<div class="dropmenu"><ul>';
+	<div id="adm_submenus"><ul class="dropmenu">';
 	
 			// Print out all the items in this tab.
 			$i = 1;
@@ -91,7 +91,7 @@ function template_project_above()
 			echo '
 	</ul></div>
 	<br class="clear" />';
-		}	
+		}
 	}
 }
 

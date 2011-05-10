@@ -244,7 +244,7 @@ function template_edit_category()
 	global $context, $settings, $options, $txt, $modSettings, $project;
 
 	echo '
-<form action="', ProjectTools::get_admin_url(array('project' => $project, 'area' => 'category', 'sa' => 'edit2')), '" method="post" accept-charset="', $context['character_set'], '">
+<form action="', ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories', 'sa' => 'edit2')), '" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="category" value="', $context['category']['id'], '" />
 
 	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">

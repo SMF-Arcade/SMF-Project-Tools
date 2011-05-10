@@ -111,34 +111,41 @@ class ProjectTools_UserAdmin
 		
 		$project_areas = array(
 			'main' => array(
-				'id' => 'main',
 				'callback' => array('ProjectTools_UserAdmin', 'Frontpage'),
 				'title' => $txt['pt_ua_tab_main'],
 				'order' => 'first',
+				'sub_buttons' => array(),
 			),
 			'modules' => array(
-				'id' => '',
 				'callback' => array('ProjectTools_UserAdmin_Modules', 'Main'),
 				'title' => $txt['pt_ua_tab_modules'],
-				'order' => 1,		
+				'order' => 1,
+				'sub_buttons' => array(),
 			),
 			'members' => array(
-				'id' => 'members',
 				'callback' => array('ProjectTools_UserAdmin_Members', 'Main'),
 				'title' => $txt['pt_ua_tab_members'],
-				'order' => 2,				
+				'order' => 2,
+				'sub_buttons' => array(),
 			),
 			'versions' => array(
-				'id' => 'versions',
 				'callback' => array('ProjectTools_UserAdmin_Versions', 'Main'),
 				'title' => $txt['pt_ua_tab_versions'],
 				'order' => 3,
+				'sub_buttons' => array(),
 			),
 			'categories' => array(
-				'id' => 'categories',
 				'callback' => array('ProjectTools_UserAdmin_Category', 'Main'),
 				'title' => $txt['pt_ua_tab_categories'],
-				'order' => 4,				
+				'order' => 4,
+				'sub_buttons' => array(
+					'main' => array(
+						'title' => $txt['pt_ua_tab_categories_edit'],
+					),
+					'new' => array(
+						'title' => $txt['pt_ua_tab_categories_new'],
+					),
+				),
 			),
 		);
 		
@@ -154,10 +161,11 @@ class ProjectTools_UserAdmin
 			'tabs' => array(),
 		);
 		
-		//
+		// Default area
 		if (empty($_REQUEST['area']) || !isset(self::$areas[$_REQUEST['area']]))
 			$_REQUEST['area'] = 'main';
 			
+		// Default subaction
 		if (empty($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'main';
 			
@@ -166,8 +174,24 @@ class ProjectTools_UserAdmin
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)
 		{
-			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
+			$area['href'] = $id !== 'main' ? ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
 				: ProjectTools::get_admin_url(array('project' => ProjectTools_Project::getCurrent()->id));
+				
+			// Add links for sub buttons
+			if (isset($area['sub_buttons']))
+			{
+				foreach ($area['sub_buttons'] as $sid => &$sub_btn)
+				{
+					$link = array('project' => ProjectTools_Project::getCurrent()->id);
+					
+					if ($id !== 'main')
+						$link['area'] = $id;
+					if ($sid !== 'main')
+						$link['sa'] = $sid;
+						
+					$sub_btn['href'] = ProjectTools::get_admin_url($link);
+				}
+			}
 			
 			$context['project_tabs']['tabs'][$id] = array(
 				'title' => $area['title'],
@@ -175,6 +199,7 @@ class ProjectTools_UserAdmin
 				'is_selected' => $area === self::$current_area,
 				'hide_linktree' => !empty($area['hide_linktree']),
 				'order' => $area['order'],
+				'sub_buttons' => isset($area['sub_buttons']) ? $area['sub_buttons'] : array(),
 			);
 		}
 	
@@ -197,6 +222,10 @@ class ProjectTools_UserAdmin
 				'name' => self::$current_area['title'],
 				'url' => self::$current_area['href'],
 			);
+			
+		// Add submenu if there is any
+		if (!empty(self::$current_area['sub_buttons']))
+			$context['project_sub_tabs'] = self::$current_area['sub_buttons'];
 		
 		// Template
 		loadTemplate('Project', array('project'));
@@ -210,6 +239,10 @@ class ProjectTools_UserAdmin
 		}
 		
 		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
+		
+		// Todo: fix?
+		if (isset($context['project_sub_tabs'][$_REQUEST['sa']]))
+			$context['project_sub_tabs'][$_REQUEST['sa']]['is_selected'] = true;
 	}
 	
 	/**

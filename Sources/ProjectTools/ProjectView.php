@@ -8,9 +8,7 @@
  */
 
 /**
- *
- * @todo Cache queries
- * @todo fix version load
+ * 
  */
 class ProjectTools_ProjectView
 {
@@ -53,6 +51,7 @@ class ProjectTools_ProjectView
 		//
 		$project_areas = array();
 		
+		//
 		ProjectTools_Extensions::runProjectHooks('RegisterAreas', array(&$project_areas));
 		
 		// No possible areas?
@@ -69,10 +68,11 @@ class ProjectTools_ProjectView
 			'tabs' => array(),
 		);
 		
-		//
+		// Default area
 		if (empty($_REQUEST['area']) || !isset(self::$areas[$_REQUEST['area']]))
 			$_REQUEST['area'] = 'main';
 			
+		// Default subaction
 		if (empty($_REQUEST['sa']))
 			$_REQUEST['sa'] = 'main';
 			
@@ -81,8 +81,24 @@ class ProjectTools_ProjectView
 		// Create Tabs
 		foreach (self::$areas as $id => &$area)
 		{
-			$area['href'] = $area['id'] !== 'main' ? ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
+			$area['href'] = $id !== 'main' ? ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => $id))
 				: ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id));
+			
+			// Add links for sub buttons
+			if (isset($area['sub_buttons']))
+			{
+				foreach ($area['sub_buttons'] as $sid => &$sub_btn)
+				{
+					$link = array('project' => ProjectTools_Project::getCurrent()->id);
+					
+					if ($id !== 'main')
+						$link['area'] = $id;
+					if ($sid !== 'main')
+						$link['sa'] = $sid;
+						
+					$sub_btn['href'] = ProjectTools::get_url($link);
+				}
+			}
 			
 			$context['project_tabs']['tabs'][$id] = array(
 				'title' => $area['title'],
@@ -90,12 +106,13 @@ class ProjectTools_ProjectView
 				'is_selected' => $area === self::$current_area,
 				'hide_linktree' => !empty($area['hide_linktree']),
 				'order' => $area['order'],
+				'sub_buttons' => isset($area['sub_buttons']) ? $area['sub_buttons'] : array(),
 			);
 		}
 	
 		// Sort tabs to correct order
 		uasort($context['project_tabs']['tabs'], array('ProjectTools', 'projectTabSort'));
-			
+		
 		// Linktree
 		$context['linktree'][] = array(
 			'name' => strip_tags(ProjectTools_Project::getCurrent()->name),
@@ -108,6 +125,10 @@ class ProjectTools_ProjectView
 				'name' => self::$current_area['title'],
 				'url' => self::$current_area['href'],
 			);
+			
+		// Add submenu if there is any
+		if (!empty(self::$current_area['sub_buttons']))
+			$context['project_sub_tabs'] = self::$current_area['sub_buttons'];
 		
 		// Template
 		loadTemplate('Project', array('project'));
@@ -121,6 +142,10 @@ class ProjectTools_ProjectView
 		}
 		
 		call_user_func(self::$current_area['callback'], array($_REQUEST['sa']));
+		
+		// Todo: fix?
+		if (isset($context['project_sub_tabs'][$_REQUEST['sa']]))
+			$context['project_sub_tabs'][$_REQUEST['sa']]['is_selected'] = true;
 	}
 	
 }
