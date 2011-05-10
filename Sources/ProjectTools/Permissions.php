@@ -48,7 +48,7 @@ class ProjectTools_Permissions
 	 */
 	function __construct($id)
 	{
-		global $user_info, $modSettings;
+		global $user_info, $modSettings, $smcFunc;
 		
 		$this->id = $id;
 		
