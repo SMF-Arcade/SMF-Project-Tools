@@ -98,7 +98,7 @@ class ProjectTools
 	 */
 	static protected function setupQueries()
 	{
-		global $user_info;
+		global $user_info, $smcFunc;
 		
 		// Administrators can see all projects.
 		if ($user_info['is_admin'] || allowedTo('project_admin'))

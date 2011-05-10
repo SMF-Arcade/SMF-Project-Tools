@@ -48,6 +48,7 @@
 		<copy todir="${builddir}/Sources" >
 			<fileset dir="./Sources/">
 				<include name="**" />
+				<exclude name="Madjoki/**" />
 			</fileset>
 		</copy>
 
