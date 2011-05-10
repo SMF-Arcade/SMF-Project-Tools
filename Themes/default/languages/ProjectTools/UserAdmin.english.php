@@ -7,6 +7,8 @@ $txt['pt_admin'] = 'Admin';
 // Tabs
 $txt['pt_ua_tab_main'] = 'Main';
 $txt['pt_ua_tab_versions'] = 'Versions';
+$txt['pt_ua_tab_versions_edit'] = 'Edit';
+$txt['pt_ua_tab_versions_new'] = 'New Version Group';
 $txt['pt_ua_tab_categories'] = 'Categories';
 $txt['pt_ua_tab_categories_edit'] = 'Edit';
 $txt['pt_ua_tab_categories_new'] = 'New';
@@ -86,9 +88,9 @@ $txt['cdelete_warning'] = 'Are you sure?';
 // Versions Admin
 $txt['project_admin_versions_description'] = 'Here you can create and edit versions';
 
-
 $txt['header_version'] = 'Version';
 $txt['new_version_group'] = 'New Version Group';
+
 $txt['new_version'] = 'New Version';
 $txt['edit_version'] = 'Edit Version';
 

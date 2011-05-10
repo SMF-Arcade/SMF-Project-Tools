@@ -132,7 +132,14 @@ class ProjectTools_UserAdmin
 				'callback' => array('ProjectTools_UserAdmin_Versions', 'Main'),
 				'title' => $txt['pt_ua_tab_versions'],
 				'order' => 3,
-				'sub_buttons' => array(),
+				'sub_buttons' => array(
+					'main' => array(
+						'title' => $txt['pt_ua_tab_versions_edit'],
+					),
+					'new' => array(
+						'title' => $txt['pt_ua_tab_versions_new'],
+					),
+				),
 			),
 			'categories' => array(
 				'callback' => array('ProjectTools_UserAdmin_Category', 'Main'),

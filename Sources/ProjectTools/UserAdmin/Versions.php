@@ -111,15 +111,6 @@ class ProjectTools_UserAdmin_Versions
 				),
 			),
 			'additional_rows' => array(
-				array(
-					'position' => 'bottom_of_list',
-					'value' => '
-						<a href="' . ProjectTools::get_admin_url(array('project' => $project, 'area' => 'versions', 'sa' => 'new')) . '">
-							' . $txt['new_version_group'] . '
-						</a>',
-					'class' => 'catbg',
-					'align' => 'right',
-				),
 			),
 		);
 	
