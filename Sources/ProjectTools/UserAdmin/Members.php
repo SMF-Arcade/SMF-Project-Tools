@@ -44,7 +44,31 @@ class ProjectTools_UserAdmin_Members
 	 */
 	public function ListMembers()
 	{	
-		global $sourcedir, $context, $txt, $project;
+		global $sourcedir, $context, $txt, $project, $user_info, $smcFunc;
+		
+		// Delete members
+		if (!empty($_POST['delete_members']) && !empty($_POST['members']))
+		{
+			$toRemove = array();
+			
+			foreach ($_POST['members'] as $member)
+			{
+				$member = (int) $member;
+				
+				if (allowedTo('project_admin') || $user_info['id'] != $member)
+					$toRemove[] = $member;
+			}
+			
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}project_developer
+				WHERE id_project = {int:project}
+					AND id_member IN({array_int:to_remove})',
+				array(
+					'project' => $project,
+					'to_remove' => $toRemove,
+				)
+			);
+		}
 		
 		$listOptions = array(
 			'id' => 'members_list',
@@ -88,23 +112,6 @@ class ProjectTools_UserAdmin_Members
 						'reverse' => 'mem.real_name DESC',
 					),
 				),
-				/*'actions' => array(
-					'header' => array(
-						'value' => $txt['new_version'],
-						'style' => 'width: 16%; text-align: right;',
-					),
-					'data' => array(
-						'function' => create_function('$list_item', '
-							global $txt, $project;
-							return (empty($list_item[\'level\']) ? \'<a href="\' .  ProjectTools::get_url(array(\'project\' => $project, \'area\' => \'admin\', \'sa\' => \'versions\', \'version\' => \'new\', \'parent\' => $list_item[\'id\'])) . \'">\' . $txt[\'new_version\'] . \'</a>\' : \'\');
-						'),
-						'style' => 'text-align: right;',
-					),
-					'sort' => array(
-						'default' => 'ver.version_name',
-						'reverse' => 'ver.version_name DESC',
-					),
-				),*/
 			),
 			'form' => array(
 				'href' => ProjectTools::get_admin_url(array('project' => $project, 'area' => 'members')),
@@ -114,17 +121,13 @@ class ProjectTools_UserAdmin_Members
 					$context['session_var'] => $context['session_id'],
 				),
 			),
-			/*'additional_rows' => array(
+			'additional_rows' => array(
 				array(
-					'position' => 'bottom_of_list',
-					'value' => '
-						<a href="' . ProjectTools::get_admin_url(array('project' => $project, 'area' => 'm', 'sa' => 'new')) . '">
-							' . $txt['new_version_group'] . '
-						</a>',
-					'class' => 'catbg',
-					'align' => 'right',
+					'position' => 'below_table_data',
+					'value' => '<input type="submit" name="delete_members" value="' . $txt['pt_delete_members'] . '" class="button_submit" />',
+					'style' => 'text-align: right;',
 				),
-			),*/
+			),
 		);
 	
 		require_once($sourcedir . '/Subs-List.php');

@@ -27,6 +27,7 @@ $txt['pt_ua_members_desc'] = 'Here you can add and remove project members';
 $txt['pt_user_name'] = 'Name';
 $txt['pt_add_project_member'] = 'Add Project Member';
 $txt['pt_add_members']  = 'Add';
+$txt['pt_delete_members']  = 'Delete selected';
 
 // Modules
 $txt['pt_ua_modules'] = 'Modules';
