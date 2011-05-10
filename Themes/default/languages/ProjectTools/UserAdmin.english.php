@@ -23,7 +23,7 @@ $txt['title_versions_new'] = '%s - Admin - New Version';
 $txt['title_versions_edit'] = '%s - Admin - Edit version: %s';
 
 // Members
-$txt['pt_ua_members_desc'] = 'Here you can create and edit issue categories';
+$txt['pt_ua_members_desc'] = 'Here you can add and remove project members';
 $txt['pt_user_name'] = 'Name';
 $txt['pt_add_project_member'] = 'Add Project Member';
 $txt['pt_add_members']  = 'Add';
