@@ -33,7 +33,7 @@ function template_issue_view_above()
 
 	// Issue Details
 	echo '
-	<a name="com', ProjectTools_IssueTracker_Issue::getCurrent()->comment_first, '"></a>
+	<a name="com', ProjectTools_IssueTracker_Issue::getCurrent()->event_first, '"></a>
 	<div id="issue_comments" class="floatleft">
 		<div class="cat_bar">
 			<h3 class="catbg">
@@ -801,7 +801,9 @@ function template_event_compact(&$event, &$alternate)
 		
 	if (!empty($event['title']))
 		echo '
-			<h5>', $event['title'], '</h5>
+			<h5>', $event['title'], '</h5>';
+			
+	echo '
 			<div class="smalltext">&#171; <strong>', !empty($event['counter']) ? $txt['reply_noun'] . ' #' . $event['counter'] : '', ' ', $txt['on'], ':</strong> ', $event['time'], ' &#187;</div>
 			<div class="post">
 				<div class="inner" id="', $id2, '">';
