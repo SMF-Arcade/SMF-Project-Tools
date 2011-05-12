@@ -115,7 +115,7 @@ class ProjectModule_Admin extends ProjectModule_Base
 	{
 		global $context, $txt;
 		
-		$context['page_title'] = $txt['title_project_admin'];
+		$context['page_title'] = sprintf($txt['title_project_admin'], $context['project']['name']);
 	}
 	
 	public function ProjectAdminVersions()
