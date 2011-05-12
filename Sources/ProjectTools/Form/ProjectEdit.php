@@ -187,22 +187,47 @@ class ProjectTools_Form_ProjectEdit extends Madjoki_Form_Database
 		
 		if (isset($data['member_groups']))
 		{
+			$versions = array();
+			
 			// Update versions with permission inherited
 			$request = $smcFunc['db_query']('', '
 				SELECT id_version
 				FROM {db_prefix}project_versions
 				WHERE id_project = {int:project}
-					AND permission_inherit = {int:inherit}
-					AND id_parent = {int:no_parent}',
+					AND permission_inherit = 1
+					AND id_parent = 0',
 				array(
 					'project' => $data['id'],
-					'inherit' => 1,
-					'no_parent' => 0,
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
-				updateVersion($data['id_field'], $row['id_version'], array('member_groups' => explode(',', $data['member_groups'])));
+				$versions[] = $row['id_version'];
 			$smcFunc['db_free_result']($request);
+			
+			// Search for subversion
+			$request = $smcFunc['db_query']('', '
+				SELECT id_version
+				FROM {db_prefix}project_versions
+				WHERE permission_inherit = 1
+					AND id_parent IN({array_int:parents})',
+				array(
+					'parents' => $versions,
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$versions[] = $row['id_version'];
+			$smcFunc['db_free_result']($request);
+			
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_versions
+				SET member_groups = {string:groups}
+				WHERE id_version IN({array_int:versions})
+					AND permission_inherit = 1',
+				array(
+					'groups' => $data['member_groups'],
+					'versions' => $versions,
+				)
+			);
 		}
 		
 		cache_put_data('project-' . $data['id_field'], null, 120);
