@@ -115,7 +115,7 @@ function template_report_issue()
 						<select name="category" tabindex="', $context['tabindex']++, '">
 							<option></option>';
 
-		foreach (ProjectTools_Project::getCurrent()->category as $c)
+		foreach (ProjectTools_Project::getCurrent()->categories as $c)
 			echo '
 							<option value="', $c['id'], '" ', $context['issue']['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
 		echo '

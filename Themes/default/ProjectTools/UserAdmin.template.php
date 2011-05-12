@@ -149,38 +149,7 @@ function template_edit_category()
 {
 	global $context, $settings, $options, $txt, $modSettings, $project;
 
-	echo '
-<form action="', ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories', 'sa' => 'edit2')), '" method="post" accept-charset="', $context['character_set'], '">
-	<input type="hidden" name="category" value="', $context['category']['id'], '" />
-
-	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">
-		<tr class="titlebg">
-			<td colspan="2">', isset($context['category']['is_new']) ? $txt['new_category'] : $txt['edit_category'], '</td>
-		</tr>
-		<tr class="windowbg2">
-			<td>
-				<b>', $txt['category_name'], ':</b>
-			</td>
-			<td valign="top" align="left">
-				<input type="text" name="category_name" value="', $context['category']['name'], '" size="30" tabindex="', $context['tabindex']++, '" />
-			</td>
-		</tr>
-		<tr class="windowbg2">
-			<td colspan="2" align="right">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
-
-	if (isset($context['category']['is_new']))
-		echo '
-				<input class="button_submit" type="submit" name="add" value="', $txt['new_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />';
-	else
-		echo '
-				<input class="button_submit" type="submit" name="edit" value="', $txt['edit_category'], '" onclick="return !isEmptyText(this.form.category_name);" tabindex="', $context['tabindex']++, '" />
-				<input class="button_submit" type="submit" name="delete" value="', $txt['delete_category'], '" onclick="return confirm(\'', $txt['cdelete_warning'], '\');" tabindex="', $context['tabindex']++, '" />';
-	echo '
-			</td>
-		</tr>
-	</table>
-</form>';
+	$context['category_form']->render();
 }
 
 ?>
