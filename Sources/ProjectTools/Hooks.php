@@ -208,7 +208,6 @@ class ProjectTools_Hooks
 					'areas' => array(
 						'projectsadmin' => array(
 							'label' => $txt['project_general'],
-							//'file' => 'ProjectAdmin.php',
 							'function' => create_function('', 'ProjectTools_Admin::Main();'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
@@ -221,8 +220,7 @@ class ProjectTools_Hooks
 						),
 						'manageprojects' => array(
 							'label' => $txt['manage_projects'],
-							//'file' => 'ManageProjects.php',
-							'function' => create_function('', 'ProjectTools_ManageProjects::Main();'),
+							'function' => create_function('', 'ProjectTools_Admin_Projects::Main();'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
 							'subsections' => array(
@@ -232,8 +230,7 @@ class ProjectTools_Hooks
 						),
 						'projectpermissions' => array(
 							'label' => $txt['manage_project_permissions'],
-							'file' => 'ProjectPermissions.php',
-							'function' => 'ManageProjectPermissions',
+							'function' => create_function('', 'ProjectTools_Admin_Permissions::Main();'),
 							'enabled' => !empty($modSettings['projectEnabled']),
 							'permission' => array('project_admin'),
 							'subsections' => array(),

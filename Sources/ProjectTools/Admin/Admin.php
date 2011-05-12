@@ -19,7 +19,7 @@ class ProjectTools_Admin
 	/**
 	 * Main admin function
 	 */
-	function Main()
+	public static function Main()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt;
 	
@@ -107,64 +107,31 @@ class ProjectTools_Admin
 		require_once($sourcedir . '/Subs-ProjectMaintenance.php');
 	
 		$maintenaceActions = array(
-			'repair' => 'ProjectsMaintenanceRepair',
-			'upgrade' => 'ProjectsMaintenanceUpgrade',
+			'repair' => 'ProjectTools_Maintenance_Repair',
+			'upgrade' => 'ProjectTools_Maintenance_Upgrade',
 		);
 	
 		$context['sub_template'] = 'project_admin_maintenance';
 	
 		if (isset($_REQUEST['activity']) && isset($maintenaceActions[$_REQUEST['activity']]))
 		{
-			$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['activity']];
-			$repairFunctions = self::$maintenaceActions[$_REQUEST['activity']]();
-	
-			$context['total_steps'] = count($repairFunctions);
-	
-			if (!isset($_GET['step']))
-				$_GET['step'] = 0;
-	
-			if (!isset($_SESSION['maintenance']) || $_SESSION['maintenance']['activity'] != $_REQUEST['activity'])
+			$context['maintenance_action_title'] = $txt['project_maintenance_' . $_REQUEST['activity']];
+			
+			/**
+			 * @var ProjectTools_Maintenance_Action
+			 */
+			$context['maintenance_action'] = new $maintenaceActions[$_REQUEST['activity']]();
+			
+			if (!isset($_REQUEST['step']))
+				$_REQUEST['step'] = 1;
+			
+			while ($_REQUEST['step'] <= $context['maintenance_action']->total_steps)
 			{
-				$_SESSION['maintenance'] = array(
-					'activity' => $_REQUEST['activity'],
-					'needed_actions' => array(),
-				);
-	
-				foreach ($repairFunctions as $id => $act)
-				{
-					if ($act['function'](true))
-						$_SESSION['maintenance']['needed_actions'][] = $id;
-				}
-	
-				if (!empty($_SESSION['maintenance']['needed_actions']))
-					redirectexit('action=admin;area=projectsadmin;sa=maintenance;step=0;activity=' . $_REQUEST['activity'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+				$_REQUEST['step'] = $context['maintenance_action']->run($_REQUEST['step']);
+				self::pauseProjectMaintenance(true);
 			}
-			else
-			{
-				$current_step = -1;
-				foreach ($repairFunctions as $id => $act)
-				{
-					$current_step++;
-	
-					if ($_GET['step'] > $current_step)
-						continue;
-	
-					if (!in_array($id, $_SESSION['maintenance']['needed_actions']))
-					{
-						$_GET['step']++;
-						continue;
-					}
-	
-					$act['function']();
-	
-					$_GET['step']++;
-	
-					self::pauseProjectMaintenance(true);
-				}
-			}
-	
-			unset($_SESSION['maintenance']);
-			$context['maintenance_finished'] = true;
+			
+			redirectexit('action=admin;area=projectsadmin;sa=maintenance');
 		}
 	}
 	
@@ -179,97 +146,18 @@ class ProjectTools_Admin
 		if (!$force && time() - array_sum(explode(' ', $time_start)) < 3)
 			return;
 	
-		$context['continue_get_data'] = '?action=admin;area=projectsadmin;sa=maintenance;step=' . $_GET['step'] . ';activity=' . $_REQUEST['activity'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+		$context['continue_get_data'] = '?action=admin;area=projectsadmin;sa=maintenance;step=' . $_REQUEST['step'] . ';activity=' . $_REQUEST['activity'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 		$context['page_title'] = $txt['not_done_title'];
 		$context['continue_post_data'] = '';
 		$context['continue_countdown'] = '2';
 		$context['sub_template'] = 'not_done';
 	
-		// Change these two if more steps are added!
-		if (empty($max_substep))
-			$context['continue_percent'] = round(($_GET['step'] * 100) / $context['total_steps']);
-		else
-			$context['continue_percent'] = round((($_GET['step'] + ($_GET['substep'] / $max_substep)) * 100) / $context['total_steps']);
+		$context['continue_percent'] = round(($context['maintenance_action']->current_step * 100) / $context['maintenance_action']->total_steps);
 	
 		// Never more than 100%!
 		$context['continue_percent'] = min($context['continue_percent'], 100);
 	
 		obExit();
-	}
-	
-	/**
-	 * Repair maintenance
-	 */
-	function ProjectsMaintenanceRepair()
-	{
-		global $txt;
-	
-		$repairFunctions = array(
-			array(
-				'name' => $txt['repair_step_general_maintenance'],
-				'function' => 'ptMaintenanceGeneral',
-			),
-			array(
-				'name' => $txt['repair_step_comments_not_linked'],
-				'function' => 'ptMaintenanceEvents1',
-			),
-			array(
-				'name' => $txt['repair_step_events_without_poster'],
-				'function' => 'ptMaintenanceEvents2',
-			),
-			array(
-				'name' => $txt['repair_step_not_needed_events'],
-				'function' => 'ptMaintenanceEvents3',
-			),
-			array(
-				'name' => '',
-				'function' => 'ptMaintenanceIssues1',
-			),
-			array(
-				'name' => '',
-				'function' => 'ptMaintenanceIssues2',
-			),
-			array(
-				'name' => '',
-				'function' => 'ptMaintenanceIssueCounts',
-			)
-		);
-	
-		return $repairFunctions;
-	}
-	
-	/**
-	 * Upgrade maintenance
-	 */
-	function ProjectsMaintenanceUpgrade()
-	{
-		global $txt;
-	
-		$repairFunctions = array(
-			array(
-				'function' => 'ptUpgrade_log_issues',
-			),
-			array(
-				'function' => 'ptUpgrade_trackers',
-			),
-			array(
-				'function' => 'ptUpgrade_versionFields',
-			),
-			array(
-				'function' => 'ptUpgrade_database06',
-			),
-			// These maintenance actions are needed for proper upgrade
-			array(
-				'name' => '',
-				'function' => 'ptMaintenanceIssues2',
-			),
-			array(
-				'name' => '',
-				'function' => 'ptMaintenanceIssueCounts',
-			),
-		);
-	
-		return $repairFunctions;
 	}
 	
 	/**

@@ -11,7 +11,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ProjectTools_ManageProjects
+class ProjectTools_Admin_Projects
 {
 	/**
 	 *

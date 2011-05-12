@@ -19,13 +19,11 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Manage Project Permissions page
 	 */
-	function ManageProjectPermissions()
+	public static function Main()
 	{
 		global $context, $sourcedir, $user_info, $txt;
 	
 		require_once($sourcedir . '/Subs-Project.php');
-	
-		isAllowedTo('project_admin');
 		
 		loadLanguage('ManagePermissions');
 		ProjectTools_Main::loadPage('admin');
@@ -56,7 +54,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Profiles management
 	 */
-	function ManageProjectPermissionsMain()
+	public static function ManageProjectPermissionsMain()
 	{
 		global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt;
 	
@@ -224,7 +222,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Edit Profile page
 	 */
-	function EditProjectProfile()
+	public static function EditProjectProfile()
 	{
 		global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings, $settings;
 	
@@ -427,7 +425,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Function to load profile data
 	 */
-	function PTloadProfile()
+	public static function PTloadProfile()
 	{
 		global $smcFunc, $context, $sourcedir, $scripturl, $user_info, $txt, $modSettings;
 	
@@ -513,7 +511,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Edit permissions of profile page
 	 */
-	function EditProfilePermissions()
+	public static function EditProfilePermissions()
 	{
 		global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 	
@@ -578,7 +576,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Save project profile permissions
 	 */
-	function EditProfilePermissions2()
+	public static function EditProfilePermissions2()
 	{
 		global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 	
@@ -644,7 +642,7 @@ class ProjectTools_Admin_Permissions
 	/**
 	 * Updates inherited groups permissions 
 	 */
-	function updatePTChildPermissions($parents, $profile)
+	public static function updatePTChildPermissions($parents, $profile)
 	{
 		global $smcFunc, $context, $sourcedir, $user_info, $txt, $modSettings;
 	
