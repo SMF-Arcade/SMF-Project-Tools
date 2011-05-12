@@ -128,7 +128,18 @@ class ProjectTools_UserAdmin_Versions
 	public static function Edit()
 	{	
 		global $smcFunc, $sourcedir, $context, $txt, $project;
-
+		
+		$context['version_form'] = new ProjectTools_Form_Version(
+			isset($_REQUEST['version']) ? (int) $_REQUEST['version'] : null, null, null, array('project' => $project, 'parent' => $_REQUEST['parent'])
+		);
+		
+		if ($context['version_form']->is_post && $context['version_form']->Save())
+			redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'versions')));
+			
+		// Template
+		$context['sub_template'] = 'edit_version';
+		
+		/*
 		if ($_REQUEST['sa'] == 'new')
 		{
 			$member_groups = array('-1', '0');
@@ -219,8 +230,7 @@ class ProjectTools_UserAdmin_Versions
 		}
 		$smcFunc['db_free_result']($request);
 	
-		// Template
-		$context['sub_template'] = 'edit_version';
+		*/
 	}
 	
 	/**
