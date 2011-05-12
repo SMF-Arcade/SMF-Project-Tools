@@ -403,7 +403,7 @@ class ProjectTools_Admin
 			$categories[] = array(
 				'id' => $row['id_category'],
 				'name' => $row['category_name'],
-				'link' => '<a href="' . ProjectTools::get_url(array('project' => $project, 'area' => 'admin', 'sa' => 'category', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
+				'link' => '<a href="' . ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories', 'sa' => 'edit', 'category' => $row['id_category'])) . '">' . $row['category_name'] . '</a>',
 			);
 		}
 		$smcFunc['db_free_result']($request);

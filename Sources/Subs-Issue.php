@@ -401,7 +401,7 @@ function createIssueEvent($id_issue, $id_comment, $posterOptions, $event_data)
 {
 	global $smcFunc;
 	
-	if ($posterOptions['id'] != 0)
+	/*if ($posterOptions['id'] != 0)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT id_issue_event, changes
@@ -506,7 +506,7 @@ function createIssueEvent($id_issue, $id_comment, $posterOptions, $event_data)
 		}
 
 		$smcFunc['db_free_result']($request);
-	}
+	}*/
 	
 	// Create issue event
 	$smcFunc['db_insert']('insert',

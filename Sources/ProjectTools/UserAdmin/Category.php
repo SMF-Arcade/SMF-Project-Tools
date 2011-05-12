@@ -114,96 +114,15 @@ class ProjectTools_UserAdmin_Category
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
 	
-		if ($_REQUEST['sa'] == 'new')
-		{
-			$context['category'] = array(
-				'is_new' => true,
-				'id' => 0,
-				'name' => '',
-			);
-			
-			$context['page_title'] = sprintf($txt['title_category_new'], ProjectTools_Project::getCurrent()->name);
-		}
-		else
-		{
-			$request = $smcFunc['db_query']('', '
-				SELECT id_category, id_project, category_name
-				FROM {db_prefix}issue_category
-				WHERE id_category = {int:category}
-					AND id_project = {int:project}',
-				array(
-					'category' => (int) $_REQUEST['category'],
-					'project' => $project,
-				)
-			);
-			$row = $smcFunc['db_fetch_assoc']($request);
-			$smcFunc['db_free_result']($request);
-	
-			if (!$row)
-				fatal_lang_error('category_not_found');
-	
-			$context['category'] = array(
-				'id' => $row['id_category'],
-				'name' => htmlspecialchars($row['category_name']),
-			);
-			
-			$context['page_title'] = sprintf($txt['title_category_edit'], ProjectTools_Project::getCurrent()->name, htmlspecialchars($row['category_name']));
-	
-			unset($row);
-		}
-	
-		if (!isset($_REQUEST['delete']))
-		{
-			$context['sub_template'] = 'edit_category';
-	
-			if (!empty($context['category']['is_new']))
-				$context['page_title'] = $txt['new_category'];
-			else
-				$context['page_title'] = $txt['edit_category'];
-		}
-		else
-		{
-			$context['sub_template'] = 'confirm_category_delete';
-			$context['page_title'] = $txt['confirm_category_delete'];
-		}
-	}
-	
-	/**
-	 *
-	 */
-	public static function Edit2()
-	{
-		global $context, $smcFunc, $sourcedir, $user_info, $txt, $project;
-	
-		checkSession();
-	
-		$_POST['category'] = (int) $_POST['category'];
-	
-		if (isset($_POST['edit']) || isset($_POST['add']))
-		{
-			$categoryOptions = array();
-	
-			$categoryOptions['name'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['category_name']);
-	
-			if (isset($_POST['add']))
-				createPTCategory($project, $categoryOptions);
-			else
-				updatePTCategory($project, $_POST['category'], $categoryOptions);
-		}
-		elseif (isset($_POST['delete']))
-		{
-			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}issue_category
-				WHERE id_category = {int:category}
-					AND id_project = {int:project}',
-				array(
-					'category' => $_POST['category'],
-					'project' => $project,
-				)
-			);
-		}
+		$context['category_form'] = new ProjectTools_Form_Category(
+			isset($_REQUEST['category']) ? (int) $_REQUEST['category'] : null, null, null, array('project' => $project)
+		);
 		
-		redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories')));
+		if ($context['category_form']->is_post && $context['category_form']->Save())
+			redirectexit(ProjectTools::get_admin_url(array('project' => $project, 'area' => 'categories')));
+			
+		// Template
+		$context['sub_template'] = 'edit_category';
 	}
 }
 
