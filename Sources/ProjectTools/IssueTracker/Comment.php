@@ -454,7 +454,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		$request = $smcFunc['db_query']('', '
 			SELECT iv.id_issue_event, iv.changes, iv.id_comment, c.id_event, iv.poster_name, iv.id_member
-			FROM {db_prefix}issue_events
+			FROM {db_prefix}issue_events AS iv
 			WHERE iv.id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
 				AND iv.id_member = {int:current_user}' : '') . '
 				AND iv.id_issue = {int:issue}

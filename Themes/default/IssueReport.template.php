@@ -12,7 +12,10 @@
 function template_report_issue()
 {
 	global $context, $settings, $options, $txt, $modSettings;
+	
+	$context['report_form']->render();
 
+/*
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function saveEntities()
@@ -154,7 +157,7 @@ function template_report_issue()
 		<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-	</form>';
+	</form>';*/
 }
 
 function template_issue_reply()

@@ -24,6 +24,10 @@ class ProjectTools_IssueTracker_Report
 		global $smcFunc, $context, $user_info, $txt, $modSettings, $sourcedir, $project, $options;
 	
 		ProjectTools::isAllowedTo('issue_report');
+		
+		$context['report_form'] = new ProjectTools_IssueTracker_IssueForm($project);
+		
+		/*
 		require_once($sourcedir . '/Subs-Post.php');
 	
 		$context['can_subscribe'] = !$user_info['is_guest'];
@@ -117,7 +121,7 @@ class ProjectTools_IssueTracker_Report
 		loadTemplate('IssueReport');
 	
 		$context['sub_template'] = 'report_issue';
-		$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);
+		$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);*/
 	}
 	
 	/**

@@ -241,8 +241,7 @@ class ProjectTools_Maintenance_Upgrade extends ProjectTools_Maintenance_Action
 					$newchanges['attachments'] = $changes['attachments'];
 					
 				if ($row['id_comment'] == NULL)
-					continue;
-				
+					$row['id_comment'] = 0;
 	
 				$smcFunc['db_insert']('',
 					'{db_prefix}issue_events', 

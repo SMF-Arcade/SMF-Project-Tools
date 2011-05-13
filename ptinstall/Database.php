@@ -708,44 +708,6 @@ $tables = array(
 				'type' => 'int',
 			),
 			array(
-				'name' => 'id_member',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'id_event',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'id_event_mod',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'post_time',
-				'type' => 'int',
-				'default' => 0,
-			),
-			array(
-				'name' => 'poster_name',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => '',
-			),
-			array(
-				'name' => 'poster_email',
-				'type' => 'varchar',
-				'size' => 255,
-				'default' => '',
-			),
-			array(
-				'name' => 'poster_ip',
-				'type' => 'varchar',
-				'size' => 60,
-				'default' => '',
-			),
-			array(
 				'name' => 'edit_time',
 				'type' => 'int',
 				'default' => 0,

@@ -173,7 +173,15 @@ class ProjectTools_IssueTracker_Issue
 	/**
 	 *
 	 */
-	public function __construct($issue)
+	public function __construct($issue = null)
+	{
+		$this->id = $issue;
+		
+		if ($this->id !== null)
+			$this->loadIssue();
+	}
+	
+	protected function loadIssue()
 	{
 		global $smcFunc, $user_info, $memberContext, $context;
 		
@@ -196,7 +204,7 @@ class ProjectTools_IssueTracker_Issue
 			LIMIT 1',
 			array(
 				'current_member' => $user_info['id'],
-				'issue' => $issue,
+				'issue' => $this->id,
 			)
 		);
 		
@@ -303,6 +311,24 @@ class ProjectTools_IssueTracker_Issue
 			return false;
 		
 		return true;
+	}
+	
+	/**
+	 * Returns data for use in report form
+	 */
+	public function getData()
+	{
+		return array(
+			'title' => $this->name,
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function Save($data)
+	{
+		
 	}
 	
 	/**
