@@ -117,11 +117,14 @@ class ProjectTools_IssueTracker_Report
 			'url' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'sa' => 'report')),
 		);
 	
+
+		*/
+		
 		// Template
 		loadTemplate('IssueReport');
 	
 		$context['sub_template'] = 'report_issue';
-		$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);*/
+		$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);
 	}
 	
 	/**

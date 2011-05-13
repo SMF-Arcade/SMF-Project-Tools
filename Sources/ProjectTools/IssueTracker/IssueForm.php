@@ -17,6 +17,12 @@ if (!defined('SMF'))
 class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
 {
 	/**
+	 *
+	 *
+	 */
+	public $formid = 'reportissue';
+	
+	/**
 	 * @var ProjectTools_Project
 	 */
 	protected $project;
@@ -31,6 +37,8 @@ class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
 	 */
 	final public function __construct($id_project, $id_issue = null, $is_fatal = true, $is_post = null)
 	{
+		global $txt;
+		
 		if ($is_post == null)
 			$this->is_post = !empty($_POST['save']);
 		else
@@ -58,7 +66,17 @@ class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
 		//
 		new Madjoki_Form_Element_Text($this, 'title', $txt['issue_title'], $textValidator);
 		
+		new Madjoki_Form_Element_BBCEditor($this, 'details', '', new Madjoki_Form_Validator_BBC());
 		
+		$this->saveEntities = array('title', 'details');
+		
+		//
+		new Madjoki_Form_Element_Divider($this);
+		
+		if ($id_issue !== null)
+			new Madjoki_Form_Element_Submit($this, $txt['edit_project']);
+		else
+			new Madjoki_Form_Element_Submit($this, $txt['report_issue']);
 	}
 }
 

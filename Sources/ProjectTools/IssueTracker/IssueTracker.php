@@ -724,7 +724,7 @@ class ProjectTools_IssueTracker
 				'issue' => $id_issue,
 				'time' => $time,
 				'issue_event' => $id_issue_event,
-				'rpl' => empty($row['id_comment_first']) ? 0 : 1,
+				'rpl' => empty($row['id_issue_event_first']) ? 0 : 1,
 			)
 		);
 	
@@ -766,7 +766,7 @@ class ProjectTools_IssueTracker
 		global $smcFunc, $db_prefix, $context;
 	
 		$request = $smcFunc['db_query']('', '
-			SELECT subject, id_project, id_comment_first
+			SELECT subject, id_project
 			FROM {db_prefix}issues
 			WHERE id_issue = {int:issue}',
 			array(
