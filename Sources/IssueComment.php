@@ -119,12 +119,18 @@ function IssueReply()
 			SELECT c.id_comment, c.post_time, c.edit_time, c.body,
 				IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
 			FROM {db_prefix}issue_comments AS c
+				INNER JOIN {db_prefix}issues AS i ON (i.id_issue = c.id_issue)
+				INNER JOIN {db_prefix}projects AS p ON (p.id_project = i.id_project)
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
-			WHERE id_comment = {int:comment}
+				LEFT JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
+					AND dev.id_member = {int:current_member})
+			WHERE {query_see_issue}
+				AND id_comment = {int:comment}
 			ORDER BY id_comment',
 			array(
 				'issue' => $issue,
 				'comment' => $_REQUEST['quote'],
+				'current_member' => $user_info['id'],
 			)
 		);
 
