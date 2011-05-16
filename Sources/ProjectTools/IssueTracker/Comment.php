@@ -124,12 +124,12 @@ class ProjectTools_IssueTracker_Comment
 			require_once($sourcedir . '/Subs-Post.php');
 	
 			$request = $smcFunc['db_query']('', '
-				SELECT c.id_comment, c.post_time, c.edit_time, c.body,
-					IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
+				SELECT c.id_comment, iv.event_time, c.edit_time, c.body,
+					IFNULL(mem.real_name, iv.poster_name) AS real_name, iv.poster_email, iv.poster_ip, iv.id_member
 				FROM {db_prefix}issue_comments AS c
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
-				WHERE id_comment = {int:comment}
-				ORDER BY id_comment',
+					INNER JOIN {db_prefix}issue_events AS iv ON (iv.id_comment = c.id_comment)
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = iv.id_member)
+				WHERE c.id_comment = {int:comment}',
 				array(
 					'issue' => $issue,
 					'comment' => $_REQUEST['quote'],
