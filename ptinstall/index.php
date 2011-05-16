@@ -2,7 +2,8 @@
 /**
  * This script is standalone installer for SMF Project Tools
  *
- * @package installer
+ * @package ProjectTools
+ * @subpackage Installer
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
@@ -18,9 +19,6 @@ elseif (!defined('SMF'))
 if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
 	
-require_once(dirname(__FILE__) . '/Database.php');
-require_once(dirname(__FILE__) . '/Subs-Install.php');
-require_once(dirname(__FILE__) . '/install_main.php');
-
+ProjectTools_Install::install();
 
 ?>

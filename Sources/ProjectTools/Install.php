@@ -188,6 +188,9 @@ class ProjectTools_Install
 		// 
 		Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, false);
 		
+		$db = new ProjectTools_Install_Database();
+		$db->DoTables();
+		
 		// Remove settings
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}settings

@@ -68,10 +68,9 @@
 		<require-file name="Themes/default/languages/ProjectEmail.english.php" destination="$languagedir" />
 		
 		<!-- Run Installer/upgrader -->
-		<code>ptinstall/Database.php</code>
-		<code>ptinstall/Subs-Install.php</code>
-		<code>Sources/ProjectTools/Install.php</code>
-		<database>ptinstall/install_main.php</database>
+		<code>Sources/ProjectTools/Install/Database.php</code>
+		<code>Sources/ProjectTools/Install/Install.php</code>
+		<database>ptinstall/install.php</database>
 
 		<modification format="xml" type="file">install.xml</modification>
 		<modification format="xml" type="file">curvetheme.xml</modification>
