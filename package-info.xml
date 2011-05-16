@@ -101,8 +101,6 @@
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
-		
-		<modification format="xml" type="file">upgrade-0.501.xml</modification>
 	</upgrade>
 	
 	<upgrade for="2.0 RC5" from="0.5">
