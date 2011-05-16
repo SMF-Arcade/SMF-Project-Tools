@@ -30,11 +30,8 @@
 		<require-dir name="Themes/default/languages/ProjectTools" destination="$languagedir" />
 
 		<!-- These files goes to Sources directory -->
-		<require-file name="Sources/ProjectPermissions.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Issue.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
-		<require-file name="Sources/Subs-ProjectAdmin.php" destination="$sourcedir" />
-		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 
 		<!-- These files goes to default Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
@@ -93,10 +90,8 @@
 		<remove-dir name="$languagedir/ProjectTools" />
 
 		<!-- Remove these files from Sources -->
-		<remove-file name="$sourcedir/ProjectPermissions.php" />
 		<remove-file name="$sourcedir/Subs-Issue.php" />
 		<remove-file name="$sourcedir/Subs-Project.php" />
-		<remove-file name="$sourcedir/Subs-ProjectAdmin.php" />
 
 		<!-- Templates -->
 		<remove-file name="$themedir/IssueList.template.php" />
@@ -130,5 +125,7 @@
 		
 		<code>Sources/ProjectTools/Install.php</code>
 		<code>ptinstall/uninstall.php</code>
+		<database>ptinstall/Database.php</database>
+		<database>ptinstall/uninstall-database.php</database>
 	</uninstall>
 </package-info>

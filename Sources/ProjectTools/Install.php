@@ -25,9 +25,10 @@ class ProjectTools_Install
 		'issuesPerPage' => array(25, false),
 		'commentsPerPage' => array(20, false),
 		'projectEnabled' => array(1, false),
-		'projectExtensions' => array('Frontpage,Roadmap,IssueTracker', true),
+		'projectExtensions' => array('Frontpage,Roadmap,IssueTracker', false),
 		'projectAttachments' => array(1, false),
 		'linkIssues' => array(1, false),
+		'projectDatabaseVersion' => array('0.6 pre', true),
 	);
 	
 	/**
@@ -57,7 +58,13 @@ class ProjectTools_Install
 	 */
 	static public function install()
 	{
-		Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, true);
+		global $modSettings;
+		
+		$upgradeFrom = isset($modSettings['projectDatabaseVersion']) ? $modSettings['projectDatabaseVersion'] : false;
+		
+		if (!$upgradeFrom)
+			Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, true);
+			
 		Madjoki_Install_Helper::doSettings(self::$settings);
 		Madjoki_Install_Helper::doPermission(self::$permissions);
 		
@@ -164,17 +171,45 @@ class ProjectTools_Install
 	/**
 	 *
 	 */
-	static public function uninstall($full_remove = false)
+	static public function uninstall()
 	{
-		if ($full_remove)
-		{
-			/*Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, true);
-			Madjoki_Install_Helper::doSettings(self::$settings);
-			Madjoki_Install_Helper::doPermission(self::$permissions);*/
-		}
-		
+		// Remove hooks
 		foreach (self::$hooks as $hook => $func)
 			remove_integration_function($hook, $func);
+	}
+	
+	/**
+	 *
+	 */
+	static public function uninstallDatabase()
+	{
+		global $smcFunc;
+		
+		// 
+		Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, false);
+		
+		// Remove settings
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}settings
+			WHERE variable IN({array_string:pt_settings})',
+			array(
+				'pt_settings' => array_keys(self::$settings),
+			)
+		);
+		
+		// Remove permissions
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}permissions
+			WHERE permission IN({array_string:pt_permissions})',
+			array(
+				'pt_permissions' => array_keys(self::$permissions),
+			)
+		);
+		
+		global $tables;
+		
+		foreach ($tables as $table => $data)
+			$smcFunc['db_drop_table']('{db_prefix}' . $table);
 	}
 	
 }
