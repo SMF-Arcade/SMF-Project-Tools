@@ -121,10 +121,10 @@
 		<remove-file name="$languagedir/Project.english.php" />
 		<remove-file name="$languagedir/ProjectAdmin.english.php" />
 		<remove-file name="$languagedir/ProjectEmail.english.php" />
-		
-		<code>Sources/ProjectTools/Install.php</code>
+
+		<code>Sources/ProjectTools/Install/Database.php</code>
+		<code>Sources/ProjectTools/Install/Install.php</code>
 		<code>ptinstall/uninstall.php</code>
-		<database>ptinstall/Database.php</database>
-		<database>ptinstall/uninstall-database.php</database>
+		<database>ptinstall/uninstall_database.php</database>
 	</uninstall>
 </package-info>
