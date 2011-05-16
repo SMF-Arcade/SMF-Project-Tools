@@ -80,8 +80,6 @@ else
 	{
 		global $project, $issue;
 
-		require_once($sourcedir . '/Project.php');
-
 		ProjectTools_Main::loadPage('smf');
 
 		// Make sure this attachment is on this issue.
@@ -134,7 +132,7 @@ else
 			<search position="after"><![CDATA[	// If they have specified a particular theme to use with SSI allow it to be used.]]></search>
 			<add><![CDATA[	elseif (class_exists('ProjectTools') && ProjectTools_Project::getCurrent() && !empty(ProjectTools_Project::getCurrent()->theme) && !empty(ProjectTools_Project::getCurrent()->override_theme))
 		$id_theme = ProjectTools_Project::getCurrent()->theme;
-	elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'projects' && !empty($modSettings['project_force_theme']))
+	elseif (IN_PRJOECT_TOOLS === true && !empty($modSettings['project_force_theme']))
 		$id_theme = (int) $modSettings['project_force_theme'];
 ]]></add>
 		</operation>

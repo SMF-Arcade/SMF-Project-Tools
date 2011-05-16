@@ -2,6 +2,7 @@ Extension Hooks
 ---------------
 These add general features not specific to a project
 
+load: Called after all extensions are loaded
 Profile_subActions: Add sub-actions for project subsection of SMF Profile pages
 Profile_subSections: Add sub-sections for project subsection of SMF Profile pages
 

@@ -2,7 +2,8 @@
 /**
  * 
  *
- * @package IssueTracker
+ * @package ProjectTools
+ * @subpackage IssueTracker
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1

@@ -1,12 +1,12 @@
 <?php
 /**
- * Template for ProjecPermissions.php
+ * Template for UserProfile
  *
- * @package admin
+ * @package ProjectTools
  * @version 0.6
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
- * @see ProjecPermissions.php
+ * @see UserProfile.php
  */
 
 function template_project_profile_main()
@@ -20,14 +20,18 @@ function template_project_profile_main()
 		<img class="icon" src="', $settings['images_url'], '/stats_info.gif" width="20" height="20" alt="" /> ', $txt['project_stats'], '
 	</h3>
 	<div class="windowbg2">
-		<table border="0" cellpadding="1" cellspacing="0" width="100%">
+		<table border="0" cellpadding="1" cellspacing="0" width="100%">';
+	
+	foreach ($context['pt_statistics'] as $statistic)
+	{
+		echo '
 			<tr>
-				<td nowrap="nowrap">', $txt['profile_reported_issues'], ':</td>
-				<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=project;sa=reported">', $context['statistics']['reported_issues'], '</a></td>
-			</tr><tr>
-				<td nowrap="nowrap">', $txt['profile_assigned_issues'], ':</td>
-				<td align="right"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=project;sa=assigned">', $context['statistics']['assigned_issues'], '</a></td>
-			</tr>
+				<td nowrap="nowrap">', $statistic['text'], ':</td>
+				<td align="right"><a href="', $statistic['href'], '">', $statistic['number'], '</a></td>
+			</tr>';
+	}
+	
+	echo '
 		</table>
 	</div>
 	</div></div>

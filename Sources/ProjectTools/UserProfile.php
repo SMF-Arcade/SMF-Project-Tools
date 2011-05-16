@@ -25,6 +25,7 @@ class ProjectTools_UserProfile
 		global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
 		global $user_info, $smcFunc, $sourcedir;
 	
+		//
 		ProjectTools_Main::loadPage('profile');
 	
 		$subActions = array(
@@ -54,39 +55,14 @@ class ProjectTools_UserProfile
 		global $db_prefix, $scripturl, $txt, $modSettings, $context, $settings;
 		global $user_info, $smcFunc, $sourcedir;
 	
-		$context['statistics'] = array();
-	
-		// Reported Issues
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*)
-			FROM {db_prefix}issues
-			WHERE id_reporter = {int:member}',
-			array(
-				'member' => $memID,
-			)
-		);
-	
-		list ($context['statistics']['reported_issues']) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	
-		// Assigned Issues
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*)
-			FROM {db_prefix}issues
-			WHERE id_assigned = {int:member}',
-			array(
-				'member' => $memID,
-			)
-		);
-	
-		list ($context['statistics']['assigned_issues']) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	
-		// Format
-		$context['statistics']['reported_issues'] = comma_format($context['statistics']['reported_issues']);
-		$context['statistics']['assigned_issues'] = comma_format($context['statistics']['assigned_issues']);
-	
-		$context['reported_issues'] = getIssueList(0, 10, 'i.updated DESC', 'i.id_reporter = {int:profile_member}', array('profile_member' => $memID));
+		$context['pt_statistics'] = array();
+
+		// Let hooks add statistics
+		ProjectTools_Extensions::runHooks('Profile_addStatistics', array(&$context['pt_statistics']));
+		
+		//
+		foreach ($context['pt_statistics'] as &$statistic)
+			$statistic['number'] = comma_format($statistic['number']);
 	
 		// Template
 		$context['sub_template'] = 'project_profile_main';
