@@ -160,7 +160,7 @@ class ProjectTools
 			if (ProjectTools_Project::getCurrent()->isDeveloper())
 				$user_info['query_see_issue_project'] = '1=1';
 					
-			if (ProjectTools_Project::getCurrent()->canAccess())
+			if (!ProjectTools_Project::getCurrent()->canAccess())
 				$context['project_error'] = 'project_not_found';
 				
 			if (!empty($projects_show) && !in_array($cp->id, $projects_show))

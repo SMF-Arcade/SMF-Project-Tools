@@ -230,7 +230,7 @@ class ProjectTools_Project
 		}
 		
 		// Load versions
-		if (!empty($this->versions))
+		if (empty($this->versions))
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT id_version, id_parent, version_name, release_date, status
@@ -255,7 +255,7 @@ class ProjectTools_Project
 				}
 				else
 				{
-					if (!isset($this->versions['versions'][$row['id_parent']]))
+					if (!isset($this->versions[$row['id_parent']]))
 						continue;
 	
 					$this->versions[$row['id_parent']]['sub_versions'][$row['id_version']] = array(

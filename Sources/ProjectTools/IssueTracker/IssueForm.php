@@ -43,7 +43,7 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		if ($this->is_post)
 			checkSession('post', '');
 			
-		parent::__construct($id_project, $is_fatal, $is_post);
+		parent::__construct((int) $id_project, $is_fatal, $is_post);
 		
 		//
 		if ($id_issue !== null)
@@ -67,6 +67,13 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		//
 		new ProjectTools_Form_TrackersElement($this, 'tracker', $txt['issue_type']);
 		
+		var_dump($this->project->versions);
+		
+		// Show version selection if project has at least one
+		if (!empty($this->project->versions))
+		{
+			new ProjectTools_Form_Element_Versions($this, 'versions', $txt['issue_version']);
+		}
 		
 		// BBC Editor
 		new Madjoki_Form_Element_BBCEditor($this, 'details', '', new Madjoki_Form_Validator_BBC());
