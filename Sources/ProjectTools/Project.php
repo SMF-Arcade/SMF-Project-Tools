@@ -468,6 +468,19 @@ class ProjectTools_Project
 	}
 	
 	/**
+	 *
+	 */
+	function canAccess()
+	{
+		global $user_info;
+		
+		if (!$this->isDeveloper() && count(array_intersect($user_info['groups'], $this->groups)) == 0 && !$user_info['is_admin'])
+			return false;
+		
+		return true;
+	}
+	
+	/**
 	 * Checks whatever permission is allowed in this project
 	 */
 	function allowedTo($permission)

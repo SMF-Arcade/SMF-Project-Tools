@@ -51,7 +51,7 @@ abstract class ProjectTools_Maintenance_Action
 		
 		$action = $this->actions[$this->current_step - 1];
 		
-		call_user_func($action, $last_sa);
+		call_user_func($action);
 		
 		return $step + 1;
 	}

@@ -15,18 +15,13 @@ if (!defined('SMF'))
 /**
  *
  */
-class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
+class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 {
 	/**
 	 *
 	 *
 	 */
 	public $formid = 'reportissue';
-	
-	/**
-	 * @var ProjectTools_Project
-	 */
-	protected $project;
 
 	/**
 	 * @var ProjectTools_IssueTracker_Issue
@@ -48,8 +43,7 @@ class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
 		if ($this->is_post)
 			checkSession('post', '');
 			
-		//
-		$this->project = ProjectTools_Project::getProject($id_project);
+		parent::__construct($id_project, $is_fatal, $is_post);
 		
 		//
 		if ($id_issue !== null)
@@ -67,6 +61,14 @@ class ProjectTools_IssueTracker_IssueForm extends Madjoki_Form_Base
 		//
 		new Madjoki_Form_Element_Text($this, 'title', $txt['issue_title'], $textValidator);
 		
+		//
+		new Madjoki_Form_Element_Check($this, 'private', $txt['private_issue']);
+		
+		//
+		new ProjectTools_Form_TrackersElement($this, 'tracker', $txt['issue_type']);
+		
+		
+		// BBC Editor
 		new Madjoki_Form_Element_BBCEditor($this, 'details', '', new Madjoki_Form_Validator_BBC());
 		
 		$this->saveEntities = array('title', 'details');

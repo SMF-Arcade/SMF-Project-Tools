@@ -54,6 +54,7 @@ class ProjectTools_UserAdmin
 				INNER JOIN {db_prefix}project_developer AS dev ON (dev.id_project = p.id_project
 					AND dev.id_member = {int:current_member})' : ''),
 			array(
+				'current_member' => $user_info['id'],
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
