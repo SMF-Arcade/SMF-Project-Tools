@@ -30,6 +30,8 @@ abstract class ProjectTools_Form_Project extends Madjoki_Form_Base
 			
 		if (!$this->project || !$this->project->canAccess())
 			fatal_lang_error('project_not_found');
+		
+		parent::__construct($is_post);
 	}
 	
 	

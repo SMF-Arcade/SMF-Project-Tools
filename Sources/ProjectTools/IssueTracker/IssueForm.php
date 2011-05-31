@@ -35,14 +35,6 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 	{
 		global $txt;
 		
-		if ($is_post == null)
-			$this->is_post = !empty($_POST['save']);
-		else
-			$this->is_post = $is_post;
-			
-		if ($this->is_post)
-			checkSession('post', '');
-			
 		parent::__construct((int) $id_project, $is_fatal, $is_post);
 		
 		//
@@ -116,7 +108,9 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 				$elm[$element->getDataField()] = $element->getValue();
 		}
 		
-		var_dump($elm);
+		var_dump($elm);die();
+		
+		return $this->issue->id;
 	}
 }
 
