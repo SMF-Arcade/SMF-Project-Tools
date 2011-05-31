@@ -67,12 +67,18 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		//
 		new ProjectTools_Form_TrackersElement($this, 'tracker', $txt['issue_type']);
 		
-		var_dump($this->project->versions);
-		
 		// Show version selection if project has at least one
 		if (!empty($this->project->versions))
 		{
 			new ProjectTools_Form_Element_Versions($this, 'versions', $txt['issue_version']);
+		}
+		
+		// Show category selection if project has at least one
+		if (!empty($this->project->categories))
+		{
+			$category = new Madjoki_Form_Element_Select($this, 'category', $txt['issue_category']);
+			foreach ($this->project->categories as $cat)
+				$category->addOption($cat['id'], $cat['name']);
 		}
 		
 		// BBC Editor
@@ -87,6 +93,30 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 			new Madjoki_Form_Element_Submit($this, $txt['edit_project']);
 		else
 			new Madjoki_Form_Element_Submit($this, $txt['report_issue']);
+	}
+	
+	/**
+	 *
+	 */
+	final public function Save()
+	{
+		global $smcFunc;
+		
+		if (!$this->is_post)
+			return false;
+		
+		if (!$this->Validate())
+			return false;
+		
+		$elm = array();
+		
+		foreach ($this->elements as $element)
+		{
+			if ($element instanceof Madjoki_Form_Element_Field)
+				$elm[$element->getDataField()] = $element->getValue();
+		}
+		
+		var_dump($elm);
 	}
 }
 

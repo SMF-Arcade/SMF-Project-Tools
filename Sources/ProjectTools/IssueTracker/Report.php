@@ -26,7 +26,11 @@ class ProjectTools_IssueTracker_Report
 		ProjectTools::isAllowedTo('issue_report');
 		
 		$context['report_form'] = new ProjectTools_IssueTracker_IssueForm($project);
-		
+		if ($context['report_form']->is_post)
+		{
+			$context['report_form']->Save();
+			redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'issues')));
+		}
 		/*
 		require_once($sourcedir . '/Subs-Post.php');
 	
@@ -256,7 +260,7 @@ class ProjectTools_IssueTracker_Report
 	
 		cache_put_data('project-' . $project, null, 120);
 	
-		redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'issues')));
+		
 	}
 	
 	/**

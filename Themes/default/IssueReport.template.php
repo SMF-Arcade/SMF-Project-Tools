@@ -16,19 +16,6 @@ function template_report_issue()
 	$context['report_form']->render();
 
 /*
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function saveEntities()
-		{
-			var textFields = ["title", "', $context['post_box_name'], '"];
-			for (i in textFields)
-				if (document.forms.reportissue.elements[textFields[i]])
-					document.forms.reportissue[textFields[i]].value = document.forms.reportissue[textFields[i]].value.replace(/&#/g, "&#38;#");
-			for (var i = document.forms.reportissue.elements.length - 1; i >= 0; i--)
-				if (document.forms.reportissue.elements[i].name.indexOf("options") == 0)
-					document.forms.reportissue.elements[i].value = document.forms.reportissue.elements[i].value.replace(/&#/g, "&#38;#");
-		}
-	// ]]></script>';
 
 	echo '
 	<div id="preview_section"', isset($context['preview_details']) ? '' : ' style="display: none;"', '>
@@ -61,77 +48,6 @@ function template_report_issue()
 							', empty($context['post_error']['messages']) ? '' : implode('<br />', $context['post_error']['messages']), '
 						</div>
 					</dd>
-					<dt>', $txt['issue_title'], ':</dt>
-					<dd>
-						<input type="text" name="title" value="', $context['issue']['title'], '" tabindex="', $context['tabindex']++, '" size="80" maxlength="80" />
-					</dd>
-					<dt>', $txt['private_issue'], ':</dt>
-					<dd>
-						<input type="checkbox" name="private" value="1" tabindex="', $context['tabindex']++, '"', !empty($context['issue']['private']) ? ' checked="checked"' : '', '/>
-					</dd>';
-
-	if (count(ProjectTools_Project::getCurrent()->trackers) > 1)
-	{
-		echo '
-					<dt>', $txt['issue_type'], ':</dt>
-					<dd>';
-
-		foreach (ProjectTools_Project::getCurrent()->trackers as $id => $tracker)
-		{
-			echo '
-						<div class="toggle">
-							<input type="radio" id="type_', $id, '" name="tracker" value="', $id, '" tabindex="', $context['tabindex']++, '"', $id == $context['issue']['tracker'] ? ' checked="checked"' : '', '/> <label for="type_', $id, '">', $tracker['tracker']['name'], '</label>
-						</div>';
-		}
-
-		echo '
-					</dd>';
-	}
-
-	if ($context['show_version'])
-	{
-		echo '
-					<dt>', $txt['issue_version'], ':</dt>
-					<dd>';
-
-
-		foreach ($context['versions'] as $v)
-		{
-			echo '
-							<input type="checkbox" id="version_', $v['id'], '" name="version[]" value="', $v['id'], '"', in_array($v['id'], $context['issue']['version'])  ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $v['id'], '" style="font-weight: bold">', $v['name'], '</label><br />';
-
-			foreach ($v['sub_versions'] as $subv)
-				echo '
-							&nbsp;&nbsp;&nbsp; <input type="checkbox" id="version_', $subv['id'], '" name="version[]" value="', $subv['id'], '"', in_array($subv['id'], $context['issue']['version']) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '"> <label for="version_', $subv['id'], '" style="font-weight: bold">', $subv['name'], '</label><br />';
-		}
-		
-		echo '
-					</dd>';
-
-	}
-
-	if ($context['show_category'])
-	{
-		echo '
-					<dt>', $txt['issue_category'], ':</dt>
-					<dd>
-						<select name="category" tabindex="', $context['tabindex']++, '">
-							<option></option>';
-
-		foreach (ProjectTools_Project::getCurrent()->categories as $c)
-			echo '
-							<option value="', $c['id'], '" ', $context['issue']['category'] == $c['id'] ? ' selected="selected"' : '', '>', $c['name'], '</option>';
-		echo '
-						</select>
-					</dd>';
-	}
-
-	echo '
-					<dd>
-						<div id="bbcBox_message"></div>
-						<div id="smileyBox_message"></div>
-						', template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message'), '
-					</dd>';
 
 	if (!empty($context['can_subscribe']))
 		echo '
