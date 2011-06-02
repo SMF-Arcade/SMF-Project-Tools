@@ -115,14 +115,12 @@ class ProjectTools_IssueTracker_Report
 		$context['show_category'] = !empty(ProjectTools_Project::getCurrent()->categories);
 	
 		checkSubmitOnce('register');
-	
+		*/
+		
 		$context['linktree'][] = array(
 			'name' => $txt['linktree_report_issue'],
 			'url' => ProjectTools::get_url(array('project' => $project, 'area' => 'issues', 'sa' => 'report')),
 		);
-	
-
-		*/
 		
 		// Template
 		loadTemplate('IssueReport');
@@ -220,13 +218,7 @@ class ProjectTools_IssueTracker_Report
 		if ($smcFunc['strlen']($_POST['title']) > 100)
 			$_POST['title'] = $smcFunc['substr']($_POST['title'], 0, 100);
 	
-		$posterOptions = array(
-			'id' => $user_info['id'],
-			'ip' => $user_info['ip'],
-			'name' => $user_info['is_guest'] ? $_POST['guestname'] : $user_info['name'],
-			'username' => $_POST['guestname'],
-			'email' => $_POST['email'],
-		);
+
 		$issueOptions = array(
 			'project' => $project,
 			'subject' => $_POST['title'],

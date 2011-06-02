@@ -22,7 +22,7 @@ class ProjectTools_IssueTracker_Issue
 	 *
 	 * @return ProjectTools_IssueTracker_Issue Issue Instance
 	 */
-	static function getIssue($id, $project = null)
+	public static function getIssue($id, $project = null)
 	{
 		if (!isset(self::$_instances[$id]))
 			self::$_instances[$id] = new self($id);
@@ -41,7 +41,7 @@ class ProjectTools_IssueTracker_Issue
 	 * 
 	 * @return ProjectTools_IssueTracker_Issue 
 	 */
-	static function getCurrent()
+	public static function getCurrent()
 	{
 		global $issue, $project;
 		
@@ -50,7 +50,29 @@ class ProjectTools_IssueTracker_Issue
 		
 		return false;
 	}
+	
+	/**
+	 *
+	 */
+	public static function getNew(ProjectTools_Project $project)
+	{
+		global $context;
 		
+		$new = new ProjectTools_IssueTracker_Issue();
+		$new->project = $project->id;
+		return $new;
+	}
+	
+	/**
+	 *
+	 */
+	public static function getDefaults()
+	{
+		global $context;
+		
+		return array('status' => 1, 'priority' => 2);
+	}
+	
 	/**
 	 * Issue ID
 	 * 
@@ -88,12 +110,12 @@ class ProjectTools_IssueTracker_Issue
 	/**
 	 *
 	 */
-	public $versions;
+	public $versions = array();
 	
 	/**
 	 *
 	 */
-	public $versions_fixed;
+	public $versions_fixed = array();
 	
 	/**
 	 *
@@ -169,11 +191,11 @@ class ProjectTools_IssueTracker_Issue
 	 *
 	 */
 	public $is_private;
-			
+	
 	/**
 	 *
 	 */
-	public function __construct($issue = null)
+	protected function __construct($issue = null)
 	{
 		$this->id = $issue;
 		
@@ -181,6 +203,9 @@ class ProjectTools_IssueTracker_Issue
 			$this->loadIssue();
 	}
 	
+	/**
+	 *
+	 */
 	protected function loadIssue()
 	{
 		global $smcFunc, $user_info, $memberContext, $context;
@@ -264,6 +289,7 @@ class ProjectTools_IssueTracker_Issue
 		$this->versions = getVersions(explode(',', $row['versions']), $row['id_project']);
 		$this->versions_fixed = getVersions(explode(',', $row['versions_fixed']), $row['id_project']);
 	
+		
 		$this->reporter = &$memberContext[$row['id_reporter']];
 		
 		if (!empty($row['id_member']))
@@ -324,11 +350,79 @@ class ProjectTools_IssueTracker_Issue
 	}
 	
 	/**
+	 * Saves changes to issue
 	 *
+	 * 
 	 */
-	public function Save($data)
+	public function Save($issueOptions, $posterOptions)
 	{
+		if ($this->id === null)
+			$this->create($issueOptions, $posterOptions);
+		else
+			$this->update($issueOptions, $posterOptions);
 		
+		return $this->id;
+	}
+	
+	/**
+	 * Inserts new issue to database
+	 * @param array $issueOptions
+	 * @param array &$posterOptions
+	 * @return int ID of issue created
+	 */
+	private function create($issueOptions, &$posterOptions)
+	{
+		global $smcFunc;
+	
+		if (empty($issueOptions['created']))
+			$issueOptions['created'] = time();
+	
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}issues',
+			array(
+				'id_project' => 'int',
+				'subject' => 'string-100',
+				'created' => 'int',
+				'id_reporter' => 'int',
+			),
+			array(
+				$this->project,
+				$issueOptions['title'],
+				$issueOptions['created'],
+				$posterOptions['id'],
+			),
+			array()
+		);
+	
+		$this->id = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
+	
+		$id_event = createTimelineEvent($this->id, $this->project, 'new_issue', array('subject' => $issueOptions['title']), $posterOptions,
+			array(
+				'time' => $issueOptions['created'],
+				'mark_read' => !empty($issueOptions['mark_read']),
+			)
+		);
+	
+		list ($id_comment, $issueOptions['event_first']) = ProjectTools_IssueTracker::createComment(
+			$this->project,
+			$this->id,
+			array(
+				'id_event' => $id_event,
+				'no_log' => true,
+				'body' => $issueOptions['details'],
+				'mark_read' => !empty($issueOptions['mark_read']),
+			),
+			$posterOptions,
+			array()
+		);
+	
+		unset($issueOptions['project'], $issueOptions['subject'], $issueOptions['details'], $issueOptions['created']);
+		$issueOptions['no_log'] = true;
+	
+		if (!empty($issueOptions))
+			$this->update($issueOptions + self::getDefaults(), $posterOptions);
+	
+		return true;
 	}
 	
 	/**
@@ -340,7 +434,7 @@ class ProjectTools_IssueTracker_Issue
 	public function update($issueOptions, $posterOptions, $return_log = false)
 	{
 		global $smcFunc, $context;
-	
+		
 		//if (!isset($context['issue_status']))
 		//	trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
 	
@@ -374,12 +468,12 @@ class ProjectTools_IssueTracker_Issue
 			);
 		}
 	
-		if (!empty($issueOptions['subject']) && $issueOptions['subject'] != $this->name)
+		if (!empty($issueOptions['title']) && $issueOptions['title'] != $this->name)
 		{
-			$issueUpdates[] = 'subject = {string:subject}';
+			$issueUpdates[] = 'subject = {string:title}';
 	
 			$event_data['changes'][] = array(
-				'rename', $this->name, $issueOptions['subject']
+				'rename', $this->name, $issueOptions['title']
 			);
 		}
 	
@@ -505,13 +599,13 @@ class ProjectTools_IssueTracker_Issue
 		$projectUpdates = array();
 	
 		// Which tracker it belonged to and will belong in future?
-		if (!empty($this->tracker['id']))
+		if (!empty($this->tracker))
 			$oldTracker = $context['issue_trackers'][$this->tracker['id']]['column_' . $oldStatus];
 		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
 			
 		if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $this->tracker['id'] || $oldStatus != $newStatus))
 		{
-			if (!empty($oldStatus))
+			if (!empty($oldStatus) && !empty($this->tracker))
 				$projectUpdates[$this->project][] = "$oldTracker = $oldTracker - 1";
 	
 			$projectUpdates[$issueOptions['project']][] = "$newTracker = $newTracker + 1";
@@ -573,11 +667,10 @@ class ProjectTools_IssueTracker_Issue
 	
 		if ($return_log)
 			return $event_data;
-		
-		$id_issue_event = createIssueEvent($this->id, 0, $posterOptions, $event_data);
 	
 		if (empty($issueOptions['no_log']))
 		{
+			$id_issue_event = ProjectTools_IssueTracker::createIssueEvent($this->id, 0, $posterOptions, $event_data);
 			$id_event = createTimelineEvent($this->id, $issueOptions['project'], 'update_issue', array('subject' => isset($issueOptions['subject']) ? $issueOptions['subject'] : $this->name), $posterOptions, $issueOptions);
 			
 			$smcFunc['db_query']('', '

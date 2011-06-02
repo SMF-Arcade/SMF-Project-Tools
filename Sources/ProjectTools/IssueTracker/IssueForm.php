@@ -41,11 +41,9 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		if ($id_issue !== null)
 			$this->issue = ProjectTools_IssueTracker_Issue::getIssue($id_issue);
 		else
-		{
-			$this->issue = new ProjectTools_IssueTracker_Issue();
-			$this->issue->project = $id_project;
-		}
-		
+			$this->issue = ProjectTools_IssueTracker_Issue::getNew(ProjectTools_Project::getCurrent());
+
+		//
 		$this->data = $this->issue->getData();
 		
 		$textValidator = new Madjoki_Form_Validator_Text();
@@ -92,7 +90,7 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 	 */
 	final public function Save()
 	{
-		global $smcFunc;
+		global $smcFunc, $user_info;
 		
 		if (!$this->is_post)
 			return false;
@@ -100,15 +98,26 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		if (!$this->Validate())
 			return false;
 		
-		$elm = array();
+		$issueOptions = array();
 		
 		foreach ($this->elements as $element)
 		{
 			if ($element instanceof Madjoki_Form_Element_Field)
-				$elm[$element->getDataField()] = $element->getValue();
+				$issueOptions[$element->getDataField()] = $element->getValue();
 		}
 		
-		var_dump($elm);die();
+		$_POST['guestname'] = $user_info['username'];
+		$_POST['email'] = $user_info['email'];
+		
+		$posterOptions = array(
+			'id' => $user_info['id'],
+			'ip' => $user_info['ip'],
+			'name' => $user_info['is_guest'] ? $_POST['guestname'] : $user_info['name'],
+			'username' => $_POST['guestname'],
+			'email' => $_POST['email'],
+		);
+		
+		$this->issue->Save($issueOptions, $posterOptions);
 		
 		return $this->issue->id;
 	}

@@ -17,67 +17,6 @@ if (!defined('SMF'))
 class ProjectTools_IssueTracker
 {
 	/**
-	 * Inserts new issue to database
-	 * @param array $issueOptions
-	 * @param array &$posterOptions
-	 * @return int ID of issue created
-	 */
-	function createIssue($issueOptions, &$posterOptions)
-	{
-		global $smcFunc;
-	
-		if (empty($issueOptions['created']))
-			$issueOptions['created'] = time();
-	
-		$smcFunc['db_insert']('insert',
-			'{db_prefix}issues',
-			array(
-				'id_project' => 'int',
-				'subject' => 'string-100',
-				'created' => 'int',
-				'id_reporter' => 'int',
-			),
-			array(
-				$issueOptions['project'],
-				$issueOptions['subject'],
-				$issueOptions['created'],
-				$posterOptions['id'],
-			),
-			array()
-		);
-	
-		$id_issue = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
-	
-		$id_event = createTimelineEvent($id_issue, $issueOptions['project'], 'new_issue', array('subject' => $issueOptions['subject']), $posterOptions,
-			array(
-				'time' => $issueOptions['created'],
-				'mark_read' => !empty($issueOptions['mark_read']),
-			)
-		);
-	
-		list ($id_comment, $issueOptions['event_first']) = createComment(
-			$issueOptions['project'],
-			$id_issue,
-			array(
-				'id_event' => $id_event,
-				'no_log' => true,
-				'body' => $issueOptions['body'],
-				'mark_read' => !empty($issueOptions['mark_read']),
-			),
-			$posterOptions,
-			array()
-		);
-	
-		unset($issueOptions['project'], $issueOptions['subject'], $issueOptions['body'], $issueOptions['created']);
-		$issueOptions['no_log'] = true;
-	
-		if (!empty($issueOptions))
-			updateIssue($id_issue, $issueOptions, $posterOptions);
-	
-		return $id_issue;
-	}
-	
-	/**
 	 * Updates issue in database
 	 * @param int $id_issue ID of issue to update
 	 * @param array $issueOptions

@@ -13,7 +13,7 @@ class ProjectTools_Form_Element_Versions extends Madjoki_Form_Element_CheckList
 	/**
 	 *
 	 */
-	public function __construct(ProjectTools_Form_Project $form, $field_name, $text, $data_field = null, $id = null, $sep = ',')
+	public function __construct(ProjectTools_Form_Project $form, $field_name, $text, $data_field = null, $id = null, $sep = '')
 	{
 		parent::__construct($form, $field_name, $text, $data_field, $id, $sep);
 		
