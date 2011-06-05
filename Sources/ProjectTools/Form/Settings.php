@@ -41,6 +41,8 @@ abstract class ProjectTools_Form_Settings extends Madjoki_Form_Base
 		
 		//
 		ProjectTools_Extensions::runProjectHooks('ExtendProjectSettingsForm', array($this->name, &$this));
+		
+		parent::__construct($is_post);
 	}
 	
 	/**
