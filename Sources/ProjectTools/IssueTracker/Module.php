@@ -27,8 +27,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'move' => array('ProjectTools_IssueTracker_Edit', 'Move'),
 			'delete' => array('ProjectTools_IssueTracker_Edit', 'Delete'),
 			// Edit
-			'edit' => array('ProjectTools_IssueTracker_Edit', 'Main'),
-			'edit2' => array('ProjectTools_IssueTracker_Edit', 'Main2'),
+			'edit' => array('ProjectTools_IssueTracker_Edit', 'Edit'),
 			// Comment
 			'reply' => array('ProjectTools_IssueTracker_Comment', 'Reply'),
 			'reply2' => array('ProjectTools_IssueTracker_Comment', 'Reply2'),

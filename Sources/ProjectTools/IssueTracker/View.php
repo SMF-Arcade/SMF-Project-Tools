@@ -633,39 +633,6 @@ class ProjectTools_IssueTracker_View
 		loadTemplate('IssueView');
 		$context['sub_template'] = 'issue_move';
 	}
-	
-	/**
-	 * Takes request to delete issue
-	 *
-	 * @see deleteIssue
-	 * @todo Move to IssueReport.php?
-	 */
-	public static function IssueDelete()
-	{
-		global $context, $user_info, $smcFunc;
-	
-		checkSession('get');
-	
-		if (!ProjectTools_IssueTracker_Issue::getCurrent())
-			fatal_lang_error('issue_not_found', false);
-	
-		ProjectTools::isAllowedTo('issue_moderate');
-	
-		$posterOptions = array(
-			'id' => $user_info['id'],
-			'ip' => $user_info['ip'],
-			'name' => htmlspecialchars($user_info['name']),
-			'username' => htmlspecialchars($user_info['username']),
-			'email' => htmlspecialchars($user_info['email']),
-		);
-	
-		// Send Notifications
-		sendIssueNotification(array('id' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'project' => ProjectTools_Project::getCurrent()->id), array(), array(), 'issue_delete', $user_info['id']);
-	
-		deleteIssue(ProjectTools_IssueTracker_Issue::getCurrent()->id, $posterOptions);
-	
-		redirectexit(ProjectTools::get_url(array('project' => ProjectTools_Project::getCurrent()->id, 'area' => 'issues')));
-	}
 }
 
 ?>

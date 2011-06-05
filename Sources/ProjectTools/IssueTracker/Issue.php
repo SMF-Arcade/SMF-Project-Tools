@@ -197,6 +197,11 @@ class ProjectTools_IssueTracker_Issue
 	 */
 	protected function __construct($issue = null)
 	{
+		global $context;
+		
+		if (!isset($context['issue_status']))
+			trigger_error(__CLASS__ . '::' . __METHOD__ . ': Issue Tracker not loaded', E_USER_ERROR);
+			
 		$this->id = $issue;
 		
 		if ($this->id !== null)
@@ -217,7 +222,7 @@ class ProjectTools_IssueTracker_Issue
 				i.versions, i.versions_fixed,
 				mem.id_member, mem.real_name, cat.id_category, cat.category_name,
 				' . ($user_info['is_guest'] ? '0 AS new_from' : 'IFNULL(log.id_event, IFNULL(lmr.id_event, -1)) + 1 AS new_from') . ',
-				iv.id_event, iv.poster_ip, com.body, com.edit_name, com.edit_time
+				iv.id_event, iv.poster_ip, com.id_comment, com.body, com.edit_name, com.edit_time
 			FROM {db_prefix}issues AS i
 				INNER JOIN {db_prefix}issue_events AS iv ON (iv.id_issue_event = id_issue_event_first)
 				INNER JOIN {db_prefix}issue_comments AS com ON (com.id_comment = iv.id_comment)' . ($user_info['is_guest'] ? '' : '
@@ -266,6 +271,7 @@ class ProjectTools_IssueTracker_Issue
 		$this->details = array(
 			'id' => $row['id_issue_event_first'],
 			'id_event' => $row['id_event'],
+			'id_comment' => $row['id_comment'],
 			'time' => timeformat($row['created']),
 			'body' => parse_bbc($row['body']),
 			'ip' => $row['poster_ip'],
@@ -346,6 +352,10 @@ class ProjectTools_IssueTracker_Issue
 	{
 		return array(
 			'title' => $this->name,
+			'private' => $this->is_private,
+			'tracker' => $this->tracker['id'],
+			'versions' => array_keys($this->versions),
+			'details' => $this->details['body'],
 		);
 	}
 	
@@ -435,9 +445,6 @@ class ProjectTools_IssueTracker_Issue
 	{
 		global $smcFunc, $context;
 		
-		//if (!isset($context['issue_status']))
-		//	trigger_error('updateIssue: issue tracker not loaded', E_USER_ERROR);
-	
 		$event_data = array(
 			'changes' => array(),
 		);
@@ -562,6 +569,17 @@ class ProjectTools_IssueTracker_Issue
 			);
 		}
 	
+		if (isset($issueOptions['details']))
+		{
+			$commentOptions = array('body' => $issueOptions['details']);
+			unset($issueOptions['details']);
+			
+			ProjectTools_IssueTracker::modifyComment($this->details['id_comment'], $this->id, $commentOptions, $posterOptions);
+			$event_data['changes'][] = array(
+				'details', 'old', 'new',
+			);
+		}
+		
 		if (!empty($this->status['id']))
 			$oldStatus = $context['issue_status'][$this->status['id']]['type'];
 		else
@@ -687,6 +705,99 @@ class ProjectTools_IssueTracker_Issue
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Delete issue from database
+	 * @param array $posterOptions posterOptions for user deleting issue
+	 * @param boolean $log_delete Whatever to log delete
+	 * @return mixed ID of event or true if not logged in success. False on error
+	 */
+	function delete($posterOptions, $log_delete = true)
+	{
+		global $smcFunc, $db_prefix, $context;
+	
+		$event_data = array(
+			'subject' => $this->name,
+			'changes' => array(),
+		);
+	
+		if (!empty($this->status['id']))
+			$status = $context['issue_status'][$this->status['id']]['type'];
+		else
+			$status = '';
+	
+		$curTracker = $context['issue_trackers'][$this->tracker['id']]['column_' . $status];
+	
+		$projectUpdates = array(
+			"$curTracker = $curTracker - 1"
+		);
+	
+		if (!empty($projectUpdates) && !empty($status))
+			$smcFunc['db_query']('', "
+				UPDATE {$db_prefix}projects
+				SET
+					" . implode(',
+					', $projectUpdates) . "
+				WHERE id_project = {int:project}",
+				array(
+					'project' => $this->project,
+				)
+			);
+			
+		// Remove issue from versions too
+		$versions = array_merge(array_keys($this->versions), array_keys($this->versions_fixed));
+			
+		if (!empty($versions))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_versions
+				SET {raw:tracker} = {raw:tracker} - 1
+				WHERE id_version IN({array_int:versions})',
+				array(
+					'tracker' => $curTracker,
+					'versions' => $versions,
+				)
+			);
+	
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issues
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => $this->id,
+			)
+		);
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issue_comments
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => $this->id,
+			)
+		);
+	
+		// Cleanup timeline
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}project_timeline
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => $this->id,
+			)
+		);
+	
+		// Remove notifications of this Issue
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify_projects
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => $this->id,
+			)
+		);
+	
+		if ($log_delete && $posterOptions !== false)
+			$id_event = createTimelineEvent($this->id, $this->project, 'delete_issue', $event_data, $posterOptions, array('time' => time()));
+		else
+			return true;
+		
+		return $id_event;
 	}
 }
 

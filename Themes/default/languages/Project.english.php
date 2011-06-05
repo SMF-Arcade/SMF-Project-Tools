@@ -8,7 +8,7 @@ $txt['linktree_projects'] = 'Projects';
 $txt['linktree_roadmap'] = 'Roadmap';
 $txt['linktree_admin'] = 'Admin';
 $txt['linktree_issues'] = 'Issues';
-$txt['linktree_report_issue'] = 'Report Issue';
+
 
 // View Status
 $txt['issue_view_status'] = 'View Status';
@@ -148,8 +148,6 @@ $txt['issue_list'] = 'Issue List';
 $txt['issue_no_issues'] = 'No issues';
 
 // Report issue
-$txt['report_issue'] = 'Report Issue';
-$txt['preview_report_issue'] = 'Preview issue';
 $txt['issue_no_title'] = 'No Title';
 $txt['error_while_submitting_issue'] = 'The following error or errors occurred while posting this issue:';
 $txt['private_issue'] = 'Private Issue';
@@ -187,6 +185,7 @@ $txt['change_rename'] = 'Issue renamed from <em>&quot;%1$s&quot;</em> to <em>&qu
 $txt['change_project'] = 'Issue moved from <em>%1$s</em> to <em>%2$s</em>';
 $txt['change_add_tag'] = 'Tags added: <em>%1$s</em>';
 $txt['change_remove_tag'] = 'Tags removed: <em>%1$s</em>';
+$txt['change_details'] = 'Details changed';
 
 // Changes used in timeline
 $txt['change_timeline_type'] = 'Type';
@@ -201,6 +200,7 @@ $txt['change_timeline_category'] = 'Category';
 $txt['change_timeline_rename'] = 'Rename';
 $txt['change_timeline_project'] = 'Project';
 $txt['change_timeline_tags'] = 'Tags';
+$txt['change_timeline_details'] = 'Details';
 
 // ModBar
 $txt['issue_delete'] = 'Delete Issue';

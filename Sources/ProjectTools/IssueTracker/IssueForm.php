@@ -39,10 +39,15 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		
 		//
 		if ($id_issue !== null)
+		{
 			$this->issue = ProjectTools_IssueTracker_Issue::getIssue($id_issue);
+			new Madjoki_Form_Element_Header($this, sprintf($txt['edit_issue'], $this->issue->id, $this->issue->name));
+		}
 		else
+		{
 			$this->issue = ProjectTools_IssueTracker_Issue::getNew(ProjectTools_Project::getCurrent());
-
+			new Madjoki_Form_Element_Header($this, $txt['report_issue']);
+		}
 		//
 		$this->data = $this->issue->getData();
 		
@@ -80,9 +85,9 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		new Madjoki_Form_Element_Divider($this);
 		
 		if ($id_issue !== null)
-			new Madjoki_Form_Element_Submit($this, $txt['edit_project']);
+			new Madjoki_Form_Element_Submit($this, $txt['save']);
 		else
-			new Madjoki_Form_Element_Submit($this, $txt['report_issue']);
+			new Madjoki_Form_Element_Submit($this, $txt['report']);
 	}
 	
 	/**
