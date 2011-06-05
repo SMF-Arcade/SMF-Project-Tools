@@ -25,6 +25,8 @@ class ProjectTools_IssueTracker_Report
 	
 		ProjectTools::isAllowedTo('issue_report');
 		
+		$context['can_subscribe'] = !$user_info['is_guest'];
+		
 		$context['report_form'] = new ProjectTools_IssueTracker_Form_Issue($project);
 		if ($context['report_form']->is_post && $context['report_form']->Save())
 			redirectexit(ProjectTools::get_url(array('project' => $project, 'area' => 'issues')));

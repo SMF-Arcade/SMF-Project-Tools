@@ -63,16 +63,7 @@ function template_report_issue()
 						', template_control_richedit_buttons($context['post_box_name']), '
 					</dd>';
 
-	echo '
-					<dd class="clear"></dd>
-				</dl>
-				<span class="botslice"><span></span></span>
-			</div>
-		</div>
 
-		<input type="hidden" name="project" value="', ProjectTools_Project::getCurrent()->id, '" />
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';*/
 }
 

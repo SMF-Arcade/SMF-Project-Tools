@@ -38,7 +38,7 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 	 */
 	final public function __construct($id_project, $id_issue, $id_comment = null, $is_fatal = true, $is_post = null)
 	{
-		global $txt, $sourcedir, $smcFunc, $user_info;
+		global $txt, $sourcedir, $smcFunc, $user_info, $context;
 		
 		parent::__construct((int) $id_project, $is_fatal, $is_post);
 		
@@ -47,6 +47,26 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		$this->comment = $id_comment;
 		
 		$this->data = array();
+		
+		// Check if user has subscribed to issue
+		if (!$user_info['is_guest'])
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT sent
+				FROM {db_prefix}log_notify_projects
+				WHERE id_issue = {int:issue}
+					AND id_member = {int:current_member}
+				LIMIT 1',
+				array(
+					'issue' => $this->issue->id,
+					'current_member' => $user_info['id'],
+				)
+			);
+			$this->data['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
+			$smcFunc['db_free_result']($request);
+		}
+		else
+			$this->data['is_subscribed'] = false;
 		
 		//
 		if ($id_comment !== null)
@@ -84,6 +104,7 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		{
 			new Madjoki_Form_Element_Header($this, $txt['comment_issue']);
 			
+			//
 			if (isset($_REQUEST['quote']))
 			{
 				checkSession('get');
@@ -135,6 +156,11 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		
 		$this->saveEntities = array('comment');
 		
+		if (!empty($context['can_subscribe']))
+		{
+			// Subscribe
+			new Madjoki_Form_Element_Check($this, 'issue_subscribe', $txt['subscribe_to_issue'], 'is_subscribed');
+		}
 		//
 		new Madjoki_Form_Element_Divider($this);
 		
@@ -149,7 +175,7 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 	 */
 	final public function Save()
 	{
-		global $smcFunc, $user_info;
+		global $smcFunc, $user_info, $context;
 		
 		if (!$this->is_post)
 			return false;
@@ -182,6 +208,40 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		else
 			list ($this->comment, $id_event) = ProjectTools_IssueTracker::createComment($this->project->id, $this->issue->id, $commentOptions, $posterOptions);
 			
+		// Subscribe
+		if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'] && !$this->data['is_subscribed'])
+		{
+			$smcFunc['db_insert']('ignore',
+				'{db_prefix}log_notify_projects',
+				array(
+					'id_project' => 'int',
+					'id_issue' => 'int',
+					'id_member' => 'int',
+					'sent' => 'int',
+				),
+				array(
+					0,
+					$this->issue->id,
+					$user_info['id'],
+					0,
+				),
+				array('id_project', 'id_issue', 'id_member')
+			);
+		}
+		// Unsubscribe
+		elseif (empty($_POST['issue_subscribe']) && $this->data['is_subscribed'])
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_notify_projects
+				WHERE id_issue = {int:issue}
+					AND id_member = {int:current_member}',
+				array(
+					'issue' => $this->issue->id,
+					'current_member' => $user_info['id'],
+				)
+			);
+		}
+		
 		return array($this->comment, isset($id_event) ? $id_event : 0);
 	}
 }

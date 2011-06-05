@@ -19,12 +19,14 @@ class ProjectTools_IssueTracker_Comment
 	/**
 	 *
 	 */
-	public static function AddComment()
+	public static function Reply()
 	{
-		global $context, $project, $issue, $txt, $smcFunc;
+		global $context, $project, $issue, $txt, $smcFunc, $user_info;
 		
 		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
 			fatal_lang_error('issue_not_found', false);
+			
+		$context['can_subscribe'] = !$user_info['is_guest'];
 			
 		$context['comment_form'] = new ProjectTools_IssueTracker_Form_Comment($project, $issue);
 		if ($context['comment_form']->is_post)
@@ -34,6 +36,12 @@ class ProjectTools_IssueTracker_Comment
 			if ($id_comment !== false)
 				redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id[1])) . '#com' . $id[0]);
 		}
+		
+		// Linktree
+		$context['linktree'][] = array(
+			'name' => $txt['linktree_edit_issue'],
+			'url' => ProjectTools::get_url(array('issue' => $issue, 'area' => 'issues', 'sa' => 'edit')),
+		);
 		
 		// Template
 		$context['sub_template'] = 'issue_reply';
@@ -45,12 +53,14 @@ class ProjectTools_IssueTracker_Comment
 	/**
 	 *
 	 */
-	public static function EditComment()
+	public static function Edit()
 	{
-		global $context, $project, $issue, $txt, $smcFunc;
+		global $context, $project, $issue, $txt, $smcFunc, $user_info;
 		
 		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
 			fatal_lang_error('issue_not_found', false);
+			
+		$context['can_subscribe'] = !$user_info['is_guest'];
 			
 		$context['comment_form'] = new ProjectTools_IssueTracker_Form_Comment($project, $issue, $_REQUEST['com']);
 		if ($context['comment_form']->is_post)
@@ -69,118 +79,6 @@ class ProjectTools_IssueTracker_Comment
 	}
 	
 	/**
-	 * Display Reply or Edit Reply page
-	 */
-	public static function _Comment()
-	{
-		global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options, $project;
-	
-		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
-			fatal_lang_error('issue_not_found', false);
-	
-		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
-	
-		$context['show_update'] = false;
-		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
-		$context['can_subscribe'] = !$user_info['is_guest'];
-		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
-		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
-		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach');
-	
-		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
-	
-		if ($context['can_issue_update'])
-		{
-			$context['can_edit'] = true;
-			$context['show_update'] = true;
-		}
-	
-		if (ProjectTools::allowedTo('issue_moderate'))
-		{
-			$context['can_assign'] = true;
-			$context['assign_members'] = &ProjectTools_Project::getCurrent()->developers;
-		}
-	
-		$context['destination'] = 'reply2';
-		
-		// Check if user has subscribed to issue
-		if (!$user_info['is_guest'])
-		{
-			$request = $smcFunc['db_query']('', '
-				SELECT sent
-				FROM {db_prefix}log_notify_projects
-				WHERE id_issue = {int:issue}
-					AND id_member = {int:current_member}
-				LIMIT 1',
-				array(
-					'issue' => $issue,
-					'current_member' => $user_info['id'],
-				)
-			);
-			$context['is_subscribed'] = $smcFunc['db_num_rows']($request) != 0;
-			$smcFunc['db_free_result']($request);
-		}
-		else
-			$context['is_subscribed'] = false;
-		
-		$context['notify'] = isset($_POST['issue_subscribe']) ? !empty($_POST['issue_subscribe']) : ($context['is_subscribed'] || !empty($options['auto_notify']));
-	
-		// Editor
-		require_once($sourcedir . '/Subs-Editor.php');
-		require_once($sourcedir . '/Subs-Post.php');
-	
-
-	
-		if (isset($_REQUEST['comment']) || !empty($context['post_error']))
-		{
-			if (!isset($_REQUEST['details']))
-				$_REQUEST['details'] = '';
-	
-			if (empty($context['post_error']))
-			{
-				// TODO CHECKS
-	
-				$previewing = true;
-			}
-			else
-				$previewing = !empty($_POST['preview']);
-	
-			$form_comment = $smcFunc['htmlspecialchars']($_REQUEST['comment'], ENT_QUOTES);
-	
-			if ($previewing)
-			{
-				$context['preview_comment'] = $form_comment;
-				preparsecode($form_comment, true);
-				preparsecode($context['preview_comment']);
-	
-				$context['preview_comment'] = parse_bbc($context['preview_comment']);
-				censorText($context['preview_comment']);
-			}
-	
-			$context['comment'] = $_REQUEST['comment'];
-		}
-	
-		$context['comment'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_comment);
-	
-		$editorOptions = array(
-			'form' => 'reportissue',
-			'id' => 'comment',
-			'width' => '550px',
-			'value' => $context['comment'],
-			'labels' => array(
-				'post_button' => $editing ? $txt['issue_save'] : $txt['issue_reply'],
-			),
-		);
-		create_control_richedit($editorOptions);
-	
-		checkSubmitOnce('register');
-	
-		$context['post_box_name'] = 'comment';
-	
-
-	}
-	
-	/**
 	 * Add new reply or save edit
 	 */
 	public static function _Comment2()
@@ -194,7 +92,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		$context['show_update'] = false;
 		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
-		$context['can_subscribe'] = !$user_info['is_guest'];
+		
 		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
 		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
 		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach');
@@ -355,38 +253,7 @@ class ProjectTools_IssueTracker_Comment
 			$id_comment = $_REQUEST['com'];
 		}
 	
-		if (!empty($_POST['issue_subscribe']) && $context['can_subscribe'] && !$context['is_subscribed'])
-		{
-			$smcFunc['db_insert']('ignore',
-				'{db_prefix}log_notify_projects',
-				array(
-					'id_project' => 'int',
-					'id_issue' => 'int',
-					'id_member' => 'int',
-					'sent' => 'int',
-				),
-				array(
-					0,
-					$issue,
-					$user_info['id'],
-					0,
-				),
-				array('id_project', 'id_issue', 'id_member')
-			);
-		}
-		// Unsubscribe
-		elseif (empty($_POST['issue_subscribe']) && $context['is_subscribed'])
-		{
-			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}log_notify_projects
-				WHERE id_issue = {int:issue}
-					AND id_member = {int:current_member}',
-				array(
-					'issue' => $issue,
-					'current_member' => $user_info['id'],
-				)
-			);
-		}
+
 	
 
 	}

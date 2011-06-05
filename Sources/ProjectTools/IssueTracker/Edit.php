@@ -25,9 +25,11 @@ class ProjectTools_IssueTracker_Edit
 			
 		if (isset($_REQUEST['com']) && $_REQUEST['com'] != ProjectTools_IssueTracker_Issue::getCurrent()->details['id_comment'])
 		{
-			self::Comment();
+			ProjectTools_IssueTracker_Comment::Edit();
 			return;
 		}
+		
+		$context['can_subscribe'] = !$user_info['is_guest'];
 			
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 		
@@ -38,6 +40,7 @@ class ProjectTools_IssueTracker_Edit
 		if ($context['report_form']->is_post && $context['report_form']->Save())
 			redirectexit(ProjectTools::get_url(array('issue' => $issue)));
 		
+		// Linktree
 		$context['linktree'][] = array(
 			'name' => $txt['linktree_edit_issue'],
 			'url' => ProjectTools::get_url(array('issue' => $issue, 'area' => 'issues', 'sa' => 'edit')),

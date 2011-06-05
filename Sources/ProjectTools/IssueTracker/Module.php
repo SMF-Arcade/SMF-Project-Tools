@@ -18,6 +18,8 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 	 */
 	public function Main()
 	{
+		global $context;
+		
 		$subActions = array(
 			'main' => array('ProjectTools_IssueTracker_List', 'Main'),
 			'view' => array('ProjectTools_IssueTracker_View', 'Main'),
@@ -26,10 +28,9 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'upload' => array('ProjectTools_IssueTracker_Edit', 'Upload'),
 			'move' => array('ProjectTools_IssueTracker_Edit', 'Move'),
 			'delete' => array('ProjectTools_IssueTracker_Edit', 'Delete'),
-			// Edit
-			'edit' => array('ProjectTools_IssueTracker_Comment', 'EditComment'),
 			// Comment
-			'reply' => array('ProjectTools_IssueTracker_Comment', 'AddComment'),
+			'reply' => array('ProjectTools_IssueTracker_Comment', 'Reply'),
+			'edit' => array('ProjectTools_IssueTracker_Edit', 'Edit'),
 			'removeComment' => array('ProjectTools_IssueTracker_Edit', 'CommentDelete'),
 			// Report
 			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),
@@ -39,6 +40,14 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 		
 		if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 			$_REQUEST['sa'] = 'main';
+			
+		// Linktree
+		if (ProjectTools_IssueTracker_Issue::getCurrent())
+			$context['linktree'][] = array(
+				'name' => ProjectTools_IssueTracker_Issue::getCurrent()->name,
+				'url' => ProjectTools_IssueTracker_Issue::getCurrent()->href,
+			);
+		
 			
 		call_user_func($subActions[$_REQUEST['sa']], $this->project);
 	}
@@ -54,7 +63,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			'id' => 'issues',
 			'title' => $txt['issues'],
 			'callback' => array($this, 'Main'),
-			'hide_linktree' => true,
+			'hide_linktree' => false,
 			'order' => 10,
 		);
 	}
