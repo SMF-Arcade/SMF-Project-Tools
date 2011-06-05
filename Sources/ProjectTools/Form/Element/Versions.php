@@ -54,7 +54,6 @@ class ProjectTools_Form_Element_Versions extends Madjoki_Form_Element_CheckList
 		list ($name, $level) = $version_info;
 		
 		echo '
-		
 		', str_repeat('&nbsp;&nbsp;&nbsp; ', $level), '<input type="checkbox" name="', $this->field_name, '[]" id="', $this->id, '_', $i, '" value="', $value, '"',
 			in_array($value, $this->value) ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" />
 			<label for="', $this->id, '_', $i, '">', $name, '</label>

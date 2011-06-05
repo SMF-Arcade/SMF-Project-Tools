@@ -419,7 +419,7 @@ class ProjectTools_IssueTracker_Issue
 			array(
 				'id_event' => $id_event,
 				'no_log' => true,
-				'body' => $issueOptions['details'],
+				'comment' => $issueOptions['details'],
 				'mark_read' => !empty($issueOptions['mark_read']),
 			),
 			$posterOptions,
