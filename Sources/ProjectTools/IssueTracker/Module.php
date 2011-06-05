@@ -29,12 +29,11 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			// Edit
 			'edit' => array('ProjectTools_IssueTracker_Edit', 'Edit'),
 			// Comment
-			'reply' => array('ProjectTools_IssueTracker_Comment', 'Reply'),
-			'reply2' => array('ProjectTools_IssueTracker_Comment', 'Reply2'),
-			'removeComment' => array('ProjectTools_IssueTracker_Comment', 'Delete'),
+			'reply' => array('ProjectTools_IssueTracker_Edit', 'Comment'),
+			'reply2' => array('ProjectTools_IssueTracker_Edit', 'Comment2'),
+			'removeComment' => array('ProjectTools_IssueTracker_Edit', 'CommentDelete'),
 			// Report
 			'report' => array('ProjectTools_IssueTracker_Report', 'Report'),
-			'report2' => array('ProjectTools_IssueTracker_Report', 'Report2'),
 		);
 		
 		ProjectTools_Extensions::runProjectHooks('IssueTracker_subActions', array(&$subActions));

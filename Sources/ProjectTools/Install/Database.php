@@ -702,10 +702,6 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 					'auto' => true,
 				),
 				array(
-					'name' => 'id_issue',
-					'type' => 'int',
-				),
-				array(
 					'name' => 'edit_time',
 					'type' => 'int',
 					'default' => 0,
@@ -725,11 +721,6 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 				array(
 					'type' => 'primary',
 					'columns' => array('id_comment')
-				),
-				array(
-					'name' => 'id_issue',
-					'type' => 'index',
-					'columns' => array('id_issue')
 				),
 				array(
 					'name' => 'id_event',

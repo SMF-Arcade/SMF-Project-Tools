@@ -17,9 +17,22 @@ if (!defined('SMF'))
 class ProjectTools_IssueTracker_Comment
 {
 	/**
+	 *
+	 */
+	public static function AddComment()
+	{
+		global $project, $issue;
+		
+		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
+			fatal_lang_error('issue_not_found', false);
+			
+		$context['comment_form'] = new ProjectTools_IssueTracker_Form_Comment($project, $issue);
+	}
+	
+	/**
 	 * Display Reply or Edit Reply page
 	 */
-	static public function Reply()
+	public static function _Comment()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $options, $project;
 	
@@ -218,7 +231,7 @@ class ProjectTools_IssueTracker_Comment
 	/**
 	 * Add new reply or save edit
 	 */
-	static public function Reply2()
+	public static function _Comment2()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $issue, $modSettings, $project;
 	
@@ -442,7 +455,7 @@ class ProjectTools_IssueTracker_Comment
 	/**
 	 * Delete Comment
 	 */
-	static public function Delete()
+	public static function _Delete()
 	{
 		global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings;
 	

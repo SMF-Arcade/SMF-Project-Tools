@@ -15,7 +15,7 @@ if (!defined('SMF'))
 /**
  *
  */
-class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
+class ProjectTools_IssueTracker_Form_Issue extends ProjectTools_Form_Project
 {
 	/**
 	 *
@@ -51,7 +51,7 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		//
 		$this->data = $this->issue->getData();
 		
-		$textValidator = new Madjoki_Form_Validator_Text();
+		$textValidator = new Madjoki_Form_Validator_Text(array('no_empty' => true));
 		
 		//
 		new Madjoki_Form_Element_Text($this, 'title', $txt['issue_title'], $textValidator);
@@ -77,7 +77,7 @@ class ProjectTools_IssueTracker_IssueForm extends ProjectTools_Form_Project
 		}
 		
 		// BBC Editor
-		new Madjoki_Form_Element_BBCEditor($this, 'details', '', new Madjoki_Form_Validator_BBC());
+		new Madjoki_Form_Element_BBCEditor($this, 'details', '', new Madjoki_Form_Validator_BBC(array('no_empty' => true)));
 		
 		$this->saveEntities = array('title', 'details');
 		

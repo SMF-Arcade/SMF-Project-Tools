@@ -766,14 +766,36 @@ class ProjectTools_IssueTracker_Issue
 				'issue' => $this->id,
 			)
 		);
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}issue_comments
+		
+		$comments = array();
+		
+		// Remove comments
+		$request = $smcFunc['db_query']('', '
+			SELECT id_comment
+			FROM {db_prefix}issue_events
 			WHERE id_issue = {int:issue}',
 			array(
 				'issue' => $this->id,
 			)
 		);
-	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$comments[] = $row['id_comment'];
+		
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issue_comments
+			WHERE id_comment IN({array_int:comments})',
+			array(
+				'comments' => $comments,
+			)
+		);
+		// Remove changes related to this issue
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}issue_events
+			WHERE id_issue = {int:issue}',
+			array(
+				'issue' => $this->id,
+			)
+		);
 		// Cleanup timeline
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}project_timeline
