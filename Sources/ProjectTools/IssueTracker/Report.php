@@ -121,7 +121,7 @@ class ProjectTools_IssueTracker_Report
 		);
 		
 		// Template
-		loadTemplate('IssueReport');
+		loadTemplate('ProjectTools/IssueTracker_Report');
 	
 		$context['sub_template'] = 'report_issue';
 		$context['page_title'] = sprintf($txt['project_report_issue'], ProjectTools_Project::getCurrent()->name);

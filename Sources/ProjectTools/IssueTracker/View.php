@@ -211,7 +211,8 @@ class ProjectTools_IssueTracker_View
 					IFNULL(iv.id_event_mod, {int:new_from}) < {int:new_from} AS is_read
 				FROM {db_prefix}issue_events AS iv
 					LEFT JOIN {db_prefix}issue_comments AS c ON (c.id_comment = iv.id_comment)
-				WHERE iv.id_issue_event IN ({array_int:events})',
+				WHERE iv.id_issue_event IN ({array_int:events})
+				ORDER BY id_issue_event',
 				array(
 					'events' => $events,
 					'new_from' => ProjectTools_IssueTracker_Issue::getCurrent()->new_from,

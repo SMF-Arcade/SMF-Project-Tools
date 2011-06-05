@@ -207,9 +207,7 @@ $txt['issue_delete'] = 'Delete Issue';
 $txt['issue_delete_confirm'] = 'Are you sure you want to delete this issue?';
 $txt['issue_move'] = 'Move Issue';
 
-// Reply
-$txt['comment_issue'] = 'Comment Issue';
-$txt['add_comment'] = 'Add Comment';
+
 
 // Tags
 $txt['issue_tags'] = 'Tags';

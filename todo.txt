@@ -1,9 +1,14 @@
 
 Report form
+	Subscribe
 Comment form
+	Subcsribe
+	Editing
 Installer
 Maintenance
 Permissions editor
 
 Missing titles admin
 non higlighted subsections
+
+quote fix

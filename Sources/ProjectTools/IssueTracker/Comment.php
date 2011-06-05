@@ -21,12 +21,25 @@ class ProjectTools_IssueTracker_Comment
 	 */
 	public static function AddComment()
 	{
-		global $project, $issue;
+		global $context, $project, $issue, $txt, $smcFunc;
 		
 		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
 			fatal_lang_error('issue_not_found', false);
 			
 		$context['comment_form'] = new ProjectTools_IssueTracker_Form_Comment($project, $issue);
+		if ($context['comment_form']->is_post)
+		{
+			$id = $context['comment_form']->Save();
+			
+			if ($id_comment !== false)
+				redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id[1])) . '#com' . $id[0]);
+		}
+		
+		// Template
+		$context['sub_template'] = 'issue_reply';
+		$context['page_title'] = sprintf($txt['project_comment_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
+	
+		loadTemplate('ProjectTools/IssueTracker_Report');
 	}
 	
 	/**
@@ -132,48 +145,7 @@ class ProjectTools_IssueTracker_Comment
 		}
 		elseif (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
 		{
-			checkSession('get');
-	
-			require_once($sourcedir . '/Subs-Post.php');
-	
-			$request = $smcFunc['db_query']('', '
-				SELECT c.id_comment, iv.event_time, c.edit_time, c.body,
-					IFNULL(mem.real_name, iv.poster_name) AS real_name, iv.poster_email, iv.poster_ip, iv.id_member
-				FROM {db_prefix}issue_comments AS c
-					INNER JOIN {db_prefix}issue_events AS iv ON (iv.id_comment = c.id_comment)
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = iv.id_member)
-				WHERE c.id_comment = {int:comment}',
-				array(
-					'issue' => $issue,
-					'comment' => $_REQUEST['quote'],
-				)
-			);
-	
-			$row = $smcFunc['db_fetch_assoc']($request);
-			$smcFunc['db_free_result']($request);
-	
-			if (!$row)
-				fatal_lang_error('comment_not_found', false);
-	
-			$form_comment = $row['body'];
-			censorText($form_comment);
-	
-			// fix html tags
-			if (strpos($form_comment, '[html]') !== false)
-			{
-				$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $form_comment, -1, PREG_SPLIT_DELIM_CAPTURE);
-				for ($i = 0, $n = count($parts); $i < $n; $i++)
-				{
-					// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
-					if ($i % 4 == 0)
-						$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . preg_replace(\'~<br\s?/?>~i\', \'&lt;br /&gt;<br />\', \'$1\') . \'[/html]\'', $parts[$i]);
 				}
-				$form_comment = implode('', $parts);
-			}
-	
-			$form_comment = preg_replace('~<br(?: /)?' . '>~i', "\n", $form_comment);
-			$form_comment = '[quote author=' . $row['real_name'] . ' link=' . 'issue=' . $issue . '.com' . $_REQUEST['quote'] . '#com' . $_REQUEST['quote'] . ' date=' . $row['post_time'] . "]\n" . rtrim($form_comment) . "\n[/quote]";
-		}
 	
 		if (isset($_REQUEST['comment']) || !empty($context['post_error']))
 		{
@@ -221,11 +193,7 @@ class ProjectTools_IssueTracker_Comment
 	
 		$context['post_box_name'] = 'comment';
 	
-		// Template
-		$context['sub_template'] = 'issue_reply';
-		$context['page_title'] = sprintf($txt['project_view_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
-	
-		loadTemplate('IssueReport');
+
 	}
 	
 	/**
@@ -436,20 +404,7 @@ class ProjectTools_IssueTracker_Comment
 			);
 		}
 	
-		$request = $smcFunc['db_query']('', '
-			SELECT id_event
-			FROM {db_prefix}issue_events
-			WHERE id_comment = {int:comment}',
-			array(
-				'current_user' => $user_info['id'],
-				'issue' => $issue,
-				'comment' => $id_comment,
-			)
-		);
-		list ($id_event) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	
-		redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id_event)) . '#com' . $id_comment);
+
 	}
 	
 	/**

@@ -201,7 +201,7 @@ class ProjectTools_IssueTracker
 				'body' => 'string',
 			),
 			array(
-				$commentOptions['body'],
+				$commentOptions['comment'],
 			),
 			array()
 		);

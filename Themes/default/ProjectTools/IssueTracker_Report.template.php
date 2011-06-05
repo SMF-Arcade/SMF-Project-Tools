@@ -80,6 +80,8 @@ function template_issue_reply()
 {
 	global $context, $settings, $options, $txt, $modSettings;
 
+	$context['comment_form']->render();
+/*
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function saveEntities()
@@ -295,7 +297,7 @@ function template_issue_reply()
 		<input type="hidden" name="issue" value="', ProjectTools_IssueTracker_Issue::getCurrent()->id, '" />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-	</form>';
+	</form>';*/
 }
 
 ?>

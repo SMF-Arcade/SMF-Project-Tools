@@ -44,7 +44,7 @@ class ProjectTools_IssueTracker_Edit
 		);
 		
 		// Template
-		loadTemplate('IssueReport');
+		loadTemplate('ProjectTools/IssueTracker_Report');
 	
 		$context['sub_template'] = 'report_issue';
 		$context['page_title'] = sprintf($txt['project_edit_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
