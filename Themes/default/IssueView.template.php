@@ -403,14 +403,14 @@ function template_issue_view_below()
 			echo '
 			ddIssueCate.addOption(', $c['id'], ', "', $c['name'], '");';
 		
-		if (!empty($context['versions']))
+		if (!empty(ProjectTools_Project::getCurrent()->versions))
 		{
 			// Affected Version
 			echo '
 			var ddIssueVers = currentIssue.addMultiDropdown("issue_version", "version");';
 
 			// Versions
-			foreach ($context['versions'] as $v)
+			foreach (ProjectTools_Project::getCurrent()->versions as $v)
 			{
 				echo '
 			ddIssueVers.addOption(', $v['id'], ', "', $v['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions[$v['id']]) ? 1 : 0 ,', "group");';
@@ -441,14 +441,14 @@ function template_issue_view_below()
 				echo '
 			ddIssueAssi.addOption(', $mem['id'], ', "', $mem['name'], '");';
 			
-			if (!empty($context['versions']))
+			if (!empty(ProjectTools_Project::getCurrent()->versions))
 			{
 				// Fixed Version
 				echo '
 			var ddIssueFixv = currentIssue.addMultiDropdown("issue_verfix", "version_fixed")';
 	
 				// Versions
-				foreach ($context['versions'] as $v)
+				foreach (ProjectTools_Project::getCurrent()->versions as $v)
 				{
 					echo '
 			ddIssueFixv.addOption(', $v['id'], ', "', $v['name'], '", ', isset(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed[$v['id']]) ? 1 : 0 ,', "group");';

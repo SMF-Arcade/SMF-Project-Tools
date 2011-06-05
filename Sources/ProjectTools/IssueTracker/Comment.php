@@ -39,8 +39,8 @@ class ProjectTools_IssueTracker_Comment
 		
 		// Linktree
 		$context['linktree'][] = array(
-			'name' => $txt['linktree_edit_issue'],
-			'url' => ProjectTools::get_url(array('issue' => $issue, 'area' => 'issues', 'sa' => 'edit')),
+			'name' => $txt['issue_reply'],
+			'url' => ProjectTools::get_url(array('issue' => $issue, 'area' => 'issues', 'sa' => 'reply')),
 		);
 		
 		// Template
@@ -70,6 +70,12 @@ class ProjectTools_IssueTracker_Comment
 			if ($id_comment !== false)
 				redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id[1])) . '#com' . $id[0]);
 		}
+		
+		// Linktree
+		$context['linktree'][] = array(
+			'name' => $txt['edit_comment'],
+			'url' => ProjectTools::get_url(array('issue' => $issue, 'area' => 'issues', 'sa' => 'edit', 'com' => $_REQUEST['com'])),
+		);
 		
 		// Template
 		$context['sub_template'] = 'issue_reply';

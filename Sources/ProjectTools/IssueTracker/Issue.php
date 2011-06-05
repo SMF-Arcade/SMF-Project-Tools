@@ -571,7 +571,7 @@ class ProjectTools_IssueTracker_Issue
 	
 		if (isset($issueOptions['details']))
 		{
-			$commentOptions = array('body' => $issueOptions['details']);
+			$commentOptions = array('comment' => $issueOptions['details']);
 			unset($issueOptions['details']);
 			
 			ProjectTools_IssueTracker::modifyComment($this->details['id_comment'], $this->id, $commentOptions, $posterOptions);

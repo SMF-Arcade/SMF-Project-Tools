@@ -630,8 +630,8 @@ function getVersions($versions, $project = null, $as_string = false)
 	{
 		if (!empty(ProjectTools_Project::getProject($project)->versions_id[$ver]))
 			$return[$ver] = $as_string ?
-				ProjectTools_Project::getProject($project)->versions['versions'][ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver]['name'] :
-				ProjectTools_Project::getProject($project)->versions['versions'][ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver];
+				ProjectTools_Project::getProject($project)->versions[ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver]['name'] :
+				ProjectTools_Project::getProject($project)->versions[ ProjectTools_Project::getProject($project)->versions_id[$ver] ]['sub_versions'][$ver];
 		elseif (!empty(ProjectTools_Project::getProject($project)->versions[$ver]))
 			$return[$ver] = $as_string ?
 				ProjectTools_Project::getProject($project)->versions[$ver]['name'] :
