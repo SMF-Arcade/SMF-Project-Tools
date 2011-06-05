@@ -38,7 +38,7 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 	 */
 	final public function __construct($id_project, $id_issue, $id_comment = null, $is_fatal = true, $is_post = null)
 	{
-		global $txt, $sourcedir, $smcFunc;
+		global $txt, $sourcedir, $smcFunc, $user_info;
 		
 		parent::__construct((int) $id_project, $is_fatal, $is_post);
 		
@@ -51,8 +51,34 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		//
 		if ($id_comment !== null)
 		{
-			
 			new Madjoki_Form_Element_Header($this, sprintf($txt['edit_comment'], $this->issue->id, $this->issue->name));
+			
+			$this->project->isAllowedTo('edit_comment_own');
+			require_once($sourcedir . '/Subs-Post.php');
+	
+			$request = $smcFunc['db_query']('', '
+				SELECT c.id_comment, iv.event_time, c.edit_time, c.body,
+					IFNULL(mem.real_name, iv.poster_name) AS real_name, iv.poster_email, iv.poster_ip, iv.id_member
+				FROM {db_prefix}issue_comments AS c
+					INNER JOIN {db_prefix}issue_events AS iv ON (iv.id_comment = c.id_comment)
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = iv.id_member)
+				WHERE c.id_comment = {int:comment}' . (!$this->project->allowedTo('edit_comment_any') ? '
+					AND mem.id_member = {int:current_user}' : '') . '
+				ORDER BY c.id_comment',
+				array(
+					'current_user' => $user_info['id'],
+					'issue' => $this->issue->id,
+					'comment' => $id_comment,
+				)
+			);
+	
+			$row = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
+	
+			if (!$row)
+				fatal_lang_error('comment_not_found', false);
+				
+			$this->data['comment'] = $row['body'];
 		}
 		else
 		{
@@ -151,9 +177,7 @@ class ProjectTools_IssueTracker_Form_Comment extends ProjectTools_Form_Project
 		);
 		
 		if ($this->comment !== null)
-		{
-			
-		}
+			ProjectTools_IssueTracker::modifyComment($this->comment, $this->issue->id, $commentOptions, $posterOptions);
 		// Create New
 		else
 			list ($this->comment, $id_event) = ProjectTools_IssueTracker::createComment($this->project->id, $this->issue->id, $commentOptions, $posterOptions);

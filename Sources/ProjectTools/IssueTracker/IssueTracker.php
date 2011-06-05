@@ -307,6 +307,7 @@ class ProjectTools_IssueTracker
 	
 	/**
 	 * Modifies comment in database
+	 * 
 	 * @param int $id_comment
 	 * @param int $id_issue
 	 * @param array $commentOptions
@@ -343,7 +344,7 @@ class ProjectTools_IssueTracker
 				'comment' => $id_comment,
 				'edit_time' => time(),
 				'edit_name' => $posterOptions['name'],
-				'body' => $commentOptions['body'],
+				'body' => $commentOptions['comment'],
 			)
 		);
 	

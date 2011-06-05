@@ -43,6 +43,32 @@ class ProjectTools_IssueTracker_Comment
 	}
 	
 	/**
+	 *
+	 */
+	public static function EditComment()
+	{
+		global $context, $project, $issue, $txt, $smcFunc;
+		
+		if (!ProjectTools_IssueTracker_Issue::getCurrent() || !ProjectTools::allowedTo('issue_comment'))
+			fatal_lang_error('issue_not_found', false);
+			
+		$context['comment_form'] = new ProjectTools_IssueTracker_Form_Comment($project, $issue, $_REQUEST['com']);
+		if ($context['comment_form']->is_post)
+		{
+			$id = $context['comment_form']->Save();
+			
+			if ($id_comment !== false)
+				redirectexit(ProjectTools::get_url(array('issue' => $issue . '.com' . $id[1])) . '#com' . $id[0]);
+		}
+		
+		// Template
+		$context['sub_template'] = 'issue_reply';
+		$context['page_title'] = sprintf($txt['project_comment_issue'], ProjectTools_Project::getCurrent()->name, ProjectTools_IssueTracker_Issue::getCurrent()->id, ProjectTools_IssueTracker_Issue::getCurrent()->name);
+	
+		loadTemplate('ProjectTools/IssueTracker_Report');
+	}
+	
+	/**
 	 * Display Reply or Edit Reply page
 	 */
 	public static function _Comment()
@@ -103,49 +129,7 @@ class ProjectTools_IssueTracker_Comment
 		require_once($sourcedir . '/Subs-Editor.php');
 		require_once($sourcedir . '/Subs-Post.php');
 	
-		$editing = false;
-	
-		$form_comment = '';
-	
-		// Editing
-		if ($_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edit2')
-		{
-			ProjectTools::isAllowedTo('edit_comment_own');
-			require_once($sourcedir . '/Subs-Post.php');
-	
-			if (empty($_REQUEST['com']) || !is_numeric($_REQUEST['com']))
-				fatal_lang_error('comment_not_found', false);
-	
-			$request = $smcFunc['db_query']('', '
-				SELECT c.id_comment, c.post_time, c.edit_time, c.body,
-					IFNULL(mem.real_name, c.poster_name) AS real_name, c.poster_email, c.poster_ip, c.id_member
-				FROM {db_prefix}issue_comments AS c
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = c.id_member)
-				WHERE id_comment = {int:comment}' . (!ProjectTools::allowedTo('edit_comment_any') ? '
-					AND c.id_member = {int:current_user}' : '') . '
-				ORDER BY id_comment',
-				array(
-					'current_user' => $user_info['id'],
-					'issue' => $issue,
-					'comment' => (int) $_REQUEST['com'],
-				)
-			);
-	
-			$context['destination'] = 'edit2;com=' . (int) $_REQUEST['com'];
-	
-			$row = $smcFunc['db_fetch_assoc']($request);
-			$smcFunc['db_free_result']($request);
-	
-			if (!$row)
-				fatal_lang_error('comment_not_found', false);
-	
-			$form_comment = un_preparsecode($row['body']);
-	
-			$editing = true;
-		}
-		elseif (isset($_REQUEST['quote']) && is_numeric($_REQUEST['quote']))
-		{
-				}
+
 	
 		if (isset($_REQUEST['comment']) || !empty($context['post_error']))
 		{
