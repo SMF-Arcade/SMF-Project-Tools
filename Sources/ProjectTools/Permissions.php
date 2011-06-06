@@ -69,6 +69,8 @@ class ProjectTools_Permissions
 				list ($this->permissions) = $temp;
 		}
 		
+		
+		
 		if (empty($this->permissions))
 		{
 			$request = $smcFunc['db_query']('', '
@@ -77,7 +79,7 @@ class ProjectTools_Permissions
 				WHERE id_group IN({array_int:groups})
 					AND id_profile = {int:profile}',
 				array(
-					'profile' => ProjectTools_Project::getCurrent()->profile,
+					'profile' => $this->id,
 					'groups' => $user_info['groups'],
 				)
 			);
@@ -87,7 +89,7 @@ class ProjectTools_Permissions
 			$smcFunc['db_free_result']($request);
 			
 			if (!empty($modSettings['cache_enable']))
-				cache_put_data('project_profile:' . $this->id . ':' . $cache_groups, array($user_info['project_permissions'], null), 240);			
+				cache_put_data('project_profile:' . $this->id . ':' . $cache_groups, array($this->permissions, null), 240);			
 		}
 	}
 	

@@ -202,6 +202,7 @@ class ProjectTools_Project
 		
 		$this->id_event_mod = $row['id_event_mod'];
 		
+		//
 		$this->permissions = ProjectTools_Permissions::getProfile($row['id_profile']);
 		
 		//
@@ -400,7 +401,7 @@ class ProjectTools_Project
 			else
 				$this->queries['see_issue_private'] = 'i.id_reporter = ' . $user_info['id'];
 				
-			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $this->versions_id) . ', i.versions) AND ' . $this->queries['see_issue_private'] . ')';
+			$this->queries['see_issue'] = '(FIND_IN_SET(' . implode(', i.versions) OR FIND_IN_SET(', $user_info['project_allowed_versions']) . ', i.versions) AND (' . $this->queries['see_issue_private'] . ' OR i.private_issue = 0))';
 		}
 	}
 	
