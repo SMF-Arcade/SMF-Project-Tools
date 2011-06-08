@@ -395,6 +395,7 @@ class ProjectTools_IssueTracker_Issue
 	
 	/**
 	 * Inserts new issue to database
+	 * 
 	 * @param array $issueOptions
 	 * @param array &$posterOptions
 	 * @return int ID of issue created
@@ -455,7 +456,10 @@ class ProjectTools_IssueTracker_Issue
 	}
 
 	/**
-	 * Returns value for field
+	 * Returns value for field to display in issue details
+	 *
+	 * @param string $field Field to get value
+	 * @param bool $raw Return raw value for editing
 	 */
 	public function getFieldValue($field, $raw = false)
 	{
@@ -465,17 +469,47 @@ class ProjectTools_IssueTracker_Issue
 			return $this->getCustomFieldValue(substr($field, 8), $raw);
 		
 		if ($field == 'reported')
-			return $this->created;
+		{
+			if ($raw)
+				trigger_error('Invalid value!', E_FATAL_ERROR);
+			else
+				return $this->created;
+		}
 		elseif ($field == 'updated')
-			return $this->updated;		
+		{
+			if ($raw)
+				trigger_error('Invalid value!', E_FATAL_ERROR);
+			else
+				return $this->updated;
+		}
 		elseif ($field == 'view_status')
-			return $this->is_private ?  $txt['issue_view_status_private'] : $txt['issue_view_status_public'];
+		{
+			if ($raw)
+				return $this->is_private ? 1 : 0;
+			else
+				return $this->is_private ?  $txt['issue_view_status_private'] : $txt['issue_view_status_public'];
+		}
 		elseif ($field == 'tracker')
-			return $this->tracker['name'];
+		{
+			if ($raw)
+				return $this->tracker['id'];
+			else
+				return $this->tracker['name'];
+		}
 		elseif ($field == 'status')
-			return $this->status['text'];
+		{
+			if ($raw)
+				return $this->status['id'];
+			else
+				return $this->status['text'];
+		}
 		elseif ($field == 'priority')
-			return $txt[$this->priority];
+		{
+			if ($raw)
+				$this->priority;
+			else
+				return $txt[$this->priority];
+		}
 		elseif ($field == 'versions')
 		{
 			if (empty($this->versions))
