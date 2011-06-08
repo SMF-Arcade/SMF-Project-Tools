@@ -3,7 +3,7 @@
  * This script contains database description
  *
  * @package installer
- * @version 0.5
+ * @version 0.5.3
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -18,10 +18,10 @@ $project_version = '0.5';
 $addSettings = array(
 	'issuesPerPage' => array(25, false),
 	'commentsPerPage' => array(20, false),
-	'projectEnabled' => array(true, false),
+	'projectEnabled' => array(1, false),
 	'projectExtensions' => array('admin,general,issues,roadmap', false),
-	'projectAttachments' => array(true, false),
-	'linkIssues' => array(true, false),
+	'projectAttachments' => array(1, false),
+	'linkIssues' => array(1, false),
 );
 
 $permissions = array(

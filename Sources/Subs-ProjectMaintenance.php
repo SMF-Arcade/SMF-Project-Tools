@@ -3,7 +3,7 @@
  * Generic functions for Project Tools maintenance
  *
  * @package admin
- * @version 0.5
+ * @version 0.5.3
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -224,8 +224,9 @@ function ptMaintenanceGeneral($check = false)
 
 	list ($maxEventID) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
-
-	updateSettings(array('project_maxEventID' => $maxEventID));
+	
+	if ($maxEventID > 0)
+		updateSettings(array('project_maxEventID' => $maxEventID));
 
 	return true;
 }

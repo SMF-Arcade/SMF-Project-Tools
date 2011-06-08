@@ -19,7 +19,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Niko:SMFProject</id>
 	<name>SMF Project Tools</name>
-	<version>0.502</version>
+	<version>0.503</version>
 	<type>modification</type>
 
 	<install for="2.0 RC5">
@@ -93,10 +93,17 @@
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
 	
+	<upgrade for="2.0 RC5" from="0.502">
+		<readme parsebbc="true">readme.txt</readme>
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+	</upgrade>
+	
 	<upgrade for="2.0 RC5" from="0.501">
+		<readme parsebbc="true">readme.txt</readme>
 		<require-file name="Sources/ProjectModule-Admin.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
@@ -104,9 +111,11 @@
 	</upgrade>
 	
 	<upgrade for="2.0 RC5" from="0.5">
+		<readme parsebbc="true">readme.txt</readme>
 		<require-file name="Sources/ProjectModule-Admin.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
