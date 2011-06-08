@@ -62,6 +62,46 @@ class ProjectTools_IssueTracker_View
 			$context['can_assign'] = true;
 			$context['assign_members'] = ProjectTools_Project::getCurrent()->developers;
 		}
+		
+		//
+		$context['issue_details'] = array(
+			'reported' => array(
+				'text' => $txt['issue_reported'],
+			),
+			'updated' => array(
+				'text' => $txt['issue_updated'],
+			),
+			'view_status' => array(
+				'text' => $txt['issue_view_status'],
+			),
+			'tracker' => array(
+				'text' => $txt['issue_type'],
+			),
+			'status' => array(
+				'text' => $txt['issue_status'],
+			),
+			'priority' => array(
+				'text' => $txt['issue_priority'],
+			),
+			'versions' => array(
+				'text' => $txt['issue_version'],
+			),
+			'versions_fixed' => array(
+				'text' => $txt['issue_version_fixed'],
+			),
+			'assign' => array(
+				'text' => $txt['issue_assigned_to'],
+			),
+			'category' => array(
+				'text' => $txt['issue_category'],
+			),
+		);
+
+		// Load Values
+		foreach ($context['issue_details'] as $id => &$field)
+		{
+			$context['issue_details']['value'] = ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($field);
+		}
 	}
 	
 	/**

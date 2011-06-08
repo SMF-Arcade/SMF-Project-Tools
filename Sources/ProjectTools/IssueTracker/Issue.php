@@ -453,18 +453,104 @@ class ProjectTools_IssueTracker_Issue
 	
 		return true;
 	}
+
+	/**
+	 * Returns value for field
+	 */
+	public function getFieldValue($field, $raw = false)
+	{
+		global $txt;
+		
+		if (substr($field, 0, 7) == 'custom_')
+			return $this->getCustomFieldValue(substr($field, 8), $raw);
+		
+		if ($field == 'reported')
+			return $this->created;
+		elseif ($field == 'updated')
+			return $this->updated;		
+		elseif ($field == 'view_status')
+			return $this->is_private ?  $txt['issue_view_status_private'] : $txt['issue_view_status_public'];
+		elseif ($field == 'tracker')
+			return $this->tracker['name'];
+		elseif ($field == 'status')
+			return $this->status['text'];
+		elseif ($field == 'priority')
+			return $txt[$this->priority];
+		elseif ($field == 'versions')
+		{
+			if (empty($this->versions))
+				return $txt['issue_none'];
+			else
+			{
+				$return = '';
+				$first = true;
+				
+				foreach ($this->versions as $version)
+				{
+					if ($first)
+						$first = false;
+					else
+						$return .= ', ';
+						
+					$return .= $version['name'];
+				}
+				
+				return $return;
+			}
+		}
+		elseif ($field == 'versions_fixed')
+		{
+			if (empty($this->versions_fixed))
+				return $txt['issue_none'];
+			else
+			{
+				$return = '';
+				$first = true;
+				
+				foreach ($this->versions_fixed as $version)
+				{
+					if ($first)
+						$first = false;
+					else
+						$return .= ', ';
+						
+					$return .= $version['name'];
+				}
+				
+				return $return;
+			}
+		}
+		elseif ($field == 'assign')
+		{
+			if ($raw)
+				return $this->assignee['id'];
+			else
+				return !empty($this->assignee['id']) ? $this->assignee['link'] : $txt['issue_none'];
+		}
+		elseif ($field == 'category')
+		{
+			if ($raw)
+				return $this->category['id'];
+			else
+				return !empty($this->category['id']) ? $this->category['link'] : $txt['issue_none'];
+		}
+		
+		trigger_error('Unknown field: ' . $field, E_FATAl_ERROR);
+	}
 	
 	/**
 	 * Returns value for custom field
 	 */
-	public function getCustomValue($variable)
+	public function getCustomFieldValue($field, $raw = false)
 	{
-		if (isset($this->customData[$variable]))
-			return $this->customData[$variable];
+		if (isset($this->customData[$field]))
+			return $this->customData[$field];
 		else
 		{
 			
 		}
+		
+		trigger_error('Unknown custom field: ' . $field, E_FATAl_ERROR);
 	}
 	
 	/**

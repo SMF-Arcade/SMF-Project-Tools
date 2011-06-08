@@ -357,10 +357,12 @@ function template_issue_view_below()
 				<span class="botslice"><span></span></span>
 			</div>
 		</div><br />
+		
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form><br />';
 	}
 	
+	/*
 	echo '
 	<script language="JavaScript" type="text/javascript">
 		var currentIssue = new PTIssue(', ProjectTools_IssueTracker_Issue::getCurrent()->id, ', "', $context['issue_xml_url'], '", ', ProjectTools_IssueTracker_Issue::getCurrent()->id_event_mod, ', "loaded_events");
@@ -479,7 +481,7 @@ function template_issue_view_below()
 	}
 
 	echo '
-	</script>';
+	</script>';*/
 }
 
 function template_event_full(&$event, &$alternate)
