@@ -72,7 +72,7 @@ function IssueList()
 		$issueListOptions['base_url']['tilte'] = $issueListOptions['filter']['title'];
 
 	if ($defaultFilter['tracker'] != $issueListOptions['filter']['tracker'])
-		$issueListOptions['base_url']['tracker'] = $context['issue_trackers'][$issueListOptions['filter']['tracker']];
+		$issueListOptions['base_url']['tracker'] = $context['issue_trackers'][$issueListOptions['filter']['tracker']]['short'];
 
 	if ($defaultFilter['category'] != $issueListOptions['filter']['category'])
 		$issueListOptions['base_url']['category'] = $issueListOptions['filter']['category'];
