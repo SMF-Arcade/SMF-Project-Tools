@@ -195,6 +195,11 @@ class ProjectTools_IssueTracker_Issue
 	/**
 	 *
 	 */
+	protected $customData = array();
+	
+	/**
+	 *
+	 */
 	protected function __construct($issue = null)
 	{
 		global $context;
@@ -322,6 +327,20 @@ class ProjectTools_IssueTracker_Issue
 		
 		$this->is_private = !empty($row['private_issue']);
 		$this->is_mine = !$user_info['is_guest'] && $row['id_reporter'] == $user_info['id'];
+		
+		// Load Custom Fields
+		$request = $smcFunc['db_query']('', '
+			SELECT variable, value
+			FROM {db_prefix}issue_custom_data
+			WHERE id_issue = {int:project}',
+			array(
+				'project' => $this->id,
+			)
+		);
+	
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$this->customData[$row['variable']] = $row['value'];
+		$smcFunc['db_free_result']($request);
 	}
 	
 	/**
@@ -433,6 +452,19 @@ class ProjectTools_IssueTracker_Issue
 			$this->update($issueOptions + self::getDefaults(), $posterOptions);
 	
 		return true;
+	}
+	
+	/**
+	 * Returns value for custom field
+	 */
+	public function getCustomValue($variable)
+	{
+		if (isset($this->customData[$variable]))
+			return $this->customData[$variable];
+		else
+		{
+			
+		}
 	}
 	
 	/**

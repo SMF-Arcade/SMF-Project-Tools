@@ -63,6 +63,12 @@
 				<include name="*" />
 				<exclude name="build.*" />
 			</fileset>
+			
+			<filterchain>
+				<replacetokens begintoken="#{" endtoken="}#">
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
 		</copy>	
     </target>
 

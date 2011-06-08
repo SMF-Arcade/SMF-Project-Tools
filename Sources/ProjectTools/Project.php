@@ -145,6 +145,11 @@ class ProjectTools_Project
 	/**
 	 *
 	 */
+	public $custom_fields = array();
+	
+	/**
+	 *
+	 */
 	public $versions = array();
 	
 	/**
@@ -274,6 +279,9 @@ class ProjectTools_Project
 	
 			cache_put_data('project_versions-' . $this->id . ':' . $cache_groups, array($this->versions, $this->versions_id), 240);
 		}
+		
+		
+		ProjectTools_Extensions::runProjectHooks('project_extend', array(), $this);
 	}
 	
 	/**

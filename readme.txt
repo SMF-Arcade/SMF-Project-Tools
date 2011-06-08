@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]SMF Project Tools {version}[/b][/size][/color]
+[center][color=red][size=16pt][b]SMF Project Tools #{VERSION}#[/b][/size][/color]
 [/center]
 [hr]
 [center][url=http://www.smfproject.net]Official website[/url] | [url=http://www.simplemachines.org/community/index.php?topic=273062.0]Support Topic[/url] | [url=http://www.smfproject.net/forum/index.php?project=5]Issue Tracker[/url][/center]
@@ -20,8 +20,7 @@ SMF Project Tools is modification for SMF, which can be used to track issues of 
 It's primarily for software but it can be also used for other purposes.
 
 [color=blue][b][size=12pt]SMF Versions supported[/size][/b][/color]
-This version supports only SMF 2.0 RC4.
-It might work on future releases such as SMF 2.0 Final but it's not guarantaneed.
+This version supports only SMF 2.0.
 
 [color=blue][b][size=12pt]Features[/size][/b][/color]
 [list]

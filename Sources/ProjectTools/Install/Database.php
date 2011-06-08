@@ -608,6 +608,39 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 				),
 			),
 		),
+		// Data for custom fields
+		'issue_custom_data' => array(
+			'name' => 'issue_custom_data',
+			// Columns
+			'columns' => array(
+				array(
+					'name' => 'id_issue',
+					'type' => 'int',
+					'auto' => true,
+				),
+				array(
+					'name' => 'variable',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'value',
+					'type' => 'text',
+				),
+			),
+			'indexes' => array(
+				array(
+					'type' => 'primary',
+					'columns' => array('id_issue', 'field')
+				),
+				array(
+					'name' => 'id_issue',
+					'type' => 'index',
+					'columns' => array('id_issue'),
+				),
+			),
+		),
 		// Issue events table
 		'issue_events' => array(
 			'name' => 'issue_events',
