@@ -632,7 +632,7 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 			'indexes' => array(
 				array(
 					'type' => 'primary',
-					'columns' => array('id_issue', 'field')
+					'columns' => array('id_issue', 'variable')
 				),
 				array(
 					'name' => 'id_issue',

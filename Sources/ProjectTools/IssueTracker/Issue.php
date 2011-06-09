@@ -337,7 +337,6 @@ class ProjectTools_IssueTracker_Issue
 				'project' => $this->id,
 			)
 		);
-	
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$this->customData[$row['variable']] = $row['value'];
 		$smcFunc['db_free_result']($request);

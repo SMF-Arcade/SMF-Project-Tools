@@ -111,7 +111,18 @@ function template_issue_view_below()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="smalltext">
-				<ul class="details">
+				<ul class="details">';
+				
+	foreach ($context['issue_details'] as $id => $field)
+		echo '
+					<li>
+						<dl>
+							<dt>', $field['text'], '</dt>
+							<dd>', $field['value'], '</dd>
+						</dl>
+					</li>';
+				
+	echo '
 					<li>
 						<dl>
 							<dt>', $txt['issue_reported'], '</dt>
