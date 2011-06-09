@@ -754,11 +754,6 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 					'type' => 'primary',
 					'columns' => array('id_comment')
 				),
-				array(
-					'name' => 'id_event',
-					'type' => 'index',
-					'columns' => array('id_event')
-				),
 			)
 		),
 		// Tags
