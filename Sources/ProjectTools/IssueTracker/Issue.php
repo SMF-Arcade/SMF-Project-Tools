@@ -505,7 +505,7 @@ class ProjectTools_IssueTracker_Issue
 		elseif ($field == 'priority')
 		{
 			if ($raw)
-				return $this->priority;
+				return $this->priority_num;
 			else
 				return $txt[$this->priority];
 		}

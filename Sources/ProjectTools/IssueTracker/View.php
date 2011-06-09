@@ -200,7 +200,7 @@ class ProjectTools_IssueTracker_View
 			elseif (isset($field['edit']) && !empty($field['can_edit']) && $field['edit'] == 'versions')
 			{
 				$context['html_headers'] .= '
-				var dd' . $id . ' = currentIssue.addMultiDropdown("issue_' . $id . '", "' . $id . '", ' . $value . ');';
+				var dd' . $id . ' = currentIssue.addMultiDropdown("issue_' . $id . '", "' . $id . '");';
 				
 				foreach (ProjectTools_Project::getCurrent()->versions as $vid => $v)
 				{
