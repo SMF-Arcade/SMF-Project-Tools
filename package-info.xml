@@ -95,7 +95,9 @@
 	
 	<upgrade for="2.0 RC5" from="0.502">
 		<readme parsebbc="true">readme.txt</readme>
+		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
 	</upgrade>
 	
 	<upgrade for="2.0 RC5" from="0.501">
@@ -103,6 +105,7 @@
 		<require-file name="Sources/ProjectModule-Admin.php" destination="$sourcedir" />
 		<require-file name="Sources/IssueComment.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+		<require-file name="Sources/IssueList.php" destination="$sourcedir" />
 		<require-file name="Sources/Subs-ProjectMaintenance.php" destination="$sourcedir" />
 		<require-file name="Themes/default/Project.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ProjectAdmin.template.php" destination="$themedir" />

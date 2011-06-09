@@ -3,7 +3,7 @@
  * Issue listings
  *
  * @package issuetracker
- * @version 0.5
+ * @version 0.5.3
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */

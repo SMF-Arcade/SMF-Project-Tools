@@ -3,7 +3,7 @@
  * Generic functions for Project Tools
  *
  * @package core
- * @version 0.5.2
+ * @version 0.5.3
  * @license http://download.smfproject.net/license.php New-BSD
  * @since 0.1
  */
@@ -22,7 +22,7 @@ function loadProjectTools()
 		return;
 
 	// Which version this is?
-	$project_version = '0.5.2';
+	$project_version = '0.5.3';
 
 	if (isset($_REQUEST['issue']) && strpos($_REQUEST['issue'], '.') !== false)
 	{
