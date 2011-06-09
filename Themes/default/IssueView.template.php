@@ -115,114 +115,15 @@ function template_issue_view_below()
 				
 	foreach ($context['issue_details'] as $id => $field)
 		echo '
-					<li>
+					<li id="issue_', $id, '">
 						<dl>
 							<dt>', $field['text'], '</dt>
 							<dd>', $field['value'], '</dd>
 						</dl>
 					</li>';
+
 				
 	echo '
-					<li>
-						<dl>
-							<dt>', $txt['issue_reported'], '</dt>
-							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->created, '</dd>
-						</dl>
-					</li>
-					<li id="issue_updated">
-						<dl>
-							<dt>', $txt['issue_updated'], '</dt>
-							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->updated, '</dd>
-						</dl>
-					</li>
-					<li id="issue_view_status">
-						<dl>
-							<dt>', $txt['issue_view_status'], '</dt>
-							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->is_private ? $txt['issue_view_status_private'] : $txt['issue_view_status_public'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_tracker">
-						<dl>
-							<dt>', $txt['issue_type'], '</dt>
-							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->tracker['name'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_status">
-						<dl>
-							<dt>', $txt['issue_status'], '</dt>
-							<dd>', ProjectTools_IssueTracker_Issue::getCurrent()->status['text'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_priority">
-						<dl>
-							<dt>', $txt['issue_priority'], '</dt>
-							<dd>', $txt[ProjectTools_IssueTracker_Issue::getCurrent()->priority], '</dd>
-						</dl>
-					</li>
-					<li id="issue_version">
-						<dl>
-							<dt>', $txt['issue_version'], '</dt>
-							<dd>';
-	
-	if (empty(ProjectTools_IssueTracker_Issue::getCurrent()->versions))
-		echo $txt['issue_none'];
-	else
-	{
-		$first = true;
-		
-		foreach (ProjectTools_IssueTracker_Issue::getCurrent()->versions as $version)
-		{
-			if ($first)
-				$first = false;
-			else
-				echo ', ';
-				
-			echo $version['name'];
-		}
-	}
-						
-	echo '
-							</dd>
-						</dl>
-					</li>
-					<li id="issue_verfix">
-						<dl>
-							<dt>', $txt['issue_version_fixed'], '</dt>
-							<dd>';
-						
-	if (empty(ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed))
-		echo $txt['issue_none'];
-	else
-	{
-		$first = true;
-		
-		foreach (ProjectTools_IssueTracker_Issue::getCurrent()->versions_fixed as $version)
-		{
-			if ($first)
-				$first = false;
-			else
-				echo ', ';
-				
-			echo $version['name'];
-		}
-	}
-						
-	echo '
-							</dd>
-						</dl>
-					</li>
-					<li id="issue_assign">
-						<dl>
-							<dt>', $txt['issue_assigned_to'], '</dt>
-							<dd>', !empty(ProjectTools_IssueTracker_Issue::getCurrent()->assignee['id']) ? ProjectTools_IssueTracker_Issue::getCurrent()->assignee['link'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
-					<li id="issue_category">
-						<dl>
-							<dt>', $txt['issue_category'], '</dt>
-							<dd>', !empty(ProjectTools_IssueTracker_Issue::getCurrent()->category['id']) ? ProjectTools_IssueTracker_Issue::getCurrent()->category['link'] : $txt['issue_none'], '</dd>
-						</dl>
-					</li>
 				</ul>
 			</div>
 			<span class="botslice"><span></span></span>

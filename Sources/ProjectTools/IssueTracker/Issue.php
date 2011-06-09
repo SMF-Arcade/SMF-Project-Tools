@@ -470,14 +470,14 @@ class ProjectTools_IssueTracker_Issue
 		if ($field == 'reported')
 		{
 			if ($raw)
-				trigger_error('Invalid value!', E_FATAL_ERROR);
+				trigger_error('Invalid value!', E_USER_ERROR);
 			else
 				return $this->created;
 		}
 		elseif ($field == 'updated')
 		{
 			if ($raw)
-				trigger_error('Invalid value!', E_FATAL_ERROR);
+				trigger_error('Invalid value!', E_USER_ERROR);
 			else
 				return $this->updated;
 		}
@@ -568,7 +568,7 @@ class ProjectTools_IssueTracker_Issue
 				return !empty($this->category['id']) ? $this->category['link'] : $txt['issue_none'];
 		}
 		
-		trigger_error('Unknown field: ' . $field, E_FATAl_ERROR);
+		trigger_error('Unknown field: ' . $field, E_USER_ERROR);
 	}
 	
 	/**
@@ -583,7 +583,7 @@ class ProjectTools_IssueTracker_Issue
 			
 		}
 		
-		trigger_error('Unknown custom field: ' . $field, E_FATAl_ERROR);
+		trigger_error('Unknown custom field: ' . $field, E_USER_ERROR);
 	}
 	
 	/**

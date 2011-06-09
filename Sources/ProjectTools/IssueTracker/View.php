@@ -71,7 +71,7 @@ class ProjectTools_IssueTracker_View
 			'updated' => array(
 				'text' => $txt['issue_updated'],
 			),
-			'view_status' => array(
+			'private' => array(
 				'text' => $txt['issue_view_status'],
 			),
 			'tracker' => array(
@@ -100,7 +100,7 @@ class ProjectTools_IssueTracker_View
 		// Load Values
 		foreach ($context['issue_details'] as $id => &$field)
 		{
-			$context['issue_details']['value'] = ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($field);
+			$field['value'] = ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($id);
 		}
 	}
 	
