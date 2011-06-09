@@ -110,6 +110,13 @@ class ProjectTools_Admin
 			'repair' => 'ProjectTools_Maintenance_Repair',
 			'upgrade' => 'ProjectTools_Maintenance_Upgrade',
 		);
+		
+		//
+		if (!empty($_REQUEST['done']))
+		{
+			$context['maintenance_finished'] = true;
+			$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['activity']];
+		}
 	
 		$context['sub_template'] = 'project_admin_maintenance';
 	
@@ -131,7 +138,7 @@ class ProjectTools_Admin
 				self::pauseProjectMaintenance(true);
 			}
 			
-			redirectexit('action=admin;area=projectsadmin;sa=maintenance');
+			redirectexit('action=admin;area=projectsadmin;sa=maintenance;done=' . $_REQUEST['activity']);
 		}
 	}
 	

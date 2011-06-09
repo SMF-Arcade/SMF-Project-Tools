@@ -143,7 +143,7 @@ function template_project_admin_extensions()
 		<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
 				<tr class="catbg">
-					<th scope="col" class="first_th">', $txt['extension_enable'], '</th>
+					<th scope="col" width="5%" class="first_th">', $txt['extension_enable'], '</th>
 					<th scope="col">', $txt['extension_name'], '</th>
 					<th scope="col" class="last_th">', $txt['extension_version'], '</th>
 				</tr>
@@ -153,35 +153,21 @@ function template_project_admin_extensions()
 	foreach ($context['installed_extensions'] as $id => $extension)
 	{
 		echo '
-				<tr>
-					<td><input type="checkbox" name="extension[]" value="', $id, '"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_enable'] || !$extension['can_disable'] ? ' disabled="disabled"' : '', ' /></td>
-					<td>', $extension['name'], ' (', $extension['filename'], ')<br />';
-				
-		if (!empty($extension['modules']))
-		{
-			echo '
-						', $txt['extension_modules'], ':', '
-						<ul>';
-					
-		foreach ($extension['modules'] as $module)
-			echo '
-							<li>', $module['class_name'], '</li>';
-					
-		echo '
-					
-						</ul>';
-		}
-					
-		echo '
-				</td>
-				<td>', $extension['version'], ' (', $txt['extension_api_version'], ': ', $extension['api_version'], ')
-			</tr>';
+				<tr class="windowbg2">
+					<td class="centertext">
+						<input type="checkbox" name="extension[]" value="', $id, '" tabindex="', $context['tabindex']++, '"', $extension['enabled'] ? ' checked="checked"' : '', '', !$extension['can_enable'] || !$extension['can_disable'] ? ' disabled="disabled"' : '', ' />
+					</td>
+					<td>', $extension['name'], ' (', $extension['filename'], ')</td>
+					<td>', $extension['version'], ' (', $txt['extension_api_version'], ': ', $extension['api_version'], ')</td>
+				</tr>';
 	}
 	
 	echo '
 			</tbody>
 		</table>
-		<input type="submit" name="save" value="', $txt['save'], '" />
+		<div class="righttext">
+			<input type="submit" name="save" value="', $txt['save'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
+		</div>
 	</form>';
 }
 
