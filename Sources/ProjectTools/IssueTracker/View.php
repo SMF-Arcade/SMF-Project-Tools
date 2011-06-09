@@ -166,7 +166,7 @@ class ProjectTools_IssueTracker_View
 				{
 					foreach (ProjectTools_Project::getCurrent()->trackers as $tid => $tracker)				
 						$context['html_headers'] .= '
-						dd' . $id . '.addOption(' . $tid. ', ' . JavaScriptEscape($tracker['name']) . ');';				
+						dd' . $id . '.addOption(' . $tid. ', ' . JavaScriptEscape($tracker['tracker']['name']) . ');';				
 				}
 				elseif ($field['edit'] == 'status')
 				{
@@ -174,13 +174,13 @@ class ProjectTools_IssueTracker_View
 						$context['html_headers'] .= '
 						dd' . $id . '.addOption(' . $status['id']. ', ' . JavaScriptEscape($status['text']) . ');';				
 				}
-				elseif ($field['priority'] == 'priority')
+				elseif ($field['edit'] == 'priority')
 				{
 					foreach ($context['issue']['priority'] as $priority => $text)
 						$context['html_headers'] .= '
 						dd' . $id . '.addOption(' . $priority . ', ' . JavaScriptEscape($txt[$text]) . ');';		
 				}
-				elseif ($field['priority'] == 'category')
+				elseif ($field['edit'] == 'category')
 				{
 					$context['html_headers'] .= '
 						dd' . $id . '.addOption(0, ' . JavaScriptEscape($txt['issue_none']) . ');';
@@ -188,7 +188,7 @@ class ProjectTools_IssueTracker_View
 						$context['html_headers'] .= '
 						dd' . $id . '.addOption(' . $c['id'] . ', ' . JavaScriptEscape($c['name']) . ');';				
 				}
-				elseif ($field['priority'] == 'members')
+				elseif ($field['edit'] == 'members')
 				{
 					$context['html_headers'] .= '
 						dd' . $id . '.addOption(0, ' . JavaScriptEscape($txt['issue_none']) . ');';

@@ -100,6 +100,7 @@ function createTimelineEvent($id_issue, $id_project, $event_name, $event_data, $
 
 		if ($smcFunc['db_num_rows']($request) > 0)
 		{
+			list ($event_name2) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}project_timeline
 				WHERE id_event = {int:event}',
