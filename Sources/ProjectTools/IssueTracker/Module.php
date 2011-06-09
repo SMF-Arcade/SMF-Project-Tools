@@ -49,7 +49,7 @@ class ProjectTools_IssueTracker_Module extends ProjectTools_ModuleBase
 			);
 		
 			
-		call_user_func($subActions[$_REQUEST['sa']], $this->project);
+		call_user_func($subActions[$_REQUEST['sa']], $this);
 	}
 
 	/**

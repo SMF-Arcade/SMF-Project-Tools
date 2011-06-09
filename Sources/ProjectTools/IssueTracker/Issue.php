@@ -481,7 +481,7 @@ class ProjectTools_IssueTracker_Issue
 			else
 				return $this->updated;
 		}
-		elseif ($field == 'view_status')
+		elseif ($field == 'private')
 		{
 			if ($raw)
 				return $this->is_private ? 1 : 0;
@@ -505,13 +505,15 @@ class ProjectTools_IssueTracker_Issue
 		elseif ($field == 'priority')
 		{
 			if ($raw)
-				$this->priority;
+				return $this->priority;
 			else
 				return $txt[$this->priority];
 		}
 		elseif ($field == 'versions')
 		{
-			if (empty($this->versions))
+			if ($raw)
+				return array_keys($this->versions);
+			elseif (empty($this->versions))
 				return $txt['issue_none'];
 			else
 			{
@@ -533,7 +535,9 @@ class ProjectTools_IssueTracker_Issue
 		}
 		elseif ($field == 'versions_fixed')
 		{
-			if (empty($this->versions_fixed))
+			if ($raw)
+				return array_keys($this->versions_fixed);
+			elseif (empty($this->versions_fixed))
 				return $txt['issue_none'];
 			else
 			{
