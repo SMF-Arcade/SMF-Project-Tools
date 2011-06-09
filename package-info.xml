@@ -35,7 +35,6 @@
 
 		<!-- These files goes to default Theme directory -->
 		<require-file name="Themes/default/IssueList.template.php" destination="$themedir" />
-		<require-file name="Themes/default/IssueReport.template.php" destination="$themedir" />
 		<require-file name="Themes/default/IssueView.template.php" destination="$themedir" />
 		<require-file name="Themes/default/ManageProjects.template.php" destination="$themedir" />
 		<require-file name="Themes/default/PatchView.template.php" destination="$themedir" />
@@ -94,7 +93,6 @@
 
 		<!-- Templates -->
 		<remove-file name="$themedir/IssueList.template.php" />
-		<remove-file name="$themedir/IssueReport.template.php" />
 		<remove-file name="$themedir/IssueView.template.php" />
 		<remove-file name="$themedir/ManageProjects.template.php" />
 		<remove-file name="$themedir/PatchView.template.php" />

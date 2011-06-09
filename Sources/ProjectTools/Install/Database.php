@@ -622,7 +622,6 @@ class ProjectTools_Install_Database extends Madjoki_Install_Database
 					'name' => 'variable',
 					'type' => 'varchar',
 					'size' => 255,
-					'default' => '',
 				),
 				array(
 					'name' => 'value',

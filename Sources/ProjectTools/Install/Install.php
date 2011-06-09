@@ -68,6 +68,9 @@ class ProjectTools_Install
 		Madjoki_Install_Helper::doSettings(self::$settings);
 		Madjoki_Install_Helper::doPermission(self::$permissions);
 		
+		$db = new ProjectTools_Install_Database();
+		$db->DoTables();		
+		
 		self::installDefaultData();
 		
 		foreach (self::$hooks as $hook => $func)
@@ -185,11 +188,10 @@ class ProjectTools_Install
 	{
 		global $smcFunc;
 		
+		$db = new ProjectTools_Install_Database();
+		
 		// 
 		Madjoki_Install_Helper::updateAdminFeatures(self::$adminFeature, false);
-		
-		$db = new ProjectTools_Install_Database();
-		$db->DoTables();
 		
 		// Remove settings
 		$smcFunc['db_query']('', '
@@ -209,12 +211,9 @@ class ProjectTools_Install
 			)
 		);
 		
-		global $tables;
-		
-		foreach ($tables as $table => $data)
+		foreach ($db->getTables() as $table => $data)
 			$smcFunc['db_drop_table']('{db_prefix}' . $table);
 	}
-	
 }
 
 ?>

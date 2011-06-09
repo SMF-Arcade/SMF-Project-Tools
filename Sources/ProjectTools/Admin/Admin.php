@@ -115,7 +115,7 @@ class ProjectTools_Admin
 		if (!empty($_REQUEST['done']))
 		{
 			$context['maintenance_finished'] = true;
-			$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['activity']];
+			$context['maintenance_action'] = $txt['project_maintenance_' . $_REQUEST['done']];
 		}
 	
 		$context['sub_template'] = 'project_admin_maintenance';
