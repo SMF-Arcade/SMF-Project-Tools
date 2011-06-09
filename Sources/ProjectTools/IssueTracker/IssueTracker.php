@@ -16,7 +16,210 @@ if (!defined('SMF'))
  */
 class ProjectTools_IssueTracker
 {
+	/**
+	 * Loads variables for issue view page
+	 */
+	public static function loadIssueView()
+	{
+		global $context, $smcFunc, $sourcedir, $user_info, $txt, $modSettings, $project, $issue;
+		
+		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
+		
+		$context['show_update'] = false;
+		$context['can_comment'] = ProjectTools::allowedTo('issue_comment');
+		$context['can_issue_moderate'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_move'] = ProjectTools::allowedTo('issue_move');
+		$context['can_issue_update'] = ProjectTools::allowedTo('issue_update_' . $type) || ProjectTools::allowedTo('issue_moderate');
+		$context['can_issue_attach'] = ProjectTools::allowedTo('issue_attach') && !empty($modSettings['projectAttachments']);
+		$context['can_issue_warning'] = allowedTo('issue_warning');
+		$context['can_moderate_forum'] = allowedTo('moderate_forum');
+		$context['can_subscribe'] = !$user_info['is_guest'];
+		$context['can_send_pm'] = allowedTo('pm_send');
+		
+		// Show signatures
+		$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
+		
+		// Tags
+		$context['can_add_tags'] = ProjectTools::allowedTo('issue_moderate');
+		$context['can_remove_tags'] = ProjectTools::allowedTo('issue_moderate');
+	
+		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
+	
+		// Disabled Fields
+		$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
+	
+		if ($context['can_issue_update'])
+		{
+			$context['can_edit'] = true;
+			$context['show_update'] = true;
+		}
+	
+		if (ProjectTools::allowedTo('issue_moderate'))
+		{
+			$context['can_assign'] = true;
+			$context['assign_members'] = ProjectTools_Project::getCurrent()->developers;
+		}
+		
+		//
+		$context['issue_details'] = array(
+			'reported' => array(
+				'text' => $txt['issue_reported'],
+			),
+			'updated' => array(
+				'text' => $txt['issue_updated'],
+				'edit' => 'label',
+			),
+			'private' => array(
+				'text' => $txt['issue_view_status'],
+				'can_edit' => $context['can_issue_moderate'],
+				'edit' => 'dropdown',
+				'items' => array($txt['issue_view_status_public'], $txt['issue_view_status_private']),
+			),
+			'tracker' => array(
+				'text' => $txt['issue_type'],
+				'can_edit' => $context['can_issue_update'],
+				'edit' => 'tracker',
+			),
+			'status' => array(
+				'text' => $txt['issue_status'],
+				'can_edit' => $context['can_issue_moderate'],
+				'edit' => 'status',
+			),
+			'priority' => array(
+				'text' => $txt['issue_priority'],
+				'can_edit' => $context['can_issue_update'],
+				'edit' => 'priority',
+			),
+			'versions' => array(
+				'text' => $txt['issue_version'],
+				'can_edit' => $context['can_issue_update'],
+				'edit' => 'versions',
+			),
+			'versions_fixed' => array(
+				'text' => $txt['issue_version_fixed'],
+				'can_edit' => $context['can_issue_moderate'],
+				'edit' => 'versions',
+			),
+			'assignee' => array(
+				'text' => $txt['issue_assigned_to'],
+				'can_edit' => $context['can_issue_moderate'],
+				'edit' => 'members',
+			),
+			'category' => array(
+				'text' => $txt['issue_category'],
+				'can_edit' => $context['can_issue_update'],
+				'edit' => 'category',
+			),
+		);
 
+		// URL for posting updates from ajax
+		$issue_xml_url = ProjectTools::get_url(array('issue' => ProjectTools_IssueTracker_Issue::getCurrent()->id, 'area' => 'issues', 'sa' => 'update', 'xml', $context['session_var'] => $context['session_id']));
+		
+		//
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript">
+			function ProjectTools_load()
+			{
+				currentIssue = new PTIssue(' . ProjectTools_IssueTracker_Issue::getCurrent()->id . ', "' . $issue_xml_url . '", ' . ProjectTools_IssueTracker_Issue::getCurrent()->id_event_mod . ', "loaded_events", "issue_save", "issue_save_button");';
+
+
+		// Load Values
+		foreach ($context['issue_details'] as $id => &$field)
+		{
+			$field['value'] = ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($id);
+			
+			if (!empty($field['can_edit']))
+				$field['raw_value'] = ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($id, true);
+			
+			if (isset($field['edit']) && ($field['edit'] == 'label' || empty($field['can_edit'])))
+			{
+				// Add label so value gets updated with ajax
+				$context['html_headers'] .= '
+				currentIssue.addLabel("issue_' . $id . '", "' . $id . '");';
+			}
+			elseif (
+				isset($field['edit']) && !empty($field['can_edit'])
+				&& in_array($field['edit'], array('dropdown', 'tracker', 'status', 'priority', 'category', 'members'))
+			)
+			{
+				if (!is_numeric($field['raw_value']))
+					$value = JavaScriptEscape($field['raw_value']);
+				else
+					$value = $field['raw_value'];
+					
+				$context['html_headers'] .= '
+				var dd' . $id . ' = currentIssue.addDropdown("issue_' . $id . '", "' . $id . '", ' . $value . ');';
+				
+				if (isset($field['items']))
+				{
+					foreach ($field['items'] as $val => $text)
+					{
+						if (!is_numeric($val))
+							$val = JavaScriptEscape($val);
+						$text = JavaScriptEscape($text);
+							
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $val. ', ' . $text . ');';
+					}
+				}
+				elseif ($field['edit'] == 'tracker')
+				{
+					foreach (ProjectTools_Project::getCurrent()->trackers as $tid => $tracker)				
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $tid. ', ' . JavaScriptEscape($tracker['tracker']['name']) . ');';				
+				}
+				elseif ($field['edit'] == 'status')
+				{
+					foreach ($context['issue_status'] as $status)		
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $status['id']. ', ' . JavaScriptEscape($status['text']) . ');';				
+				}
+				elseif ($field['edit'] == 'priority')
+				{
+					foreach ($context['issue']['priority'] as $priority => $text)
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $priority . ', ' . JavaScriptEscape($txt[$text]) . ');';		
+				}
+				elseif ($field['edit'] == 'category')
+				{
+					$context['html_headers'] .= '
+						dd' . $id . '.addOption(0, ' . JavaScriptEscape($txt['issue_none']) . ');';
+					foreach (ProjectTools_Project::getCurrent()->categories as $c)
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $c['id'] . ', ' . JavaScriptEscape($c['name']) . ');';				
+				}
+				elseif ($field['edit'] == 'members')
+				{
+					$context['html_headers'] .= '
+						dd' . $id . '.addOption(0, ' . JavaScriptEscape($txt['issue_none']) . ');';
+					foreach ($context['assign_members'] as $mem)
+						$context['html_headers'] .= '
+						dd' . $id . '.addOption(' . $mem['id'] . ', ' . JavaScriptEscape($mem['name']) . ');';				
+				}
+			}
+			elseif (isset($field['edit']) && !empty($field['can_edit']) && $field['edit'] == 'versions')
+			{
+				$context['html_headers'] .= '
+				var dd' . $id . ' = currentIssue.addMultiDropdown("issue_' . $id . '", "' . $id . '");';
+				
+				foreach (ProjectTools_Project::getCurrent()->versions as $vid => $v)
+				{
+					$context['html_headers'] .= '
+					dd' . $id . '.addOption(' . $vid . ', ' . JavaScriptEscape($v['name']) . ', ' . (in_array($vid, $field['raw_value']) ? 1 : 0) . ', "group");';			
+				
+				foreach ($v['sub_versions'] as $sid => $subv)
+					$context['html_headers'] .= '
+					dd' . $id . '.addOption(' . $sid . ', ' . JavaScriptEscape($subv['name']) . ', ' . (in_array($sid, $field['raw_value']) ? 1 : 0) . ');';			
+				}
+			}
+		}
+		
+		$context['html_headers'] .= '
+			}
+			addLoadEvent(ProjectTools_load);
+		</script>';
+	}
+	
 	/**
 	 *
 	 *

@@ -125,6 +125,9 @@ function template_issue_view_below()
 				
 	echo '
 				</ul>
+				<div id="issue_save" style="display: none;">
+					<input id="issue_save_button" type="button" class="button_submit" value="', $txt['save'], '" />
+				</div>
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>

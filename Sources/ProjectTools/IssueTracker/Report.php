@@ -270,6 +270,8 @@ class ProjectTools_IssueTracker_Report
 		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
 	
 		checkSession('get');
+		
+		ProjectTools_IssueTracker::loadIssueView();
 	
 		$_POST['guestname'] = $user_info['username'];
 		$_POST['email'] = $user_info['email'];
@@ -304,16 +306,6 @@ class ProjectTools_IssueTracker_Report
 		}
 		else
 			$id_event = false;
-			
-		// Update time
-		if ($id_event != false)
-			$context['xml_data']['updates']['children'][] = array(
-				'attributes' => array(
-					'field' => 'updated',
-					'id' => 0,
-				),
-				'value' => timeformat(time()),
-			);
 		
 		$context['xml_data']['success'] = array(
 			'identifier' => 'success',
@@ -322,12 +314,22 @@ class ProjectTools_IssueTracker_Report
 			),		
 		);
 		
+		//
+		foreach ($context['issue_details'] as $field_name => $field)
+		{
+			$context['xml_data']['updates']['children'][] = array(
+				'attributes' => array(
+					'field' => $field_name,
+					'id' => '',
+				),
+				'value' => ProjectTools_IssueTracker_Issue::getCurrent()->getFieldValue($field_name),
+			);
+		}
+		
 		// Add new events
 		if (isset($_REQUEST['last_event']))
 		{
 			loadTemplate('IssueView');
-			
-			ProjectTools_IssueTracker_View::loadIssueView();
 			
 			$request = $smcFunc['db_query']('', '
 				SELECT id_issue_event, id_member
@@ -413,197 +415,16 @@ class ProjectTools_IssueTracker_Report
 	static public function handleUpdate(&$posterOptions, &$issueOptions, $xml_data = false)
 	{
 		global $context, $user_info, $smcFunc, $sourcedir, $txt;
-	
-		$type = ProjectTools_IssueTracker_Issue::getCurrent()->is_mine ? 'own' : 'any';
-	
-		// Assigning
-		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['assign']))
-		{
-			if (!isset(ProjectTools_Project::getCurrent()->developers[(int) $_REQUEST['assign']]))
-				$_REQUEST['assign'] = 0;
-	
-			$issueOptions['assignee'] = (int) $_REQUEST['assign'];
-			
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'assign',
-						'id' => $issueOptions['assignee'],
-					),
-					'value' => $issueOptions['assignee'],
-				);
-		}
-	
-		// Title
-		if (!empty($_REQUEST['title']) && trim($_REQUEST['title']) != '')
-		{
-			$_REQUEST['title'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['title']), array("\r" => '', "\n" => '', "\t" => ''));
-			$issueOptions['subject'] = $_REQUEST['title'];
-			
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'subject',
-						'id' => 0,
-					),
-					'value' => $issueOptions['subject'],
-				);
-		}
-	
-		// Private
-		if (isset($_REQUEST['private']))
-		{
-			$issueOptions['private'] = !empty($_REQUEST['private']);
-	
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'private',
-						'id' => $issueOptions['private'] ? 1 : 0,
-					),
-					'value' => $issueOptions['private'] ? 1 : 0,
-				);		
-		}
-	
-		// Priority
-		if (isset($_REQUEST['priority']) && isset($context['issue']['priority'][(int) $_REQUEST['priority']]))
-		{
-			$issueOptions['priority'] = (int) $_REQUEST['priority'];
-			
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'priority',
-						'id' => $issueOptions['priority'],
-					),
-					'value' => $issueOptions['priority'],
-				);
-		}
-	
-		// Version
-		if (isset($_REQUEST['versions']))
-		{
-			$issueOptions['versions'] = is_array($_REQUEST['versions']) ? $_REQUEST['versions'] : explode(',', $_REQUEST['versions']);
-	
-			foreach ($issueOptions['versions'] as $k => $v)
-			{
-				$v = (int) $v;
-				
-				if (!isset($context['versions_id'][$v]))
-					unset($issueOptions['versions'][$k]);
-					
-				$issueOptions['versions'][$k] = $v;
-			}
-	
-			if ($xml_data)
-			{
-				$version_text = '';
-				
-				foreach (getVersions($issueOptions['versions']) as $version)
-				{
-					if (!empty($version_text))
-						$version_text .= ', ';
-					
-					$version_text .= $version['name'];
-				}
-				
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'versions',
-						'id' => implode(',', $issueOptions['versions']),
-					),
-					'value' => !empty($version_text) ? $version_text : $txt['issue_none'],
-				);
-				
-				unset($version_text);
-			}
-		}
-	
-		// Version fixed
-		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['versions_fixed']))
-		{
-			$issueOptions['versions_fixed'] = is_array($_REQUEST['versions_fixed']) ? $_REQUEST['versions_fixed'] : explode(',', $_REQUEST['versions_fixed']);
-	
-			foreach ($issueOptions['versions_fixed'] as $k => $v)
-			{
-				$v = (int) $v;
-				
-				if (!isset($context['versions_id'][$v]))
-					unset($issueOptions['versions_fixed'][$k]);
-					
-				$issueOptions['versions_fixed'][$k] = $v;
-			}
-	
-			if ($xml_data)
-			{
-				$version_text = '';
-				
-				foreach (getVersions($issueOptions['versions_fixed']) as $version)
-				{
-					if (!empty($version_text))
-						$version_text .= ', ';
-					
-					$version_text .= $version['name'];
-				}
-				
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'versions_fixed',
-						'id' => implode(',', $issueOptions['versions_fixed']),
-					),
-					'value' => !empty($version_text) ? $version_text : $txt['issue_none'],
-				);
-				
-				unset($version_text);
-			}
-		}
-	
-		// Category
-		if (isset($_REQUEST['category']))
-		{
-			if (!isset(ProjectTools_Project::getCurrent()->category[(int) $_REQUEST['category']]))
-				$_REQUEST['category'] = 0;
-	
-			$issueOptions['category'] = (int) $_REQUEST['category'];
-	
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'category',
-						'id' => $issueOptions['category'],
-					),
-					'value' => $issueOptions['category'],
-				);
-		}
-	
-		// Status
-		if (ProjectTools::allowedTo('issue_moderate') && isset($_REQUEST['status']))
-		{
-			if (isset($context['issue_status'][(int) $_REQUEST['status']]))
-				$issueOptions['status'] = (int) $_REQUEST['status'];
-	
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'status',
-						'id' => $issueOptions['status'],
-					),
-					'value' => $issueOptions['status'],
-				);
-		}
 		
-		if (isset($_REQUEST['tracker']) && isset(ProjectTools_Project::getCurrent()->trackers[$_REQUEST['tracker']]))
+		foreach ($context['issue_details'] as $field_name => $field)
 		{
-			$issueOptions['tracker'] = $_REQUEST['tracker'];
-	
-			if ($xml_data)
-				$context['xml_data']['updates']['children'][] = array(
-					'attributes' => array(
-						'field' => 'tracker',
-						'id' => $issueOptions['tracker']
-					),
-					'value' => $issueOptions['tracker'],
-				);
+			if (empty($field['can_edit']) || !isset($_REQUEST[$field_name]))
+				continue;
+			
+			if ($field['edit'] == 'versions')
+				$_REQUEST[$field_name] = explode(',', $_REQUEST[$field_name]);
+				
+			$issueOptions[$field_name] = $_REQUEST[$field_name];
 		}
 	}
 	

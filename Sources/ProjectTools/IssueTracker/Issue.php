@@ -29,7 +29,7 @@ class ProjectTools_IssueTracker_Issue
 		
 		if ($project !== null && self::$_instances[$id])
 		{
-			if (self::$_instances[$id]->project !== $project)
+			if (self::$_instances[$id]->project->id !== $project)
 				return false;
 		}
 		
@@ -59,7 +59,7 @@ class ProjectTools_IssueTracker_Issue
 		global $context;
 		
 		$new = new ProjectTools_IssueTracker_Issue();
-		$new->project = $project->id;
+		$new->project = $project;
 		return $new;
 	}
 	
@@ -83,7 +83,7 @@ class ProjectTools_IssueTracker_Issue
 	/**
 	 * Project ID
 	 * 
-	 * @var boolean|int ID Of Project. False if not found
+	 * @var ProjectTools_Project
 	 */
 	public $project;
 	
@@ -271,7 +271,7 @@ class ProjectTools_IssueTracker_Issue
 		$this->name = $row['subject'];
 		$this->href = ProjectTools::get_url(array('issue' => $row['id_issue'] . '.0'));
 		
-		$this->project = $row['id_project'];
+		$this->project = ProjectTools_Project::getProject($row['id_project']);
 		
 		$this->details = array(
 			'id' => $row['id_issue_event_first'],
@@ -353,11 +353,11 @@ class ProjectTools_IssueTracker_Issue
 			return true;
 			
 		// Check that user can see at least one of versions
-		if (!empty($this->versions) && count(array_intersect(array_keys($this->versions), ProjectTools_Project::getProject($this->project)->versions_id)) == 0)
+		if (!empty($this->versions) && count(array_intersect(array_keys($this->versions), $this->project->versions_id)) == 0)
 			return false;
 		
 		// Private
-		if ($this->is_private && !$this->is_mine && !ProjectTools_Project::getProject($this->project)->allowedTo('issue_view_private'))
+		if ($this->is_private && !$this->is_mine && !$this->project->allowedTo('issue_view_private'))
 			return false;
 		
 		return true;
@@ -415,7 +415,7 @@ class ProjectTools_IssueTracker_Issue
 				'id_reporter' => 'int',
 			),
 			array(
-				$this->project,
+				$this->project->id,
 				$issueOptions['title'],
 				$issueOptions['created'],
 				$posterOptions['id'],
@@ -425,7 +425,7 @@ class ProjectTools_IssueTracker_Issue
 	
 		$this->id = $smcFunc['db_insert_id']('{db_prefix}issues', 'id_issue');
 	
-		$id_event = createTimelineEvent($this->id, $this->project, 'new_issue', array('subject' => $issueOptions['title']), $posterOptions,
+		$id_event = createTimelineEvent($this->id, $this->project->id, 'new_issue', array('subject' => $issueOptions['title']), $posterOptions,
 			array(
 				'time' => $issueOptions['created'],
 				'mark_read' => !empty($issueOptions['mark_read']),
@@ -433,7 +433,7 @@ class ProjectTools_IssueTracker_Issue
 		);
 	
 		list ($id_comment, $issueOptions['event_first']) = ProjectTools_IssueTracker::createComment(
-			$this->project,
+			$this->project->id,
 			$this->id,
 			array(
 				'id_event' => $id_event,
@@ -557,7 +557,7 @@ class ProjectTools_IssueTracker_Issue
 				return $return;
 			}
 		}
-		elseif ($field == 'assign')
+		elseif ($field == 'assignee')
 		{
 			if ($raw)
 				return $this->assignee['id'];
@@ -605,18 +605,38 @@ class ProjectTools_IssueTracker_Issue
 		);
 	
 		$issueUpdates = array();
-	
+
+		if (!empty($this->status['id']))
+			$oldStatus = $context['issue_status'][$this->status['id']]['type'];
+		else
+			$oldStatus = '';
+			
+		// Which tracker it belonged to and will belong in future?
+		if (!empty($this->tracker))
+			$oldTracker = $context['issue_trackers'][$this->tracker['id']]['column_' . $oldStatus];
+			
 		// Make sure project exists always
 		if (!isset($issueOptions['project']))
-			$issueOptions['project'] = $this->project;
+			$issueOptions['project'] = $this->project->id;
 	
-		if (isset($issueOptions['project']) && $issueOptions['project'] != $this->project)
+		if (isset($issueOptions['project']) && $issueOptions['project'] != $this->project->id)
 		{
 			$issueUpdates[] = 'id_project = {int:project}';
 			$issueOptions['project'] = $issueOptions['project'];
 	
 			$event_data['changes'][] = array(
-				'project', $this->project, $issueOptions['project']
+				'project', $this->project->id, $issueOptions['project']
+			);
+			
+			//
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}project_timeline
+				SET id_project = {int:project}
+				WHERE id_issue = {int:issue}',
+				array(
+					'project' => $issueOptions['project'],
+					'issue' => $this->id,
+				)
 			);
 		}
 	
@@ -734,11 +754,6 @@ class ProjectTools_IssueTracker_Issue
 				'details', 'old', 'new',
 			);
 		}
-		
-		if (!empty($this->status['id']))
-			$oldStatus = $context['issue_status'][$this->status['id']]['type'];
-		else
-			$oldStatus = '';
 	
 		if (!empty($issueOptions['status']))
 			$newStatus = $context['issue_status'][$issueOptions['status']]['type'];
@@ -771,15 +786,13 @@ class ProjectTools_IssueTracker_Issue
 		// Update Issue Counts from project
 		$projectUpdates = array();
 	
-		// Which tracker it belonged to and will belong in future?
-		if (!empty($this->tracker))
-			$oldTracker = $context['issue_trackers'][$this->tracker['id']]['column_' . $oldStatus];
+		//
 		$newTracker = $context['issue_trackers'][$issueOptions['tracker']]['column_' . $newStatus];
 			
 		if (!empty($issueOptions['tracker']) && ($issueOptions['tracker'] != $this->tracker['id'] || $oldStatus != $newStatus))
 		{
 			if (!empty($oldStatus) && !empty($this->tracker))
-				$projectUpdates[$this->project][] = "$oldTracker = $oldTracker - 1";
+				$projectUpdates[$this->project->id][] = "$oldTracker = $oldTracker - 1";
 	
 			$projectUpdates[$issueOptions['project']][] = "$newTracker = $newTracker + 1";
 		}
@@ -826,17 +839,8 @@ class ProjectTools_IssueTracker_Issue
 				)
 			);
 			
-		// Update id_project in timeline if needed
-		if ($this->project != $issueOptions['project'])
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}project_timeline
-				SET id_project = {int:project}
-				WHERE id_issue = {int:issue}',
-				array(
-					'project' => $issueOptions['project'],
-					'issue' => $this->id,
-				)
-			);
+		// Refresh data (for ajax!)
+		$this->loadIssue();
 	
 		if ($return_log)
 			return $event_data;
@@ -896,7 +900,7 @@ class ProjectTools_IssueTracker_Issue
 					', $projectUpdates) . "
 				WHERE id_project = {int:project}",
 				array(
-					'project' => $this->project,
+					'project' => $this->project->id,
 				)
 			);
 			
@@ -970,7 +974,7 @@ class ProjectTools_IssueTracker_Issue
 		);
 	
 		if ($log_delete && $posterOptions !== false)
-			$id_event = createTimelineEvent($this->id, $this->project, 'delete_issue', $event_data, $posterOptions, array('time' => time()));
+			$id_event = createTimelineEvent($this->id, $this->project->id, 'delete_issue', $event_data, $posterOptions, array('time' => time()));
 		else
 			return true;
 		

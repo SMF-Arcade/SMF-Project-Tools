@@ -1,5 +1,5 @@
 // Project Tools Dropdown
-function PTIssue(id_issue, saveURL, id_last_event, element_events)
+function PTIssue(id_issue, saveURL, id_last_event, element_events, elm_button_div, elm_button)
 {
 	var changes = [];
 	var callbacks = [];
@@ -9,6 +9,14 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 	var saveInProgress = false;
 	
 	var loadedEvents = document.getElementById(element_events);
+	
+	var ElmbuttonDIV = document.getElementById(elm_button_div);
+	var Elmbutton = document.getElementById(elm_button);
+	
+	ElmbuttonDIV.style.display = 'none';
+	
+	createEventListener(Elmbutton);
+	Elmbutton.addEventListener('click', saveChanges, false);
 	
 	this.id_issue = id_issue;
 	this.id_last_event = id_last_event;
@@ -56,6 +64,9 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 		i = changes.length;
 		changes[i] = item + "=" + value;
 		
+		// Show save button
+		ElmbuttonDIV.style.display = '';
+		
 		return true;
 	}
 	
@@ -100,6 +111,9 @@ function PTIssue(id_issue, saveURL, id_last_event, element_events)
 		callbacks = [];
 		
 		saveInProgress = false;
+		
+		// Hide save button
+		ElmbuttonDIV.style.display = 'none';
 	}
 }
 
@@ -158,10 +172,10 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 
 	function setValue(id, value)
 	{
-		selectedValue = id;
-		selectedItem = options[id];
+		//selectedValue = id;
+		//selectedItem = options[id];
 		
-		dropdownValue.innerHTML = selectedItem['name'];
+		dropdownValue.innerHTML = value;
 	}
 	
 	function dropDownHide()
@@ -235,9 +249,6 @@ function PTDropdown(issue, name, fieldName, selectedValue)
 			// Register change and add callback to update status after request is done	
 			issue.addChange(fieldName, selectedValue);
 			issue.addCallback(saveDone)
-
-			// Save changes now
-			issue.saveChanges();
 		}
 
 		dropDownHide();
@@ -369,9 +380,6 @@ function PTMultiDropdown(issue, name, fieldName)
 			// Register change and add callback to update status after request is done	
 			issue.addChange(fieldName, value);
 			issue.addCallback(saveDone)
-
-			// Save changes now
-			issue.saveChanges();
 			
 			changed = false;
 		}
