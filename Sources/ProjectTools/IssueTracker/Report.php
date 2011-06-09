@@ -330,25 +330,22 @@ class ProjectTools_IssueTracker_Report
 			ProjectTools_IssueTracker_View::loadIssueView();
 			
 			$request = $smcFunc['db_query']('', '
-				SELECT id_event, id_member
-				FROM {db_prefix}project_timeline
+				SELECT id_issue_event, id_member
+				FROM {db_prefix}issue_events
 				WHERE id_issue = {int:issue}
-					AND id_event > {int:last_event} OR id_event = {int:current_event}',
+					AND id_issue_event > {int:last_event} OR id_issue_event = {int:current_event}',
 				array(
 					'issue' => $issue,
 					'last_event' => (int) $_REQUEST['last_event'],
 					'current_event' => is_int($id_event) ? $id_event : 0,
 				)
 			);
-			
-			$events = array();
-			$posters = array();
 		
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
 				if (!empty($row['id_member']))
 					$posters[$row['id_member']] = $row['id_member'];
-				$events[] = $row['id_event'];
+				$events[] = $row['id_issue_event'];
 			}
 			$smcFunc['db_free_result']($request);
 		

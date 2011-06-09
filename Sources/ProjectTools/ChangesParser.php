@@ -96,7 +96,7 @@ class ProjectTools_ChangesParser
 			}
 			elseif ($field == 'assign')
 			{
-				loadMemberData(array($old_value, $new_value));
+				loadMemberData(array((int)$old_value, (int)$new_value));
 
 				if (empty($old_value))
 					$old_value = $txt['issue_none'];

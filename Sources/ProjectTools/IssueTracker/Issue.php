@@ -856,7 +856,7 @@ class ProjectTools_IssueTracker_Issue
 				)
 			);
 			
-			return $id_event;
+			return $id_issue_event;
 		}
 		
 		return true;
