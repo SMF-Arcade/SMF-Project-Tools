@@ -159,6 +159,10 @@ class ProjectTools_Hooks
 		if (empty($modSettings['projectEnabled']))
 			return;
 		
+		ProjectTools::load();
+		
+		// TODO: Merge to ProjectTools::load
+		
 		loadLanguage('Project');
 	
 		// Load status texts

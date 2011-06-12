@@ -20,18 +20,6 @@
 	<id>Niko:SMFProject</id>
 	<version>0.6</version>
 
-	<!-- Board directory -->
-	<file name="$boarddir/index.php">		
-		<operation>
-			<search position="after"><![CDATA[	// Load the current user's permissions.]]></search>
-			<add><![CDATA[
-	// Project Tools (edit 1)
-	if (class_exists('ProjectTools') && !empty($modSettings['projectEnabled']))
-		ProjectTools::load();
-]]></add>
-		</operation>
-	</file>
-
 	<file name="$boarddir/SSI.php">
 		<operation>
 			<search position="after"><![CDATA[// Take care of any banning that needs to be done.]]></search>
@@ -310,24 +298,6 @@ function list_getProjectNotifications($start, $items_per_page, $sort, $memID)
 
 	return $notification_projects;
 }]]></add>
-		</operation>
-	</file>
-	
-	<file name="$sourcedir/Security.php">
-		<operation>
-			<search position="before"><![CDATA[$user_info['permissions'] = array_diff($user_info['permissions'], $denied_permissions);]]></search>
-			<add><![CDATA[
-
-		if (!empty($modSettings['projectEnabled']) && !empty($user_info['project_permissions']) && empty($modSettings['projectNoPostbanCheck']))
-		{
-			// TODO FIX THIS
-			$pt_denied_permissions = array(
-				'issue_report', 'issue_update', 'issue_attach', 'issue_moderate',
-				'issue_comment', 'edit_comment', 'delete_comment'
-			);
-			$user_info['project_permissions'] = array_diff($user_info['project_permissions'], $pt_denied_permissions);
-		}
-]]></add>
 		</operation>
 	</file>
 

@@ -28,6 +28,12 @@ class ProjectTools
 	{
 		global $context, $smcFunc, $modSettings, $user_info, $txt, $settings, $projects_show;
 		global $sourcedir, $project;
+		static $loaded = false;
+		
+		if ($loaded)
+			return;
+		
+		$loaded = true;
 	
 		//
 		require_once($sourcedir . '/Subs-Project.php');

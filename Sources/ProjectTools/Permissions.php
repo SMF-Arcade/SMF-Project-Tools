@@ -69,8 +69,7 @@ class ProjectTools_Permissions
 				list ($this->permissions) = $temp;
 		}
 		
-		
-		
+		// Load from database
 		if (empty($this->permissions))
 		{
 			$request = $smcFunc['db_query']('', '
@@ -91,6 +90,18 @@ class ProjectTools_Permissions
 			if (!empty($modSettings['cache_enable']))
 				cache_put_data('project_profile:' . $this->id . ':' . $cache_groups, array($this->permissions, null), 240);			
 		}
+		
+		// TODO: Support post ban
+		/*
+		 		if (!empty($modSettings['projectEnabled']) && !empty($user_info['project_permissions']) && empty($modSettings['projectNoPostbanCheck']))
+		{
+			// TODO FIX THIS
+			$pt_denied_permissions = array(
+				'issue_report', 'issue_update', 'issue_attach', 'issue_moderate',
+				'issue_comment', 'edit_comment', 'delete_comment'
+			);
+			$user_info['project_permissions'] = array_diff($user_info['project_permissions'], $pt_denied_permissions);
+		}*/
 	}
 	
 	/**
