@@ -45,9 +45,11 @@
 		</operation>
 
 		<operation>
-			<search position="after"><![CDATA[		}
+			<search position="after"><![CDATA[
 		echo '
-			</tbody>
+			</tbody>';
+		}
+		echo '
 			<tbody class="divider">
 				<tr>
 					<td colspan="4"></td>
