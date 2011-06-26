@@ -21,7 +21,6 @@ It's primarily for software but it can be also used for other purposes.
 
 [color=blue][b][size=12pt]SMF Versions supported[/size][/b][/color]
 This version supports only SMF 2.0.
-It might work on future releases such as SMF 2.0 Final but it's not guarantaneed.
 
 [color=blue][b][size=12pt]Features[/size][/b][/color]
 [list]
