@@ -188,6 +188,15 @@ class ProjectTools_Hooks
 		loadIssue();
 	}
 	
+		
+	/**
+	 *
+	 */
+	static public function bbc()
+	{
+		
+	}
+	
 	/**
 	 * SMF Hook integrate_admin_areas
 	 *
