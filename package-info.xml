@@ -19,10 +19,10 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Niko:SMFProject</id>
 	<name>SMF Project Tools</name>
-	<version>0.503</version>
+	<version>0.504</version>
 	<type>modification</type>
 
-	<install for="2.0 RC5, 2.0">
+	<install for="2.0 RC5, 2.0, 2.0.1">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
@@ -92,6 +92,11 @@
 		<!-- Redirect to upgrader -->
 		<redirect url="$scripturl?action=admin;area=projectsadmin;sa=maintenance;activity=upgrade" timeout="10"></redirect>
 	</install>
+
+	<upgrade for="2.0, 2.0.1" from="0.503">
+		<readme parsebbc="true">readme.txt</readme>
+		<require-file name="Sources/Subs-Project.php" destination="$sourcedir" />
+	</upgrade>
 	
 	<upgrade for="2.0 RC5" from="0.502">
 		<readme parsebbc="true">readme.txt</readme>
