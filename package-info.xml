@@ -22,7 +22,7 @@
 	<version>0.504</version>
 	<type>modification</type>
 
-	<install for="2.0 RC5, 2.0, 2.0.1">
+	<install for="2.0, 2.0.1">
 		<readme parsebbc="true">readme.txt</readme>
 
 		<!-- These files goes to Sources directory -->
