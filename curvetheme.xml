@@ -18,7 +18,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<!-- This information needs to be the same as that in the package-info.xml. -->
 	<id>Niko:SMFProject</id>
-	<version>0.502</version>
+	<version>0.504</version>
 
 	<file name="$themedir/Profile.template.php">
 		<operation>
@@ -37,9 +37,7 @@
 
 	<file name="$themedir/BoardIndex.template.php">
 		<operation>
-			<search position="before"><![CDATA[		// Assuming the category hasn't been collapsed...
-		if (!$category['is_collapsed'])
-		{]]></search>
+			<search position="before"><![CDATA[<tbody class="content" id="category_', $category['id'], '_boards">';]]></search>
 			<add><![CDATA[
 			template_boardindex_project($category['id'], 'first');]]></add>
 		</operation>
